@@ -194,6 +194,28 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
         <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review new account applications, trace beneficial ownership hierarchies, verify documentation, and assess customer risk. Decide whether to approve, reject, or require EDD.</p>
         <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">5 cases • Ownership graph explorer • Document review</div>
       </div>
+      <div class="role-card gc" onclick="startShift('eddi')" id="role-eddi">
+        <div class="flex items-center gap-3 mb-2">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🔬</div>
+          <div>
+            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">EDD — Individuals</h3>
+            <div style="font-size:.6rem;color:#a78bfa;font-weight:600">Enhanced Due Diligence Reviews</div>
+          </div>
+        </div>
+        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Conduct periodic deep-dive reviews of high-risk individual customers. Assess source of wealth, adverse media, and ongoing risk. Decide whether to maintain, exit, or escalate.</p>
+        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">1 case • Source of wealth • Adverse media • PEP review</div>
+      </div>
+      <div class="role-card gc" onclick="startShift('edde')" id="role-edde">
+        <div class="flex items-center gap-3 mb-2">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,184,51,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🏗️</div>
+          <div>
+            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">EDD — Entities</h3>
+            <div style="font-size:.6rem;color:#ffb833;font-weight:600">Enhanced Due Diligence Reviews</div>
+          </div>
+        </div>
+        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review high-risk corporate customers. Investigate ownership changes, sanctions proximity, regulatory status, and transaction patterns. Decide whether to maintain, exit, or escalate.</p>
+        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">1 case • Ownership analysis • Sanctions proximity • Entity review</div>
+      </div>
     </div>
   </div>
 </div>
@@ -304,6 +326,152 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
 </div>
 
+<!-- ═══ EDD INDIVIDUAL INVESTIGATION ═══ -->
+<div class="screen" id="scr-eddi">
+  <div class="p-5 pb-2">
+    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.8rem">← Back to Cases</button>
+    <div class="flex items-center justify-between mb-3">
+      <div><div id="eddi-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
+      <h2 id="eddi-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
+      <div id="eddi-pill"></div>
+    </div>
+  </div>
+  <!-- Profile -->
+  <div class="px-5 mb-3"><div class="gc p-4">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.55rem">👤 Customer Profile</div>
+    <div id="eddi-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+  </div></div>
+  <!-- Review Trigger -->
+  <div class="px-5 mb-3"><div class="gc-s p-3">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div>
+    <p id="eddi-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+  </div></div>
+  <!-- Source of Wealth -->
+  <div class="px-5 mb-3"><div class="gc p-4">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.55rem">💰 Source of Wealth Assessment</div>
+    <div id="eddi-sow" style="font-size:.72rem"></div>
+  </div></div>
+  <!-- Adverse Media -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">📰 Adverse Media</div>
+    <div id="eddi-media" class="space-y-2"></div>
+  </div>
+  <!-- Transactions -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Recent Transaction Activity</div>
+    <div id="eddi-txs" class="space-y-2"></div>
+  </div>
+  <!-- Documents -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">📄 Document Review</div>
+    <div id="eddi-docs" class="space-y-2"></div>
+  </div>
+  <!-- Screening -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">🛡️ Screening Results</div>
+    <div id="eddi-scr" class="space-y-2"></div>
+  </div>
+  <!-- Network -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.45rem">🔗 Relationship Map</div>
+    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
+    <div class="gc p-3 relative" style="min-height:460px">
+      <svg id="eddi-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+      <div class="net-tip" id="eddi-tip"></div>
+    </div>
+  </div>
+  <!-- Red Flags -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">🚩 EDD Red Flags</div>
+    <div id="eddi-flags" class="space-y-2"></div>
+  </div>
+  <!-- Notes -->
+  <div class="px-5 mb-4">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.35rem">Your Notes</div>
+    <textarea id="eddi-notes" rows="3" placeholder="Add EDD review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
+  </div>
+  <!-- EDD Individual Action buttons -->
+  <div class="act-grid" style="padding-bottom:1.5rem">
+    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
+    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
+    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate to MLRO</button>
+    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="act-ico">📉</span>Downgrade Risk</button>
+  </div>
+</div>
+
+<!-- ═══ EDD ENTITY INVESTIGATION ═══ -->
+<div class="screen" id="scr-edde">
+  <div class="p-5 pb-2">
+    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.8rem">← Back to Cases</button>
+    <div class="flex items-center justify-between mb-3">
+      <div><div id="edde-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
+      <h2 id="edde-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
+      <div id="edde-pill"></div>
+    </div>
+  </div>
+  <!-- Entity Profile -->
+  <div class="px-5 mb-3"><div class="gc p-4">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.55rem">🏢 Entity Profile</div>
+    <div id="edde-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+  </div></div>
+  <!-- Review Trigger -->
+  <div class="px-5 mb-3"><div class="gc-s p-3">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div>
+    <p id="edde-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+  </div></div>
+  <!-- Source of Wealth -->
+  <div class="px-5 mb-3"><div class="gc p-4">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.55rem">💰 Source of Wealth / Funds Assessment</div>
+    <div id="edde-sow" style="font-size:.72rem"></div>
+  </div></div>
+  <!-- Adverse Media -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">📰 Adverse Media</div>
+    <div id="edde-media" class="space-y-2"></div>
+  </div>
+  <!-- Transactions -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Recent Transaction Activity</div>
+    <div id="edde-txs" class="space-y-2"></div>
+  </div>
+  <!-- Documents -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">📄 Document Review</div>
+    <div id="edde-docs" class="space-y-2"></div>
+  </div>
+  <!-- Screening -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">🛡️ Screening Results</div>
+    <div id="edde-scr" class="space-y-2"></div>
+  </div>
+  <!-- Network -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.45rem">🏛️ Ownership & Relationship Structure</div>
+    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
+    <div class="gc p-3 relative" style="min-height:460px">
+      <svg id="edde-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+      <div class="net-tip" id="edde-tip"></div>
+    </div>
+  </div>
+  <!-- Red Flags -->
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">🚩 EDD Red Flags</div>
+    <div id="edde-flags" class="space-y-2"></div>
+  </div>
+  <!-- Notes -->
+  <div class="px-5 mb-4">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.35rem">Your Notes</div>
+    <textarea id="edde-notes" rows="3" placeholder="Add EDD entity review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
+  </div>
+  <!-- EDD Entity Action buttons -->
+  <div class="act-grid" style="padding-bottom:1.5rem">
+    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
+    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
+    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate to MLRO</button>
+    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="act-ico">📉</span>Downgrade Risk</button>
+  </div>
+</div>
+
 <!-- ═══ MY CASES ═══ -->
 <div class="screen" id="scr-cases">
   <div class="p-5">
@@ -367,6 +535,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 <!-- ── DATA ── -->
 <script src="/cases/aml-cases.js"></script>
 <script src="/cases/kyc-cases.js"></script>
+<script src="/cases/edd-individual-cases.js"></script>
+<script src="/cases/edd-entity-cases.js"></script>
 
 <!-- ── APP LOGIC ── -->
 <script>
@@ -397,7 +567,7 @@ function saveState(){localStorage.setItem('ech-state',JSON.stringify({xp:state.x
 function getLevel(){var l=0;for(var i=LEVELS.length-1;i>=0;i--){if(state.xp>=LEVELS[i].xp){l=i;break;}}return l;}
 function getLevelInfo(){var l=getLevel(),c=LEVELS[l],n=LEVELS[l+1]||{xp:c.xp+2000};return{level:l+1,title:c.title,xpForNext:n.xp,progress:Math.min(((state.xp-c.xp)/(n.xp-c.xp))*100,100)};}
 function getAccuracy(){if(!state.casesCompleted.length)return null;return Math.round((state.casesCompleted.filter(function(c){return c.correct;}).length/state.casesCompleted.length)*100);}
-function getCases(){return state.currentRole==='kyc'?KYC_CASES:AML_CASES;}
+function getCases(){return state.currentRole==='kyc'?KYC_CASES:state.currentRole==='eddi'?EDD_INDIVIDUAL_CASES:state.currentRole==='edde'?EDD_ENTITY_CASES:AML_CASES;}
 
 // ═══ NAV ═══
 function nav(id){showScreen(id);document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.toggle('act',b.dataset.s===id);});document.getElementById('mainNav').style.display='';}
@@ -408,12 +578,12 @@ function backToShift(){document.getElementById('mainNav').style.display='';showS
 function renderDashboard(){var li=getLevelInfo(),acc=getAccuracy();document.getElementById('d-streak').innerHTML='<span class="fire">🔥</span> '+state.streak+' day streak';document.getElementById('d-level').textContent=li.title;document.getElementById('d-lvl-num').textContent=li.level;document.getElementById('d-xp-cur').textContent=state.xp;document.getElementById('d-xp-max').textContent=li.xpForNext;document.getElementById('d-xp-bar').style.width=li.progress+'%';document.getElementById('d-score').textContent=state.xp;document.getElementById('d-cases').textContent=state.casesCompleted.length;document.getElementById('d-acc').textContent=acc!==null?acc+'%':'—';document.getElementById('d-tip').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];}
 
 // ═══ SHIFT ═══
-function startShift(role){state.currentRole=role;state.shiftResults=[];var today=new Date().toISOString().slice(0,10);if(state.lastPlayDate!==today)state.streak=(state.streak||0)+1;state.lastPlayDate=today;saveState();var badge=document.getElementById('shift-role-badge');badge.textContent=role==='kyc'?'KYC Analyst — Customer Due Diligence':'AML Analyst — Suspicious Activity';badge.style.color=role==='kyc'?'#38bdf8':'#ff4d6a';showScreen('shift');renderShift();document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.remove('act');});}
+function startShift(role){state.currentRole=role;state.shiftResults=[];var today=new Date().toISOString().slice(0,10);if(state.lastPlayDate!==today)state.streak=(state.streak||0)+1;state.lastPlayDate=today;saveState();var badge=document.getElementById('shift-role-badge');var labels={aml:'AML Analyst — Suspicious Activity',kyc:'KYC Analyst — Customer Due Diligence',eddi:'EDD Analyst — Individual Reviews',edde:'EDD Analyst — Entity Reviews'};var cols={aml:'#ff4d6a',kyc:'#38bdf8',eddi:'#a78bfa',edde:'#ffb833'};badge.textContent=labels[role]||role;badge.style.color=cols[role]||'#00e68a';showScreen('shift');renderShift();document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.remove('act');});}
 
 function renderShift(){var cases=getCases(),el=document.getElementById('shift-cards'),done=state.shiftResults||[];el.innerHTML=cases.map(function(c,i){var resolved=done.find(function(r){return r.id===c.id;});var pc={critical:'pill-crit',high:'pill-high',med:'pill-med',low:'pill-low'}[c.riskLevel];return '<div class="gc p-4 cursor-pointer transition-transform active:scale-[.98]" onclick="'+(resolved?'':'openCase('+i+')')+'" style="'+(resolved?'opacity:.5;pointer-events:none':'')+'"><div class="flex justify-between items-start mb-2"><div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</div><span class="pill '+pc+'">'+c.riskLabel+'</span></div><h3 style="font-family:\'Anybody\',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.15rem">'+c.name+'</h3><p style="font-size:.72rem;color:#4a6a8a;margin-bottom:.5rem">'+c.teaser+'</p><div class="flex justify-between items-center"><div style="font-size:.62rem;color:#4a6a8a">'+(c.amount||c.entityType||'')+'</div>'+(resolved?'<span style="font-size:.62rem;font-weight:700;color:'+(resolved.correct?'#00e68a':'#ff4d6a')+'">'+(resolved.correct?'✓ Correct':'✗ Incorrect')+'</span>':'<span style="font-size:.62rem;color:#00e68a;font-weight:600">Tap to investigate →</span>')+'</div></div>';}).join('');}
 
 // ═══ OPEN CASE ═══
-function openCase(idx){state.currentCase=idx;var c=getCases()[idx];document.getElementById('mainNav').style.display='none';if(state.currentRole==='kyc')openKYC(c);else openAML(c);}
+function openCase(idx){state.currentCase=idx;var c=getCases()[idx];document.getElementById('mainNav').style.display='none';if(state.currentRole==='kyc')openKYC(c);else if(state.currentRole==='eddi')openEDDI(c);else if(state.currentRole==='edde')openEDDE(c);else openAML(c);}
 
 // ═══ AML INVESTIGATION ═══
 function openAML(c){
@@ -528,6 +698,119 @@ function renderOwnershipGraph(h){
   initDrag(svg,'kyc',h.nodes,h.edges,'kyc-tip');
 }
 
+// ═══ EDD INDIVIDUAL INVESTIGATION ═══
+function openEDDI(c){
+  document.getElementById('eddi-id').textContent=c.id;
+  document.getElementById('eddi-name').textContent=c.name;
+  document.getElementById('eddi-pill').innerHTML='<span class="pill pill-'+(c.riskLevel==='critical'?'crit':c.riskLevel)+'">'+c.riskLabel+'</span>';
+  var p=c.profile;document.getElementById('eddi-profile').innerHTML=[
+    ['Full Name',p.fullName],['Date of Birth',p.dateOfBirth],['Nationality',p.nationality],
+    ['Occupation',p.occupation],['PEP Status','<span style="color:'+(p.pepStatus.startsWith('Yes')?'#ff4d6a':'#00e68a')+';font-weight:700">'+p.pepStatus+'</span>'],
+    ['Customer Since',p.customerSince],['Account Type',p.accountType],['Declared Income',p.declaredIncome],
+    ['Declared Wealth',p.declaredWealth],['Risk Rating','<span style="color:#ff4d6a;font-weight:700">'+p.riskRating+'</span>']
+  ].map(function(r){return '<div style="color:#4a6a8a;font-weight:600">'+r[0]+'</div><div>'+r[1]+'</div>';}).join('');
+  document.getElementById('eddi-trigger').textContent=c.reviewTrigger;
+  renderSOW('eddi-sow',c.sourceOfWealth);
+  renderMedia('eddi-media',c.adverseMedia);
+  renderEDDTxs('eddi-txs',c.transactions);
+  renderEDDDocs('eddi-docs',c.documents);
+  renderEDDScreening('eddi-scr',c.screening);
+  renderOwnershipGraph_EDD(c.network,'eddi-net','eddi-tip','eddi');
+  document.getElementById('eddi-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
+  document.getElementById('eddi-notes').value=state.notes[c.id]||'';
+  showScreen('eddi');
+}
+
+// ═══ EDD ENTITY INVESTIGATION ═══
+function openEDDE(c){
+  document.getElementById('edde-id').textContent=c.id;
+  document.getElementById('edde-name').textContent=c.name;
+  document.getElementById('edde-pill').innerHTML='<span class="pill pill-'+(c.riskLevel==='critical'?'crit':c.riskLevel)+'">'+c.riskLabel+'</span>';
+  var p=c.profile;document.getElementById('edde-profile').innerHTML=[
+    ['Entity Name',p.entityName],['Entity Type',p.entityType],['Jurisdiction',p.jurisdiction],
+    ['Incorporated',p.incorporationDate],['Registered Agent',p.registeredAgent],['Customer Since',p.customerSince],
+    ['Account Type',p.accountType],['Declared Turnover',p.declaredTurnover],
+    ['Current Risk',p.currentRiskRating],['Regulated By',p.regulatedBy]
+  ].map(function(r){return '<div style="color:#4a6a8a;font-weight:600">'+r[0]+'</div><div>'+r[1]+'</div>';}).join('');
+  document.getElementById('edde-trigger').textContent=c.reviewTrigger;
+  renderSOW('edde-sow',c.sourceOfWealth);
+  renderMedia('edde-media',c.adverseMedia);
+  renderEDDTxs('edde-txs',c.transactions);
+  renderEDDDocs('edde-docs',c.documents);
+  renderEDDScreening('edde-scr',c.screening);
+  renderOwnershipGraph_EDD(c.network,'edde-net','edde-tip','edde');
+  document.getElementById('edde-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
+  document.getElementById('edde-notes').value=state.notes[c.id]||'';
+  showScreen('edde');
+}
+
+// ═══ SHARED EDD RENDERERS ═══
+function renderSOW(elId,sow){
+  document.getElementById(elId).innerHTML=
+    '<div style="margin-bottom:8px"><div style="font-size:.55rem;font-weight:700;color:#4a6a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Declared</div><div style="color:#8ba4c0;line-height:1.5">'+sow.declared+'</div></div>'
+    +'<div style="margin-bottom:8px"><div style="font-size:.55rem;font-weight:700;color:#ff4d6a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Findings</div><div style="color:#c8daf0;line-height:1.5">'+sow.findings+'</div></div>'
+    +'<div style="padding:8px 10px;border-radius:8px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12)"><div style="font-size:.55rem;font-weight:700;color:#ffb833;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Assessment</div><div style="color:#ffb833;line-height:1.5;font-size:.72rem">'+sow.assessment+'</div></div>';
+}
+function renderMedia(elId,media){
+  document.getElementById(elId).innerHTML=media.map(function(m){
+    return '<div class="gc-s p-3'+(m.flag?' flagged':'')+'" style="'+(m.flag?'border-left:3px solid #ff4d6a':'')+'"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.6rem;font-weight:700;color:#fff">'+m.source+'</span><span style="font-size:.56rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+m.date+'</span></div><div style="font-size:.72rem;color:#8ba4c0;line-height:1.45">'+m.summary+'</div></div>';
+  }).join('');
+}
+function renderEDDTxs(elId,txs){
+  document.getElementById(elId).innerHTML=txs.map(function(tx){
+    return '<div class="gc-s p-3 tx-card flex justify-between items-center gap-3" style="'+(tx.flag?'border-left:3px solid #ff4d6a':'')+'"><div class="flex-1 min-w-0"><div style="font-family:\'Anybody\',sans-serif;font-size:.88rem;font-weight:700;color:'+(tx.flag?'#ff4d6a':'#fff')+'">'+tx.amount+'</div><div style="font-size:.62rem;color:#4a6a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tx.to+'</div></div><div class="text-right flex-shrink-0"><div style="font-size:.58rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+tx.date+'</div><div style="font-size:.56rem;color:#8ba4c0">'+tx.country+'</div></div></div>';
+  }).join('');
+}
+function renderEDDDocs(elId,docs){
+  document.getElementById(elId).innerHTML=docs.map(function(d){
+    var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';
+    var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ '+d.status.charAt(0).toUpperCase()+d.status.slice(1);
+    return '<div class="doc-card'+(d.flag?' flagged':'')+'"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div class="flex-1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.64rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';
+  }).join('');
+}
+function renderEDDScreening(elId,scr){
+  document.getElementById(elId).innerHTML=scr.map(function(s){
+    return '<div class="scr-row'+(s.flag?' flagged':'')+'"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.68rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+';max-width:55%">'+s.result+'</div></div>';
+  }).join('');
+}
+
+// ═══ EDD OWNERSHIP/RELATIONSHIP GRAPH ═══
+function renderOwnershipGraph_EDD(h,svgId,tipId,mode){
+  var svg=document.getElementById(svgId),tip=document.getElementById(tipId);tip.classList.remove('show');
+  var riskCol={critical:'#ff4d6a',high:'#ffb833',medium:'#38bdf8',low:'#00e68a'};
+  var typeIco={company:'🏢',person:'🧑',trust:'🏛️',nominee:'👤',bank:'🏦',unknown:'❓'};
+  svg.innerHTML='';
+  var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
+  h.edges.forEach(function(e){
+    var from=h.nodes.find(function(n){return n.id===e.from;}),to=h.nodes.find(function(n){return n.id===e.to;});
+    if(!from||!to)return;
+    var isHot=to.risk==='critical'||from.risk==='critical';
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',from.x);line.setAttribute('y1',from.y);line.setAttribute('x2',to.x);line.setAttribute('y2',to.y);
+    line.setAttribute('class','net-edge'+(isHot?' hot':''));if(isHot)line.setAttribute('stroke-dasharray','6 3');
+    line.dataset.from=e.from;line.dataset.to=e.to;edgeG.appendChild(line);
+    var mx=(from.x+to.x)/2,my=(from.y+to.y)/2;
+    var lg=document.createElementNS('http://www.w3.org/2000/svg','g');lg.dataset.efrom=e.from;lg.dataset.eto=e.to;
+    var tw=Math.max((e.label||'').length*5.5+10,52);
+    lg.innerHTML='<rect x="'+(mx-tw/2)+'" y="'+(my-8)+'" width="'+tw+'" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>'
+      +'<text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+(e.label||'')+'</text>';
+    edgeG.appendChild(lg);
+  });
+  svg.appendChild(edgeG);
+  h.nodes.forEach(function(n){
+    var col=riskCol[n.risk]||'#8ba4c0';var ico=typeIco[n.type]||'🔷';
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';
+    var alert=n.risk==='critical'?'<circle class="nd-alert" cx="'+(n.x+24)+'" cy="'+(n.y-16)+'" r="5" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>':'';
+    g.innerHTML='<rect class="nd-bg" x="'+(n.x-28)+'" y="'+(n.y-20)+'" width="56" height="40" rx="10" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>'
+      +'<text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:18px;fill:#fff;pointer-events:none">'+ico+'</text>'
+      +'<text x="'+n.x+'" y="'+(n.y+36)+'" class="net-label nd-lbl">'+n.label+'</text>'
+      +alert;
+    svg.appendChild(g);
+  });
+  initDrag(svg,mode,h.nodes,h.edges,tipId);
+}
+
 // ═══ DRAG SYSTEM ═══
 function initDrag(svg,mode,nodes,edges,tipId){
   if(svg._dc)svg._dc();
@@ -541,7 +824,7 @@ function initDrag(svg,mode,nodes,edges,tipId){
     g.querySelectorAll('circle.nd-bg,circle.nd-fg').forEach(function(c){c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);});
     var bg=g.querySelector('rect.nd-bg');if(bg){var w=+bg.getAttribute('width'),bh=+bg.getAttribute('height');bg.setAttribute('x',n.x-w/2);bg.setAttribute('y',n.y-bh/2);}
     var ico=g.querySelector('.nd-ico');if(ico){ico.setAttribute('x',n.x);ico.setAttribute('y',n.y+5);}
-    var lbl=g.querySelector('.nd-lbl');if(lbl){lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+(mode==='kyc'?36:40));}
+    var lbl=g.querySelector('.nd-lbl');if(lbl){lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+(mode==='aml'?40:36));}
     var dot=g.querySelector('.nd-alert');if(dot){dot.setAttribute('cx',n.x+24);dot.setAttribute('cy',n.y-16);}
   }
 
@@ -582,6 +865,7 @@ function initDrag(svg,mode,nodes,edges,tipId){
 function showNodePanel(tipId,nodeId,mode){
   var c=getCases()[state.currentCase];var n;
   if(mode==='kyc'){n=c.hierarchy.nodes.find(function(nd){return nd.id===nodeId;});}
+  else if(mode==='eddi'||mode==='edde'){n=c.network.nodes.find(function(nd){return nd.id===nodeId;});}
   else{n=c.network.nodes[nodeId];}
   if(!n)return;
   var tip=document.getElementById(tipId);
@@ -662,7 +946,7 @@ function initTipDrag(tip,dragId){
   };
 }
 
-function saveNotes(){if(state.currentCase===null)return;var c=getCases()[state.currentCase];var noteEl=state.currentRole==='kyc'?document.getElementById('kyc-notes'):document.getElementById('aml-notes');state.notes[c.id]=noteEl.value;saveState();}
+function saveNotes(){if(state.currentCase===null)return;var c=getCases()[state.currentCase];var noteEl=state.currentRole==='kyc'?document.getElementById('kyc-notes'):state.currentRole==='eddi'?document.getElementById('eddi-notes'):state.currentRole==='edde'?document.getElementById('edde-notes'):document.getElementById('aml-notes');state.notes[c.id]=noteEl.value;saveState();}
 
 // ═══ DECISION ═══
 function decide(action){
@@ -705,6 +989,8 @@ function checkBadges(c,action){
   if(c.id==='AML-2026-0651'&&action==='sar'&&!has('Chain Analyst'))state.badges.push({icon:'⛓️',name:'Chain Analyst',shift:true});
   if(c.id==='AML-2026-0687'&&action==='sar'&&!has('Loop Breaker'))state.badges.push({icon:'🔄',name:'Loop Breaker',shift:true});
   if(c.id==='AML-2026-0723'&&action==='clear'&&!has('Clear Thinker'))state.badges.push({icon:'✅',name:'Clear Thinker',shift:true});
+  if(c.id==='EDD-I-2026-0101'&&action==='exit'&&!has('Risk Gatekeeper'))state.badges.push({icon:'🚪',name:'Risk Gatekeeper',shift:true});
+  if(c.id==='EDD-E-2026-0201'&&action==='escalate'&&!has('Sanctions Sentinel'))state.badges.push({icon:'🛡️',name:'Sanctions Sentinel',shift:true});
   if(c.id==='KYC-2026-0831'&&action==='edd'&&!has('UBO Detective'))state.badges.push({icon:'🏛️',name:'UBO Detective',shift:true});
   if(c.id==='KYC-2026-0847'&&action==='reject'&&!has('Gatekeeper'))state.badges.push({icon:'🚫',name:'Gatekeeper',shift:true});
   if(c.id==='KYC-2026-0903'&&action==='edd'&&!has('NPO Watchdog'))state.badges.push({icon:'🏥',name:'NPO Watchdog',shift:true});
@@ -723,8 +1009,8 @@ function renderCaseLog(){
   var list=document.getElementById('cases-list'),empty=document.getElementById('cases-empty');
   if(!state.casesCompleted.length){list.innerHTML='';empty.style.display='';return;}empty.style.display='none';
   var seen={},unique=[];state.casesCompleted.slice().reverse().forEach(function(c){if(!seen[c.id]){seen[c.id]=true;unique.push(c);}});
-  var allCases=AML_CASES.concat(KYC_CASES);
-  list.innerHTML=unique.map(function(c){var cd=allCases.find(function(x){return x.id===c.id;});var roleLabel=c.role==='kyc'?'KYC':'AML';return '<div class="gc p-4"><div class="flex justify-between items-center mb-1"><span style="font-size:.54rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</span><span style="font-size:.62rem;font-weight:700;color:'+(c.correct?'#00e68a':'#ff4d6a')+'">'+(c.correct?'✓':'✗')+' '+c.decision.toUpperCase()+'</span></div><div style="font-weight:700;color:#fff;font-size:.86rem;margin-bottom:.15rem">'+(cd?cd.name:c.id)+'</div><div class="flex justify-between items-center"><span style="font-size:.6rem;padding:2px 8px;border-radius:4px;font-weight:700;background:rgba('+(c.role==='kyc'?'56,189,248':'255,77,106')+',.1);color:'+(c.role==='kyc'?'#38bdf8':'#ff4d6a')+'">'+roleLabel+'</span><span style="font-size:.72rem;font-weight:700;color:'+(c.points>=0?'#00e68a':'#ff4d6a')+'">'+(c.points>=0?'+':'')+c.points+' XP</span></div></div>';}).join('');
+  var allCases=AML_CASES.concat(KYC_CASES).concat(EDD_INDIVIDUAL_CASES).concat(EDD_ENTITY_CASES);
+  list.innerHTML=unique.map(function(c){var cd=allCases.find(function(x){return x.id===c.id;});var roleLabel={aml:'AML',kyc:'KYC',eddi:'EDD-I',edde:'EDD-E'}[c.role]||c.role;var roleCol={aml:'255,77,106',kyc:'56,189,248',eddi:'167,139,250',edde:'255,184,51'}[c.role]||'0,230,138';return '<div class="gc p-4"><div class="flex justify-between items-center mb-1"><span style="font-size:.54rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</span><span style="font-size:.62rem;font-weight:700;color:'+(c.correct?'#00e68a':'#ff4d6a')+'">'+(c.correct?'✓':'✗')+' '+c.decision.toUpperCase()+'</span></div><div style="font-weight:700;color:#fff;font-size:.86rem;margin-bottom:.15rem">'+(cd?cd.name:c.id)+'</div><div class="flex justify-between items-center"><span style="font-size:.6rem;padding:2px 8px;border-radius:4px;font-weight:700;background:rgba('+roleCol+',.1);color:rgba('+roleCol+',1)">'+roleLabel+'</span><span style="font-size:.72rem;font-weight:700;color:'+(c.points>=0?'#00e68a':'#ff4d6a')+'">'+(c.points>=0?'+':'')+c.points+' XP</span></div></div>';}).join('');
 }
 
 // ═══ PROFILE ═══
