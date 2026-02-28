@@ -35,7 +35,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 
 /* ── Nav ── */
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(6,14,26,.94);border-top:1px solid rgba(74,106,138,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:60px}
+.bnav-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:68px}
 .bnav-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:600;cursor:pointer;transition:.15s;position:relative}
 .bnav-b.act{color:#00e68a}.bnav-b.act::before{content:'';position:absolute;top:3px;width:4px;height:4px;background:#00e68a;border-radius:50%}
 .bnav-ico{font-size:1.56rem;line-height:1}
@@ -75,8 +75,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .net-label{font-family:'DM Sans',sans-serif;font-size:11px;fill:#c8daf0;pointer-events:none;text-anchor:middle;font-weight:600}
 .net-edge{stroke:rgba(74,106,138,.3);stroke-width:2}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2.5}
 .net-elabel{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ffb833;pointer-events:none;text-anchor:middle;font-weight:600}
-.net-tip{position:absolute;background:rgba(6,14,26,.97);border:1px solid rgba(74,106,138,.3);border-radius:12px;padding:14px 16px;font-size:.74rem;color:#c8daf0;pointer-events:auto;z-index:60;max-width:290px;max-height:360px;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.6);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.45}
+.net-tip{position:absolute;background:rgba(6,14,26,.97);border:1px solid rgba(74,106,138,.3);border-radius:12px;padding:0;font-size:.74rem;color:#c8daf0;pointer-events:auto;z-index:60;width:260px;max-height:360px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6);opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;line-height:1.45}
 .net-tip.show{opacity:1;transform:translateY(0)}
+.tip-drag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;cursor:grab;user-select:none;-webkit-user-select:none;border-bottom:1px solid rgba(74,106,138,.12);background:rgba(11,26,46,.6)}
+.tip-drag:active{cursor:grabbing}
+.tip-body{padding:10px 14px 14px;max-height:290px;overflow-y:auto}
 
 /* ── Doc card ── */
 .doc-card{padding:10px 12px;border-radius:10px;font-size:.72rem;line-height:1.4;border:1px solid rgba(74,106,138,.1);background:rgba(22,42,74,.35);display:flex;gap:8px;align-items:flex-start}
@@ -561,11 +564,13 @@ function showNodePanel(tipId,nodeId,mode){
     if(n.type==='unknown'&&(fl.indexOf('undisclosed')!==-1||fl.indexOf('settlor')!==-1||fl.indexOf('unknown')!==-1))return true;
     return false;
   });
-  var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
-    +'<div><strong style="color:#fff;font-size:.82rem">'+n.label+'</strong>'+riskBadge+'</div>'
-    +'<button onclick="document.getElementById(\''+tipId+'\').classList.remove(\'show\')" style="background:0;border:0;color:#4a6a8a;font-size:1rem;cursor:pointer;padding:0 2px;line-height:1">✕</button></div>'
-    +juris
-    +'<div style="margin-top:6px;font-size:.72rem;line-height:1.5;color:#8ba4c0">'+n.info+'</div>';
+  // Build drag header + body
+  var html='<div class="tip-drag" id="'+tipId+'-drag">'
+    +'<div style="display:flex;align-items:center;gap:6px"><span style="color:#4a6a8a;font-size:.6rem;letter-spacing:1px">⠿</span><strong style="color:#fff;font-size:.78rem">'+n.label+'</strong>'+riskBadge+'</div>'
+    +'<button onclick="document.getElementById(\''+tipId+'\').classList.remove(\'show\')" style="background:0;border:0;color:#4a6a8a;font-size:1rem;cursor:pointer;padding:0 2px;line-height:1">✕</button></div>';
+  html+='<div class="tip-body">';
+  html+=juris;
+  html+='<div style="font-size:.72rem;line-height:1.5;color:#8ba4c0">'+n.info+'</div>';
   if(relevantFlags.length){
     html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(74,106,138,.15)">'
       +'<div style="font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:6px">🚩 Related Red Flags</div>';
@@ -578,13 +583,50 @@ function showNodePanel(tipId,nodeId,mode){
   } else if(n.risk==='low'){
     html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(74,106,138,.15);font-size:.68rem;color:#00e68a">✅ No red flags associated with this entity.</div>';
   }
+  html+='</div>';
   tip.innerHTML=html;tip.classList.add('show');
   clearTimeout(tip._t);
-  var rect=tip.parentElement.getBoundingClientRect();
-  var vw=parseFloat(tip.parentElement.querySelector('svg').getAttribute('viewBox').split(' ')[2]);
-  var sc=rect.width/vw;
-  tip.style.left=Math.min(Math.max(n.x*sc+20,5),rect.width-280)+'px';
-  tip.style.top=Math.max(n.y*sc-40,5)+'px';
+  // Position: upper right of graph container
+  var container=tip.parentElement;
+  var cw=container.offsetWidth;
+  tip.style.right='8px';tip.style.left='auto';tip.style.top='8px';
+  // Init drag on header
+  initTipDrag(tip,tipId+'-drag');
+}
+
+function initTipDrag(tip,dragId){
+  if(tip._tipClean)tip._tipClean();
+  var drag=document.getElementById(dragId);if(!drag)return;
+  var dragging=false,ox=0,oy=0,startL=0,startT=0;
+  function onDown(e){
+    e.preventDefault();var ev=e.touches?e.touches[0]:e;
+    var rect=tip.getBoundingClientRect();
+    startL=rect.left-tip.parentElement.getBoundingClientRect().left;
+    startT=rect.top-tip.parentElement.getBoundingClientRect().top;
+    ox=ev.clientX;oy=ev.clientY;dragging=true;drag.style.cursor='grabbing';
+    // Switch from right to left positioning for drag
+    tip.style.left=startL+'px';tip.style.right='auto';
+  }
+  function onMove(e){
+    if(!dragging)return;e.preventDefault();var ev=e.touches?e.touches[0]:e;
+    var dx=ev.clientX-ox,dy=ev.clientY-oy;
+    tip.style.left=(startL+dx)+'px';tip.style.top=(startT+dy)+'px';
+  }
+  function onUp(){if(!dragging)return;dragging=false;drag.style.cursor='grab';}
+  drag.addEventListener('mousedown',onDown);
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+  drag.addEventListener('touchstart',onDown,{passive:false});
+  document.addEventListener('touchmove',onMove,{passive:false});
+  document.addEventListener('touchend',onUp);
+  tip._tipClean=function(){
+    drag.removeEventListener('mousedown',onDown);
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+    drag.removeEventListener('touchstart',onDown);
+    document.removeEventListener('touchmove',onMove);
+    document.removeEventListener('touchend',onUp);
+  };
 }
 
 function saveNotes(){if(state.currentCase===null)return;var c=getCases()[state.currentCase];var noteEl=state.currentRole==='kyc'?document.getElementById('kyc-notes'):document.getElementById('aml-notes');state.notes[c.id]=noteEl.value;saveState();}
