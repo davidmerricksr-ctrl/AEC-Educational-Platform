@@ -1,0 +1,192 @@
+// ═══════════════════════════════════════════════════════════════
+// KYC ANALYST CASES — Customer Due Diligence Investigation
+// All names are fictional and designed to be clearly non-real.
+// Each case centres on a beneficial ownership hierarchy graph.
+// To add a case: push a new object following the same structure.
+// ═══════════════════════════════════════════════════════════════
+
+const KYC_CASES = [
+  // ── CASE 1: Complex Corporate Structure — Hidden PEP ──
+  {
+    id: "KYC-2026-0831",
+    name: "Meridium Capital Partners LLP",
+    teaser: "Corporate account application — multi-layered ownership across 4 jurisdictions",
+    entityType: "Limited Liability Partnership",
+    riskLevel: "high",
+    riskLabel: "High",
+    correct: "edd",
+    application: {
+      type: "Corporate Current Account",
+      purpose: "International trade finance and advisory fees",
+      expectedVolume: "$3–5M monthly",
+      jurisdiction: "United Kingdom",
+      incorporationDate: "2024-06-14",
+      registeredAgent: "Glennfield Corporate Services Ltd",
+    },
+    documents: [
+      { name:"Certificate of Incorporation (UK)", status:"provided", flag:false, note:"LLP registered at Companies House. Incorporation date matches." },
+      { name:"Partnership Agreement", status:"provided", flag:true, note:"Lists only nominee partners — no natural persons as designated members." },
+      { name:"Proof of Registered Address", status:"provided", flag:true, note:"Virtual office address. Shared with 40+ other entities at same building." },
+      { name:"Astralis Group Ltd — Certificate (BVI)", status:"provided", flag:true, note:"BVI entity holds 60% of Meridium. BVI register does not disclose beneficial owners." },
+      { name:"Fennwick Advisory AG — Commercial Extract (CH)", status:"provided", flag:false, note:"Swiss entity holds 40%. Registered in Zug. Director: Linnea Solvander." },
+      { name:"Source of Funds Declaration", status:"missing", flag:true, note:"Not provided. Requested twice — applicant cited 'commercial sensitivity.'" },
+      { name:"Caelum Trust — Trust Deed (Cayman)", status:"missing", flag:true, note:"Caelum Trust owns 100% of Astralis Group. Trust deed not provided despite requests." },
+      { name:"UBO Declaration Form", status:"incomplete", flag:true, note:"Form lists Linnea Solvander (40% via Fennwick) but leaves the 60% via Astralis/Caelum blank." },
+    ],
+    screening: [
+      { type:"Sanctions", result:"No direct match", flag:false },
+      { type:"PEP", result:"Possible match — Jorvyn Drask (see ownership note)", flag:true },
+      { type:"Adverse Media", result:"Astralis Group linked to offshore tax investigation (2023)", flag:true },
+      { type:"Jurisdiction Risk", result:"BVI (high) + Cayman (high) + Switzerland (medium)", flag:true },
+    ],
+    // Beneficial ownership hierarchy for the interactive graph
+    hierarchy: {
+      nodes: [
+        { id:"meridium", label:"Meridium Capital Partners LLP", type:"company", jurisdiction:"UK 🇬🇧", risk:"medium", x:200, y:30,
+          info:"The applicant entity. LLP registered in UK. Virtual office. Expected $3–5M/month turnover. Only nominee partners listed." },
+        { id:"astralis", label:"Astralis Group Ltd", type:"company", jurisdiction:"BVI 🇻🇬", risk:"high", ownership:"60%", parent:"meridium", x:100, y:115,
+          info:"BVI registered company holding 60% of Meridium. No public beneficial ownership disclosure. Linked to offshore tax investigation (2023)." },
+        { id:"fennwick", label:"Fennwick Advisory AG", type:"company", jurisdiction:"Switzerland 🇨🇭", risk:"medium", ownership:"40%", parent:"meridium", x:300, y:115,
+          info:"Swiss advisory firm in Zug. Holds 40% of Meridium. Director: Linnea Solvander. Legitimate corporate registration." },
+        { id:"caelum", label:"Caelum Trust", type:"trust", jurisdiction:"Cayman 🇰🇾", risk:"high", ownership:"100%", parent:"astralis", x:55, y:200,
+          info:"Cayman Islands discretionary trust. Owns 100% of Astralis Group. Trust deed NOT provided. Beneficiaries and settlor undisclosed." },
+        { id:"solvander", label:"Linnea Solvander", type:"person", jurisdiction:"Sweden 🇸🇪", risk:"low", ownership:"70%", parent:"fennwick", x:260, y:200,
+          info:"Swedish national. Director and 70% shareholder of Fennwick Advisory. Clean screening. Tax resident in Switzerland. Cooperating with requests." },
+        { id:"nominee_f", label:"Glennfield Nominees Ltd", type:"nominee", jurisdiction:"UK 🇬🇧", risk:"medium", ownership:"30%", parent:"fennwick", x:345, y:200,
+          info:"Nominee shareholder holding 30% of Fennwick on behalf of undisclosed client(s). Same registered agent as Meridium." },
+        { id:"drask", label:"Jorvyn Drask", type:"person", jurisdiction:"Latvia 🇱🇻", risk:"critical", ownership:"Beneficiary", parent:"caelum", x:55, y:280,
+          info:"⚠️ PEP MATCH: Former Deputy Minister of Economy, Latvia (2018–2022). Subject of parliamentary inquiry into procurement irregularities. Identified as discretionary beneficiary of Caelum Trust via leaked correspondence." },
+        { id:"unknown", label:"[Undisclosed]", type:"unknown", jurisdiction:"Unknown", risk:"critical", ownership:"Settlor", parent:"caelum", x:150, y:280,
+          info:"⚠️ The settlor of Caelum Trust has not been disclosed. Trust deed has not been provided despite repeated requests. This is a critical CDD gap." },
+      ],
+      edges: [
+        { from:"meridium", to:"astralis", label:"60%" },
+        { from:"meridium", to:"fennwick", label:"40%" },
+        { from:"astralis", to:"caelum", label:"100%" },
+        { from:"fennwick", to:"solvander", label:"70%" },
+        { from:"fennwick", to:"nominee_f", label:"30%" },
+        { from:"caelum", to:"drask", label:"Beneficiary" },
+        { from:"caelum", to:"unknown", label:"Settlor" },
+      ]
+    },
+    flags: [
+      "60% ownership traced through BVI → Cayman trust chain — beneficial owner not fully identified. Critical CDD gap.",
+      "Jorvyn Drask identified as trust beneficiary — PEP (former Deputy Minister of Economy, Latvia). Not declared on UBO form.",
+      "Trust deed for Caelum Trust not provided despite repeated requests. Settlor identity unknown.",
+      "Source of funds declaration missing — applicant cited 'commercial sensitivity' twice.",
+      "Virtual office address shared with 40+ other entities. Nominee partners only — no natural persons as designated members.",
+      "Astralis Group linked to offshore tax investigation (2023) — adverse media hit.",
+    ],
+    feedback: {
+      edd: {
+        grade:"excellent", title:"Excellent Decision!", points:150,
+        explain:"Requesting Enhanced Due Diligence is exactly right. You cannot onboard this client without resolving the <strong>critical CDD gaps</strong>: the hidden PEP (Jorvyn Drask) behind the Caelum Trust, the missing trust deed, the undisclosed settlor, and the absent source of funds declaration. EDD must include full UBO identification through the BVI/Cayman chain, PEP-specific risk assessment, and independent verification of the trust structure.",
+        coach:"🎓 <strong>AI Coach:</strong> When ownership chains pass through opacity jurisdictions (BVI, Cayman) and terminate in trusts with undisclosed beneficiaries, you must resolve every link before onboarding. The CDD Rule (31 CFR 1010.230) requires identification and verification of all beneficial owners holding 25%+ ownership.",
+      },
+      approve: {
+        grade:"bad", title:"Critical CDD Failure", points:-40,
+        explain:"Approving this application would be a <strong>serious regulatory violation</strong>. You have not identified the beneficial owner of 60% of the entity. A PEP is hidden behind a trust structure, the trust deed hasn't been provided, and source of funds is missing. Under BSA/CDD Rule requirements, you cannot establish a business relationship without adequate customer identification.",
+        coach:"🎓 <strong>AI Coach:</strong> Never onboard when the UBO chain is incomplete. 60% ownership is unresolved — that's not a minor gap, it's a fundamental failure of customer identification.",
+      },
+      reject: {
+        grade:"partial", title:"Defensible, But EDD First", points:70,
+        explain:"Rejection is defensible given the red flags, but best practice is to give the applicant the opportunity to provide the missing information through an <strong>EDD process</strong> first. If they refuse to provide the trust deed and UBO information, then rejection is the appropriate outcome. Rejecting without requesting resolution may expose the bank to complaints.",
+        coach:"🎓 <strong>AI Coach:</strong> The risk-based approach means applying proportionate measures. EDD gives the client a chance to resolve concerns — if they can't or won't, then you reject with a clear audit trail.",
+      },
+      escalate: {
+        grade:"partial", title:"Good, But You Should Lead", points:60,
+        explain:"Escalating PEP-related cases is appropriate, but you should escalate <strong>with a recommendation</strong>. The correct recommendation here is EDD: demand the trust deed, identify the settlor, conduct PEP-specific due diligence on Jorvyn Drask, and require source of funds documentation.",
+        coach:"🎓 <strong>AI Coach:</strong> Escalation without a recommendation shifts the decision rather than demonstrating analytical judgement. Always escalate with a clear assessment and proposed action.",
+      }
+    }
+  },
+
+  // ── CASE 2: Individual CDD — Inconsistent Documentation ──
+  {
+    id: "KYC-2026-0847",
+    name: "Thalric Brennovan",
+    teaser: "Premier account application — documentation inconsistencies and adverse media",
+    entityType: "Individual",
+    riskLevel: "critical",
+    riskLabel: "Critical",
+    correct: "reject",
+    application: {
+      type: "Premier Current Account",
+      purpose: "Personal banking and investment income",
+      expectedVolume: "$200K–400K monthly",
+      jurisdiction: "United States",
+      dateOfBirth: "1978-03-22",
+      nationality: "Irish / Cypriot (dual)",
+    },
+    documents: [
+      { name:"Passport (Ireland)", status:"provided", flag:false, note:"Valid Irish passport. Photo and details match application." },
+      { name:"Passport (Cyprus)", status:"provided", flag:true, note:"Cypriot passport obtained through now-suspended 'golden visa' investment scheme (2019)." },
+      { name:"Proof of Address — Utility Bill", status:"provided", flag:true, note:"Address: Limassol, Cyprus. But application states US residency. Inconsistent." },
+      { name:"Source of Wealth Declaration", status:"provided", flag:true, note:"Claims wealth from 'technology company exits.' No company names, dates, or verifiable detail provided." },
+      { name:"Bank Reference Letter", status:"provided", flag:true, note:"Reference from Karvonis Bank, Cyprus — a small institution with no correspondent relationships and limited AML controls." },
+      { name:"Tax Residency Certificate", status:"missing", flag:true, note:"Not provided. Claims US tax residency but provides Cyprus address. No US tax documentation." },
+      { name:"Employment/Income Verification", status:"missing", flag:true, note:"No employment verification. Self-declared 'independent investor' with no supporting documentation." },
+    ],
+    screening: [
+      { type:"Sanctions", result:"No direct match", flag:false },
+      { type:"PEP", result:"No match", flag:false },
+      { type:"Adverse Media", result:"Named in Cypriot regulatory investigation into property fraud ring (2024)", flag:true },
+      { type:"Close Associates", result:"Known associate of Halvek Mordonis — sanctioned by OFAC (2025) for sanctions evasion", flag:true },
+    ],
+    hierarchy: {
+      nodes: [
+        { id:"brennovan", label:"Thalric Brennovan", type:"person", jurisdiction:"Ireland 🇮🇪 / Cyprus 🇨🇾", risk:"critical", x:200, y:30,
+          info:"Applicant. Dual Irish-Cypriot national. Claims US residency but provides Cyprus address. Self-declared 'independent investor' — no verifiable employment history." },
+        { id:"novaquest", label:"Novaquest Ventures Ltd", type:"company", jurisdiction:"Cyprus 🇨🇾", risk:"high", ownership:"100% Owner", parent:"brennovan", x:80, y:130,
+          info:"Cyprus-registered investment company. Brennovan is sole director and shareholder. Company registered 2019 — same year as golden visa passport. No audited accounts filed." },
+        { id:"brevmark", label:"Brevmark Holdings Ltd", type:"company", jurisdiction:"BVI 🇻🇬", risk:"high", ownership:"100% Owner", parent:"brennovan", x:320, y:130,
+          info:"BVI entity. Brennovan listed as sole director. No public filings available. Registered agent: offshore service provider with no physical office." },
+        { id:"mordonis", label:"Halvek Mordonis", type:"person", jurisdiction:"Cyprus 🇨🇾", risk:"critical", ownership:"Associate", parent:"brennovan", x:80, y:230,
+          info:"⚠️ SANCTIONED by OFAC (2025) for facilitating sanctions evasion through Cypriot shell companies. Known close associate of Brennovan — co-director of Novaquest until 2024." },
+        { id:"karvonis", label:"Karvonis Bank", type:"bank", jurisdiction:"Cyprus 🇨🇾", risk:"high", ownership:"Banking Rel.", parent:"brennovan", x:320, y:230,
+          info:"Small Cypriot bank that provided reference letter. No major correspondent relationships. Subject of ECB supervisory concerns regarding AML controls (2023)." },
+        { id:"property", label:"[Property Fraud Ring]", type:"unknown", jurisdiction:"Cyprus 🇨🇾", risk:"critical", x:200, y:310,
+          info:"⚠️ Cypriot regulatory investigation (2024) into property fraud scheme involving inflated valuations and money laundering. Brennovan named as a person of interest." },
+      ],
+      edges: [
+        { from:"brennovan", to:"novaquest", label:"100% Owner" },
+        { from:"brennovan", to:"brevmark", label:"100% Owner" },
+        { from:"brennovan", to:"mordonis", label:"Associate" },
+        { from:"brennovan", to:"karvonis", label:"Reference" },
+        { from:"novaquest", to:"mordonis", label:"Former Co-Director" },
+        { from:"mordonis", to:"property", label:"Subject" },
+        { from:"brennovan", to:"property", label:"Person of Interest" },
+      ]
+    },
+    flags: [
+      "Close associate of OFAC-sanctioned individual (Halvek Mordonis) — co-directed Novaquest Ventures until 2024.",
+      "Named as person of interest in Cypriot property fraud investigation (2024).",
+      "Cypriot 'golden visa' passport obtained through suspended investment scheme.",
+      "Address inconsistency — claims US residency but provides Cyprus utility bill. No US tax documentation.",
+      "Source of wealth unverifiable — vague claims of 'technology exits' with no company names or dates.",
+      "Bank reference from Karvonis Bank — institution with ECB supervisory concerns over AML controls.",
+    ],
+    feedback: {
+      reject: {
+        grade:"excellent", title:"Excellent Decision!", points:150,
+        explain:"Rejection is the correct call. The combination of an <strong>OFAC-sanctioned close associate</strong>, active regulatory investigation, unverifiable source of wealth, address inconsistencies, and a golden visa passport obtained through a suspended scheme creates unacceptable risk. No amount of EDD can resolve the sanctions proximity and active fraud investigation concerns. Onboarding would expose the institution to significant regulatory and reputational risk.",
+        coach:"🎓 <strong>AI Coach:</strong> When a prospective customer is a known associate of a sanctioned person AND is named in an active fraud investigation, that's a clear rejection. Sanctions proximity risk cannot be 'managed' through EDD alone.",
+      },
+      approve: {
+        grade:"bad", title:"Critical CDD Failure", points:-40,
+        explain:"Approving this application would be <strong>extremely high-risk</strong>. The applicant is a known associate of an OFAC-sanctioned individual, is named in an active fraud investigation, has unverifiable source of wealth, and presents multiple documentation inconsistencies. This could constitute facilitating sanctions evasion.",
+        coach:"🎓 <strong>AI Coach:</strong> Sanctions proximity is one of the most serious risk factors in CDD. A close associate of a sanctioned person must be treated with extreme caution — approval here could make your institution complicit.",
+      },
+      edd: {
+        grade:"partial", title:"Good Caution, But This Is Beyond EDD", points:60,
+        explain:"EDD is normally the right response to elevated risk, but this case goes beyond what EDD can resolve. The <strong>sanctions proximity</strong> (close associate of OFAC-designated Halvek Mordonis) and the <strong>active fraud investigation</strong> represent risks that persist regardless of additional documentation. The risk-based approach supports rejection.",
+        coach:"🎓 <strong>AI Coach:</strong> Not every high-risk case is an EDD case. When the risk factors include sanctions proximity and active criminal investigations, rejection may be the only defensible option.",
+      },
+      escalate: {
+        grade:"partial", title:"Understandable, But Be Decisive", points:50,
+        explain:"Escalating a case with sanctions proximity is reasonable, but the evidence here supports a clear recommendation to <strong>reject</strong>. Active OFAC sanctions association, fraud investigation involvement, and multiple CDD failures make this a straightforward decline.",
+        coach:"🎓 <strong>AI Coach:</strong> Escalate with conviction. When you see sanctions proximity, adverse media, and documentation failures all in one case, your recommendation should be clear: reject.",
+      }
+    }
+  }
+];
