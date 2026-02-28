@@ -181,7 +181,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
           </div>
         </div>
         <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review transaction alerts, trace fund flows, and identify money laundering patterns. Decide whether to file a SAR, clear the alert, or escalate.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">2 cases • Transaction monitoring • Network analysis</div>
+        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">7 cases • Transaction monitoring • Network analysis</div>
       </div>
       <div class="role-card gc" onclick="startShift('kyc')" id="role-kyc">
         <div class="flex items-center gap-3 mb-2">
@@ -667,6 +667,11 @@ function checkBadges(c,action){
   function has(n){return state.badges.some(function(b){return b.name===n;});}
   if(c.id==='AML-2026-0447'&&action==='sar'&&!has('Structuring Spotter'))state.badges.push({icon:'🔍',name:'Structuring Spotter',shift:true});
   if(c.id==='AML-2026-0512'&&action==='sar'&&!has('PEP Watchdog'))state.badges.push({icon:'🐕',name:'PEP Watchdog',shift:true});
+  if(c.id==='AML-2026-0583'&&action==='sar'&&!has('TBML Tracker'))state.badges.push({icon:'📦',name:'TBML Tracker',shift:true});
+  if(c.id==='AML-2026-0614'&&action==='sar'&&!has('Mule Hunter'))state.badges.push({icon:'🕸️',name:'Mule Hunter',shift:true});
+  if(c.id==='AML-2026-0651'&&action==='sar'&&!has('Chain Analyst'))state.badges.push({icon:'⛓️',name:'Chain Analyst',shift:true});
+  if(c.id==='AML-2026-0687'&&action==='sar'&&!has('Loop Breaker'))state.badges.push({icon:'🔄',name:'Loop Breaker',shift:true});
+  if(c.id==='AML-2026-0723'&&action==='clear'&&!has('Clear Thinker'))state.badges.push({icon:'✅',name:'Clear Thinker',shift:true});
   if(c.id==='KYC-2026-0831'&&action==='edd'&&!has('UBO Detective'))state.badges.push({icon:'🏛️',name:'UBO Detective',shift:true});
   if(c.id==='KYC-2026-0847'&&action==='reject'&&!has('Gatekeeper'))state.badges.push({icon:'🚫',name:'Gatekeeper',shift:true});
   if(c.id==='KYC-2026-0903'&&action==='edd'&&!has('NPO Watchdog'))state.badges.push({icon:'🏥',name:'NPO Watchdog',shift:true});
