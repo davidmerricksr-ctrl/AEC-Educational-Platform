@@ -43,7 +43,7 @@ const AML_CASES = [
         { id:4, label:"Palmspur Imports", type:"company", x:312, y:268, info:"Panama-registered import company. No verifiable business records found." },
         { id:5, label:"Panama 🇵🇦", type:"jurisdiction", x:200, y:320, info:"FATF increased-monitoring list. Known deficiencies in AML transparency." },
       ],
-      edges: [[0,1],[0,2],[0,3],[0,4],[3,4],[4,5]],
+      edges: [[0,1,"$69K"],[0,2,"$69K"],[0,3,"$14.2K"],[0,4,"$8.5K"],[3,4,""],[4,5,""]],
       hotEdges: [[0,1],[0,2],[4,5]]
     },
     flags: [
@@ -114,8 +114,8 @@ const AML_CASES = [
         { id:5, label:"UAE 🇦🇪", type:"jurisdiction", x:141, y:324, info:"Over $1.5M in outgoing wires. Opaque corporate ownership structures." },
         { id:6, label:"Cyprus 🇨🇾", type:"jurisdiction", x:271, y:324, info:"EU member, previously grey-listed. Popular for Russian capital flows." },
       ],
-      edges: [[0,1],[0,2],[0,3],[0,4],[1,5],[2,6],[3,2]],
-      hotEdges: [[0,1],[0,4],[1,5]]
+      edges: [[0,1,"$1.54M"],[0,2,"$320K"],[0,3,"$275K"],[4,0,"$250K"],[1,5,""],[2,6,""],[3,2,""]],
+      hotEdges: [[0,1],[4,0],[1,5]]
     },
     flags: [
       "Senior Foreign PEP — former advisor to Ministry of Energy. Automatic Enhanced Due Diligence required.",
@@ -184,8 +184,8 @@ const AML_CASES = [
         { id:4, label:"UAE 🇦🇪", type:"jurisdiction", x:88, y:320, info:"Free Zone companies enjoy minimal oversight. Popular vehicle for TBML." },
         { id:5, label:"Lebanon 🇱🇧", type:"jurisdiction", x:312, y:320, info:"FATF grey-listed. Banking system under severe strain. High ML/TF risk." },
       ],
-      edges: [[0,1],[0,2],[0,3],[1,2],[1,3],[2,4],[3,5]],
-      hotEdges: [[0,2],[0,3],[3,5]]
+      edges: [[0,1,""],[1,2,"$2.03M"],[1,3,"$1.69M"],[0,2,""],[0,3,""],[2,4,""],[3,5,""]],
+      hotEdges: [[1,2],[1,3],[3,5]]
     },
     flags: [
       "Copper invoiced at $18,400/ton — market rate is ~$4,200/ton. Invoice inflation of ~340%, classic TBML indicator.",
@@ -256,7 +256,7 @@ const AML_CASES = [
         { id:4, label:"Mexico 🇲🇽", type:"jurisdiction", x:88, y:320, info:"High-risk corridor for money mule networks and narcotics-linked flows." },
         { id:5, label:"Colombia 🇨🇴", type:"jurisdiction", x:312, y:320, info:"FATF monitored. Narcotics trafficking and trade-based ML risks." },
       ],
-      edges: [[1,0],[0,2],[0,3],[2,4],[3,5]],
+      edges: [[1,0,"$87K"],[0,2,"$32K"],[0,3,"$18K"],[2,4,""],[3,5,""]],
       hotEdges: [[1,0],[0,2],[0,3]]
     },
     flags: [
@@ -327,7 +327,7 @@ const AML_CASES = [
         { id:4, label:"Pellaren Capital", type:"company", x:328, y:260, info:"Delaware LLC. $275K wire. Registered agent only. No employees or website." },
         { id:5, label:"Vossenthal Immob.", type:"company", x:200, y:320, info:"German property firm. $180K — appears to be real estate purchase. Potential integration stage." },
       ],
-      edges: [[1,0],[0,2],[0,3],[0,4],[0,5],[3,4]],
+      edges: [[1,0,"$1.28M"],[0,2,"$185K"],[0,3,"$220K"],[0,4,"$275K"],[0,5,"$180K"],[3,4,""]],
       hotEdges: [[1,0],[0,3],[0,5]]
     },
     flags: [
@@ -396,8 +396,8 @@ const AML_CASES = [
         { id:3, label:"Personal Account", type:"bank", x:200, y:260, info:"Large cash deposits: $360K in December alone. Source claimed as 'private vehicle sales' — no invoices." },
         { id:4, label:"Panama 🇵🇦", type:"jurisdiction", x:328, y:310, info:"FATF grey-listed. Bearer shares recently abolished but corporate opacity persists." },
       ],
-      edges: [[0,1],[0,2],[2,0],[0,3],[2,4],[3,0]],
-      hotEdges: [[0,2],[2,0],[0,3]]
+      edges: [[0,1,""],[0,2,"$920K"],[2,0,"$520K"],[3,0,"$360K"],[2,4,""],[0,3,""]],
+      hotEdges: [[0,2],[2,0],[3,0]]
     },
     flags: [
       "Circular flow: wires out to Calveris Finance SA (Panama), then 'loans' return to Halstren — loan-back scheme.",
@@ -466,7 +466,7 @@ const AML_CASES = [
         { id:3, label:"Dulvare Kitchen", type:"company", x:72, y:260, info:"US kitchen equipment supplier. 3-year relationship. All invoices verified. Licensed contractor." },
         { id:4, label:"Prentova Packaging", type:"company", x:328, y:260, info:"US packaging company. 2-year supplier. Invoices on file and verified. Standard trade terms." },
       ],
-      edges: [[0,1],[1,2],[1,3],[1,4]],
+      edges: [[0,1,""],[1,2,"$79K"],[1,3,"$37K"],[1,4,"$40K"]],
       hotEdges: []
     },
     flags: [],
