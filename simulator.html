@@ -555,7 +555,7 @@ function renderCaseLog(){
   var list=document.getElementById('cases-list'),empty=document.getElementById('cases-empty');
   if(!state.casesCompleted.length){list.innerHTML='';empty.style.display='';return;}empty.style.display='none';
   var seen={},unique=[];state.casesCompleted.slice().reverse().forEach(function(c){if(!seen[c.id]){seen[c.id]=true;unique.push(c);}});
-  var allCases=AML_CASES.concat(KYC_CASES);
+  var allCases=AML_CASES.concat(kyc_cases);
   list.innerHTML=unique.map(function(c){var cd=allCases.find(function(x){return x.id===c.id;});var roleLabel=c.role==='kyc'?'KYC':'AML';return '<div class="gc p-4"><div class="flex justify-between items-center mb-1"><span style="font-size:.54rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</span><span style="font-size:.62rem;font-weight:700;color:'+(c.correct?'#00e68a':'#ff4d6a')+'">'+(c.correct?'✓':'✗')+' '+c.decision.toUpperCase()+'</span></div><div style="font-weight:700;color:#fff;font-size:.86rem;margin-bottom:.15rem">'+(cd?cd.name:c.id)+'</div><div class="flex justify-between items-center"><span style="font-size:.6rem;padding:2px 8px;border-radius:4px;font-weight:700;background:rgba('+(c.role==='kyc'?'56,189,248':'255,77,106')+',.1);color:'+(c.role==='kyc'?'#38bdf8':'#ff4d6a')+'">'+roleLabel+'</span><span style="font-size:.72rem;font-weight:700;color:'+(c.points>=0?'#00e68a':'#ff4d6a')+'">'+(c.points>=0?'+':'')+c.points+' XP</span></div></div>';}).join('');
 }
 
