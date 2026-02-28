@@ -433,13 +433,35 @@ function renderNetworkAML(net){
   var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};
   var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
   svg.innerHTML='';
+  // Arrow markers
+  var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML='<marker id="ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(74,106,138,.5)"/></marker>'
+    +'<marker id="ah-hot" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(255,77,106,.6)"/></marker>';
+  svg.appendChild(defs);
   var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
   net.edges.forEach(function(e){
     var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];
+    // Shorten line so arrow doesn't overlap node
+    var dx=nb.x-na.x,dy=nb.y-na.y,len=Math.sqrt(dx*dx+dy*dy);
+    var ux=dx/len,uy=dy/len,pad=26;
+    var x1=na.x+ux*pad,y1=na.y+uy*pad,x2=nb.x-ux*pad,y2=nb.y-uy*pad;
     var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',na.x);line.setAttribute('y1',na.y);line.setAttribute('x2',nb.x);line.setAttribute('y2',nb.y);
-    line.setAttribute('class','net-edge'+(hot?' hot':''));if(hot)line.setAttribute('stroke-dasharray','6 3');
+    line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+    line.setAttribute('class','net-edge'+(hot?' hot':''));
+    if(hot)line.setAttribute('stroke-dasharray','6 3');
+    line.setAttribute('marker-end','url(#ah'+(hot?'-hot':'')+')');
     line.dataset.from=e[0];line.dataset.to=e[1];edgeG.appendChild(line);
+    // Edge label
+    var label=e[2]||'';
+    if(label){
+      var mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
+      var lg=document.createElementNS('http://www.w3.org/2000/svg','g');
+      lg.dataset.efrom=e[0];lg.dataset.eto=e[1];
+      var tw=label.length*5.5+10;
+      lg.innerHTML='<rect x="'+(mx-tw/2)+'" y="'+(my-8)+'" width="'+tw+'" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>'
+        +'<text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+label+'</text>';
+      edgeG.appendChild(lg);
+    }
   });
   svg.appendChild(edgeG);
   net.nodes.forEach(function(n){
@@ -527,12 +549,23 @@ function initDrag(svg,mode,nodes,edges,tipId){
     svg.querySelectorAll('line[data-from]').forEach(function(ln){
       var fk=ln.dataset.from,tk=ln.dataset.to;
       var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];
-      if(fn&&tn){ln.setAttribute('x1',fn.x);ln.setAttribute('y1',fn.y);ln.setAttribute('x2',tn.x);ln.setAttribute('y2',tn.y);}
+      if(fn&&tn){
+        if(mode==='aml'){
+          var dx=tn.x-fn.x,dy=tn.y-fn.y,len=Math.sqrt(dx*dx+dy*dy)||1;
+          var ux=dx/len,uy=dy/len,pad=26;
+          ln.setAttribute('x1',fn.x+ux*pad);ln.setAttribute('y1',fn.y+uy*pad);
+          ln.setAttribute('x2',tn.x-ux*pad);ln.setAttribute('y2',tn.y-uy*pad);
+        } else {
+          ln.setAttribute('x1',fn.x);ln.setAttribute('y1',fn.y);ln.setAttribute('x2',tn.x);ln.setAttribute('y2',tn.y);
+        }
+      }
     });
     svg.querySelectorAll('g[data-efrom]').forEach(function(lg){
-      var fn=nMap[lg.dataset.efrom],tn=nMap[lg.dataset.eto];
+      var fk=lg.dataset.efrom,tk=lg.dataset.eto;
+      var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];
       if(fn&&tn){var mx=(fn.x+tn.x)/2,my=(fn.y+tn.y)/2;var r=lg.querySelector('rect'),t=lg.querySelector('text');
-        if(r){r.setAttribute('x',mx-26);r.setAttribute('y',my-8);}if(t){t.setAttribute('x',mx);t.setAttribute('y',my+4);}}
+        if(r){var hw=+r.getAttribute('width')/2;r.setAttribute('x',mx-hw);r.setAttribute('y',my-8);}
+        if(t){t.setAttribute('x',mx);t.setAttribute('y',my+4);}}
     });
   }
 
