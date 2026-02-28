@@ -71,11 +71,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .overlay-inner{width:100%;max-width:420px;max-height:90vh;overflow-y:auto;animation:sIn .3s cubic-bezier(.22,1,.36,1)}
 
 /* ── Network / Ownership graph ── */
-.net-node{cursor:pointer;transition:filter .2s}.net-node:hover{filter:brightness(1.3)}
+.net-node{cursor:pointer;transition:filter .2s;-webkit-user-select:none;user-select:none}.net-node:hover{filter:brightness(1.3)}
 .net-label{font-family:'DM Sans',sans-serif;font-size:11px;fill:#c8daf0;pointer-events:none;text-anchor:middle;font-weight:600}
 .net-edge{stroke:rgba(74,106,138,.3);stroke-width:2}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2.5}
 .net-elabel{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ffb833;pointer-events:none;text-anchor:middle;font-weight:600}
-.net-tip{position:absolute;background:rgba(6,14,26,.96);border:1px solid rgba(74,106,138,.25);border-radius:10px;padding:12px 16px;font-size:.78rem;color:#c8daf0;pointer-events:none;z-index:60;max-width:260px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.45}
+.net-tip{position:absolute;background:rgba(6,14,26,.97);border:1px solid rgba(74,106,138,.3);border-radius:12px;padding:14px 16px;font-size:.74rem;color:#c8daf0;pointer-events:auto;z-index:60;max-width:290px;max-height:360px;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.6);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.45}
 .net-tip.show{opacity:1;transform:translateY(0)}
 
 /* ── Doc card ── */
@@ -225,6 +225,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Relationship Network</div>
+    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
     <div class="gc p-3 relative" style="min-height:380px">
       <svg id="aml-net" width="100%" height="380" viewBox="0 0 400 340"></svg>
       <div class="net-tip" id="aml-tip"></div>
@@ -264,7 +265,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   <!-- Ownership Graph -->
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.45rem">🏛️ Beneficial Ownership Structure</div>
-    <p style="font-size:.66rem;color:#4a6a8a;margin-bottom:.4rem">Tap any entity to see details. Trace ownership down to the ultimate beneficial owners.</p>
+    <p style="font-size:.66rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
     <div class="gc p-3 relative" style="min-height:460px">
       <svg id="kyc-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
       <div class="net-tip" id="kyc-tip"></div>
@@ -425,10 +426,29 @@ function openAML(c){
 function renderNetworkAML(net){
   var svg=document.getElementById('aml-net'),tip=document.getElementById('aml-tip');tip.classList.remove('show');
   var hotSet={};net.hotEdges.forEach(function(e){hotSet[e[0]+'-'+e[1]]=true;});
-  var h='';var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
-  net.edges.forEach(function(e){var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];h+='<line x1="'+na.x+'" y1="'+na.y+'" x2="'+nb.x+'" y2="'+nb.y+'" class="net-edge'+(hot?' hot':'')+'" '+(hot?'stroke-dasharray="6 3"':'')+'/>'; });
-  net.nodes.forEach(function(n){var col=colors[n.type]||'#a78bfa';h+='<g class="net-node" onclick="showTip(\'aml-tip\','+n.id+')"><circle cx="'+n.x+'" cy="'+n.y+'" r="24" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/><circle cx="'+n.x+'" cy="'+n.y+'" r="16" fill="'+col+'" fill-opacity=".25"/><text x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:16px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text><text x="'+n.x+'" y="'+(n.y+40)+'" class="net-label">'+n.label+'</text></g>';});
-  svg.innerHTML=h;
+  var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};
+  var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
+  svg.innerHTML='';
+  var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
+  net.edges.forEach(function(e){
+    var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',na.x);line.setAttribute('y1',na.y);line.setAttribute('x2',nb.x);line.setAttribute('y2',nb.y);
+    line.setAttribute('class','net-edge'+(hot?' hot':''));if(hot)line.setAttribute('stroke-dasharray','6 3');
+    line.dataset.from=e[0];line.dataset.to=e[1];edgeG.appendChild(line);
+  });
+  svg.appendChild(edgeG);
+  net.nodes.forEach(function(n){
+    var col=colors[n.type]||'#a78bfa';
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';
+    g.innerHTML='<circle class="nd-bg" cx="'+n.x+'" cy="'+n.y+'" r="24" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>'
+      +'<circle class="nd-fg" cx="'+n.x+'" cy="'+n.y+'" r="16" fill="'+col+'" fill-opacity=".25"/>'
+      +'<text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:16px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text>'
+      +'<text x="'+n.x+'" y="'+(n.y+40)+'" class="net-label nd-lbl">'+n.label+'</text>';
+    svg.appendChild(g);
+  });
+  initDrag(svg,'aml',net.nodes,net.edges,'aml-tip');
 }
 
 // ═══ KYC INVESTIGATION ═══
@@ -437,11 +457,8 @@ function openKYC(c){
   document.getElementById('kyc-pill').innerHTML='<span class="pill pill-'+(c.riskLevel==='critical'?'crit':c.riskLevel)+'">'+c.riskLabel+'</span>';
   var a=c.application;document.getElementById('kyc-app').innerHTML=[['Account Type',a.type],['Purpose',a.purpose],['Expected Volume',a.expectedVolume],['Jurisdiction',a.jurisdiction],['Entity Type / DOB',a.incorporationDate||a.dateOfBirth],['Nationality / Agent',a.registeredAgent||a.nationality]].map(function(r){return '<div style="color:#4a6a8a;font-weight:600">'+r[0]+'</div><div>'+r[1]+'</div>';}).join('');
   renderOwnershipGraph(c.hierarchy);
-  // Documents
   document.getElementById('kyc-docs').innerHTML=c.documents.map(function(d){var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ Incomplete';return '<div class="doc-card'+(d.flag?' flagged':'')+'"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div class="flex-1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.64rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';}).join('');
-  // Screening
   document.getElementById('kyc-scr').innerHTML=c.screening.map(function(s){return '<div class="scr-row'+(s.flag?' flagged':'')+'"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.68rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+'">'+s.result+'</div></div>';}).join('');
-  // Flags
   var flagsEl=document.getElementById('kyc-flags');var flagsHeader=flagsEl.previousElementSibling;
   if(c.flags.length){flagsHeader.style.display='';flagsEl.innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');}
   else{flagsHeader.style.display='none';flagsEl.innerHTML='<div class="gc-s p-3 text-center" style="font-size:.74rem;color:#00e68a">✅ No red flags identified. Standard risk profile.</div>';}
@@ -452,48 +469,121 @@ function openKYC(c){
 // ═══ OWNERSHIP GRAPH ═══
 function renderOwnershipGraph(h){
   var svg=document.getElementById('kyc-net'),tip=document.getElementById('kyc-tip');tip.classList.remove('show');
-  var html='';
   var riskCol={critical:'#ff4d6a',high:'#ffb833',medium:'#38bdf8',low:'#00e68a'};
   var typeIco={company:'🏢',person:'🧑',trust:'🏛️',nominee:'👤',bank:'🏦',unknown:'❓'};
-  // Edges with labels
+  svg.innerHTML='';
+  var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
   h.edges.forEach(function(e){
     var from=h.nodes.find(function(n){return n.id===e.from;}),to=h.nodes.find(function(n){return n.id===e.to;});
     if(!from||!to)return;
     var isHot=to.risk==='critical'||from.risk==='critical';
-    html+='<line x1="'+from.x+'" y1="'+from.y+'" x2="'+to.x+'" y2="'+to.y+'" class="net-edge'+(isHot?' hot':'')+'" '+(isHot?'stroke-dasharray="6 3"':'')+'/>'; 
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',from.x);line.setAttribute('y1',from.y);line.setAttribute('x2',to.x);line.setAttribute('y2',to.y);
+    line.setAttribute('class','net-edge'+(isHot?' hot':''));if(isHot)line.setAttribute('stroke-dasharray','6 3');
+    line.dataset.from=e.from;line.dataset.to=e.to;edgeG.appendChild(line);
     var mx=(from.x+to.x)/2,my=(from.y+to.y)/2;
-    html+='<rect x="'+(mx-26)+'" y="'+(my-8)+'" width="52" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>';
-    html+='<text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+e.label+'</text>';
+    var lg=document.createElementNS('http://www.w3.org/2000/svg','g');lg.dataset.efrom=e.from;lg.dataset.eto=e.to;
+    lg.innerHTML='<rect x="'+(mx-26)+'" y="'+(my-8)+'" width="52" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>'
+      +'<text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+e.label+'</text>';
+    edgeG.appendChild(lg);
   });
-  // Nodes
+  svg.appendChild(edgeG);
   h.nodes.forEach(function(n){
     var col=riskCol[n.risk]||'#8ba4c0';var ico=typeIco[n.type]||'🔷';
-    html+='<g class="net-node" onclick="showTip(\'kyc-tip\',\''+n.id+'\')">';
-    html+='<rect x="'+(n.x-28)+'" y="'+(n.y-20)+'" width="56" height="40" rx="10" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>';
-    html+='<text x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:18px;fill:#fff;pointer-events:none">'+ico+'</text>';
-    html+='<text x="'+n.x+'" y="'+(n.y+36)+'" class="net-label">'+n.label+'</text>';
-    if(n.risk==='critical'){html+='<circle cx="'+(n.x+24)+'" cy="'+(n.y-16)+'" r="5" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>';}
-    html+='</g>';
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';
+    var alert=n.risk==='critical'?'<circle class="nd-alert" cx="'+(n.x+24)+'" cy="'+(n.y-16)+'" r="5" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>':'';
+    g.innerHTML='<rect class="nd-bg" x="'+(n.x-28)+'" y="'+(n.y-20)+'" width="56" height="40" rx="10" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>'
+      +'<text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:18px;fill:#fff;pointer-events:none">'+ico+'</text>'
+      +'<text x="'+n.x+'" y="'+(n.y+36)+'" class="net-label nd-lbl">'+n.label+'</text>'
+      +alert;
+    svg.appendChild(g);
   });
-  svg.innerHTML=html;
+  initDrag(svg,'kyc',h.nodes,h.edges,'kyc-tip');
 }
 
-// ═══ TOOLTIP ═══
-function showTip(tipId,nodeIdOrIdx){
-  var cases=getCases(),c=cases[state.currentCase];var n;
-  if(state.currentRole==='kyc'){n=c.hierarchy.nodes.find(function(nd){return nd.id===nodeIdOrIdx;});}
-  else{n=c.network.nodes[nodeIdOrIdx];}
+// ═══ DRAG SYSTEM ═══
+function initDrag(svg,mode,nodes,edges,tipId){
+  if(svg._dc)svg._dc();
+  var dragging=null,wasDrag=false;
+  var nMap={};nodes.forEach(function(n){nMap[mode==='aml'?n.id:n.id]=n;});
+
+  function pt(e){var p=svg.createSVGPoint();var t=e.touches?e.touches[0]:e;p.x=t.clientX;p.y=t.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+  function findG(el){while(el&&el!==svg){if(el.dataset&&el.dataset.nid!==undefined)return el;el=el.parentNode;}return null;}
+
+  function moveNode(g,n){
+    g.querySelectorAll('circle.nd-bg,circle.nd-fg').forEach(function(c){c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);});
+    var bg=g.querySelector('rect.nd-bg');if(bg){var w=+bg.getAttribute('width'),bh=+bg.getAttribute('height');bg.setAttribute('x',n.x-w/2);bg.setAttribute('y',n.y-bh/2);}
+    var ico=g.querySelector('.nd-ico');if(ico){ico.setAttribute('x',n.x);ico.setAttribute('y',n.y+5);}
+    var lbl=g.querySelector('.nd-lbl');if(lbl){lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+(mode==='kyc'?36:40));}
+    var dot=g.querySelector('.nd-alert');if(dot){dot.setAttribute('cx',n.x+24);dot.setAttribute('cy',n.y-16);}
+  }
+
+  function moveEdges(){
+    svg.querySelectorAll('line[data-from]').forEach(function(ln){
+      var fk=ln.dataset.from,tk=ln.dataset.to;
+      var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];
+      if(fn&&tn){ln.setAttribute('x1',fn.x);ln.setAttribute('y1',fn.y);ln.setAttribute('x2',tn.x);ln.setAttribute('y2',tn.y);}
+    });
+    svg.querySelectorAll('g[data-efrom]').forEach(function(lg){
+      var fn=nMap[lg.dataset.efrom],tn=nMap[lg.dataset.eto];
+      if(fn&&tn){var mx=(fn.x+tn.x)/2,my=(fn.y+tn.y)/2;var r=lg.querySelector('rect'),t=lg.querySelector('text');
+        if(r){r.setAttribute('x',mx-26);r.setAttribute('y',my-8);}if(t){t.setAttribute('x',mx);t.setAttribute('y',my+4);}}
+    });
+  }
+
+  function onDown(e){var g=findG(e.target);if(!g)return;e.preventDefault();var p=pt(e);var nid=mode==='aml'?+g.dataset.nid:g.dataset.nid;dragging={g:g,n:nMap[nid],ox:p.x,oy:p.y};wasDrag=false;g.style.cursor='grabbing';}
+  function onMove(e){if(!dragging)return;e.preventDefault();var p=pt(e);var dx=p.x-dragging.ox,dy=p.y-dragging.oy;if(Math.abs(dx)>2||Math.abs(dy)>2)wasDrag=true;dragging.n.x+=dx;dragging.n.y+=dy;dragging.ox=p.x;dragging.oy=p.y;moveNode(dragging.g,dragging.n);moveEdges();}
+  function onUp(){if(!dragging)return;dragging.g.style.cursor='grab';if(!wasDrag){var nid=mode==='aml'?+dragging.g.dataset.nid:dragging.g.dataset.nid;showNodePanel(tipId,nid,mode);}dragging=null;}
+
+  svg.addEventListener('mousedown',onDown);svg.addEventListener('mousemove',onMove);svg.addEventListener('mouseup',onUp);svg.addEventListener('mouseleave',onUp);
+  svg.addEventListener('touchstart',onDown,{passive:false});svg.addEventListener('touchmove',onMove,{passive:false});svg.addEventListener('touchend',onUp);
+  svg._dc=function(){svg.removeEventListener('mousedown',onDown);svg.removeEventListener('mousemove',onMove);svg.removeEventListener('mouseup',onUp);svg.removeEventListener('mouseleave',onUp);svg.removeEventListener('touchstart',onDown);svg.removeEventListener('touchmove',onMove);svg.removeEventListener('touchend',onUp);};
+}
+
+// ═══ NODE INFO + FLAGS PANEL ═══
+function showNodePanel(tipId,nodeId,mode){
+  var c=getCases()[state.currentCase];var n;
+  if(mode==='kyc'){n=c.hierarchy.nodes.find(function(nd){return nd.id===nodeId;});}
+  else{n=c.network.nodes[nodeId];}
   if(!n)return;
   var tip=document.getElementById(tipId);
-  var riskBadge=n.risk?'<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:.5rem;font-weight:700;text-transform:uppercase;margin-left:4px;background:rgba('+(n.risk==='critical'?'255,77,106':n.risk==='high'?'255,184,51':'56,189,248')+',.15);color:'+(n.risk==='critical'?'#ff4d6a':n.risk==='high'?'#ffb833':'#38bdf8')+'">'+n.risk+'</span>':'';
-  var juris=n.jurisdiction?'<div style="font-size:.6rem;color:#4a6a8a;margin:2px 0">'+n.jurisdiction+'</div>':'';
-  tip.innerHTML='<strong style="color:#fff">'+n.label+'</strong>'+riskBadge+juris+'<div style="margin-top:4px">'+n.info+'</div>';
-  tip.classList.add('show');
-  clearTimeout(tip._t);tip._t=setTimeout(function(){tip.classList.remove('show');},5000);
-  // Position
+  var riskBadge=n.risk?'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:.55rem;font-weight:700;text-transform:uppercase;margin-left:6px;background:rgba('+(n.risk==='critical'?'255,77,106':n.risk==='high'?'255,184,51':n.risk==='medium'?'56,189,248':'0,230,138')+',.15);color:'+(n.risk==='critical'?'#ff4d6a':n.risk==='high'?'#ffb833':n.risk==='medium'?'#38bdf8':'#00e68a')+'">'+n.risk+'</span>':'';
+  var juris=n.jurisdiction?'<div style="font-size:.62rem;color:#4a6a8a;margin:3px 0">'+n.jurisdiction+'</div>':'';
+  // Find flags relevant to this node
+  var flags=c.flags||[];var label=(n.label||'').toLowerCase();
+  var relevantFlags=flags.filter(function(f){
+    var fl=f.toLowerCase();
+    if(label.length>3&&fl.indexOf(label)!==-1)return true;
+    var parts=label.replace(/[\[\]()]/g,'').split(/[\s,\-]+/);
+    for(var i=0;i<parts.length;i++){if(parts[i].length>3&&fl.indexOf(parts[i])!==-1)return true;}
+    if(n.type==='unknown'&&(fl.indexOf('undisclosed')!==-1||fl.indexOf('settlor')!==-1||fl.indexOf('unknown')!==-1))return true;
+    return false;
+  });
+  var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+    +'<div><strong style="color:#fff;font-size:.82rem">'+n.label+'</strong>'+riskBadge+'</div>'
+    +'<button onclick="document.getElementById(\''+tipId+'\').classList.remove(\'show\')" style="background:0;border:0;color:#4a6a8a;font-size:1rem;cursor:pointer;padding:0 2px;line-height:1">✕</button></div>'
+    +juris
+    +'<div style="margin-top:6px;font-size:.72rem;line-height:1.5;color:#8ba4c0">'+n.info+'</div>';
+  if(relevantFlags.length){
+    html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(74,106,138,.15)">'
+      +'<div style="font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:6px">🚩 Related Red Flags</div>';
+    relevantFlags.forEach(function(f){
+      html+='<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px;font-size:.68rem;line-height:1.4;color:#c8daf0">'
+        +'<span style="width:6px;height:6px;border-radius:50%;background:#ff4d6a;flex-shrink:0;margin-top:5px"></span>'
+        +'<span>'+f+'</span></div>';
+    });
+    html+='</div>';
+  } else if(n.risk==='low'){
+    html+='<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(74,106,138,.15);font-size:.68rem;color:#00e68a">✅ No red flags associated with this entity.</div>';
+  }
+  tip.innerHTML=html;tip.classList.add('show');
+  clearTimeout(tip._t);
   var rect=tip.parentElement.getBoundingClientRect();
-  tip.style.left=Math.min(n.x?n.x+15:10,rect.width-230)+'px';
-  tip.style.top=Math.max((n.y||50)-80,5)+'px';
+  var vw=parseFloat(tip.parentElement.querySelector('svg').getAttribute('viewBox').split(' ')[2]);
+  var sc=rect.width/vw;
+  tip.style.left=Math.min(Math.max(n.x*sc+20,5),rect.width-280)+'px';
+  tip.style.top=Math.max(n.y*sc-40,5)+'px';
 }
 
 function saveNotes(){if(state.currentCase===null)return;var c=getCases()[state.currentCase];var noteEl=state.currentRole==='kyc'?document.getElementById('kyc-notes'):document.getElementById('aml-notes');state.notes[c.id]=noteEl.value;saveState();}
