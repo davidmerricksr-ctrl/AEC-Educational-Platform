@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,19 +11,17 @@
 --ink:#0b0f1a;--char:#1a1f2e;--slate:#2d3447;--gun:#3f4862;--ash:#6b7394;--sil:#9ba3bf;
 --fog:#c8cde0;--mist:#e4e7f0;--ice:#f2f3f8;--snow:#fafbfe;
 --crim:#c0392b;--crim2:#e74c3c;--navy:#1a3a5c;--navyd:#0d2137;--teal:#1a6b5a;--teal2:#22917a;
---amber:#c8902e;--amberG:#e8a93a;--parch:#f7f4ee;--cream:#ede9df;
+--amber:#c8902e;--amberG:#e8a93a;
 }
 body{font-family:'Source Sans 3',sans-serif;background:var(--snow);color:var(--ink);line-height:1.68;overflow-x:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--fog);border-radius:3px}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.04)}
 .ni{max-width:1320px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
 .nlogo{font-family:'Playfair Display',serif;color:var(--snow);font-size:1.1rem;text-decoration:none;display:flex;align-items:center;gap:.55rem;cursor:pointer}
 .nlogo .sh{width:26px;height:26px;background:linear-gradient(135deg,var(--crim),var(--amber));border-radius:5px;display:grid;place-items:center;font-size:.75rem;color:#fff;font-weight:700}
 .nlogo i{opacity:.35;font-style:italic;font-size:.72rem;margin-left:.15rem}
 .nlinks{display:flex;list-style:none;gap:.1rem}
-.nlinks a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.76rem;font-weight:500;padding:.38rem .72rem;border-radius:5px;transition:.25s;cursor:pointer}
+.nlinks a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.73rem;font-weight:500;padding:.38rem .65rem;border-radius:5px;transition:.25s;cursor:pointer}
 .nlinks a:hover{color:#fff;background:rgba(255,255,255,.07)}
 .nlinks a.act{color:#fff;background:rgba(255,255,255,.1)}
 .ham{display:none;background:0;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
@@ -33,19 +30,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .mmenu.open{display:block}
 .mmenu a{display:block;color:rgba(255,255,255,.65);text-decoration:none;padding:.65rem 1rem;font-size:.88rem;border-radius:6px;cursor:pointer}
 .mmenu a:hover{background:rgba(255,255,255,.06);color:#fff}
-@media(max-width:860px){.nlinks{display:none}.ham{display:flex}}
-
-/* SPA PAGES */
-.page{display:none;min-height:100vh;padding-top:60px}
-.page.active{display:block;animation:pgIn .35s ease}
+@media(max-width:920px){.nlinks{display:none}.ham{display:flex}}
+.page{display:none;min-height:100vh;padding-top:60px}.page.active{display:block;animation:pgIn .35s ease}
 @keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .pi{max-width:1120px;margin:0 auto;padding:3rem 2rem 5rem}
 .ph{margin-bottom:2.5rem}
 .se{font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--crim);margin-bottom:.55rem}
 .st{font-family:'Playfair Display',serif;font-size:clamp(1.85rem,3.4vw,2.5rem);line-height:1.14;letter-spacing:-.02em;margin-bottom:.7rem}
 .sd{font-size:.97rem;color:var(--ash);max-width:640px}
-
-/* HERO / HOME */
 #home{background:var(--ink);position:relative;overflow:hidden}
 #home::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 28% 42%,rgba(192,57,43,.06),transparent),radial-gradient(ellipse 55% 45% at 72% 58%,rgba(26,58,92,.1),transparent)}
 .hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:56px 56px;opacity:.5}
@@ -53,8 +45,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .hbadge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(200,144,46,.1);border:1px solid rgba(200,144,46,.18);color:var(--amberG);font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.45rem 1.1rem;border-radius:100px;margin-bottom:1.8rem}
 .hbadge .pd{width:6px;height:6px;background:var(--amberG);border-radius:50%;animation:pd 2s infinite}
 @keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
-.hero-top h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5.5vw,4.2rem);line-height:1.08;letter-spacing:-.03em;color:var(--snow);margin-bottom:1.2rem;max-width:800px;margin-left:auto;margin-right:auto}
-.hero-top h1 em{font-style:italic;color:var(--amberG)}
+#home h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5.5vw,4.2rem);line-height:1.08;letter-spacing:-.03em;color:var(--snow);margin-bottom:1.2rem;max-width:800px;margin-left:auto;margin-right:auto}
+#home h1 em{font-style:italic;color:var(--amberG)}
 .hero-top>p{font-size:1.05rem;color:rgba(255,255,255,.45);max-width:560px;margin:0 auto 2rem;font-weight:300}
 .ha{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
 .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.78rem 1.7rem;border-radius:7px;font-size:.86rem;font-weight:600;text-decoration:none;transition:.3s;cursor:pointer;border:none;font-family:inherit}
@@ -62,40 +54,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .bg:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,57,43,.42)}
 .bgh{background:rgba(255,255,255,.06);color:var(--snow);border:1px solid rgba(255,255,255,.1)}
 .bgh:hover{background:rgba(255,255,255,.1)}
-
-/* HOME STATS */
 .home-stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.05);max-width:900px;margin:0 auto;border-radius:14px;overflow:hidden}
-.hs{padding:1.6rem 1rem;text-align:center;background:rgba(255,255,255,.03);backdrop-filter:blur(4px)}
+.hs{padding:1.6rem 1rem;text-align:center;background:rgba(255,255,255,.03)}
 .hs .sv{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);color:var(--amberG);margin-bottom:.2rem}
 .hs .sl{font-size:.7rem;color:rgba(255,255,255,.4);font-weight:500;line-height:1.35}
 @media(max-width:600px){.home-stats{grid-template-columns:repeat(2,1fr)}}
-
-/* HOME CAREER */
 .home-career{position:relative;z-index:2;max-width:800px;margin:0 auto;padding:3.5rem 2rem 2rem;text-align:center}
 .home-career h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.8vw,1.9rem);color:var(--snow);margin-bottom:1rem;line-height:1.2}
 .home-career h2 em{color:var(--amberG);font-style:italic}
 .home-career p{font-size:.92rem;color:rgba(255,255,255,.45);max-width:600px;margin:0 auto .8rem;line-height:1.7}
-.home-career .hc-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1.5rem}
+.hc-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1.5rem}
 .hc-tag{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.35rem .8rem;border-radius:100px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
-
-/* HOME BANNER */
 .eban{position:relative;z-index:2;background:rgba(200,144,46,.08);border-top:1px solid rgba(200,144,46,.12);padding:.6rem 2rem;text-align:center;font-size:.7rem;color:var(--amberG);letter-spacing:.03em;font-weight:500;margin-top:2.5rem}
-
-/* ABOUT */
 .ag{display:grid;grid-template-columns:1.1fr .9fr;gap:3.2rem;align-items:start}
 .at p{color:var(--gun);margin-bottom:1rem;font-size:.93rem}
-.pb{border-radius:13px;padding:1.8rem}
-.pb h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.55rem}
+.pb{border-radius:13px;padding:1.8rem}.pb h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.55rem}
 .pb p{font-size:.85rem;color:var(--slate);margin-bottom:.5rem}
 .pb ul{margin:.4rem 0 0 1.1rem;font-size:.83rem;color:var(--gun)}.pb li{margin-bottom:.25rem}
-.purp{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.12)}
-.purp h3{color:var(--crim)}
+.purp{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.12)}.purp h3{color:var(--crim)}
 .srcb{margin-top:1.3rem;background:rgba(200,144,46,.07);border:1px solid rgba(200,144,46,.14);border-radius:13px;padding:1.4rem}
 .srcb h4{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem}
 .srcb p{font-size:.8rem;color:var(--gun);line-height:1.6}.srcb a{color:var(--navy);text-decoration:underline}
 @media(max-width:768px){.ag{grid-template-columns:1fr}}
-
-/* SKILLS */
 .skg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
 .skc{background:var(--snow);border:1px solid var(--mist);border-radius:12px;padding:1.35rem;cursor:pointer;transition:.3s;position:relative}
 .skc:hover{border-color:var(--amber);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.06)}
@@ -105,10 +85,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .skc .skd{display:none;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--mist);font-size:.84rem;color:var(--gun);line-height:1.7}
 .skc.exp .skd{display:block;animation:fs .35s ease}
 .skc .exh{position:absolute;top:1.1rem;right:1.1rem;font-size:.6rem;color:var(--fog);transition:.3s}
-.skc:hover .exh{color:var(--amber)}
 @keyframes fs{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* TYPOLOGIES */
 .tt{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:2.3rem}
 .ttb{padding:.5rem 1.1rem;border:1px solid var(--mist);border-radius:100px;font-size:.78rem;font-weight:500;color:var(--ash);cursor:pointer;transition:.25s;background:var(--snow);font-family:inherit}
 .ttb:hover{border-color:var(--gun);color:var(--ink)}
@@ -123,30 +100,32 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .rf{margin-top:.4rem;padding-top:.7rem;border-top:1px solid var(--mist)}
 .rf h4{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--crim);margin-bottom:.35rem}
 .rf ul{margin-left:1rem;font-size:.8rem;color:var(--gun)}.rf li{margin-bottom:.15rem}
-
-/* FLOW GRAPH */
-.flow-wrap{margin-top:3rem;background:var(--ink);border-radius:16px;position:relative;overflow:hidden;padding:2.5rem 2rem 0}
-.flow-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(192,57,43,.05),transparent)}
-.flow-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--snow);text-align:center;margin-bottom:.3rem;position:relative;z-index:1}
-.flow-sub{font-size:.8rem;color:rgba(255,255,255,.35);text-align:center;margin-bottom:1.5rem;position:relative;z-index:1}
-.flow-svg-wrap{position:relative;z-index:1;overflow-x:auto;padding-bottom:1rem}
-.flow-svg{display:block;margin:0 auto;min-width:700px}
-.flow-node{cursor:pointer}
-.flow-node rect,.flow-node circle{transition:all .3s}
-.flow-node:hover rect{filter:brightness(1.25)}
-.flow-node text{pointer-events:none}
-.flow-arrow{opacity:.5}
-.flow-arrow-anim{stroke-dasharray:6 4;animation:dashMove 1.2s linear infinite}
-@keyframes dashMove{to{stroke-dashoffset:-20}}
-.flow-detail{position:relative;z-index:2;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.06);padding:1.6rem 2rem;min-height:100px;margin-top:.5rem;border-radius:0 0 16px 16px}
-.flow-detail .fd-stage{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;display:inline-block;margin-bottom:.5rem}
-.flow-detail h4{font-family:'Playfair Display',serif;color:var(--snow);font-size:1.05rem;margin-bottom:.4rem}
-.flow-detail p{font-size:.84rem;color:rgba(255,255,255,.55);line-height:1.65}
-.flow-detail .fd-flags{margin-top:.6rem;font-size:.78rem}
-.flow-detail .fd-flags span{display:inline-block;background:rgba(232,169,58,.1);color:var(--amberG);border:1px solid rgba(232,169,58,.2);padding:.15rem .55rem;border-radius:4px;margin:.2rem .3rem .2rem 0;font-size:.7rem}
-.flow-hint{text-align:center;padding:.8rem;font-size:.7rem;color:rgba(255,255,255,.25);font-style:italic;position:relative;z-index:1}
-
-/* IMPACT */
+.cs-wrap{margin-top:3rem;background:var(--ink);border-radius:16px;position:relative;overflow:hidden}
+.cs-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(192,57,43,.04),transparent)}
+.cs-header{position:relative;z-index:1;padding:2rem 2rem 0;text-align:center}
+.cs-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--snow);margin-bottom:.3rem}
+.cs-sub{font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:1.2rem}
+.cs-tabs{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;position:relative;z-index:1;padding:0 2rem}
+.cs-tab{padding:.45rem 1rem;border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;transition:.25s;background:0;font-family:inherit}
+.cs-tab:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7)}
+.cs-tab.act{background:rgba(232,169,58,.15);border-color:rgba(232,169,58,.35);color:var(--amberG)}
+.cs-flow{position:relative;z-index:1;padding:0 1.5rem;overflow-x:auto}
+.cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;min-width:680px}
+.cs-stage{padding:.6rem}
+.cs-stage-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:.3rem;border-radius:6px;margin-bottom:.6rem}
+.cs-node{padding:.75rem;border-radius:8px;margin-bottom:.45rem;cursor:pointer;transition:.25s;border:1px solid transparent}
+.cs-node:hover{transform:translateX(3px)}
+.cs-node.sel{border-color:rgba(232,169,58,.5)!important;box-shadow:0 0 16px rgba(232,169,58,.15)}
+.cs-node-title{font-size:.76rem;font-weight:600;color:rgba(255,255,255,.85)}
+.cs-node-sub{font-size:.66rem;color:rgba(255,255,255,.35);margin-top:.1rem}
+.cs-detail{position:relative;z-index:2;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.06);padding:1.4rem 2rem;min-height:105px;margin-top:.5rem}
+.cs-detail .csd-stage{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.18rem .55rem;border-radius:4px;display:inline-block;margin-bottom:.45rem}
+.cs-detail h4{font-family:'Playfair Display',serif;color:var(--snow);font-size:1rem;margin-bottom:.35rem}
+.cs-detail p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6}
+.cs-detail .csd-flags{margin-top:.5rem}
+.cs-detail .csd-flags span{display:inline-block;background:rgba(232,169,58,.1);color:var(--amberG);border:1px solid rgba(232,169,58,.2);padding:.12rem .45rem;border-radius:4px;margin:.15rem .2rem .15rem 0;font-size:.66rem}
+.cs-source{text-align:center;padding:.6rem 2rem .8rem;font-size:.63rem;color:rgba(255,255,255,.2);position:relative;z-index:1}
+.cs-source a{color:rgba(232,169,58,.35);text-decoration:none}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2.5rem}
 .stat-card{background:var(--ink);border-radius:12px;padding:1.4rem;text-align:center}
 .stat-card .sv{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--amberG);margin-bottom:.25rem}
@@ -159,8 +138,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .stg a{text-decoration:none;color:inherit}
 .s1{background:rgba(26,107,90,.08);color:var(--teal)}.s2{background:rgba(26,58,92,.08);color:var(--navy)}
 .s3{background:rgba(192,57,43,.06);color:var(--crim)}.s4{background:rgba(200,144,46,.08);color:var(--amber)}
-
-/* ORGS */
 .org-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.1rem}
 .oc{background:var(--snow);border:1px solid var(--mist);border-radius:12px;padding:1.4rem;text-decoration:none;color:inherit;transition:.3s;display:block}
 .oc:hover{border-color:var(--amber);transform:translateY(-2px);box-shadow:0 5px 20px rgba(0,0,0,.06)}
@@ -168,8 +145,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .oc h3{font-family:'Playfair Display',serif;font-size:.92rem;margin-bottom:.3rem}
 .oc p{font-size:.79rem;color:var(--ash);line-height:1.5;margin-bottom:.5rem}
 .otag{font-size:.64rem;font-weight:600;padding:.18rem .5rem;border-radius:4px}
-
-/* FUTURE */
 .fut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.3rem}
 .fc{background:var(--snow);border:1px solid var(--mist);border-radius:13px;padding:1.6rem;transition:.3s}
 .fc:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,0,0,.07);border-color:var(--teal)}
@@ -179,8 +154,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .career-cta{margin-top:2.5rem;background:linear-gradient(135deg,var(--navy),var(--navyd));border-radius:16px;padding:2.5rem;text-align:center;color:#fff}
 .career-cta h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:.6rem}
 .career-cta p{font-size:.9rem;opacity:.7;max-width:500px;margin:0 auto}
-
-/* RESOURCES */
+/* POP CULTURE */
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.3rem}
+.pcc{border:1px solid var(--mist);border-radius:13px;padding:1.6rem;transition:.3s;display:flex;gap:1.2rem;align-items:flex-start}
+.pcc:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(0,0,0,.06);border-color:var(--amber)}
+.pc-icon{font-size:2rem;flex-shrink:0;width:48px;height:48px;display:grid;place-items:center;background:rgba(200,144,46,.07);border-radius:10px}
+.pcc h3{font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:.15rem}
+.pc-meta{font-size:.68rem;color:var(--ash);margin-bottom:.4rem;font-weight:500}
+.pcc p{font-size:.82rem;color:var(--gun);line-height:1.55}
+.pc-tag{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem;border-radius:3px;margin-top:.5rem}
 .res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
 .res-card{border:1px solid var(--mist);border-radius:13px;padding:1.6rem;transition:.3s}
 .res-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.05)}
@@ -188,17 +170,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(11,15,26,.9
 .res-card p{font-size:.82rem;color:var(--gun);line-height:1.55;margin-bottom:.6rem}
 .res-card a{color:var(--navy);font-size:.8rem;font-weight:600;text-decoration:none}
 .res-card a:hover{text-decoration:underline}
-
-/* FOOTER */
 footer{background:var(--ink);color:rgba(255,255,255,.45);padding:2.5rem 2rem;text-align:center;font-size:.78rem;line-height:1.7}
 footer a{color:rgba(255,255,255,.6);text-decoration:underline}
 footer .fd{margin-top:.8rem;font-size:.7rem;opacity:.5}
 </style>
 </head>
 <body>
-
-<nav>
-<div class="ni">
+<nav><div class="ni">
 <a class="nlogo" onclick="go('home')"><div class="sh">EC</div>EconCrime<i>edu</i></a>
 <ul class="nlinks" id="navLinks">
 <li><a data-pg="about" onclick="go('about')">About</a></li>
@@ -207,17 +185,18 @@ footer .fd{margin-top:.8rem;font-size:.7rem;opacity:.5}
 <li><a data-pg="impact" onclick="go('impact')">Impact</a></li>
 <li><a data-pg="orgs" onclick="go('orgs')">Organisations</a></li>
 <li><a data-pg="future" onclick="go('future')">Future</a></li>
+<li><a data-pg="popculture" onclick="go('popculture')">Pop Culture</a></li>
 <li><a data-pg="resources" onclick="go('resources')">Resources</a></li>
 </ul>
 <button class="ham" onclick="document.getElementById('mm').classList.toggle('open')"><span></span><span></span><span></span></button>
-</div>
-</nav>
+</div></nav>
 <div class="mmenu" id="mm">
 <a onclick="go('about')">About</a><a onclick="go('skills')">Key Skills</a><a onclick="go('typologies')">Typologies</a>
-<a onclick="go('impact')">Impact</a><a onclick="go('orgs')">Organisations</a><a onclick="go('future')">Future</a><a onclick="go('resources')">Resources</a>
+<a onclick="go('impact')">Impact</a><a onclick="go('orgs')">Organisations</a><a onclick="go('future')">Future</a>
+<a onclick="go('popculture')">Pop Culture</a><a onclick="go('resources')">Resources</a>
 </div>
 
-<!-- ══════════ HOME ══════════ -->
+<!-- HOME -->
 <div class="page active" id="home">
 <div class="hgrid"></div>
 <div class="hero-top">
@@ -229,14 +208,12 @@ footer .fd{margin-top:.8rem;font-size:.7rem;opacity:.5}
 <button class="btn bgh" onclick="go('skills')">Key Skills</button>
 </div>
 </div>
-
 <div class="home-stats">
 <div class="hs"><div class="sv">$3.1T</div><div class="sl">Global annual cost of financial crime</div></div>
 <div class="hs"><div class="sv">50M</div><div class="sl">People trapped in modern slavery worldwide</div></div>
 <div class="hs"><div class="sv">$150B</div><div class="sl">Annual profits from forced labour</div></div>
-<div class="hs"><div class="sv">$12.5B</div><div class="sl">US cyber fraud losses in 2023</div></div>
+<div class="hs"><div class="sv">$12.5B</div><div class="sl">US cyber fraud losses in 2023 (FBI IC3)</div></div>
 </div>
-
 <div class="home-career">
 <h2>A Career That <em>Matters</em></h2>
 <p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world. From compliance and data science to cybersecurity and intelligence analysis — the fight against financial crime needs passionate, talented people from every background.</p>
@@ -247,348 +224,358 @@ footer .fd{margin-top:.8rem;font-size:.7rem;opacity:.5}
 <span class="hc-tag">Policy</span><span class="hc-tag">Forensic Accounting</span>
 </div>
 </div>
-
 <div class="eban">⚠ This platform is for educational purposes only. It does not constitute legal, financial, or regulatory advice.</div>
 </div>
 
-<!-- ══════════ ABOUT ══════════ -->
+<!-- ABOUT -->
 <div class="page" id="about">
 <div class="pi"><div class="ph"><div class="se">About</div><div class="st">Educational Purpose</div><div class="sd">An independent, non-commercial resource for learning about economic crime.</div></div>
 <div class="ag">
 <div class="at">
-<p>This platform brings together educational content from leading organisations working to combat economic crime, modern slavery, and online fraud. It is designed for students, researchers, and professionals seeking to understand the landscape of financial crime and the skills needed to fight it.</p>
-<p>All content is sourced from publicly available materials and is presented for educational purposes only. This platform does not provide legal, financial, or regulatory advice, and is not affiliated with any commercial entity.</p>
-<p>The aim is to raise awareness of how economic crime impacts society — funding modern slavery, enabling terrorism, devastating individuals and communities — and to inspire the next generation of professionals to enter this vital and rewarding field.</p>
+<p>This platform brings together educational content from leading organisations and US government public domain resources to help students, researchers, and professionals understand the landscape of financial crime.</p>
+<p>All content is sourced from publicly available materials — including US government publications (public domain under 17 U.S.C. § 105) and UK public interest resources. This platform does not provide legal, financial, or regulatory advice.</p>
+<p>The aim is to raise awareness of how economic crime impacts society — funding modern slavery, enabling terrorism, devastating individuals and communities — and to inspire the next generation of professionals to enter this vital field.</p>
 <div class="srcb"><h4>Content Sources</h4>
 <p><a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> — Modern slavery prevention &amp; supply chain integrity<br>
 <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> — Online safety &amp; fraud awareness (Crown Copyright)<br>
-<a href="https://grokipedia.com/" target="_blank">Grokipedia</a> — AI-powered encyclopaedia reference material<br>
-<a href="https://www.interpol.int/en/Crimes/Financial-crime" target="_blank">INTERPOL</a> — International financial crime data &amp; assessments<br>
-<a href="https://www.fatf-gafi.org/" target="_blank">FATF</a> — Global AML/CTF standards &amp; typology reports</p></div>
+<a href="https://www.fincen.gov/" target="_blank">FinCEN</a> — US Financial Crimes Enforcement Network (public domain)<br>
+<a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> — Internet Crime Complaint Center reports (public domain)<br>
+<a href="https://www.justice.gov/" target="_blank">US Department of Justice</a> — Financial crime case studies (public domain)<br>
+<a href="https://home.treasury.gov/" target="_blank">US Department of the Treasury</a> — Sanctions &amp; terrorist financing intelligence (public domain)<br>
+<a href="https://www.state.gov/trafficking-in-persons-report/" target="_blank">US State Department</a> — Trafficking in Persons Report (public domain)<br>
+<a href="https://www.interpol.int/en/Crimes/Financial-crime" target="_blank">INTERPOL</a> — International financial crime assessments</p></div>
 </div>
 <div>
 <div class="pb purp"><h3>Educational Use Only</h3><p>This platform is strictly non-commercial and does not:</p>
-<ul><li>Provide legal or financial advice</li><li>Promote any commercial product or service</li><li>Collect personal data from visitors</li><li>Represent any organisation's official position</li></ul></div>
-</div>
+<ul><li>Provide legal or financial advice</li><li>Promote any commercial product or service</li><li>Collect personal data from visitors</li><li>Represent any organisation's official position</li></ul>
+<p style="margin-top:.8rem;font-size:.8rem;color:var(--gun)">US Government materials are in the public domain under 17 U.S.C. § 105. Get Safe Online content used under Crown Copyright provisions with attribution.</p>
+</div></div>
 </div>
 </div></div>
 
-<!-- ══════════ SKILLS ══════════ -->
+<!-- SKILLS -->
 <div class="page" id="skills">
 <div class="pi"><div class="ph"><div class="se">Key Skills</div><div class="st">Essential Competencies</div><div class="sd">Click any skill to explore it in depth.</div></div>
 <div class="skg" id="skillsGrid"></div>
 </div></div>
 
-<!-- ══════════ TYPOLOGIES ══════════ -->
+<!-- TYPOLOGIES -->
 <div class="page" id="typologies">
 <div class="pi"><div class="ph"><div class="se">Typologies</div><div class="st">Patterns of Economic Crime</div><div class="sd">How criminals exploit financial systems — and the red flags that can stop them.</div></div>
 <div class="tt" id="typoTabs"></div>
 <div id="typoContent"></div>
-
-<!-- INTERACTIVE FLOW GRAPH -->
-<div class="flow-wrap">
-<div class="flow-title">Case Study: Money Laundering in Action</div>
-<div class="flow-sub">Follow the money through all three stages — click any node to learn more</div>
-<div class="flow-svg-wrap">
-<svg class="flow-svg" viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" fill="none">
-<!-- Stage backgrounds -->
-<rect x="8" y="8" width="260" height="284" rx="12" fill="rgba(192,57,43,.04)" stroke="rgba(192,57,43,.12)" stroke-width="1"/>
-<rect x="300" y="8" width="260" height="284" rx="12" fill="rgba(26,58,92,.06)" stroke="rgba(26,58,92,.15)" stroke-width="1"/>
-<rect x="592" y="8" width="260" height="284" rx="12" fill="rgba(26,107,90,.05)" stroke="rgba(26,107,90,.12)" stroke-width="1"/>
-<!-- Stage labels -->
-<text x="138" y="36" text-anchor="middle" fill="rgba(192,57,43,.5)" font-size="10" font-weight="700" font-family="Source Sans 3" letter-spacing="1.5">PLACEMENT</text>
-<text x="430" y="36" text-anchor="middle" fill="rgba(26,58,92,.6)" font-size="10" font-weight="700" font-family="Source Sans 3" letter-spacing="1.5">LAYERING</text>
-<text x="722" y="36" text-anchor="middle" fill="rgba(26,107,90,.6)" font-size="10" font-weight="700" font-family="Source Sans 3" letter-spacing="1.5">INTEGRATION</text>
-
-<!-- Arrows between stages -->
-<path d="M268,150 L300,150" stroke="rgba(232,169,58,.4)" stroke-width="2" marker-end="url(#arrowA)" class="flow-arrow-anim"/>
-<path d="M560,150 L592,150" stroke="rgba(232,169,58,.4)" stroke-width="2" marker-end="url(#arrowA)" class="flow-arrow-anim"/>
-<defs><marker id="arrowA" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(232,169,58,.5)"/></marker></defs>
-
-<!-- PLACEMENT NODES -->
-<g class="flow-node" onclick="fd(0)">
-<rect x="38" y="55" width="200" height="52" rx="8" fill="rgba(192,57,43,.15)" stroke="rgba(192,57,43,.35)" stroke-width="1.2"/>
-<text x="68" y="86" fill="#fff" font-size="18">💰</text>
-<text x="88" y="78" fill="rgba(255,255,255,.9)" font-size="12" font-weight="600" font-family="Source Sans 3">Drug Trafficking</text>
-<text x="88" y="95" fill="rgba(255,255,255,.4)" font-size="10" font-family="Source Sans 3">£2M cash proceeds</text>
-</g>
-<!-- Arrow down -->
-<line x1="138" y1="107" x2="138" y2="125" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-<defs><marker id="arrowW" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0, 6 2.5, 0 5" fill="rgba(255,255,255,.2)"/></marker></defs>
-
-<g class="flow-node" onclick="fd(1)">
-<rect x="38" y="125" width="200" height="52" rx="8" fill="rgba(192,57,43,.12)" stroke="rgba(192,57,43,.25)" stroke-width="1"/>
-<text x="68" y="156" fill="#fff" font-size="18">🏦</text>
-<text x="88" y="148" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">Smurfing / Structuring</text>
-<text x="88" y="165" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">£9,500 × 210 deposits</text>
-</g>
-<line x1="138" y1="177" x2="138" y2="195" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-
-<g class="flow-node" onclick="fd(2)">
-<rect x="38" y="195" width="200" height="52" rx="8" fill="rgba(192,57,43,.12)" stroke="rgba(192,57,43,.25)" stroke-width="1"/>
-<text x="68" y="226" fill="#fff" font-size="18">👥</text>
-<text x="88" y="218" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">Cash-Intensive Business</text>
-<text x="88" y="235" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">Car wash, restaurant</text>
-</g>
-
-<!-- LAYERING NODES -->
-<g class="flow-node" onclick="fd(3)">
-<rect x="330" y="55" width="200" height="52" rx="8" fill="rgba(26,58,92,.2)" stroke="rgba(26,58,92,.45)" stroke-width="1.2"/>
-<text x="360" y="86" fill="#fff" font-size="18">🏢</text>
-<text x="380" y="78" fill="rgba(255,255,255,.9)" font-size="12" font-weight="600" font-family="Source Sans 3">Shell Companies</text>
-<text x="380" y="95" fill="rgba(255,255,255,.4)" font-size="10" font-family="Source Sans 3">3 jurisdictions, fake invoices</text>
-</g>
-<line x1="430" y1="107" x2="430" y2="125" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-
-<g class="flow-node" onclick="fd(4)">
-<rect x="330" y="125" width="200" height="52" rx="8" fill="rgba(26,58,92,.15)" stroke="rgba(26,58,92,.3)" stroke-width="1"/>
-<text x="360" y="156" fill="#fff" font-size="18">🔄</text>
-<text x="380" y="148" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">Wire Transfers</text>
-<text x="380" y="165" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">UK → Cyprus → Dubai</text>
-</g>
-<line x1="430" y1="177" x2="430" y2="195" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-
-<g class="flow-node" onclick="fd(5)">
-<rect x="330" y="195" width="200" height="52" rx="8" fill="rgba(26,58,92,.15)" stroke="rgba(26,58,92,.3)" stroke-width="1"/>
-<text x="360" y="226" fill="#fff" font-size="18">💱</text>
-<text x="380" y="218" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">Currency Conversion</text>
-<text x="380" y="235" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">GBP → EUR → USD</text>
-</g>
-
-<!-- INTEGRATION NODES -->
-<g class="flow-node" onclick="fd(6)">
-<rect x="622" y="55" width="200" height="52" rx="8" fill="rgba(26,107,90,.2)" stroke="rgba(26,107,90,.45)" stroke-width="1.2"/>
-<text x="652" y="86" fill="#fff" font-size="18">🏠</text>
-<text x="672" y="78" fill="rgba(255,255,255,.9)" font-size="12" font-weight="600" font-family="Source Sans 3">Property Purchase</text>
-<text x="672" y="95" fill="rgba(255,255,255,.4)" font-size="10" font-family="Source Sans 3">Luxury apartments</text>
-</g>
-<line x1="722" y1="107" x2="722" y2="125" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-
-<g class="flow-node" onclick="fd(7)">
-<rect x="622" y="125" width="200" height="52" rx="8" fill="rgba(26,107,90,.12)" stroke="rgba(26,107,90,.25)" stroke-width="1"/>
-<text x="652" y="156" fill="#fff" font-size="18">🚗</text>
-<text x="672" y="148" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">High-Value Assets</text>
-<text x="672" y="165" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">Cars, watches, art</text>
-</g>
-<line x1="722" y1="177" x2="722" y2="195" stroke="rgba(255,255,255,.15)" stroke-width="1.5" marker-end="url(#arrowW)"/>
-
-<g class="flow-node" onclick="fd(8)">
-<rect x="622" y="195" width="200" height="52" rx="8" fill="rgba(26,107,90,.12)" stroke="rgba(26,107,90,.25)" stroke-width="1"/>
-<text x="652" y="226" fill="#fff" font-size="18">✅</text>
-<text x="672" y="218" fill="rgba(255,255,255,.8)" font-size="12" font-weight="500" font-family="Source Sans 3">"Legitimate" Income</text>
-<text x="672" y="235" fill="rgba(255,255,255,.35)" font-size="10" font-family="Source Sans 3">Rental income, dividends</text>
-</g>
-</svg>
+<div class="cs-wrap">
+<div class="cs-header"><div class="cs-title">Interactive Case Studies</div><div class="cs-sub">Follow the money through real-world typology patterns — click any step to explore</div></div>
+<div class="cs-tabs" id="csTabs"></div>
+<div id="csFlow"></div>
+<div class="cs-detail" id="csDetail">
+<div class="csd-stage" id="csdStage" style="background:rgba(232,169,58,.15);color:#e8a93a">OVERVIEW</div>
+<h4 id="csdTitle">Select a case study above</h4>
+<p id="csdDesc">Each case study traces a criminal scheme through its key stages. Click any tab to load a case, then click the step nodes to see how it works and the red flags that can expose it.</p>
+<div class="csd-flags" id="csdFlags"></div>
 </div>
-
-<div class="flow-detail" id="flowDetail">
-<div class="fd-stage" id="fdStage" style="background:rgba(232,169,58,.15);color:#e8a93a">OVERVIEW</div>
-<h4 id="fdTitle">How Money Laundering Works</h4>
-<p id="fdDesc">This case study traces £2 million in drug trafficking proceeds through all three stages of money laundering. Click any node above to see how criminals move dirty money through placement, layering, and integration — and the red flags that can expose them at each step.</p>
-<div class="fd-flags" id="fdFlags"></div>
+<div class="cs-source">Patterns based on <a href="https://www.fincen.gov/resources/advisories" target="_blank">FinCEN advisories</a>, <a href="https://www.ic3.gov/" target="_blank">FBI IC3 reports</a>, <a href="https://www.justice.gov/criminal/criminal-fraud" target="_blank">DOJ case materials</a> &amp; <a href="https://home.treasury.gov/" target="_blank">US Treasury</a> (public domain)</div>
 </div>
-<div class="flow-hint">Click any node to explore each step · Based on common FATF typology patterns</div>
-</div>
-
 </div></div>
 
-<!-- ══════════ IMPACT ══════════ -->
+<!-- IMPACT -->
 <div class="page" id="impact">
-<div class="pi"><div class="ph"><div class="se">Societal Impact</div><div class="st">The Human Cost of Economic Crime</div><div class="sd">Economic crime is not victimless. It devastates lives, communities, and entire economies.</div></div>
+<div class="pi"><div class="ph"><div class="se">Societal Impact</div><div class="st">The Human Cost of Economic Crime</div><div class="sd">Economic crime is not victimless — it devastates lives, communities, and entire economies.</div></div>
 <div class="stats-row">
 <div class="stat-card"><div class="sv">$3.1T</div><div class="sl">Global annual cost of financial crime</div></div>
 <div class="stat-card"><div class="sv">50M</div><div class="sl">People in modern slavery worldwide</div></div>
 <div class="stat-card"><div class="sv">$150B</div><div class="sl">Annual forced labour profits</div></div>
-<div class="stat-card"><div class="sv">$12.5B</div><div class="sl">US cyber fraud losses (2023)</div></div>
+<div class="stat-card"><div class="sv">$12.5B</div><div class="sl">US cyber fraud losses (FBI IC3, 2023)</div></div>
 </div>
 <div id="impactBlocks"></div>
 </div></div>
 
-<!-- ══════════ ORGANISATIONS ══════════ -->
+<!-- ORGANISATIONS -->
 <div class="page" id="orgs">
 <div class="pi"><div class="ph"><div class="se">Industry Bodies</div><div class="st">Key Organisations</div><div class="sd">The global network of bodies working to prevent and combat economic crime.</div></div>
 <div class="org-grid" id="orgsGrid"></div>
 </div></div>
 
-<!-- ══════════ FUTURE ══════════ -->
+<!-- FUTURE -->
 <div class="page" id="future">
 <div class="pi"><div class="ph"><div class="se">Looking Ahead</div><div class="st">The Future of Fighting Economic Crime</div><div class="sd">Emerging technologies and approaches transforming the battle against financial crime.</div></div>
 <div class="fut-grid" id="futureGrid"></div>
 <div class="career-cta"><h3>Join the Fight Against Economic Crime</h3><p>The field is growing rapidly and needs talented, passionate people from all backgrounds — compliance, tech, law, data science, and beyond.</p></div>
 </div></div>
 
-<!-- ══════════ RESOURCES ══════════ -->
+<!-- POP CULTURE -->
+<div class="page" id="popculture">
+<div class="pi"><div class="ph"><div class="se">Pop Culture</div><div class="st">Economic Crime on Screen &amp; Page</div><div class="sd">From Hollywood blockbusters to investigative journalism — how popular culture has brought financial crime into the mainstream.</div></div>
+<div class="pc-grid" id="pcGrid"></div>
+</div></div>
+
+<!-- RESOURCES -->
 <div class="page" id="resources">
 <div class="pi"><div class="ph"><div class="se">Learn More</div><div class="st">Key Resources</div><div class="sd">Authoritative sources for further study and professional development.</div></div>
 <div class="res-grid">
-<div class="res-card"><h3>🛡️ Slave Free Alliance</h3><p>Specialist services helping organisations combat modern slavery in operations and supply chains. A social enterprise of Hope for Justice.</p><a href="https://www.slavefreealliance.org/" target="_blank">Visit slavefreealliance.org →</a></div>
-<div class="res-card"><h3>🔒 Get Safe Online</h3><p>The UK's leading source of free, impartial, practical advice on internet safety, fraud prevention, and information security.</p><a href="https://www.getsafeonline.org/" target="_blank">Visit getsafeonline.org →</a></div>
-<div class="res-card"><h3>📖 Grokipedia</h3><p>AI-powered encyclopaedia by xAI providing reference articles on financial crime, economic systems, and related topics.</p><a href="https://grokipedia.com/" target="_blank">Visit grokipedia.com →</a></div>
-<div class="res-card"><h3>🌐 FATF</h3><p>The Financial Action Task Force — global standard-setter for anti-money laundering and counter-terrorist financing measures.</p><a href="https://www.fatf-gafi.org/" target="_blank">Visit fatf-gafi.org →</a></div>
-<div class="res-card"><h3>💼 ACAMS</h3><p>The Association of Certified Anti-Money Laundering Specialists — the world's largest AML membership organisation.</p><a href="https://www.acams.org/" target="_blank">Visit acams.org →</a></div>
-<div class="res-card"><h3>🎓 International Compliance Association</h3><p>Professional body providing globally recognised qualifications in governance, risk, and compliance.</p><a href="https://www.int-comp.org/" target="_blank">Visit int-comp.org →</a></div>
+<div class="res-card"><h3>🛡️ Slave Free Alliance</h3><p>Specialist services helping organisations combat modern slavery in operations and supply chains. A social enterprise of Hope for Justice.</p><a href="https://www.slavefreealliance.org/" target="_blank">slavefreealliance.org →</a></div>
+<div class="res-card"><h3>🔒 Get Safe Online</h3><p>The UK's leading source of free, impartial advice on internet safety, fraud prevention, and information security.</p><a href="https://www.getsafeonline.org/" target="_blank">getsafeonline.org →</a></div>
+<div class="res-card"><h3>🇺🇸 FinCEN</h3><p>US Financial Crimes Enforcement Network — advisories, SAR data, and AML/CTF guidance. Public domain.</p><a href="https://www.fincen.gov/" target="_blank">fincen.gov →</a></div>
+<div class="res-card"><h3>🕵️ FBI IC3</h3><p>Internet Crime Complaint Center — annual cyber fraud reports and emerging threat analysis. Public domain.</p><a href="https://www.ic3.gov/" target="_blank">ic3.gov →</a></div>
+<div class="res-card"><h3>⚖️ US Department of Justice</h3><p>Criminal Division — FCPA enforcement, fraud prosecution, and financial crime case studies. Public domain.</p><a href="https://www.justice.gov/criminal/criminal-fraud" target="_blank">justice.gov →</a></div>
+<div class="res-card"><h3>🏛️ US Treasury (TFI)</h3><p>Office of Terrorism and Financial Intelligence — sanctions, terrorist financing analysis, and national risk assessments. Public domain.</p><a href="https://home.treasury.gov/policy-issues/terrorism-and-illicit-finance" target="_blank">treasury.gov →</a></div>
+<div class="res-card"><h3>🌍 US State Dept — TIP Report</h3><p>Trafficking in Persons Report — the world's most comprehensive resource on governmental anti-trafficking efforts. Public domain.</p><a href="https://www.state.gov/trafficking-in-persons-report/" target="_blank">state.gov →</a></div>
+<div class="res-card"><h3>💼 ACAMS</h3><p>Association of Certified Anti-Money Laundering Specialists — the world's largest AML professional body and certification provider.</p><a href="https://www.acams.org/" target="_blank">acams.org →</a></div>
+<div class="res-card"><h3>🎓 International Compliance Association</h3><p>Professional body providing globally recognised qualifications in governance, risk, and compliance.</p><a href="https://www.int-comp.org/" target="_blank">int-comp.org →</a></div>
 </div>
 </div></div>
 
 <footer>
 <div>EconCrime<em style="opacity:.4;font-style:italic;font-size:.75rem"> edu</em> — An educational platform for understanding economic crime. Strictly non-commercial.</div>
-<div style="margin-top:.4rem">Information sourced from <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a>, <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a>, <a href="https://grokipedia.com/" target="_blank">Grokipedia</a>, <a href="https://www.interpol.int/" target="_blank">INTERPOL</a>, <a href="https://www.fatf-gafi.org/" target="_blank">FATF</a>, and other public sources.</div>
-<div class="fd">This platform does not provide legal, financial, or regulatory advice. Content is for educational purposes only. Get Safe Online content used under Crown Copyright provisions with attribution. © Educational Use 2026.</div>
+<div style="margin-top:.4rem">Sources: <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> · <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> · <a href="https://www.fincen.gov/" target="_blank">FinCEN</a> · <a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> · <a href="https://www.justice.gov/" target="_blank">DOJ</a> · <a href="https://home.treasury.gov/" target="_blank">US Treasury</a> · <a href="https://www.interpol.int/" target="_blank">INTERPOL</a></div>
+<div class="fd">Educational purposes only — not legal, financial, or regulatory advice. US Government materials are public domain (17 U.S.C. § 105). Crown Copyright content attributed. © Educational Use 2026.</div>
 </footer>
 
 <script>
-// ═══════ SPA NAVIGATION ═══════
-function go(id){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('.nlinks a').forEach(a=>a.classList.toggle('act',a.dataset.pg===id));
-document.getElementById('mm').classList.remove('open');
-window.scrollTo(0,0);
-}
+// ═══════ SPA NAV ═══════
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nlinks a').forEach(a=>a.classList.toggle('act',a.dataset.pg===id));document.getElementById('mm').classList.remove('open');window.scrollTo(0,0)}
 
-// ═══════ SKILLS DATA ═══════
+// ═══════ SKILLS ═══════
 const skills=[
-{icon:"🔎",title:"Know Your Customer (KYC)",brief:"Verifying the identity of clients to prevent crime.",detail:"KYC is the process financial institutions use to verify their customers' identities, assess their risk profiles, and understand their financial activities. It involves collecting identification documents, verifying addresses, screening against sanctions lists, and establishing the source of funds. KYC is a cornerstone of anti-money laundering compliance and is required by law in most jurisdictions."},
-{icon:"⚖️",title:"Anti-Money Laundering (AML)",brief:"Policies and controls to detect and prevent money laundering.",detail:"AML refers to the laws, regulations, and procedures designed to prevent criminals from disguising illegally obtained money as legitimate income. This includes monitoring customer transactions for unusual patterns, filing suspicious activity reports (SARs), maintaining records, and training staff to recognise red flags. The three stages of money laundering — placement, layering, and integration — each present different detection opportunities."},
-{icon:"📊",title:"Transaction Monitoring",brief:"Detecting suspicious patterns in financial transactions.",detail:"Transaction monitoring involves the systematic review of customer transactions to detect patterns that may indicate money laundering, terrorist financing, fraud, or other financial crimes. Modern systems use rules-based triggers alongside machine learning algorithms that can identify subtle anomalies across millions of data points. Effective transaction monitoring balances detection sensitivity with managing false positives."},
-{icon:"🛡️",title:"Sanctions Screening",brief:"Checking transactions and customers against sanctions lists.",detail:"Sanctions screening is the process of checking customers, transactions, and counterparties against designated sanctions lists maintained by bodies such as the UN, EU, OFAC (US), and HM Treasury (UK). Screening must occur at onboarding, during transactions, and on an ongoing basis as lists are regularly updated. Failures can result in severe penalties and criminal prosecution."},
-{icon:"📝",title:"Suspicious Activity Reporting",brief:"Filing reports when potential financial crime is identified.",detail:"When a regulated organisation suspects that a transaction or activity may be linked to financial crime, it is legally required to file a Suspicious Activity Report (SAR) with the relevant financial intelligence unit — such as the NCA in the UK or FinCEN in the US. SARs are a critical source of intelligence for law enforcement. Filing also provides legal protection to the reporting organisation."},
-{icon:"🌍",title:"Risk Assessment",brief:"Evaluating exposure to financial crime threats.",detail:"Risk assessment is the process by which organisations identify, evaluate, and prioritise the money laundering, terrorist financing, and fraud risks they face. This involves analysing customer types, product vulnerabilities, geographic exposure, delivery channels, and transaction volumes. A risk-based approach ensures resources are directed where threats are greatest."},
-{icon:"🧩",title:"Due Diligence",brief:"Investigating business relationships and transactions.",detail:"Due diligence goes beyond basic KYC to involve deeper investigation into the nature and purpose of business relationships. Enhanced Due Diligence (EDD) is required for higher-risk situations — such as politically exposed persons (PEPs), complex corporate structures, or high-risk jurisdictions. Customer Due Diligence (CDD) is the standard process, while Simplified Due Diligence (SDD) may apply to lower-risk scenarios."},
-{icon:"💻",title:"Cyber Crime Awareness",brief:"Understanding digital threats to financial security.",detail:"Cybercrime in the context of economic crime includes phishing, ransomware, business email compromise, payment fraud, identity theft, and attacks on financial infrastructure. As Get Safe Online advises, understanding these threats is essential for both individuals and organisations. Skills in cybersecurity, digital forensics, and secure system design are increasingly critical."},
-{icon:"📜",title:"Regulatory Compliance",brief:"Adhering to laws and regulations governing financial crime.",detail:"Regulatory compliance involves understanding and implementing the legal requirements set by authorities such as the FCA (UK), FinCEN (US), or EBA (EU). Key regulations include the Money Laundering Regulations, the Bank Secrecy Act, EU Anti-Money Laundering Directives, and the Proceeds of Crime Act. Non-compliance can result in substantial fines, criminal prosecution, and loss of operating licences."},
-{icon:"🔗",title:"Supply Chain Integrity",brief:"Ensuring supply chains are free from exploitation and crime.",detail:"As highlighted by the Slave Free Alliance, modern slavery and labour exploitation can be embedded deep within global supply chains. Supply chain integrity involves mapping suppliers, conducting risk assessments, performing site audits, and implementing remediation plans. The UK Modern Slavery Act and similar legislation worldwide require organisations to take active steps to identify and address these risks."},
-{icon:"🧠",title:"Financial Intelligence Analysis",brief:"Analysing data to uncover criminal networks and flows.",detail:"Financial intelligence analysis involves examining financial data, transaction records, SARs, and other information to identify patterns, connections, and anomalies that may indicate criminal activity. Analysts use techniques such as link analysis, network mapping, and statistical modelling. This skill bridges the gap between raw data and actionable intelligence for law enforcement."},
-{icon:"🤝",title:"Public-Private Partnerships",brief:"Collaboration between sectors to combat financial crime.",detail:"Effective economic crime prevention increasingly relies on collaboration between government, law enforcement, regulators, and the private sector. Initiatives such as the UK's Joint Money Laundering Intelligence Taskforce (JMLIT) enable real-time intelligence exchange, breaking down silos and allowing faster, more coordinated responses to emerging threats."}
+{icon:"🔎",title:"Know Your Customer (KYC)",brief:"Verifying the identity of clients to prevent crime.",detail:"KYC is the process financial institutions use to verify customers' identities, assess risk profiles, and understand financial activities. It involves collecting ID documents, verifying addresses, screening against sanctions lists, and establishing source of funds. FinCEN requires all US financial institutions to implement robust KYC programmes under the Bank Secrecy Act."},
+{icon:"⚖️",title:"Anti-Money Laundering (AML)",brief:"Policies and controls to detect and prevent money laundering.",detail:"AML refers to laws, regulations, and procedures designed to prevent criminals from disguising illegally obtained money as legitimate income. This includes transaction monitoring, filing SARs, maintaining records, and staff training. The Bank Secrecy Act and successive US legislation form the backbone of AML compliance globally."},
+{icon:"📊",title:"Transaction Monitoring",brief:"Detecting suspicious patterns in financial transactions.",detail:"Transaction monitoring involves systematic review of customer transactions to detect patterns indicating money laundering, terrorist financing, or fraud. Modern systems use rules-based triggers alongside machine learning to identify anomalies across millions of data points. Balancing detection sensitivity with false positive management is a core challenge."},
+{icon:"🛡️",title:"Sanctions Screening",brief:"Checking transactions and customers against sanctions lists.",detail:"Sanctions screening checks customers, transactions, and counterparties against lists maintained by OFAC (US), the UN, EU, and HM Treasury (UK). Screening must occur at onboarding, during transactions, and continuously. OFAC can impose severe civil penalties — sometimes hundreds of millions of dollars — for violations."},
+{icon:"📝",title:"Suspicious Activity Reporting",brief:"Filing reports when potential financial crime is identified.",detail:"When a regulated organisation suspects financial crime, it must file a SAR with the relevant FIU — FinCEN in the US, the NCA in the UK. SARs are a critical intelligence source for law enforcement. FinCEN receives over 4 million SARs annually, making the US SAR database the largest financial intelligence repository in the world."},
+{icon:"🌍",title:"Risk Assessment",brief:"Evaluating exposure to financial crime threats.",detail:"Risk assessment identifies, evaluates, and prioritises money laundering, terrorist financing, and fraud risks. It analyses customer types, product vulnerabilities, geographic exposure, and transaction volumes. The US Treasury publishes National Money Laundering and Terrorist Financing Risk Assessments to guide industry efforts."},
+{icon:"🧩",title:"Due Diligence",brief:"Investigating business relationships and transactions.",detail:"Due diligence goes beyond basic KYC to investigate the nature and purpose of business relationships. Enhanced Due Diligence (EDD) is required for higher-risk situations — PEPs, complex structures, or high-risk jurisdictions. The CDD Rule (31 CFR 1010.230) requires financial institutions to identify and verify beneficial owners."},
+{icon:"💻",title:"Cyber Crime Awareness",brief:"Understanding digital threats to financial security.",detail:"Cybercrime includes phishing, ransomware, BEC, payment fraud, and identity theft. As Get Safe Online and the FBI warn, these attacks grow more targeted each year. FBI IC3 reported record losses from cyber-enabled fraud, with criminals increasingly exploiting AI and cryptocurrency."},
+{icon:"📜",title:"Regulatory Compliance",brief:"Adhering to laws governing financial crime.",detail:"Compliance involves implementing requirements set by authorities such as FinCEN, the SEC, FCA (UK), and EBA (EU). Key laws include the Bank Secrecy Act, USA PATRIOT Act, Anti-Money Laundering Act of 2020, and EU AML Directives. Non-compliance can result in billions in fines and criminal prosecution."},
+{icon:"🔗",title:"Supply Chain Integrity",brief:"Ensuring supply chains are free from exploitation.",detail:"As the Slave Free Alliance highlights, modern slavery can be embedded in global supply chains. The US State Department's TIP Report ranks countries on anti-trafficking efforts. The Uyghur Forced Labor Prevention Act (UFLPA) requires importers to prove goods are not made with forced labour — US Customs detained $1.42 billion in shipments in 2023."},
+{icon:"🧠",title:"Financial Intelligence Analysis",brief:"Analysing data to uncover criminal networks.",detail:"Financial intelligence analysis examines transaction records, SARs, and other data to identify criminal patterns. Analysts use link analysis, network mapping, and statistical modelling. FinCEN's 314(a) and 314(b) programmes enable information sharing between government and the private sector to trace criminal finances."},
+{icon:"🤝",title:"Public-Private Partnerships",brief:"Cross-sector collaboration against financial crime.",detail:"Effective prevention relies on collaboration between government, law enforcement, and the private sector. Initiatives like FinCEN Exchange, the UK's JMLIT, and the BSA Advisory Group enable intelligence exchange and coordinated responses to emerging threats across institutional boundaries."}
 ];
 
-// ═══════ TYPOLOGY DATA ═══════
+// ═══════ TYPOLOGIES ═══════
 const typoCategories=[
 {name:"Money Laundering",cards:[
-{icon:"🏦",bg:"rgba(26,58,92,.08)",title:"Smurfing / Structuring",desc:"Breaking large sums of illicit cash into smaller deposits below reporting thresholds. Multiple individuals ('smurfs') may be used across different bank branches.",flags:["Multiple small deposits just below reporting thresholds","Numerous accounts under different names","Rapid movement between accounts"]},
-{icon:"🏢",bg:"rgba(192,57,43,.06)",title:"Shell Companies",desc:"Creating fictitious or dormant companies with no genuine business activity to obscure the beneficial ownership of funds and create the appearance of legitimate income.",flags:["Companies with no physical presence or employees","Complex ownership structures across jurisdictions","Transactions inconsistent with stated business purpose"]},
-{icon:"🔄",bg:"rgba(26,107,90,.07)",title:"Trade-Based Laundering",desc:"Manipulating international trade invoices — through over-invoicing, under-invoicing, or phantom shipments — to transfer value across borders while disguising the origin of funds.",flags:["Invoice values significantly different from market norms","Goods shipped to/from high-risk jurisdictions","Repeated transactions with same counterparties"]},
-{icon:"💱",bg:"rgba(200,144,46,.07)",title:"Currency Exchange Exploitation",desc:"Using money service businesses, currency exchanges, or cryptocurrency platforms to convert and move illicit funds, exploiting regulatory gaps between jurisdictions.",flags:["Frequent large cash-to-crypto conversions","Use of multiple exchanges across jurisdictions","Layering through mixing services or privacy coins"]}
+{icon:"🏦",bg:"rgba(26,58,92,.08)",title:"Smurfing / Structuring",desc:"Breaking large sums into deposits below reporting thresholds. FinCEN identifies structuring as one of the most commonly reported suspicious activities in US SAR filings.",flags:["Multiple deposits just below $10,000","Numerous accounts under different names","Rapid movement between accounts"]},
+{icon:"🏢",bg:"rgba(192,57,43,.06)",title:"Shell Companies",desc:"Creating fictitious companies with no genuine activity to obscure beneficial ownership. DOJ cases frequently feature networks of shell entities across jurisdictions.",flags:["Companies with no physical presence","Complex cross-jurisdictional ownership","Transactions inconsistent with business purpose"]},
+{icon:"🔄",bg:"rgba(26,107,90,.07)",title:"Trade-Based Laundering",desc:"Manipulating trade invoices to transfer value across borders. The US Treasury has identified trade-based laundering as a primary money laundering methodology.",flags:["Invoice values deviating from market norms","Goods to/from high-risk jurisdictions","Repeated transactions with same counterparties"]},
+{icon:"💱",bg:"rgba(200,144,46,.07)",title:"Currency Exchange Exploitation",desc:"Using MSBs, exchanges, or crypto platforms to convert and move illicit funds, exploiting regulatory gaps between jurisdictions and asset classes.",flags:["Frequent large cash-to-crypto conversions","Multiple exchanges across jurisdictions","Use of mixing services or privacy coins"]}
 ]},
 {name:"Fraud",cards:[
-{icon:"📧",bg:"rgba(192,57,43,.06)",title:"Business Email Compromise",desc:"Criminals impersonate senior executives or trusted partners via compromised or spoofed email accounts to instruct employees to make urgent payments to fraudulent accounts.",flags:["Urgent payment requests from senior leadership","Slight variations in email addresses","Requests to bypass normal approval processes"]},
-{icon:"🎭",bg:"rgba(26,58,92,.08)",title:"Identity Fraud",desc:"Using stolen, fabricated, or synthetic identities to open accounts, obtain credit, or commit financial crimes. Increasingly sophisticated with deepfakes and AI-generated documents.",flags:["Identity documents that don't match across databases","Rapid account opening across multiple institutions","Synthetic identities combining real and fabricated data"]},
-{icon:"📈",bg:"rgba(26,107,90,.07)",title:"Investment & Ponzi Schemes",desc:"Fraudulent investment schemes promising unusually high returns. Ponzi schemes use funds from new investors to pay existing investors, creating the illusion of legitimate returns.",flags:["Returns consistently above market rates","Difficulty withdrawing funds","Unregistered investment products or advisors"]},
-{icon:"🏥",bg:"rgba(200,144,46,.07)",title:"Insurance & Benefits Fraud",desc:"Filing false claims, inflating genuine claims, or staging incidents to obtain insurance payouts or government benefits fraudulently.",flags:["Claims patterns inconsistent with policyholder history","Multiple claims in short succession","Staged accidents or exaggerated injuries"]}
+{icon:"📧",bg:"rgba(192,57,43,.06)",title:"Business Email Compromise",desc:"Criminals impersonate executives via compromised or spoofed emails to instruct urgent payments. FBI IC3 reports BEC caused over $2.9 billion in losses in 2023.",flags:["Urgent payment requests from leadership","Slight email address variations","Requests to bypass approval processes"]},
+{icon:"🎭",bg:"rgba(26,58,92,.08)",title:"Identity Fraud",desc:"Using stolen, fabricated, or synthetic identities to open accounts or commit financial crimes. Increasingly sophisticated with deepfakes and AI-generated documents.",flags:["Documents that don't match across databases","Rapid account opening across institutions","Synthetic identities mixing real and fake data"]},
+{icon:"📈",bg:"rgba(26,107,90,.07)",title:"Investment & Ponzi Schemes",desc:"Fraudulent schemes promising high returns with little risk. The SEC and DOJ have prosecuted numerous cases where new investor funds pay existing investors.",flags:["Returns consistently above market rates","Difficulty withdrawing funds","Unregistered products or advisors"]},
+{icon:"🏥",bg:"rgba(200,144,46,.07)",title:"Insurance & Benefits Fraud",desc:"Filing false or inflated claims. DOJ healthcare fraud enforcement alone recovers billions annually through the False Claims Act.",flags:["Claims inconsistent with history","Multiple claims in short succession","Staged incidents or exaggerated injuries"]}
 ]},
 {name:"Bribery & Corruption",cards:[
-{icon:"💼",bg:"rgba(192,57,43,.06)",title:"Facilitation Payments",desc:"Small unofficial payments to public officials to expedite routine government actions. Illegal under most anti-bribery laws and can fund wider corruption networks.",flags:["Unexplained 'consulting fees' or 'commissions'","Payments to officials in cash or via intermediaries","Contracts awarded without competitive process"]},
-{icon:"🏛️",bg:"rgba(26,58,92,.08)",title:"Political Corruption",desc:"The misuse of public office for private gain, including embezzlement, nepotism, patronage, and accepting bribes in exchange for political favours or policy decisions.",flags:["Unexplained wealth of public officials","Public contracts awarded to connected parties","Lack of transparency in government procurement"]},
-{icon:"🤝",bg:"rgba(26,107,90,.07)",title:"Private Sector Bribery",desc:"Offering or accepting inducements in commercial transactions to gain unfair business advantages — including kickbacks, secret commissions, and gifts.",flags:["Lavish hospitality or gifts to procurement officials","Use of third-party agents in weak governance jurisdictions","Unusual commission structures"]}
+{icon:"💼",bg:"rgba(192,57,43,.06)",title:"Facilitation Payments & FCPA",desc:"Bribes to foreign officials for business advantages. The DOJ and SEC enforce the Foreign Corrupt Practices Act, which has resulted in over $31 billion in penalties since 1977.",flags:["Unexplained 'consulting fees'","Payments to officials via intermediaries","Contracts awarded without competition"]},
+{icon:"🏛️",bg:"rgba(26,58,92,.08)",title:"Political Corruption",desc:"Misuse of public office for private gain. The DOJ Public Integrity Section is the nation's primary federal prosecutor of elected officials and government corruption.",flags:["Unexplained official wealth","Contracts to politically connected parties","Lack of procurement transparency"]},
+{icon:"🤝",bg:"rgba(26,107,90,.07)",title:"Private Sector Bribery",desc:"Offering or accepting inducements in commercial transactions — kickbacks, secret commissions, and gifts designed to influence business decisions.",flags:["Lavish gifts to procurement officials","Third-party agents in weak governance areas","Unusual commission structures"]}
 ]},
 {name:"Cyber-Enabled Crime",cards:[
-{icon:"🎣",bg:"rgba(192,57,43,.06)",title:"Phishing & Social Engineering",desc:"Deceptive communications designed to trick individuals into revealing sensitive information or making payments. As Get Safe Online warns, these attacks are increasingly sophisticated.",flags:["Emails with urgent requests or threatening language","Links to websites mimicking legitimate organisations","Requests for passwords, PINs, or financial details"]},
-{icon:"🔐",bg:"rgba(26,58,92,.08)",title:"Ransomware",desc:"Malicious software that encrypts an organisation's data and demands cryptocurrency payment for decryption. Increasingly threatens to publish stolen data.",flags:["Unexpected system lockouts or encrypted files","Ransom demands in cryptocurrency","Unusual network activity or data exfiltration"]},
-{icon:"💳",bg:"rgba(200,144,46,.07)",title:"Payment & Card Fraud",desc:"Unauthorised use of payment card details obtained through data breaches, skimming, or social engineering to make fraudulent purchases, often across borders.",flags:["Transactions in unusual locations or times","Multiple card-not-present transactions rapidly","Small 'test' transactions followed by larger ones"]}
+{icon:"🎣",bg:"rgba(192,57,43,.06)",title:"Phishing & Social Engineering",desc:"Deceptive communications tricking people into revealing information. As Get Safe Online and the FBI warn, these attacks grow more targeted and convincing each year.",flags:["Urgent or threatening language","Links mimicking legitimate sites","Requests for passwords or financial details"]},
+{icon:"🔐",bg:"rgba(26,58,92,.08)",title:"Ransomware",desc:"Malware encrypting data with ransom demands in cryptocurrency. FBI IC3 and CISA report escalating attacks on critical infrastructure, healthcare, and government systems.",flags:["Unexpected system lockouts","Ransom demands in cryptocurrency","Unusual network activity or data exfiltration"]},
+{icon:"💳",bg:"rgba(200,144,46,.07)",title:"Payment & Card Fraud",desc:"Unauthorised use of card details from breaches or skimming. FBI IC3 data shows payment fraud among the fastest-growing cyber crime categories.",flags:["Transactions in unusual locations","Rapid card-not-present transactions","Small 'test' charges then larger ones"]}
 ]},
 {name:"Terrorist Financing",cards:[
-{icon:"🌐",bg:"rgba(192,57,43,.06)",title:"Abuse of Charitable Organisations",desc:"Exploiting charity structures to collect, move, and distribute funds to support terrorist activities, taking advantage of reduced regulatory scrutiny.",flags:["Charitable funds diverted to conflict zones","Lack of transparency in fund allocation","Charities with minimal legitimate activities"]},
-{icon:"💰",bg:"rgba(26,58,92,.08)",title:"Informal Value Transfer",desc:"Using hawala networks and other informal systems to move money across borders without formal banking channels, making tracing extremely difficult.",flags:["Large cash transactions with no clear business purpose","Counterpart transactions in high-risk jurisdictions","No formal records or paper trail"]},
-{icon:"📱",bg:"rgba(26,107,90,.07)",title:"Exploitation of Digital Platforms",desc:"Using crowdfunding, social media, encrypted messaging, and cryptocurrencies to raise and move small amounts from dispersed supporters.",flags:["Crowdfunding campaigns with vague purposes","Crypto transfers to wallets linked to designated entities","Coordinated small donations from multiple sources"]}
+{icon:"🌐",bg:"rgba(192,57,43,.06)",title:"Abuse of Charitable Organisations",desc:"Exploiting charity structures to fund terrorism. The US Treasury has designated numerous entities under Executive Order 13224 for charity-based terrorist financing.",flags:["Funds diverted to conflict zones","Lack of transparency in allocation","Minimal legitimate charitable activities"]},
+{icon:"💰",bg:"rgba(26,58,92,.08)",title:"Informal Value Transfer",desc:"Using hawala networks to move money without formal banking. FinCEN advisories highlight these systems as high-risk for terrorist financing and sanctions evasion.",flags:["Large cash transactions without business purpose","Counterpart transactions in high-risk areas","No formal records or paper trail"]},
+{icon:"📱",bg:"rgba(26,107,90,.07)",title:"Digital Platform Exploitation",desc:"Using crowdfunding, crypto, and encrypted messaging to raise and move funds. The US Treasury has identified growing virtual asset exploitation for terrorist financing.",flags:["Crowdfunding with vague purposes","Crypto to designated-entity wallets","Coordinated small donations"]}
 ]}
+];
+
+// ═══════ 5 CASE STUDIES ═══════
+const CS=[
+{name:"Money Laundering",icon:"💰",stages:["PLACEMENT","LAYERING","INTEGRATION"],
+c1:"192,57,43",c2:"26,58,92",c3:"26,107,90",
+nodes:[[
+{i:"💊",t:"Drug Proceeds",s:"$2M cash from trafficking",T:"Drug Trafficking Proceeds",D:"A criminal network generates $2 million in cash from drug distribution across multiple states. This bulk cash needs to enter the financial system without triggering Bank Secrecy Act reporting. FinCEN data shows narcotics trafficking remains the largest single source of laundered funds in the US.",F:["Large volumes of unexplained cash","No legitimate business explanation","Multiple cash collection points"]},
+{i:"🏦",t:"Structuring",s:"$9,500 × 210 deposits",T:"Structuring Below BSA Thresholds",D:"The network recruits 15–20 couriers who deposit $9,500 — just below the $10,000 CTR threshold — across dozens of bank branches. Structuring is a federal crime under 31 U.S.C. § 5324 even if the funds are legitimate. FinCEN SARs frequently flag this exact pattern.",F:["Deposits just below $10,000","Multiple depositors and branches","Sequential or identical amounts"]},
+{i:"🏪",t:"Cash Business Front",s:"Car wash, restaurant",T:"Cash-Intensive Business Front",D:"Some cash is co-mingled with legitimate revenue from a car wash and restaurant. Daily takings are inflated on paper but revenue doesn't match footfall, utilities, or inventory. DOJ and IRS-CI cases frequently feature this method.",F:["Revenue inconsistent with business type","Unusual cash-to-card ratios","Stock doesn't match reported sales"]}
+],[
+{i:"🏢",t:"Shell Companies",s:"3 jurisdictions",T:"Shell Company Network",D:"Funds are transferred to shell companies in Delaware, Cyprus, and the UAE — entities with no employees, offices, or real activity. They generate fictitious invoices for 'consulting.' The Corporate Transparency Act now requires beneficial ownership reporting to FinCEN.",F:["No genuine business activity","Nominee directors, hidden UBOs","Invoices for vague services"]},
+{i:"🔄",t:"Wire Transfers",s:"US → Cyprus → Dubai",T:"International Wire Transfers",D:"Money is wired between shell companies across jurisdictions, each referencing fake invoices. Rapid cross-border movement through multiple correspondent banks makes tracing extremely difficult. FinCEN's 314(b) programme allows banks to share intelligence on suspicious wires.",F:["Rapid cross-border transfers","Circular payment patterns","Inconsistent with company profile"]},
+{i:"💱",t:"Currency Conversion",s:"USD → EUR → Crypto → GBP",T:"Currency & Crypto Layering",D:"Funds are converted between currencies at each stage, with some briefly passing through cryptocurrency. The US Treasury has identified virtual asset layering as a growing concern in its National Risk Assessment.",F:["Multiple conversions without rationale","Brief crypto as layering tool","High-risk jurisdictions"]}
+],[
+{i:"🏠",t:"Property",s:"Luxury real estate",T:"Real Estate Purchases",D:"The 'clean' money buys luxury apartments in Miami and London. FinCEN's Geographic Targeting Orders (GTOs) require title companies to identify beneficial owners in all-cash real estate deals in major US metros — specifically targeting this typology.",F:["All-cash or rapid purchases","Properties via LLC structures","Buyer doesn't match property value"]},
+{i:"🚗",t:"Luxury Assets",s:"Cars, watches, art",T:"High-Value Asset Purchases",D:"Additional funds buy luxury vehicles, watches, and art — assets that cross borders easily and can be resold for clean cash. These face fewer reporting requirements than real estate transactions.",F:["Large cash purchases of luxury goods","Third-party purchasers","Assets don't match declared income"]},
+{i:"✅",t:"Clean Income",s:"Rental, dividends",T:"Legitimate Income Stream",D:"The criminal now receives rental income and company dividends — all appearing legitimate. The drug trafficking link has been severed across multiple layers of transactions, jurisdictions, and entities.",F:["Income from laundered-asset investments","Tax returns showing business income","Lifestyle from 'legitimate' sources"]}
+]]},
+
+{name:"Fraud (BEC Scheme)",icon:"📧",stages:["TARGETING","EXECUTION","EXTRACTION"],
+c1:"200,144,46",c2:"192,57,43",c3:"26,58,92",
+nodes:[[
+{i:"🔍",t:"Reconnaissance",s:"Research target company",T:"Researching the Target",D:"Criminals spend weeks studying a company's leadership, suppliers, and payment practices using LinkedIn, websites, and breached data. FBI IC3 reports BEC groups increasingly use AI to build convincing profiles and identify the right finance employees to target.",F:["Scraping corporate social media","Monitoring executive travel","Identifying finance department contacts"]},
+{i:"🎭",t:"Email Compromise",s:"Spoof CEO account",T:"Email Compromise or Spoofing",D:"The attacker either compromises a real executive email (through phishing or credential stuffing) or creates a lookalike domain — e.g., c0mpany.com vs company.com. More sophisticated groups use AI to mimic the executive's writing style.",F:["Lookalike domains registered recently","Login from unusual locations","Auto-forward rules on mailboxes"]},
+{i:"📋",t:"Pretext Crafted",s:"'Urgent acquisition deal'",T:"Crafting the Pretext",D:"A convincing scenario is prepared — a confidential acquisition, overdue supplier payment, or regulatory matter — always with urgency and secrecy to bypass verification. DOJ cases show these pretexts growing increasingly sophisticated with real business context.",F:["Scenarios requiring immediate action","Instructions to keep it confidential","References to real business activities"]}
+],[
+{i:"📧",t:"Fraudulent Email",s:"'Wire $480K today'",T:"The Fraudulent Instruction",D:"The spoofed email instructs a finance employee to wire $480,000 to a new account for the 'acquisition.' It references real deals and presses for same-day execution. FBI IC3 data shows average BEC losses of $137,000 per incident, with some exceeding $30 million.",F:["Payment to new or changed account","Sent outside business hours","Bypass standard approval chains"]},
+{i:"💸",t:"Wire Executed",s:"$480K to mule account",T:"Funds Transferred",D:"Believing the instruction is genuine, the finance officer executes the wire. The money lands in a domestic mule account — often a compromised business account or recently opened account controlled by the criminal network.",F:["Wire to recently opened account","Beneficiary name doesn't match context","Funds moved within hours of receipt"]},
+{i:"🔀",t:"Rapid Movement",s:"Split and forwarded",T:"Rapid Fund Dispersal",D:"Within hours, the funds are split across multiple accounts and wired internationally — often to accounts in Southeast Asia or West Africa. Speed is critical: once funds leave the US banking system, recovery drops below 10%.",F:["Immediate splitting of received funds","International wires within 24 hours","Multiple downstream beneficiaries"]}
+],[
+{i:"💱",t:"Converted to Crypto",s:"BTC via exchanges",T:"Cryptocurrency Conversion",D:"Portions are quickly converted to cryptocurrency through exchanges with weak KYC — often peer-to-peer platforms or decentralised exchanges. This severs the direct banking trail and adds complexity for investigators.",F:["Quick conversion to crypto","Use of P2P or DEX platforms","Multiple wallet addresses"]},
+{i:"🏧",t:"Cash Withdrawal",s:"ATMs across countries",T:"Cash Withdrawal Network",D:"Other portions are withdrawn as cash through ATM networks in multiple countries using prepaid cards loaded from the mule accounts. FBI IC3 has tracked BEC proceeds cashed out across dozens of countries simultaneously.",F:["ATM withdrawals in multiple countries","Prepaid cards funded from mule accounts","Withdrawals at maximum daily limits"]},
+{i:"👻",t:"Funds Vanish",s:"Unrecoverable",T:"Proceeds Disappear",D:"Within 48–72 hours of the initial wire, the $480,000 has been dispersed across international accounts, converted to crypto, and cashed out — making full recovery virtually impossible. The FBI's Recovery Asset Team can freeze funds, but only if notified within 24 hours.",F:["Funds in non-cooperative jurisdictions","Mixed crypto and cash channels","No single recovery pathway"]}
+]]},
+
+{name:"Bribery & Corruption",icon:"💼",stages:["OPPORTUNITY","CORRUPT PAYMENT","CONCEALMENT"],
+c1:"26,58,92",c2:"192,57,43",c3:"26,107,90",
+nodes:[[
+{i:"🏗️",t:"Government Contract",s:"$50M infrastructure bid",T:"The Government Contract",D:"A multinational company is bidding on a $50 million infrastructure project in a developing country. The procurement process is opaque, and a local official signals that a 'commission' will be needed to secure the award. DOJ FCPA cases show this pattern repeatedly across extractives, infrastructure, and telecoms.",F:["High-value government contract","Opaque procurement process","Intermediary suggests 'facilitation'"]},
+{i:"🤵",t:"Third-Party Agent",s:"Local 'consultant' hired",T:"Engaging the Intermediary",D:"Rather than paying the official directly, the company hires a local 'consultant' — actually a front for the corrupt official — and signs a consulting agreement with vague deliverables. FCPA enforcement actions frequently target the use of third-party intermediaries to disguise bribe payments.",F:["Consultant with no relevant expertise","Vague or non-existent deliverables","Consultant connected to the decision-maker"]},
+{i:"📄",t:"Fake Deliverables",s:"Fabricated reports",T:"Creating False Justification",D:"The consultant produces generic 'market research reports' to justify invoicing. In reality, these are templates with minimal customisation — created solely to generate a paper trail. SEC and DOJ look specifically for this pattern in FCPA investigations.",F:["Generic reports with minimal substance","Invoicing before contract award","Deliverables not reviewed by management"]}
+],[
+{i:"💰",t:"$2.5M Payment",s:"Via offshore account",T:"The Corrupt Payment",D:"$2.5 million is wired to the consultant's offshore company in a low-transparency jurisdiction. The consultant passes most of the money to the government official through cash, property purchases, or tuition payments for the official's family. FCPA penalties for such schemes regularly exceed $100 million.",F:["Payment to offshore entity","Amount disproportionate to services","Payments coincide with contract milestones"]},
+{i:"🏆",t:"Contract Awarded",s:"Company wins the $50M bid",T:"Contract Secured",D:"The company wins the contract — outscoring competitors on evaluation criteria that were adjusted in their favour. The bribe has distorted the procurement process, potentially awarding critical infrastructure work to a less qualified bidder.",F:["Unexpected contract award","Evaluation criteria changed mid-process","Competing bidders were more qualified"]},
+{i:"🔇",t:"Complaints Silenced",s:"Whistleblowers pressured",T:"Suppressing Internal Concerns",D:"Junior employees who notice the unusual consultant payments are discouraged from asking questions. Internal audit findings are buried. DOJ provides enhanced credit to companies with effective whistleblower programmes for exactly this reason.",F:["Audit findings not escalated","Staff warned against raising concerns","Compliance function underfunded"]}
+],[
+{i:"📊",t:"Books Falsified",s:"'Consulting expenses'",T:"Falsifying Books and Records",D:"The bribe payments are recorded as legitimate consulting expenses in the company's books. The SEC's FCPA books-and-records provision (15 U.S.C. § 78m) makes this falsification independently criminal, even if the underlying bribery is hard to prove directly.",F:["Vague expense descriptions","No supporting documentation","Expenses not subject to normal controls"]},
+{i:"🌴",t:"Official Enriched",s:"Property, school fees",T:"Corrupt Official's Proceeds",D:"The government official uses the bribe to purchase property, pay children's university fees abroad, and fund a lifestyle far beyond their official salary. The DOJ's Kleptocracy Asset Recovery Initiative specifically targets and seizes such assets.",F:["Lifestyle inconsistent with income","Foreign property purchases","Education or luxury spending spikes"]},
+{i:"🔁",t:"Pattern Repeats",s:"Embedded in operations",T:"Systemic Corruption",D:"With one successful bribe, the pattern becomes embedded — the company uses the same consultant and method for future contracts across the region. What began as a single payment becomes systemic corruption. This is why DOJ FCPA enforcement focuses on corporate culture and compliance programme effectiveness.",F:["Same intermediary used repeatedly","Pattern across multiple jurisdictions","No management challenge of payments"]}
+]]},
+
+{name:"Cyber Crime (Ransomware)",icon:"🔐",stages:["ACCESS","EXPLOITATION","MONETISATION"],
+c1:"192,57,43",c2:"26,58,92",c3:"200,144,46",
+nodes:[[
+{i:"🎣",t:"Phishing Email",s:"Employee clicks link",T:"Initial Access — Phishing",D:"A hospital employee receives an email appearing to be from a medical supplier with an attached 'invoice.' Clicking the link installs malware. FBI IC3 and CISA report that phishing remains the primary initial access vector in over 80% of ransomware attacks on healthcare.",F:["Email from spoofed trusted sender","Urgent invoice or delivery notice","Link to malicious download"]},
+{i:"🔓",t:"Network Penetration",s:"Lateral movement begins",T:"Network Compromise",D:"The malware establishes a foothold and the attackers move laterally through the network, escalating privileges and mapping critical systems. This 'dwell time' — often weeks or months — allows attackers to identify the most valuable data and systems to encrypt.",F:["Unusual account privilege escalation","Lateral movement across network segments","Access to backup and admin systems"]},
+{i:"📤",t:"Data Exfiltration",s:"Patient records stolen",T:"Data Theft Before Encryption",D:"Before encrypting anything, the attackers exfiltrate sensitive patient records, financial data, and proprietary information. This enables 'double extortion' — demanding payment both to decrypt and to prevent public release of stolen data. The US HHS considers this a HIPAA breach.",F:["Large data transfers to external IPs","Data moved outside business hours","Compression of sensitive file archives"]}
+],[
+{i:"🔒",t:"Systems Encrypted",s:"Hospital operations halted",T:"Ransomware Deployment",D:"The attackers deploy ransomware across the hospital's network simultaneously, encrypting electronic health records, scheduling systems, billing, and even connected medical devices. Critical care reverts to paper-based processes. FBI IC3 reported 249 ransomware attacks on healthcare in 2023 alone.",F:["Simultaneous encryption across systems","Ransom note displayed on screens","IT unable to access backups"]},
+{i:"💀",t:"Ransom Demand",s:"$4.5M in Bitcoin",T:"The Ransom Demand",D:"A ransom note demands $4.5 million in Bitcoin within 72 hours, threatening to publish patient records on a dark web leak site. The average ransomware payment in 2023 exceeded $1.5 million. CISA strongly advises against paying, as it funds further criminal operations.",F:["Payment demanded in cryptocurrency","Countdown timer creating urgency","Threat to publish stolen data"]},
+{i:"⏱️",t:"Pressure Mounts",s:"Lives at risk",T:"Escalating Pressure",D:"With systems down, the hospital diverts emergency patients and cancels surgeries. Patient safety is directly at risk. The attackers contact media outlets to increase pressure. FBI and CISA provide incident response support, but recovery without paying can take weeks.",F:["Patient care directly impacted","Threat actors contact journalists","Regulatory notification deadlines"]}
+],[
+{i:"₿",t:"Bitcoin Payment",s:"$4.5M transferred",T:"Ransom Payment",D:"Under pressure, the hospital's board authorises payment. $4.5 million in Bitcoin is transferred to the attackers' wallet. The FBI tracks the wallet but funds are quickly moved through mixing services. FinCEN requires ransomware payment processors to file SARs.",F:["Payment to anonymous crypto wallet","Funds immediately tumbled/mixed","No guarantee of decryption"]},
+{i:"🔀",t:"Crypto Laundering",s:"Mixers and chain-hopping",T:"Laundering the Ransom",D:"The Bitcoin is run through mixing services, chain-hopped to Monero and back, and sent through exchanges in jurisdictions with weak AML. US Treasury sanctioned the Tornado Cash mixing protocol specifically because of its use in laundering ransomware proceeds.",F:["Use of sanctioned mixing protocols","Cross-chain swaps to privacy coins","Off-ramping through non-compliant exchanges"]},
+{i:"💵",t:"Cash Out",s:"Property, luxury goods",T:"Converting to Assets",D:"The group — often operating from jurisdictions with minimal US extradition cooperation — converts crypto to cash, property, and luxury goods. Despite international cooperation efforts, only a small fraction of ransomware proceeds are ever recovered.",F:["Conversion in non-cooperative jurisdictions","Purchase of assets and property","Funds reinvested in criminal infrastructure"]}
+]]},
+
+{name:"Terrorist Financing",icon:"🕌",stages:["FUNDRAISING","TRANSFER","DEPLOYMENT"],
+c1:"200,144,46",c2:"26,58,92",c3:"192,57,43",
+nodes:[[
+{i:"🕊️",t:"Sham Charity",s:"Humanitarian front",T:"Charity Front Organisation",D:"A charity is established claiming to provide humanitarian aid to a conflict zone. While some legitimate aid work occurs, a significant portion of donations are diverted. The US Treasury has designated over 70 entities under E.O. 13224 for using charitable fronts to finance terrorism.",F:["Charity operating in conflict zones","Vague programme descriptions","Disproportionate 'admin' costs"]},
+{i:"💻",t:"Online Fundraising",s:"Social media campaigns",T:"Digital Fundraising Campaigns",D:"The organisation runs emotive social media campaigns soliciting small donations from thousands of supporters worldwide. Encrypted messaging groups coordinate donation drives. US Treasury research shows micro-donations aggregated at scale can fund significant operations.",F:["Emotive appeals on social media","Donations via crypto or gift cards","Encrypted group coordination"]},
+{i:"🏪",t:"Legitimate Business",s:"Import/export front",T:"Business Income Diversion",D:"A seemingly legitimate import/export business generates real revenue — but a portion is systematically diverted to fund operations. Unlike money laundering, terrorist financing may involve entirely legitimate funds being redirected to illicit purposes. This makes detection particularly challenging.",F:["Legitimate business with unexplained transfers","Profits don't match reinvestment patterns","Trade with high-risk conflict regions"]}
+],[
+{i:"💱",t:"Hawala Transfer",s:"No formal banking trail",T:"Informal Value Transfer (Hawala)",D:"Funds are moved internationally through hawala — an informal value transfer system operating on trust between brokers. Money is deposited with a broker in one country and an equivalent amount released in another with no formal wire transfer. FinCEN has issued multiple advisories on hawala exploitation for terrorist financing.",F:["Cash deposits with informal brokers","Corresponding releases in conflict zones","Minimal or no documentation"]},
+{i:"📱",t:"Crypto Channels",s:"Bitcoin to conflict zone",T:"Cryptocurrency Transfer",D:"Some funds are converted to Bitcoin and transferred through a chain of wallets to operatives overseas. Virtual asset service providers in jurisdictions with weak regulation are exploited as on/off ramps. The US Treasury's 2024 risk assessment identified crypto as a growing TF channel.",F:["Crypto to wallets in high-risk regions","Use of unregulated exchanges","Small repeated transfers"]},
+{i:"🧳",t:"Cash Couriers",s:"Physical transport",T:"Bulk Cash Smuggling",D:"Physical cash is moved across borders by couriers — sometimes hidden in commercial shipments. US Customs and Border Protection seizes millions in undeclared currency annually. Cash remains the most difficult channel to trace once it leaves the formal financial system.",F:["Undeclared cross-border cash","Couriers on high-risk routes","Cash hidden in goods shipments"]}
+],[
+{i:"🔫",t:"Weapons Purchased",s:"Arms on black market",T:"Weapons and Equipment",D:"In the destination country, funds are used to purchase weapons, communications equipment, vehicles, and supplies. These purchases often occur through black market networks or corrupt military sources, making them extremely difficult to trace back to the original donations.",F:["Black market weapons purchases","Untraceable communications equipment","Supplies inconsistent with aid work"]},
+{i:"🏕️",t:"Training Camps",s:"Recruitment & logistics",T:"Operational Infrastructure",D:"Funds support recruitment, training facilities, safe houses, and logistics networks. The US State Department's Country Reports on Terrorism document how apparently small sums can sustain significant operational capacity in low-cost environments.",F:["Facility rentals in remote areas","Travel bookings for recruits","Subsistence payments to operatives"]},
+{i:"💥",t:"Attack Funded",s:"Operational execution",T:"Attack Planning & Execution",D:"Ultimately, the diverted charitable donations, business profits, and transferred funds finance an act of violence. US Treasury analysis shows that even modest sums — sometimes under $10,000 — can fund devastating attacks. This is why even small suspicious transactions related to TF receive intensive scrutiny.",F:["Small amounts funding significant harm","Planning expenses across countries","Complete disconnect from original donors"]}
+]]}
 ];
 
 // ═══════ IMPACT DATA ═══════
 const impacts=[
-{icon:"👥",title:"Modern Slavery & Human Trafficking",paras:["Economic crime directly fuels modern slavery. As the Slave Free Alliance highlights, modern slavery and labour exploitation are embedded in global supply chains across industries from agriculture to construction. Forced labour alone generates an estimated $150 billion in illegal profits annually.","The ILO estimates approximately 50 million people are trapped in modern slavery, including 28 million in forced labour. Financial crime networks use money laundering to process the proceeds, making the financial system complicit unless effective controls are in place."],tags:[{cls:"s1",text:"Source: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s4",text:"Ref: Grokipedia",url:"https://grokipedia.com/"}]},
-{icon:"🔒",title:"Online Fraud & Cyber Victimisation",paras:["Get Safe Online warns that cyber-enabled fraud is escalating rapidly, with criminals exploiting digital platforms to defraud individuals and businesses on a massive scale. INTERPOL describes this as an epidemic, particularly targeting vulnerable people.","The FBI reported over $12.5 billion in losses from cyber fraud in the US alone in 2023, more than doubling in five years. Victims suffer not only financial loss but lasting psychological harm. Elderly citizens and those less familiar with digital technologies are disproportionately affected."],tags:[{cls:"s2",text:"Source: Get Safe Online",url:"https://www.getsafeonline.org/"},{cls:"s3",text:"Ref: INTERPOL",url:"https://www.interpol.int/en/Crimes/Financial-crime"}]},
-{icon:"📉",title:"Economic Damage & Market Distortion",paras:["Financial crime significantly undermines economic growth and market integrity. Money laundering represented approximately 3.1% of US GDP in 2023 — comparable in scale to the entire accommodation and food services sector.","Businesses fronting for criminal enterprises distort fair competition. Tax evasion deprives governments of revenue for public services, and corruption undermines investor confidence, suppressing development particularly in vulnerable economies."],tags:[{cls:"s4",text:"Ref: Grokipedia",url:"https://grokipedia.com/"},{cls:"s3",text:"Ref: INTERPOL",url:"https://www.interpol.int/en/Crimes/Financial-crime"}]},
-{icon:"🏘️",title:"Community Harm & Erosion of Trust",paras:["Economic crime erodes trust in institutions — banks, governments, and law enforcement — that communities depend upon. When fraud goes unpunished or corruption pervades public services, social cohesion breaks down.","The proceeds of financial crime fund further criminal activity, including drug trafficking, weapons smuggling, and violent organised crime. Communities suffer both the direct impact of fraud and the downstream consequences."],tags:[{cls:"s1",text:"Ref: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s2",text:"Source: Get Safe Online",url:"https://www.getsafeonline.org/"}]},
-{icon:"🧒",title:"Impact on Vulnerable Populations",paras:["Children, migrant workers, elderly people, and low-income communities bear a disproportionate burden. Roughly a quarter of all victims of modern slavery are children. Migrant workers are particularly vulnerable to forced labour.","Online scams disproportionately target the elderly and those with limited digital literacy. Romance fraud and investment scams cause devastating financial and emotional harm to victims who may lose their life savings."],tags:[{cls:"s1",text:"Source: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s2",text:"Source: Get Safe Online",url:"https://www.getsafeonline.org/"}]},
-{icon:"🌍",title:"Global Destabilisation",paras:["At a macro level, economic crime destabilises nations. Corruption diverts resources from health, education, and infrastructure. Terrorist financing enables violence. Financial flows from trafficking undermine governance and the rule of law.","G20 nations imported an estimated $468 billion worth of products potentially made by forced labour, demonstrating how economic crime is woven into the global economy."],tags:[{cls:"s3",text:"Ref: INTERPOL",url:"https://www.interpol.int/en/Crimes/Financial-crime"},{cls:"s4",text:"Ref: Grokipedia",url:"https://grokipedia.com/"}]}
+{icon:"👥",title:"Modern Slavery & Human Trafficking",paras:["Economic crime directly fuels modern slavery. As the Slave Free Alliance highlights, modern slavery and labour exploitation are embedded in global supply chains. Forced labour generates an estimated $150 billion in illegal profits annually. The US State Department's Trafficking in Persons Report monitors 188 countries.","The ILO estimates 50 million people are trapped in modern slavery, including 28 million in forced labour. Financial crime networks use money laundering to process trafficking proceeds, making the financial system complicit unless effective controls are in place."],tags:[{cls:"s1",text:"Source: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s4",text:"Ref: US State Dept TIP Report",url:"https://www.state.gov/trafficking-in-persons-report/"}]},
+{icon:"🔒",title:"Online Fraud & Cyber Victimisation",paras:["Get Safe Online warns that cyber-enabled fraud is escalating rapidly. INTERPOL describes this as an epidemic. The FBI IC3 reported $12.5 billion in losses in 2023 alone — more than doubling in five years, with investment fraud and BEC as the costliest categories.","Victims suffer not only financial loss but lasting psychological harm. Elderly citizens and those with limited digital literacy are disproportionately targeted. Romance fraud and tech support scams are devastatingly effective against vulnerable populations."],tags:[{cls:"s2",text:"Source: Get Safe Online",url:"https://www.getsafeonline.org/"},{cls:"s3",text:"Source: FBI IC3",url:"https://www.ic3.gov/"}]},
+{icon:"📉",title:"Economic Damage & Market Distortion",paras:["Financial crime significantly undermines economic growth. Money laundering represented approximately 2–5% of global GDP according to UN estimates. The US Treasury's National Risk Assessment identifies real estate, legal services, and digital assets as particularly vulnerable sectors.","Businesses fronting for criminals distort competition. Tax evasion deprives governments of public service revenue, and corruption undermines investor confidence — particularly damaging in developing economies."],tags:[{cls:"s4",text:"Ref: US Treasury",url:"https://home.treasury.gov/"},{cls:"s3",text:"Ref: INTERPOL",url:"https://www.interpol.int/en/Crimes/Financial-crime"}]},
+{icon:"🏘️",title:"Community Harm & Erosion of Trust",paras:["Economic crime erodes trust in institutions — banks, governments, and law enforcement — that communities depend upon. When fraud goes unpunished or corruption pervades public services, social cohesion breaks down.","Financial crime proceeds fund further criminal activity — drug trafficking, weapons smuggling, and organised violence. Communities suffer both direct fraud impacts and downstream criminal consequences."],tags:[{cls:"s1",text:"Ref: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s2",text:"Source: Get Safe Online",url:"https://www.getsafeonline.org/"}]},
+{icon:"🧒",title:"Impact on Vulnerable Populations",paras:["Children, migrant workers, elderly people, and low-income communities bear a disproportionate burden. The US State Department estimates a quarter of trafficking victims are children. Migrant workers face forced labour exploitation worldwide.","Online scams disproportionately target the elderly. FBI IC3 data shows Americans over 60 lost $3.4 billion to fraud in 2023 — more than any other age group."],tags:[{cls:"s1",text:"Source: Slave Free Alliance",url:"https://www.slavefreealliance.org/"},{cls:"s3",text:"Source: FBI IC3",url:"https://www.ic3.gov/"}]},
+{icon:"🌍",title:"Global Destabilisation",paras:["Economic crime destabilises nations. Corruption diverts resources from health and education. Terrorist financing enables violence. The US Treasury's national risk assessments identify transnational criminal organisations as threats to both financial system integrity and national security.","DOJ and international partners have recovered billions in assets stolen by kleptocrats, but the scale of illicit financial flows far exceeds enforcement capacity."],tags:[{cls:"s4",text:"Ref: US Treasury",url:"https://home.treasury.gov/"},{cls:"s3",text:"Ref: INTERPOL",url:"https://www.interpol.int/en/Crimes/Financial-crime"}]}
 ];
 
-// ═══════ ORGS DATA ═══════
+// ═══════ ORGS ═══════
 const orgs=[
-{icon:"🌐",bg:"rgba(26,58,92,.06)",name:"Financial Action Task Force (FATF)",desc:"Global standard-setter for anti-money laundering and counter-terrorist financing.",url:"https://www.fatf-gafi.org/",tag:"Global Standards",cls:"s2"},
-{icon:"🔍",bg:"rgba(192,57,43,.06)",name:"INTERPOL",desc:"International policing organisation coordinating cross-border financial crime investigations.",url:"https://www.interpol.int/en/Crimes/Financial-crime",tag:"Law Enforcement",cls:"s3"},
-{icon:"🏛️",bg:"rgba(26,58,92,.06)",name:"Europol – Financial Crime",desc:"EU law enforcement agency tackling money laundering, fraud, and criminal finance.",url:"https://www.europol.europa.eu/crime-areas/economic-crime",tag:"Law Enforcement",cls:"s2"},
-{icon:"⚖️",bg:"rgba(192,57,43,.06)",name:"UK National Crime Agency",desc:"Lead UK agency combating serious and organised crime including economic crime.",url:"https://www.nationalcrimeagency.gov.uk/",tag:"Law Enforcement",cls:"s3"},
-{icon:"📋",bg:"rgba(26,107,90,.07)",name:"Financial Conduct Authority (FCA)",desc:"UK regulator ensuring financial markets work well and consumers are protected.",url:"https://www.fca.org.uk/",tag:"Regulator",cls:"s1"},
-{icon:"🇺🇸",bg:"rgba(26,58,92,.06)",name:"FinCEN (US)",desc:"US Financial Crimes Enforcement Network — financial intelligence to combat crime.",url:"https://www.fincen.gov/",tag:"Intelligence",cls:"s2"},
-{icon:"🏦",bg:"rgba(200,144,46,.07)",name:"Wolfsberg Group",desc:"Association of 13 global banks developing financial crime risk frameworks.",url:"https://www.wolfsberg-principles.com/",tag:"Industry",cls:"s4"},
-{icon:"🛡️",bg:"rgba(26,107,90,.07)",name:"Slave Free Alliance",desc:"Social enterprise helping organisations combat modern slavery in supply chains.",url:"https://www.slavefreealliance.org/",tag:"Modern Slavery",cls:"s1"},
-{icon:"🔒",bg:"rgba(26,58,92,.06)",name:"Get Safe Online",desc:"UK's leading public/private partnership for impartial online safety advice.",url:"https://www.getsafeonline.org/",tag:"Cyber Safety",cls:"s2"},
-{icon:"📖",bg:"rgba(200,144,46,.07)",name:"Grokipedia",desc:"AI-powered encyclopaedia providing reference articles on financial crime.",url:"https://grokipedia.com/",tag:"Reference",cls:"s4"},
-{icon:"🏢",bg:"rgba(192,57,43,.06)",name:"Transparency International",desc:"Global movement working to end the injustice of corruption.",url:"https://www.transparency.org/",tag:"Anti-Corruption",cls:"s3"},
-{icon:"📊",bg:"rgba(26,107,90,.07)",name:"Egmont Group",desc:"Network of 167 Financial Intelligence Units sharing information globally.",url:"https://egmontgroup.org/",tag:"Intelligence",cls:"s1"},
-{icon:"🌱",bg:"rgba(26,58,92,.06)",name:"Walk Free Foundation",desc:"Human rights organisation publishing the Global Slavery Index.",url:"https://www.walkfree.org/",tag:"Modern Slavery",cls:"s2"},
-{icon:"🇬🇧",bg:"rgba(192,57,43,.06)",name:"UK Fraud Advisory Panel",desc:"Charity providing expert, independent advice on fraud prevention.",url:"https://www.fraudadvisorypanel.org/",tag:"Fraud Prevention",cls:"s3"},
-{icon:"💼",bg:"rgba(200,144,46,.07)",name:"ACAMS",desc:"The largest AML membership organisation globally.",url:"https://www.acams.org/",tag:"Professional Body",cls:"s4"},
+{icon:"🇺🇸",bg:"rgba(26,58,92,.06)",name:"FinCEN",desc:"US Financial Crimes Enforcement Network — collects and analyses financial intelligence to combat crime.",url:"https://www.fincen.gov/",tag:"Intelligence",cls:"s2"},
+{icon:"🕵️",bg:"rgba(192,57,43,.06)",name:"FBI IC3",desc:"Internet Crime Complaint Center — public reporting and analysis of cyber-enabled financial crime.",url:"https://www.ic3.gov/",tag:"Law Enforcement",cls:"s3"},
+{icon:"⚖️",bg:"rgba(26,107,90,.07)",name:"US Department of Justice",desc:"Criminal Division — prosecutes fraud, money laundering, FCPA violations, and financial crime.",url:"https://www.justice.gov/criminal",tag:"Prosecution",cls:"s1"},
+{icon:"🏛️",bg:"rgba(200,144,46,.07)",name:"US Treasury (TFI)",desc:"Office of Terrorism and Financial Intelligence — sanctions, terrorist financing, and financial crime policy.",url:"https://home.treasury.gov/",tag:"Policy",cls:"s4"},
+{icon:"🔍",bg:"rgba(192,57,43,.06)",name:"INTERPOL",desc:"International policing organisation coordinating cross-border financial crime investigations globally.",url:"https://www.interpol.int/en/Crimes/Financial-crime",tag:"Law Enforcement",cls:"s3"},
+{icon:"🏛️",bg:"rgba(26,58,92,.06)",name:"Europol",desc:"EU law enforcement agency tackling money laundering, fraud, and criminal finance across Europe.",url:"https://www.europol.europa.eu/crime-areas/economic-crime",tag:"Law Enforcement",cls:"s2"},
+{icon:"⚖️",bg:"rgba(192,57,43,.06)",name:"UK National Crime Agency",desc:"Lead UK agency combating serious and organised crime including economic crime and cybercrime.",url:"https://www.nationalcrimeagency.gov.uk/",tag:"Law Enforcement",cls:"s3"},
+{icon:"📋",bg:"rgba(26,107,90,.07)",name:"Financial Conduct Authority",desc:"UK regulator ensuring financial markets work well and consumers are protected from harm.",url:"https://www.fca.org.uk/",tag:"Regulator",cls:"s1"},
+{icon:"🏦",bg:"rgba(200,144,46,.07)",name:"Wolfsberg Group",desc:"Association of 13 global banks developing financial crime risk management frameworks.",url:"https://www.wolfsberg-principles.com/",tag:"Industry",cls:"s4"},
+{icon:"🛡️",bg:"rgba(26,107,90,.07)",name:"Slave Free Alliance",desc:"Social enterprise helping organisations protect operations and supply chains from modern slavery.",url:"https://www.slavefreealliance.org/",tag:"Modern Slavery",cls:"s1"},
+{icon:"🔒",bg:"rgba(26,58,92,.06)",name:"Get Safe Online",desc:"UK's leading public/private partnership providing free, impartial online safety advice.",url:"https://www.getsafeonline.org/",tag:"Cyber Safety",cls:"s2"},
+{icon:"🏢",bg:"rgba(192,57,43,.06)",name:"Transparency International",desc:"Global movement working to end the injustice of corruption through advocacy and research.",url:"https://www.transparency.org/",tag:"Anti-Corruption",cls:"s3"},
+{icon:"📊",bg:"rgba(26,107,90,.07)",name:"Egmont Group",desc:"Network of 167 Financial Intelligence Units sharing information to combat ML and TF globally.",url:"https://egmontgroup.org/",tag:"Intelligence",cls:"s1"},
+{icon:"💼",bg:"rgba(200,144,46,.07)",name:"ACAMS",desc:"The largest AML membership organisation globally — certifications, training, and professional community.",url:"https://www.acams.org/",tag:"Professional Body",cls:"s4"},
 {icon:"🎓",bg:"rgba(26,107,90,.07)",name:"International Compliance Association",desc:"Globally recognised qualifications in governance, risk, and compliance.",url:"https://www.int-comp.org/",tag:"Education",cls:"s1"}
 ];
 
-// ═══════ FUTURE DATA ═══════
+// ═══════ FUTURE ═══════
 const futures=[
-{icon:"🤖",title:"AI & Machine Learning",desc:"AI is revolutionising transaction monitoring — learning from billions of data points, detecting subtle anomalies, and identifying emerging typologies in real time. Machine learning reduces false positives and uncovers complex criminal networks."},
-{icon:"⛓️",title:"Blockchain Analytics",desc:"While criminals exploit cryptocurrency for anonymity, blockchain's transparent ledger creates a powerful investigative tool. Advanced analytics can trace funds across wallets, exchanges, and mixing services."},
-{icon:"🔬",title:"Behavioural Biometrics",desc:"Next-generation fraud detection analyses how people interact with devices — typing patterns, mouse movements, swipe gestures — to detect account takeover and social engineering in real time."},
-{icon:"🛰️",title:"Satellite & Geospatial Intelligence",desc:"Satellite imagery and geospatial analytics detect forced labour, illegal mining, and undeclared economic activity — corroborating or challenging claims in supply chain audits and trade documents."},
-{icon:"🧬",title:"Digital Identity & Biometrics",desc:"Advances in digital identity — facial recognition, liveness detection, verifiable credentials — make it harder for criminals to use stolen or synthetic identities for financial crime."},
-{icon:"📡",title:"Real-Time Information Sharing",desc:"Secure, real-time information sharing between banks, law enforcement, and regulators — enabled by privacy-enhancing technologies — allows detection of threats no single institution could identify alone."},
-{icon:"🌐",title:"RegTech & Automated Compliance",desc:"Regulatory technology is automating compliance — from KYC and sanctions screening to regulatory reporting. NLP monitors regulatory changes across jurisdictions in real time."},
-{icon:"🧠",title:"Predictive Analytics & Network Science",desc:"Predictive models combine financial data, social network analysis, and open-source intelligence to identify emerging threats before they materialise, exposing criminal infrastructure at scale."},
-{icon:"🎮",title:"Gamification & Immersive Training",desc:"VR simulations and gamified learning are transforming compliance training — allowing practitioners to practise identifying red flags and handling complex investigations in realistic safe environments."}
+{icon:"🤖",title:"AI & Machine Learning",desc:"AI is revolutionising transaction monitoring — detecting subtle anomalies across billions of data points and identifying emerging typologies in real time. FinCEN has endorsed responsible AI adoption for AML compliance."},
+{icon:"⛓️",title:"Blockchain Analytics",desc:"While criminals exploit crypto for anonymity, blockchain's transparent ledger enables powerful investigation. Analytics platforms trace funds across wallets, exchanges, and mixing services, linking transactions to identities."},
+{icon:"🔬",title:"Behavioural Biometrics",desc:"Next-generation fraud detection analyses how people interact with devices — typing patterns, mouse movements, swipe gestures — detecting account takeover and social engineering in real time."},
+{icon:"🛰️",title:"Satellite & Geospatial Intelligence",desc:"Satellite imagery detects forced labour, illegal mining, and undeclared activity. Combined with financial data, it corroborates or challenges supply chain audit claims."},
+{icon:"🧬",title:"Digital Identity & Biometrics",desc:"Facial recognition, liveness detection, and verifiable digital credentials make it harder for criminals to exploit stolen or synthetic identities for financial crime."},
+{icon:"📡",title:"Real-Time Information Sharing",desc:"Secure, real-time intelligence sharing between banks, law enforcement, and regulators — enabled by privacy-enhancing technologies — allows detection of threats no single institution could find alone."},
+{icon:"🌐",title:"RegTech & Automated Compliance",desc:"Regulatory technology automates compliance — from KYC to sanctions screening. NLP monitors regulatory changes across jurisdictions in real time, keeping organisations ahead of evolving requirements."},
+{icon:"🧠",title:"Predictive Analytics & Network Science",desc:"Predictive models combine financial data, social network analysis, and open-source intelligence to identify threats before they materialise, exposing criminal infrastructure at scale."},
+{icon:"🎮",title:"Gamification & Immersive Training",desc:"VR simulations and gamified platforms transform compliance training — practitioners practise identifying red flags and handling investigations in realistic safe environments."}
 ];
 
-// ═══════ FLOW GRAPH DATA ═══════
-const flowData=[
-{stage:"PLACEMENT",color:"rgba(192,57,43,.3)",title:"Drug Trafficking Proceeds",desc:"A criminal network has generated £2 million in cash from drug trafficking operations across the UK. This bulk cash is the starting point — it needs to enter the financial system without triggering alerts. The challenge: how do you deposit £2M in cash without banks noticing?",flags:["Large volumes of cash","No legitimate business explanation","Multiple collection points"]},
-{stage:"PLACEMENT",color:"rgba(192,57,43,.3)",title:"Smurfing / Structuring",desc:"The network recruits 15–20 'smurfs' — individuals who each make multiple cash deposits of £9,500 (just below the £10,000 reporting threshold) across dozens of bank branches over several weeks. Each deposit appears routine in isolation, but the aggregate pattern is the red flag.",flags:["Deposits just below reporting threshold","Multiple depositors, multiple branches","Identical or sequential deposit amounts"]},
-{stage:"PLACEMENT",color:"rgba(192,57,43,.3)",title:"Cash-Intensive Business Front",desc:"Simultaneously, some cash is fed through a cash-intensive business — a car wash and a takeaway restaurant — by inflating daily takings. The businesses appear profitable on paper, but the revenue doesn't match footfall or stock purchases. This is 'co-mingling' of dirty and legitimate money.",flags:["Revenue inconsistent with business type/location","Unusual cash-to-card payment ratios","Stock purchases don't match reported sales"]},
-{stage:"LAYERING",color:"rgba(26,58,92,.4)",title:"Shell Company Network",desc:"The deposited funds are transferred to accounts held by three shell companies registered in the UK, Cyprus, and the UAE. These companies have no employees, no real offices, and exist only to generate fictitious invoices for 'consulting services' — creating a paper trail that appears legitimate.",flags:["Companies with no genuine business activity","Nominee directors, no visible UBO","Invoices for vague 'services'"]},
-{stage:"LAYERING",color:"rgba(26,58,92,.4)",title:"International Wire Transfers",desc:"Money is wired between the shell companies across jurisdictions: UK → Cyprus → Dubai → back to a UK-linked account. Each transfer references a fake invoice. The rapid cross-border movement, combined with currency conversion, makes tracing extremely difficult for any single country's authorities.",flags:["Rapid cross-border transfers","Circular payment patterns","Transactions inconsistent with business profile"]},
-{stage:"LAYERING",color:"rgba(26,58,92,.4)",title:"Currency Conversion",desc:"At each stage, funds are converted between currencies — GBP to EUR in Cyprus, EUR to USD in Dubai — adding another layer of complexity. Some funds are briefly converted to cryptocurrency and back, exploiting the speed and pseudonymity of blockchain transactions.",flags:["Multiple currency conversions without business rationale","Brief crypto holdings (layering tool)","Funds pass through high-risk jurisdictions"]},
-{stage:"INTEGRATION",color:"rgba(26,107,90,.35)",title:"Property Purchases",desc:"The 'clean' money — now appearing as legitimate consulting income — is used to purchase luxury apartments in London and Dubai. Property is a favoured integration vehicle because it's a store of value, can appreciate, and generates rental income that provides an ongoing legitimate income stream.",flags:["Cash or unusually fast property purchases","Properties held through corporate structures","Buyer profile inconsistent with property value"]},
-{stage:"INTEGRATION",color:"rgba(26,107,90,.35)",title:"High-Value Asset Purchases",desc:"Additional funds are used to purchase luxury cars, watches, and art — assets that can be enjoyed, displayed as status symbols, and resold later for 'clean' cash. These purchases are harder to trace than property and can cross borders easily.",flags:["Large cash purchases of luxury goods","Purchases under third-party names","Assets don't match declared income"]},
-{stage:"INTEGRATION",color:"rgba(26,107,90,.35)",title:"\"Legitimate\" Income Stream",desc:"The criminal now receives rental income from the properties, dividends from the shell company network, and can sell assets for 'clean' proceeds. The money has been fully laundered — it appears to come from legitimate business activities. The original drug trafficking link has been severed across multiple layers.",flags:["Income from assets purchased with layered funds","Tax returns filed showing 'business income'","Lifestyle funded by apparently legitimate sources"]}
+// ═══════ POP CULTURE ═══════
+const popCulture=[
+{icon:"🎬",title:"The Wolf of Wall Street",meta:"Film · 2013 · Dir. Martin Scorsese",desc:"Based on the true story of stockbroker Jordan Belfort, who defrauded investors of over $200 million through pump-and-dump schemes at his firm Stratton Oakmont. The film depicts securities fraud, money laundering through Swiss banks, and the FBI investigation that brought Belfort down.",tag:"Securities Fraud",cls:"s3"},
+{icon:"🎬",title:"The Big Short",meta:"Film · 2015 · Dir. Adam McKay",desc:"Follows the true story of the investors who predicted and profited from the 2007–2008 housing market collapse. Exposes the fraudulent mortgage-backed securities, ratings agency failures, and systemic deception that triggered the global financial crisis.",tag:"Financial Fraud",cls:"s2"},
+{icon:"📺",title:"Ozark",meta:"TV Series · 2017–2022 · Netflix",desc:"A financial planner launders money for a Mexican drug cartel, relocating his family to the Ozarks. The series provides a detailed (if dramatised) portrayal of money laundering mechanics — shell companies, cash businesses, real estate, and the constant threat of both law enforcement and criminal violence.",tag:"Money Laundering",cls:"s1"},
+{icon:"📺",title:"Breaking Bad",meta:"TV Series · 2008–2013 · AMC",desc:"A chemistry teacher turned methamphetamine manufacturer faces the challenge of laundering millions in drug proceeds — ultimately using a car wash business as a front. The show depicts structuring, cash-intensive business fronts, and the corrosive effects of financial crime on individuals and families.",tag:"Money Laundering",cls:"s1"},
+{icon:"🎬",title:"The Laundromat",meta:"Film · 2019 · Dir. Steven Soderbergh",desc:"Based on the Panama Papers scandal, the film dramatises how the law firm Mossack Fonseca helped wealthy clients hide assets through shell companies and offshore structures. A sharp exploration of how legal corporate structures enable global money laundering and tax evasion.",tag:"Shell Companies",cls:"s4"},
+{icon:"📺",title:"Dirty Money",meta:"Documentary Series · 2018–2020 · Netflix",desc:"Each episode investigates a different case of corporate fraud and corruption — from Volkswagen's emissions scandal to predatory payday lending and HSBC's money laundering for drug cartels. Based on real investigations and DOJ enforcement actions.",tag:"Corporate Fraud",cls:"s3"},
+{icon:"🎬",title:"All the President's Men",meta:"Film · 1976 · Dir. Alan J. Pakula",desc:"The classic account of Washington Post journalists Woodward and Bernstein investigating the Watergate scandal — which ultimately involved illegal campaign financing, money laundering, bribery, and obstruction of justice at the highest levels of government.",tag:"Political Corruption",cls:"s2"},
+{icon:"📖",title:"Billion Dollar Whale",meta:"Book · 2018 · Tom Wright & Bradley Hope",desc:"The astonishing true story of Jho Low, who masterminded the theft of billions from Malaysia's 1MDB sovereign wealth fund. The book traces how the stolen money flowed through global banks, shell companies, and real estate into Hollywood film financing, art purchases, and lavish parties.",tag:"Money Laundering",cls:"s1"},
+{icon:"📖",title:"Bad Blood",meta:"Book · 2018 · John Carreyrou",desc:"The definitive account of the Theranos fraud — how Elizabeth Holmes and Sunny Balwani deceived investors, patients, and regulators about their blood-testing technology. A masterclass in understanding how corporate fraud persists when due diligence fails and whistleblowers are silenced.",tag:"Corporate Fraud",cls:"s3"},
+{icon:"📖",title:"Treasure Islands",meta:"Book · 2011 · Nicholas Shaxson",desc:"An investigation into the global network of offshore tax havens — how they enable money laundering, tax evasion, and corruption by providing secrecy, minimal regulation, and legal structures designed to hide wealth and criminal proceeds.",tag:"Tax Havens",cls:"s4"},
+{icon:"🎬",title:"Catch Me If You Can",meta:"Film · 2002 · Dir. Steven Spielberg",desc:"Based on the true story of Frank Abagnale Jr., one of the most successful con artists in history. Before his 19th birthday, he had impersonated a pilot, doctor, and lawyer while forging millions of dollars in cheques — an entertaining introduction to identity fraud and social engineering.",tag:"Identity Fraud",cls:"s2"},
+{icon:"📖",title:"The Spider Network",meta:"Book · 2017 · David Enrich",desc:"The true story of Tom Hayes, the first person convicted for manipulating LIBOR — the benchmark interest rate underpinning trillions in financial contracts. Reveals how a small network of traders rigged global markets for profit, and the regulatory failures that allowed it to persist.",tag:"Market Manipulation",cls:"s1"},
+{icon:"🎬",title:"American Made",meta:"Film · 2017 · Dir. Doug Liman",desc:"Based on the real story of Barry Seal, a TWA pilot recruited by the CIA who became a drug smuggler and money launderer for the Medellín Cartel — burying so much cash he ran out of places to store it. Illustrates the placement challenge at the heart of money laundering.",tag:"Money Laundering",cls:"s4"},
+{icon:"📺",title:"McMafia",meta:"TV Series · 2018 · BBC/AMC",desc:"Inspired by Misha Glenny's investigative book, the series follows a British-Russian family entangled in organised crime spanning from London to Mumbai, Prague, and Tel Aviv. A sophisticated portrayal of how legitimate finance and transnational organised crime intersect.",tag:"Organised Crime",cls:"s3"},
+{icon:"📖",title:"Dark Towers",meta:"Book · 2020 · David Enrich",desc:"An exposé of Deutsche Bank — its entanglement with Donald Trump, Russian oligarchs, and Jeffrey Epstein. Chronicles decades of compliance failures, money laundering scandals, and the bank's role as a conduit for illicit finance from Moscow to Manhattan.",tag:"Banking Scandal",cls:"s2"}
 ];
-
-function fd(i){
-const d=flowData[i];
-document.getElementById('fdStage').style.background=d.color;
-document.getElementById('fdStage').textContent=d.stage;
-document.getElementById('fdTitle').textContent=d.title;
-document.getElementById('fdDesc').textContent=d.desc;
-document.getElementById('fdFlags').innerHTML=d.flags.map(f=>'<span>🚩 '+f+'</span>').join('');
-document.getElementById('flowDetail').style.animation='none';
-document.getElementById('flowDetail').offsetHeight;
-document.getElementById('flowDetail').style.animation='fs .3s ease';
-}
 
 // ═══════ RENDER ═══════
-document.getElementById('skillsGrid').innerHTML=skills.map(s=>`
-<div class="skc" onclick="this.classList.toggle('exp')">
-<span class="exh">▼</span><span class="ski">${s.icon}</span>
-<h3>${s.title}</h3><div class="skb">${s.brief}</div>
-<div class="skd">${s.detail}</div></div>`).join('');
+document.getElementById('skillsGrid').innerHTML=skills.map(s=>`<div class="skc" onclick="this.classList.toggle('exp')"><span class="exh">▼</span><span class="ski">${s.icon}</span><h3>${s.title}</h3><div class="skb">${s.brief}</div><div class="skd">${s.detail}</div></div>`).join('');
 
 document.getElementById('typoTabs').innerHTML=typoCategories.map((c,i)=>`<button class="ttb${i===0?' act':''}" onclick="showTypo(${i})">${c.name}</button>`).join('');
-
-function showTypo(idx){
-document.querySelectorAll('.ttb').forEach((t,i)=>t.classList.toggle('act',i===idx));
-document.getElementById('typoContent').innerHTML=`<div class="tcg">${typoCategories[idx].cards.map(c=>`
-<div class="tcc"><div class="tch"><div class="tci" style="background:${c.bg}">${c.icon}</div><h3>${c.title}</h3></div>
-<p>${c.desc}</p><div class="rf"><h4>Red Flags</h4><ul>${c.flags.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>`).join('')}</div>`;
-}
+function showTypo(idx){document.querySelectorAll('.ttb').forEach((t,i)=>t.classList.toggle('act',i===idx));document.getElementById('typoContent').innerHTML=`<div class="tcg">${typoCategories[idx].cards.map(c=>`<div class="tcc"><div class="tch"><div class="tci" style="background:${c.bg}">${c.icon}</div><h3>${c.title}</h3></div><p>${c.desc}</p><div class="rf"><h4>Red Flags</h4><ul>${c.flags.map(f=>`<li>${f}</li>`).join('')}</ul></div></div>`).join('')}</div>`}
 showTypo(0);
 
-document.getElementById('impactBlocks').innerHTML=impacts.map(b=>`
-<div class="ibl"><h3>${b.icon} ${b.title}</h3>
-${b.paras.map(p=>`<p>${p}</p>`).join('')}
-<div>${b.tags.map(t=>`<span class="stg ${t.cls}"><a href="${t.url}" target="_blank">${t.text}</a></span>`).join('')}</div></div>`).join('');
+// Case Studies
+document.getElementById('csTabs').innerHTML=CS.map((c,i)=>`<button class="cs-tab${i===0?' act':''}" onclick="showCS(${i})">${c.icon} ${c.name}</button>`).join('');
+let curCS=0;
+function showCS(idx){
+curCS=idx;const c=CS[idx];
+document.querySelectorAll('.cs-tab').forEach((t,i)=>t.classList.toggle('act',i===idx));
+let h='<div class="cs-flow"><div class="cs-grid">';
+c.nodes.forEach((col,ci)=>{
+const cv=[c.c1,c.c2,c.c3][ci];
+h+=`<div class="cs-stage"><div class="cs-stage-label" style="background:rgba(${cv},.12);color:rgba(${cv},1)">${c.stages[ci]}</div>`;
+col.forEach((n,ni)=>{h+=`<div class="cs-node" style="background:rgba(${cv},.08)" onclick="showNode(${ci},${ni})" id="csn-${ci}-${ni}"><div class="cs-node-title">${n.i} ${n.t}</div><div class="cs-node-sub">${n.s}</div></div>`});
+h+='</div>'});
+h+='</div></div>';
+document.getElementById('csFlow').innerHTML=h;
+document.getElementById('csdStage').style.background='rgba(232,169,58,.15)';
+document.getElementById('csdStage').style.color='#e8a93a';
+document.getElementById('csdStage').textContent='OVERVIEW';
+document.getElementById('csdTitle').textContent=c.name+' — Case Study';
+document.getElementById('csdDesc').textContent='Click any step above to explore how this scheme works and the red flags that can expose it at each stage.';
+document.getElementById('csdFlags').innerHTML='';
+}
+function showNode(ci,ni){
+const c=CS[curCS],n=c.nodes[ci][ni],cv=[c.c1,c.c2,c.c3][ci];
+document.querySelectorAll('.cs-node').forEach(el=>el.classList.remove('sel'));
+document.getElementById('csn-'+ci+'-'+ni).classList.add('sel');
+document.getElementById('csdStage').style.background='rgba('+cv+',.2)';
+document.getElementById('csdStage').style.color='rgba('+cv+',1)';
+document.getElementById('csdStage').textContent=c.stages[ci];
+document.getElementById('csdTitle').textContent=n.T;
+document.getElementById('csdDesc').textContent=n.D;
+document.getElementById('csdFlags').innerHTML=n.F.map(f=>'<span>🚩 '+f+'</span>').join('');
+const d=document.getElementById('csDetail');d.style.animation='none';d.offsetHeight;d.style.animation='fs .3s ease';
+}
+showCS(0);
 
-document.getElementById('orgsGrid').innerHTML=orgs.map(o=>`
-<a href="${o.url}" target="_blank" class="oc"><div class="oi" style="background:${o.bg}">${o.icon}</div>
-<h3>${o.name}</h3><p>${o.desc}</p><span class="otag ${o.cls}">${o.tag}</span></a>`).join('');
+document.getElementById('impactBlocks').innerHTML=impacts.map(b=>`<div class="ibl"><h3>${b.icon} ${b.title}</h3>${b.paras.map(p=>`<p>${p}</p>`).join('')}<div>${b.tags.map(t=>`<span class="stg ${t.cls}"><a href="${t.url}" target="_blank">${t.text}</a></span>`).join('')}</div></div>`).join('');
 
-document.getElementById('futureGrid').innerHTML=futures.map(f=>`
-<div class="fc"><span class="fci">${f.icon}</span><h3>${f.title}</h3><p>${f.desc}</p></div>`).join('');
+document.getElementById('orgsGrid').innerHTML=orgs.map(o=>`<a href="${o.url}" target="_blank" class="oc"><div class="oi" style="background:${o.bg}">${o.icon}</div><h3>${o.name}</h3><p>${o.desc}</p><span class="otag ${o.cls}">${o.tag}</span></a>`).join('');
+
+document.getElementById('futureGrid').innerHTML=futures.map(f=>`<div class="fc"><span class="fci">${f.icon}</span><h3>${f.title}</h3><p>${f.desc}</p></div>`).join('');
+
+document.getElementById('pcGrid').innerHTML=popCulture.map(p=>`<div class="pcc"><div class="pc-icon">${p.icon}</div><div><h3>${p.title}</h3><div class="pc-meta">${p.meta}</div><p>${p.desc}</p><span class="pc-tag ${p.cls}">${p.tag}</span></div></div>`).join('');
 </script>
 </body>
 </html>
+
