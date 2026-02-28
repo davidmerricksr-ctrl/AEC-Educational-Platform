@@ -227,8 +227,8 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">🏠</span>Home</button>
 <button class="nb" data-pg="explorer" onclick="go('explorer')"><span class="bi">🗺️</span>Explorer</button>
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">📋</span>Reference</button>
-<button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">📊</span>Impact</button>
 <button class="nb" data-pg="competencies" onclick="go('competencies')"><span class="bi">🔑</span>Competencies</button>
+<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">🕵️</span>Simulator</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">≡</span>More</button>
 </div></nav>
 
@@ -236,6 +236,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
 <div class="msh">
 <h3>More Sections</h3>
+<div class="mi" onclick="go('impact');closeMore()"><div class="ic">📊</div><div><div class="ml">Impact</div><div class="ms">The human cost</div></div></div>
 <div class="mi" onclick="go('glossary');closeMore()"><div class="ic">📖</div><div><div class="ml">Glossary</div><div class="ms">A–Z terminology</div></div></div>
 <div class="mi" onclick="go('orgs');closeMore()"><div class="ic">🏛️</div><div><div class="ml">Organisations</div><div class="ms">Key bodies in economic crime</div></div></div>
 <div class="mi" onclick="go('future');closeMore()"><div class="ic">🚀</div><div><div class="ml">Future</div><div class="ms">Emerging technologies</div></div></div>
