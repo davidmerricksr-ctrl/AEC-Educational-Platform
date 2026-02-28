@@ -1,0 +1,933 @@
+<!--
+  ═══════════════════════════════════════════════════════════════
+  ECONOMIC CRIME HUNTER SIMULATOR
+  Save as simulator.html and open in any browser — works offline.
+  Mobile-first gamified AML/fraud training experience.
+  ═══════════════════════════════════════════════════════════════
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1">
+<title>Crime Hunter — Economic Crime Simulator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{
+  abyss:'#060e1a',deep:'#0b1a2e',slate:'#112240',card:'#162a4a',
+  edge:'#1e3a5f',mute:'#4a6a8a',soft:'#8ba4c0',light:'#c8daf0',
+  ngreen:'#00e68a',nred:'#ff4d6a',namber:'#ffb833',nblue:'#38bdf8',npurp:'#a78bfa',
+},fontFamily:{
+  head:['"Anybody"','system-ui','sans-serif'],
+  body:['"DM Sans"','system-ui','sans-serif'],
+  mono:['"JetBrains Mono"','monospace'],
+}}}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,400..900&family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET & BASE ═══ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0;height:100%;overflow:hidden}
+::-webkit-scrollbar{width:0;height:0}
+
+/* ═══ SCREEN SYSTEM ═══ */
+.screen{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px}
+.screen.active{display:block;animation:sIn .32s cubic-bezier(.22,1,.36,1)}
+@keyframes sIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ BOTTOM NAV ═══ */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(6,14,26,.94);border-top:1px solid rgba(74,106,138,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:60px}
+.bnav-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.52rem;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:.15s;position:relative}
+.bnav-b.act{color:#00e68a}
+.bnav-b.act::before{content:'';position:absolute;top:3px;width:4px;height:4px;background:#00e68a;border-radius:50%}
+.bnav-ico{font-size:1.2rem;line-height:1}
+
+/* ═══ GLASS CARDS ═══ */
+.gc{background:rgba(22,42,74,.6);border:1px solid rgba(74,106,138,.14);border-radius:16px;backdrop-filter:blur(8px)}
+.gc-s{background:rgba(22,42,74,.45);border:1px solid rgba(74,106,138,.1);border-radius:12px}
+
+/* ═══ RISK PILLS ═══ */
+.pill{padding:3px 10px;border-radius:100px;font-size:.6rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:inline-block}
+.pill-crit{background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.2)}
+.pill-high{background:rgba(255,184,51,.1);color:#ffb833;border:1px solid rgba(255,184,51,.2)}
+.pill-med{background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)}
+.pill-low{background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.2)}
+
+/* ═══ XP BAR ═══ */
+.xp-bar{height:6px;border-radius:3px;background:rgba(74,106,138,.15);overflow:hidden}
+.xp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#00e68a,#38bdf8);transition:width .7s cubic-bezier(.22,1,.36,1)}
+
+/* ═══ START BUTTON GLOW ═══ */
+.glow-btn{position:relative;overflow:hidden;transition:transform .12s}
+.glow-btn:active{transform:scale(.96)}
+.glow-btn::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--ga,0deg),#00e68a,#38bdf8,#a78bfa,#00e68a);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;animation:gspin 4s linear infinite}
+.glow-btn:hover::before,.glow-btn:focus::before{opacity:1}
+@property --ga{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes gspin{to{--ga:360deg}}
+
+/* ═══ FLAG CHIP ═══ */
+.flag-chip{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:10px;background:rgba(255,77,106,.05);border:1px solid rgba(255,77,106,.1);font-size:.74rem;line-height:1.45;color:#c8daf0}
+.flag-dot{width:7px;height:7px;border-radius:50%;background:#ff4d6a;flex-shrink:0;margin-top:5px}
+
+/* ═══ ACTION BUTTONS ═══ */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 1rem 1rem}
+.act-btn{padding:14px 8px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;border:none;cursor:pointer;transition:.12s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.act-btn:active{transform:scale(.95)}
+.act-btn .act-ico{font-size:1.3rem}
+
+/* ═══ OVERLAY MODAL ═══ */
+.overlay{position:fixed;inset:0;z-index:800;background:rgba(6,14,26,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.show{display:flex}
+.overlay-inner{width:100%;max-width:400px;max-height:90vh;overflow-y:auto;animation:sIn .3s cubic-bezier(.22,1,.36,1)}
+
+/* ═══ NETWORK SVG ═══ */
+.net-node{cursor:pointer;transition:filter .2s}
+.net-node:hover{filter:brightness(1.3)}
+.net-label{font-family:'DM Sans',sans-serif;font-size:9px;fill:#8ba4c0;pointer-events:none;text-anchor:middle}
+.net-edge{stroke:rgba(74,106,138,.3);stroke-width:1.5;transition:stroke .2s}
+.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2}
+.net-tip{position:absolute;background:rgba(6,14,26,.95);border:1px solid rgba(74,106,138,.25);border-radius:10px;padding:10px 14px;font-size:.68rem;color:#c8daf0;pointer-events:none;z-index:60;max-width:190px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.4}
+.net-tip.show{opacity:1;transform:translateY(0)}
+
+/* ═══ CONFETTI ═══ */
+.confetti{position:fixed;width:8px;height:8px;z-index:9999;pointer-events:none;border-radius:2px;animation:cfall 2.8s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes cfall{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}100%{opacity:0;transform:translateY(105vh) rotate(900deg) scale(.5)}}
+
+/* ═══ STREAK FIRE ═══ */
+@keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.1) rotate(2deg)}}
+.fire{display:inline-block;animation:flick 1.2s ease-in-out infinite}
+
+/* ═══ TX CARD ═══ */
+.tx-card{transition:transform .15s,background .15s}
+.tx-card:active{background:rgba(30,58,95,.6);transform:scale(.98)}
+
+/* ═══ LEADERBOARD ═══ */
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;transition:.12s}
+.lb-row:nth-child(odd){background:rgba(22,42,74,.3)}
+.lb-rank{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:.7rem;font-weight:800;flex-shrink:0}
+
+/* ═══ BADGE ═══ */
+.badge-card{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.14);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.badge-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.2rem;background:rgba(167,139,250,.1);flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- BOTTOM NAVIGATION                          -->
+<!-- ═══════════════════════════════════════════ -->
+<nav class="bnav" id="mainNav">
+<div class="bnav-inner">
+  <button class="bnav-b act" data-s="dashboard" onclick="nav('dashboard')"><span class="bnav-ico">🏠</span>Dashboard</button>
+  <button class="bnav-b" data-s="cases" onclick="nav('cases')"><span class="bnav-ico">📋</span>My Cases</button>
+  <button class="bnav-b" data-s="leaderboard" onclick="nav('leaderboard')"><span class="bnav-ico">🏆</span>Leaderboard</button>
+  <button class="bnav-b" data-s="profile" onclick="nav('profile')"><span class="bnav-ico">👤</span>Profile</button>
+</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: DASHBOARD                          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen active" id="scr-dashboard">
+  <div style="background:linear-gradient(180deg,rgba(0,230,138,.04) 0%,transparent 60%);padding:2rem 1.2rem 1rem">
+    <div class="flex items-center justify-between mb-1">
+      <div>
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime</div>
+        <h1 style="font-family:'Anybody',sans-serif;font-size:1.45rem;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.02em">Crime Hunter</h1>
+      </div>
+      <div class="text-right">
+        <div id="d-streak" class="text-sm font-bold" style="color:#ffb833"></div>
+        <div id="d-level" style="font-size:.62rem;color:#8ba4c0;font-weight:600"></div>
+      </div>
+    </div>
+    <div class="mt-3 mb-1 flex justify-between" style="font-size:.56rem;color:#4a6a8a;font-weight:600">
+      <span>Level <span id="d-lvl-num">1</span></span>
+      <span><span id="d-xp-cur">0</span> / <span id="d-xp-max">200</span> XP</span>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="d-xp-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="px-5 mb-4">
+    <div class="gc p-4">
+      <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.5rem">Your Stats</div>
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div><div id="d-score" style="font-family:'Anybody',sans-serif;font-size:1.5rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.56rem;color:#4a6a8a">Total XP</div></div>
+        <div><div id="d-cases" style="font-family:'Anybody',sans-serif;font-size:1.5rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.56rem;color:#4a6a8a">Cases Solved</div></div>
+        <div><div id="d-acc" style="font-family:'Anybody',sans-serif;font-size:1.5rem;font-weight:800;color:#ffb833">—</div><div style="font-size:.56rem;color:#4a6a8a">Accuracy %</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-5 mb-5">
+    <button class="glow-btn w-full py-4 rounded-2xl font-bold text-base tracking-wide" style="background:linear-gradient(135deg,#00c775,#00a86b);color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 24px rgba(0,230,138,.25)" onclick="startShift()">🕵️ Start Today's Shift</button>
+    <p class="text-center mt-2" style="font-size:.62rem;color:#4a6a8a">2 cases waiting for review</p>
+  </div>
+
+  <div class="px-5">
+    <div class="gc-s p-4">
+      <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.35rem">💡 Daily Tip</div>
+      <p id="d-tip" style="font-size:.76rem;color:#8ba4c0;line-height:1.5"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: SHIFT                              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="scr-shift">
+  <div class="p-5">
+    <button onclick="nav('dashboard')" style="background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:4px;margin-bottom:1rem">← Back to Dashboard</button>
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a;margin-bottom:.15rem">Today's Shift</div>
+    <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Incoming Alerts</h2>
+    <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Review each case and make your decision.</p>
+    <div id="shift-cards" class="space-y-3"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: INVESTIGATION                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="scr-investigate">
+  <div class="p-5 pb-2">
+    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:4px;margin-bottom:.8rem">← Back to Cases</button>
+    <div class="flex items-center justify-between mb-3">
+      <div><div id="inv-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
+      <h2 id="inv-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
+      <div id="inv-pill"></div>
+    </div>
+  </div>
+
+  <div class="px-5 mb-3">
+    <div class="gc p-4">
+      <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.55rem">Customer Profile</div>
+      <div id="inv-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+    </div>
+  </div>
+
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Transaction History</div>
+    <div id="inv-txs" class="space-y-2"></div>
+  </div>
+
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Relationship Network</div>
+    <div class="gc p-3 relative" style="min-height:260px">
+      <svg id="inv-net" width="100%" height="260" viewBox="0 0 340 260"></svg>
+      <div class="net-tip" id="net-tip"></div>
+    </div>
+  </div>
+
+  <div class="px-5 mb-3">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">🚩 Red Flags Identified</div>
+    <div id="inv-flags" class="space-y-2"></div>
+  </div>
+
+  <div class="px-5 mb-4">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.35rem">Your Notes</div>
+    <textarea id="inv-notes" rows="3" placeholder="Add investigation notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
+  </div>
+
+  <div class="act-grid" style="padding-bottom:1.5rem">
+    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('clear')"><span class="act-ico">✅</span>Clear Alert</button>
+    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('sar')"><span class="act-ico">🚨</span>File SAR</button>
+    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate</button>
+    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('info')"><span class="act-ico">🔍</span>More Info</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: MY CASES                           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="scr-cases">
+  <div class="p-5">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;margin-bottom:.15rem">Case Log</div>
+    <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem">My Cases</h2>
+    <div id="cases-list" class="space-y-3"></div>
+    <div id="cases-empty" class="text-center py-12" style="color:#4a6a8a;font-size:.82rem">No cases reviewed yet. Start a shift!</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: LEADERBOARD                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="scr-leaderboard">
+  <div class="p-5">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffb833;margin-bottom:.15rem">Rankings</div>
+    <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem">Leaderboard</h2>
+    <div id="lb-list" class="space-y-2"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCREEN: PROFILE                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="screen" id="scr-profile">
+  <div class="p-5">
+    <div class="text-center mb-5">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#00e68a,#38bdf8);display:grid;place-items:center;font-size:1.8rem;margin:0 auto .6rem">🕵️</div>
+      <h2 style="font-family:'Anybody',sans-serif;font-size:1.1rem;font-weight:800;color:#fff" id="p-level"></h2>
+      <div style="font-size:.62rem;color:#4a6a8a;font-weight:500">Level <span id="p-lvl">1</span></div>
+    </div>
+    <div class="gc p-4 mb-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="text-center"><div id="p-xp" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.54rem;color:#4a6a8a">Total XP</div></div>
+        <div class="text-center"><div id="p-cases" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.54rem;color:#4a6a8a">Cases</div></div>
+        <div class="text-center"><div id="p-acc" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ffb833">—</div><div style="font-size:.54rem;color:#4a6a8a">Accuracy</div></div>
+        <div class="text-center"><div id="p-streak" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ff4d6a">0</div><div style="font-size:.54rem;color:#4a6a8a">Streak</div></div>
+      </div>
+    </div>
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.45rem">Badges Earned</div>
+    <div id="p-badges" class="space-y-2"></div>
+    <div id="p-no-badges" style="color:#4a6a8a;font-size:.78rem;padding:1rem 0">Complete cases to earn badges!</div>
+    <button onclick="if(confirm('Reset all progress?')){localStorage.removeItem('ech-state');location.reload()}" class="mt-6 w-full py-3 rounded-xl text-sm font-bold" style="background:rgba(255,77,106,.08);color:#ff4d6a;border:1px solid rgba(255,77,106,.12);cursor:pointer">Reset Progress</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- OVERLAY: DECISION FEEDBACK                 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="overlay" id="ov-feedback">
+  <div class="overlay-inner gc p-5 mx-3" style="max-width:400px">
+    <div id="fb-icon" class="text-center text-4xl mb-3"></div>
+    <h3 id="fb-title" class="text-center font-bold text-lg mb-1" style="font-family:'Anybody',sans-serif"></h3>
+    <div id="fb-points" class="text-center text-sm font-bold mb-3"></div>
+    <div id="fb-explain" class="gc-s p-3 mb-3" style="font-size:.74rem;color:#8ba4c0;line-height:1.55"></div>
+    <div id="fb-coach" class="p-3 rounded-xl mb-4" style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1);font-size:.72rem;color:#a78bfa;line-height:1.45"></div>
+    <button id="fb-btn" class="w-full py-3 rounded-xl font-bold text-sm" style="background:#00e68a;color:#060e1a;border:none;cursor:pointer" onclick="afterFeedback()"></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- OVERLAY: SHIFT SUMMARY                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="overlay" id="ov-summary">
+  <div class="overlay-inner gc p-5 mx-3" style="max-width:400px">
+    <div class="text-center text-3xl mb-2">🎖️</div>
+    <h3 class="text-center font-bold text-lg mb-1" style="font-family:'Anybody',sans-serif;color:#fff">Shift Complete!</h3>
+    <p class="text-center mb-4" style="font-size:.74rem;color:#4a6a8a">Great work, analyst. Here's your report.</p>
+    <div class="gc-s p-4 mb-3 grid grid-cols-3 gap-2 text-center">
+      <div><div id="sum-pts" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.5rem;color:#4a6a8a">XP Earned</div></div>
+      <div><div id="sum-cases" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.5rem;color:#4a6a8a">Cases</div></div>
+      <div><div id="sum-acc" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ffb833">0%</div><div style="font-size:.5rem;color:#4a6a8a">Accuracy</div></div>
+    </div>
+    <div id="sum-badges" class="space-y-2 mb-4"></div>
+    <div id="sum-msg" class="text-center mb-4" style="font-size:.78rem;color:#8ba4c0"></div>
+    <button class="w-full py-3 rounded-xl font-bold text-sm" style="background:#00e68a;color:#060e1a;border:none;cursor:pointer" onclick="closeSummary()">Return to Dashboard</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                      -->
+<!-- ════════════════════════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════════════
+// 1. CASE DATA — 2 fully detailed, realistic cases
+// ═══════════════════════════════════════════════════
+
+const CASES = [
+  // ── CASE 1: Classic Structuring / Smurfing ──
+  {
+    id: "AML-2026-0447",
+    name: "Marcus Delgado",
+    teaser: "Multiple $9,900 cash deposits across 7 branches in 14 days",
+    amount: "$138,600",
+    riskLevel: "critical",
+    riskLabel: "Critical",
+    correct: "sar",
+    profile: {
+      occupation: "Self-employed — Mobile Phone Reseller",
+      country: "United States",
+      pep: "No",
+      riskScore: 92,
+      accountAge: "8 months",
+      income: "$42,000 (declared)",
+    },
+    transactions: [
+      { amount:"$9,900", date:"2026-02-14", to:"Cash Deposit", country:"US", flag:true },
+      { amount:"$9,800", date:"2026-02-14", to:"Cash Deposit (Branch 3)", country:"US", flag:true },
+      { amount:"$9,900", date:"2026-02-12", to:"Cash Deposit (Branch 7)", country:"US", flag:true },
+      { amount:"$9,750", date:"2026-02-10", to:"Cash Deposit (Branch 1)", country:"US", flag:true },
+      { amount:"$9,900", date:"2026-02-08", to:"Cash Deposit (Branch 5)", country:"US", flag:true },
+      { amount:"$14,200", date:"2026-02-06", to:"Wire → Ramirez Trading LLC", country:"US", flag:false },
+      { amount:"$9,850", date:"2026-02-04", to:"Cash Deposit (Branch 2)", country:"US", flag:true },
+      { amount:"$9,900", date:"2026-02-02", to:"Cash Deposit (Branch 6)", country:"US", flag:true },
+      { amount:"$8,500", date:"2026-01-30", to:"Wire → Apex General Supplies", country:"Panama", flag:true },
+      { amount:"$9,900", date:"2026-01-28", to:"Cash Deposit (Branch 4)", country:"US", flag:true },
+    ],
+    network: {
+      nodes: [
+        { id:0, label:"M. Delgado", type:"customer", x:170, y:45, info:"Primary subject. 8-month account, declared income $42K, but $138K in cash deposits in 14 days." },
+        { id:1, label:"Branch 1–3", type:"bank", x:55, y:115, info:"3 branches visited on the same day. All deposits just below the $10K CTR threshold." },
+        { id:2, label:"Branch 4–7", type:"bank", x:285, y:115, info:"4 more branches within 14 days. Consistent with smurfing across multiple locations." },
+        { id:3, label:"Ramirez Trading", type:"company", x:75, y:205, info:"LLC registered in New Mexico 4 months ago. No web presence. Single-member entity." },
+        { id:4, label:"Apex Supplies", type:"company", x:265, y:205, info:"Panama-registered import company. No verifiable business records found." },
+        { id:5, label:"Panama 🇵🇦", type:"jurisdiction", x:170, y:245, info:"FATF increased-monitoring list. Known deficiencies in AML transparency." },
+      ],
+      edges: [[0,1],[0,2],[0,3],[0,4],[3,4],[4,5]],
+      hotEdges: [[0,1],[0,2],[4,5]]
+    },
+    flags: [
+      "14 cash deposits in 14 days — all between $9,750 and $9,900. Classic structuring below the $10,000 CTR threshold.",
+      "Same-day deposits at 2 different branches (smurfing pattern).",
+      "Total deposits ($138K) are 3.3× declared annual income ($42K).",
+      "Wire to Panama-based Apex Supplies — no verifiable business. High-risk jurisdiction.",
+      "Ramirez Trading LLC registered 4 months ago — shell company indicators (no employees, no web presence).",
+    ],
+    feedback: {
+      sar: {
+        grade: "excellent", title: "Excellent Decision!", points: 150,
+        explain: "Filing a SAR is exactly right. This is a textbook <strong>structuring / smurfing</strong> case. The customer made 14 cash deposits between $9,750 and $9,900 — deliberately staying below the $10,000 CTR threshold. Under <strong>31 U.S.C. § 5324</strong>, structuring is a federal crime even if the underlying funds are legitimate. The multi-branch pattern, income mismatch, and shell company wires are all classic red flags that FinCEN advisories specifically describe.",
+        coach: "🎓 <strong>AI Coach:</strong> Structuring is illegal regardless of whether the underlying funds are legitimate. This is one of the most commonly filed SAR categories. The $10,000 CTR threshold hasn't changed since 1970 — criminals know it well.",
+      },
+      clear: {
+        grade: "bad", title: "Missed Critical Red Flags", points: -40,
+        explain: "Clearing this alert would be a serious compliance failure. The deposits show a <strong>textbook structuring pattern</strong> — 14 deposits all just below $10,000 across 7 branches in 14 days. The total ($138K) is over 3× declared income. Combined with shell company wires and a Panama connection, this required immediate SAR filing.",
+        coach: "🎓 <strong>AI Coach:</strong> When you see repetitive deposits clustered just below $10,000, that's structuring until proven otherwise. Always compare total volume against declared income — that mismatch is a key signal.",
+      },
+      escalate: {
+        grade: "partial", title: "Good Instinct, But Act Now", points: 60,
+        explain: "Escalating shows caution, but this case has enough evidence for an immediate SAR. The <strong>structuring pattern</strong> is unambiguous — 14 sub-threshold deposits, multiple branches, same-day activity, and totals far exceeding declared income. You don't need manager approval to recognise textbook structuring.",
+        coach: "🎓 <strong>AI Coach:</strong> When red flags are this clear, file the SAR directly. Escalation is for genuinely ambiguous cases. Confidence in recognising common patterns like structuring is a core analyst skill.",
+      },
+      info: {
+        grade: "partial", title: "The Evidence Is Already There", points: 40,
+        explain: "The case already contains overwhelming evidence of <strong>structuring</strong>. The 14 sub-threshold deposits, multi-branch activity, income mismatch, and Panama wires are more than sufficient for a SAR. Requesting more info risks delaying a time-sensitive filing.",
+        coach: "🎓 <strong>AI Coach:</strong> Know when you have enough to act. FinCEN expects SARs filed within 30 days of detection. Don't delay a clear structuring case while waiting for additional information.",
+      }
+    }
+  },
+
+  // ── CASE 2: PEP with Unexplained High-Value Wires ──
+  {
+    id: "AML-2026-0512",
+    name: "Elena Voskresenskaya",
+    teaser: "PEP — $2.1M wires to UAE & Cyprus, source unknown",
+    amount: "$2,140,000",
+    riskLevel: "critical",
+    riskLabel: "Critical",
+    correct: "sar",
+    profile: {
+      occupation: "Advisor — Ministry of Energy (Retired)",
+      country: "Russian Federation",
+      pep: "Yes — Senior Foreign PEP",
+      riskScore: 97,
+      accountAge: "14 months",
+      income: "$85,000 (pension)",
+    },
+    transactions: [
+      { amount:"$485,000", date:"2026-02-18", to:"Wire → Zenith Holdings Ltd", country:"UAE", flag:true },
+      { amount:"$320,000", date:"2026-02-12", to:"Wire → Larnaca Property Dev.", country:"Cyprus", flag:true },
+      { amount:"$510,000", date:"2026-02-05", to:"Wire → Zenith Holdings Ltd", country:"UAE", flag:true },
+      { amount:"$85,000", date:"2026-01-28", to:"Incoming — RF Pension Fund", country:"Russia", flag:false },
+      { amount:"$275,000", date:"2026-01-22", to:"Wire → Marbella Estates SL", country:"Spain", flag:true },
+      { amount:"$550,000", date:"2026-01-15", to:"Wire → Zenith Holdings Ltd", country:"UAE", flag:true },
+      { amount:"$250,000", date:"2026-01-05", to:"Incoming — Volga Resource CJSC", country:"Russia", flag:true },
+      { amount:"$85,000", date:"2025-12-28", to:"Incoming — RF Pension Fund", country:"Russia", flag:false },
+    ],
+    network: {
+      nodes: [
+        { id:0, label:"E. Voskresenskaya", type:"customer", x:170, y:38, info:"Senior Foreign PEP. Former advisor to Russian Ministry of Energy. Pension $85K but moving $2.1M." },
+        { id:1, label:"Zenith Holdings", type:"company", x:50, y:125, info:"UAE registered company. Nominee director. No public filings. Received $1.54M from subject." },
+        { id:2, label:"Larnaca Prop.", type:"company", x:290, y:125, info:"Cyprus property developer. $320K wire. Cyprus previously flagged for AML weaknesses." },
+        { id:3, label:"Marbella Estates", type:"company", x:50, y:215, info:"Spanish luxury real estate. €245K Mediterranean property purchase in progress." },
+        { id:4, label:"Volga Resource", type:"company", x:290, y:215, info:"Russian resource company. $250K incoming wire — source of wealth unclear. Potential state link." },
+        { id:5, label:"UAE 🇦🇪", type:"jurisdiction", x:120, y:248, info:"Over $1.5M in outgoing wires. Opaque corporate ownership structures." },
+        { id:6, label:"Cyprus 🇨🇾", type:"jurisdiction", x:230, y:248, info:"EU member, previously grey-listed. Popular destination for Russian capital flows." },
+      ],
+      edges: [[0,1],[0,2],[0,3],[0,4],[1,5],[2,6],[3,2]],
+      hotEdges: [[0,1],[0,4],[1,5]]
+    },
+    flags: [
+      "Senior Foreign PEP — former advisor to Russian Ministry of Energy. Automatic Enhanced Due Diligence required.",
+      "$2.1M outgoing wires vs. declared pension of $85K — massive, unexplained source-of-funds gap.",
+      "$1.54M to Zenith Holdings Ltd (UAE) — shell company with nominee director and no public filings.",
+      "Luxury property purchases in Cyprus and Spain — potential integration stage of money laundering.",
+      "$250K incoming from Volga Resource CJSC — possible state-linked entity, source of wealth unknown.",
+    ],
+    feedback: {
+      sar: {
+        grade: "excellent", title: "Excellent Decision!", points: 150,
+        explain: "This is a clear SAR case. Elena is a <strong>Senior Foreign PEP</strong> — FATF Recommendation 12 and the CDD Rule require Enhanced Due Diligence. The $2.1M in wires dwarfs her $85K pension. Funds flow to a <strong>UAE shell company</strong> with no business purpose and into <strong>luxury real estate</strong> in Cyprus and Spain — textbook <strong>Placement → Layering → Integration</strong>. The $250K from Volga Resource raises serious concerns about state-linked corruption proceeds.",
+        coach: "🎓 <strong>AI Coach:</strong> PEPs are high-risk by definition due to their access to public funds. When a PEP moves millions through shell companies into luxury property, that's the classic three-stage laundering cycle. Source of wealth verification is always mandatory for PEPs.",
+      },
+      clear: {
+        grade: "bad", title: "Missed Critical Red Flags", points: -40,
+        explain: "Clearing a <strong>Senior Foreign PEP</strong> moving $2.1M through shell companies into luxury real estate — while declaring only an $85K pension — would be a very serious compliance failure. This has multiple indicators of <strong>corruption proceeds being laundered</strong> through the three-stage process. PEPs always require Enhanced Due Diligence.",
+        coach: "🎓 <strong>AI Coach:</strong> Never clear a PEP alert without verifying source of wealth and source of funds. The gap between declared income and transaction volume is the single most important indicator in PEP investigations.",
+      },
+      escalate: {
+        grade: "partial", title: "Right Direction, But File the SAR", points: 80,
+        explain: "PEP cases can be sensitive, so escalation isn't wrong. But the evidence here is overwhelming: Senior Foreign PEP, $2.1M vs $85K income, UAE shell companies, luxury property. A <strong>SAR should be filed regardless</strong> of internal escalation. The two should happen in parallel.",
+        coach: "🎓 <strong>AI Coach:</strong> In PEP cases, escalation and SAR filing are not mutually exclusive — do both. Don't let internal processes delay regulatory obligations.",
+      },
+      info: {
+        grade: "partial", title: "The Picture Is Already Clear", points: 50,
+        explain: "While EDD naturally involves more information gathering, the current evidence already supports a SAR filing. Waiting could breach FinCEN's 30-day filing window. The <strong>source-of-funds gap</strong>, shell company transfers, and luxury property purchases provide more than sufficient basis.",
+        coach: "🎓 <strong>AI Coach:</strong> You can file a SAR and continue investigating simultaneously. SARs are intelligence reports, not accusations. Don't wait for perfection when you already have clarity.",
+      }
+    }
+  }
+];
+
+// ═══════════════════════════════════════════════════
+// 2. DAILY TIPS
+// ═══════════════════════════════════════════════════
+const TIPS = [
+  "Structuring is a federal crime under 31 U.S.C. § 5324 — even if the underlying funds are completely legitimate.",
+  "FATF Recommendation 12 requires Enhanced Due Diligence for all Politically Exposed Persons.",
+  "The three stages of money laundering: Placement, Layering, Integration. Each has distinct red flags.",
+  "FinCEN receives over 4 million SARs annually — pattern analysis across filings is extremely powerful.",
+  "The $10,000 CTR threshold hasn't changed since 1970. Criminals know it well — and so should you.",
+  "Shell companies with nominee directors in low-transparency jurisdictions are the most common layering tool.",
+  "A SAR is not an accusation — it's an intelligence report. File when you have reasonable suspicion.",
+  "PEPs pose higher risk because of their access to public funds and potential for corruption.",
+];
+
+// ═══════════════════════════════════════════════════
+// 3. FAKE LEADERBOARD
+// ═══════════════════════════════════════════════════
+const FAKE_LB = [
+  { name:"Sarah Chen", xp:4850, lvl:8 },
+  { name:"James Okafor", xp:4320, lvl:7 },
+  { name:"Ana Petrov", xp:3980, lvl:7 },
+  { name:"YOU", xp:0, lvl:1, me:true },
+  { name:"David Kim", xp:2100, lvl:5 },
+  { name:"Priya Sharma", xp:1850, lvl:4 },
+  { name:"Tom Wilson", xp:1420, lvl:3 },
+  { name:"Lina Abbas", xp:980, lvl:2 },
+];
+
+// ═══════════════════════════════════════════════════
+// 4. LEVEL SYSTEM
+// ═══════════════════════════════════════════════════
+const LEVELS = [
+  { title:"Trainee Analyst", xp:0 },
+  { title:"Junior Analyst", xp:200 },
+  { title:"Analyst", xp:500 },
+  { title:"Senior Analyst", xp:900 },
+  { title:"Lead Investigator", xp:1500 },
+  { title:"AML Manager", xp:2500 },
+  { title:"Compliance Officer", xp:4000 },
+  { title:"Head of Financial Crime", xp:6000 },
+  { title:"Chief Compliance Officer", xp:9000 },
+];
+
+// ═══════════════════════════════════════════════════
+// 5. STATE
+// ═══════════════════════════════════════════════════
+let state = {
+  xp: 0,
+  casesCompleted: [],
+  streak: 0,
+  lastPlayDate: null,
+  badges: [],
+  notes: {},
+  // Session (not persisted)
+  shiftResults: [],
+  currentCase: null,
+};
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('ech-state'));
+    if (s) { state.xp=s.xp||0; state.casesCompleted=s.casesCompleted||[]; state.streak=s.streak||0; state.lastPlayDate=s.lastPlayDate; state.badges=s.badges||[]; state.notes=s.notes||{}; }
+  } catch(e) {}
+  // Check streak continuity
+  const today = new Date().toISOString().slice(0,10);
+  if (state.lastPlayDate && state.lastPlayDate !== today) {
+    const diff = Math.floor((new Date(today) - new Date(state.lastPlayDate)) / 86400000);
+    if (diff > 1) state.streak = 0;
+  }
+}
+
+function saveState() {
+  localStorage.setItem('ech-state', JSON.stringify({
+    xp: state.xp, casesCompleted: state.casesCompleted, streak: state.streak,
+    lastPlayDate: state.lastPlayDate, badges: state.badges, notes: state.notes,
+  }));
+}
+
+function getLevel() {
+  let lvl = 0;
+  for (let i = LEVELS.length - 1; i >= 0; i--) { if (state.xp >= LEVELS[i].xp) { lvl = i; break; } }
+  return lvl;
+}
+
+function getLevelInfo() {
+  const lvl = getLevel();
+  const cur = LEVELS[lvl];
+  const next = LEVELS[lvl + 1] || { xp: cur.xp + 2000 };
+  const progress = Math.min(((state.xp - cur.xp) / (next.xp - cur.xp)) * 100, 100);
+  return { level: lvl + 1, title: cur.title, xpForNext: next.xp, progress };
+}
+
+function getAccuracy() {
+  if (!state.casesCompleted.length) return null;
+  return Math.round((state.casesCompleted.filter(c => c.correct).length / state.casesCompleted.length) * 100);
+}
+
+// ═══════════════════════════════════════════════════
+// 6. NAVIGATION
+// ═══════════════════════════════════════════════════
+function nav(id) {
+  showScreen(id);
+  document.querySelectorAll('.bnav-b').forEach(b => b.classList.toggle('act', b.dataset.s === id));
+  document.getElementById('mainNav').style.display = '';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('scr-' + id);
+  if (el) { el.classList.add('active'); el.scrollTop = 0; }
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'leaderboard') renderLeaderboard();
+  if (id === 'cases') renderCaseLog();
+  if (id === 'profile') renderProfile();
+}
+
+function backToShift() {
+  document.getElementById('mainNav').style.display = '';
+  showScreen('shift');
+  renderShift();
+}
+
+// ═══════════════════════════════════════════════════
+// 7. RENDER — DASHBOARD
+// ═══════════════════════════════════════════════════
+function renderDashboard() {
+  const li = getLevelInfo();
+  const acc = getAccuracy();
+  document.getElementById('d-streak').innerHTML = '<span class="fire">🔥</span> ' + state.streak + ' day streak';
+  document.getElementById('d-level').textContent = li.title;
+  document.getElementById('d-lvl-num').textContent = li.level;
+  document.getElementById('d-xp-cur').textContent = state.xp;
+  document.getElementById('d-xp-max').textContent = li.xpForNext;
+  document.getElementById('d-xp-bar').style.width = li.progress + '%';
+  document.getElementById('d-score').textContent = state.xp;
+  document.getElementById('d-cases').textContent = state.casesCompleted.length;
+  document.getElementById('d-acc').textContent = acc !== null ? acc + '%' : '—';
+  document.getElementById('d-tip').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+}
+
+// ═══════════════════════════════════════════════════
+// 8. RENDER — SHIFT
+// ═══════════════════════════════════════════════════
+function renderShift() {
+  const el = document.getElementById('shift-cards');
+  const done = state.shiftResults || [];
+  el.innerHTML = CASES.map((c, i) => {
+    const resolved = done.find(r => r.id === c.id);
+    const pc = { critical:'pill-crit', high:'pill-high', med:'pill-med', low:'pill-low' }[c.riskLevel];
+    return '<div class="gc p-4 cursor-pointer transition-transform active:scale-[.98]" onclick="' + (resolved ? '' : 'openCase('+i+')') + '" style="' + (resolved ? 'opacity:.5;pointer-events:none' : '') + '">'
+      + '<div class="flex justify-between items-start mb-2"><div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">' + c.id + '</div><span class="pill ' + pc + '">' + c.riskLabel + '</span></div>'
+      + '<h3 style="font-family:\'Anybody\',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.15rem">' + c.name + '</h3>'
+      + '<p style="font-size:.72rem;color:#4a6a8a;margin-bottom:.5rem">' + c.teaser + '</p>'
+      + '<div class="flex justify-between items-center"><div style="font-family:\'Anybody\',sans-serif;font-size:1.1rem;font-weight:800;color:#ffb833">' + c.amount + '</div>'
+      + (resolved ? '<span style="font-size:.62rem;font-weight:700;color:' + (resolved.correct ? '#00e68a' : '#ff4d6a') + '">' + (resolved.correct ? '✓ Correct' : '✗ Incorrect') + '</span>' : '<span style="font-size:.62rem;color:#00e68a;font-weight:600">Tap to investigate →</span>')
+      + '</div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// 9. RENDER — INVESTIGATION
+// ═══════════════════════════════════════════════════
+function openCase(idx) {
+  state.currentCase = idx;
+  const c = CASES[idx];
+  document.getElementById('mainNav').style.display = 'none';
+  document.getElementById('inv-id').textContent = c.id;
+  document.getElementById('inv-name').textContent = c.name;
+  document.getElementById('inv-pill').innerHTML = '<span class="pill pill-' + (c.riskLevel==='critical'?'crit':c.riskLevel) + '">' + c.riskLabel + '</span>';
+
+  // Profile
+  const pf = c.profile;
+  document.getElementById('inv-profile').innerHTML = [
+    ['Occupation', pf.occupation],
+    ['Country', pf.country],
+    ['PEP Status', '<span style="color:'+(pf.pep.startsWith('Yes')?'#ff4d6a':'#00e68a')+';font-weight:700">'+pf.pep+'</span>'],
+    ['Risk Score', '<span style="color:'+(pf.riskScore>80?'#ff4d6a':pf.riskScore>50?'#ffb833':'#00e68a')+';font-weight:700">'+pf.riskScore+'/100</span>'],
+    ['Account Age', pf.accountAge],
+    ['Declared Income', pf.income],
+  ].map(function(r){return '<div style="color:#4a6a8a;font-weight:600">'+r[0]+'</div><div>'+r[1]+'</div>';}).join('');
+
+  // Transactions
+  document.getElementById('inv-txs').innerHTML = c.transactions.map(function(tx){
+    return '<div class="gc-s p-3 tx-card flex justify-between items-center gap-3" style="'+(tx.flag?'border-left:3px solid #ff4d6a':'')+'">'
+      + '<div class="flex-1 min-w-0"><div style="font-family:\'Anybody\',sans-serif;font-size:.88rem;font-weight:700;color:'+(tx.flag?'#ff4d6a':'#fff')+'">'+tx.amount+'</div>'
+      + '<div style="font-size:.62rem;color:#4a6a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tx.to+'</div></div>'
+      + '<div class="text-right flex-shrink-0"><div style="font-size:.58rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+tx.date+'</div>'
+      + '<div style="font-size:.56rem;color:#8ba4c0">'+tx.country+'</div></div></div>';
+  }).join('');
+
+  // Network
+  renderNetwork(c.network);
+
+  // Flags
+  document.getElementById('inv-flags').innerHTML = c.flags.map(function(f){
+    return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';
+  }).join('');
+
+  // Notes
+  document.getElementById('inv-notes').value = state.notes[c.id] || '';
+
+  showScreen('investigate');
+}
+
+function saveNotes() {
+  if (state.currentCase === null) return;
+  state.notes[CASES[state.currentCase].id] = document.getElementById('inv-notes').value;
+  saveState();
+}
+
+// ═══════════════════════════════════════════════════
+// 10. SVG NETWORK GRAPH
+// ═══════════════════════════════════════════════════
+function renderNetwork(net) {
+  var svg = document.getElementById('inv-net');
+  var tip = document.getElementById('net-tip');
+  tip.classList.remove('show');
+  var hotSet = {};
+  net.hotEdges.forEach(function(e){ hotSet[e[0]+'-'+e[1]]=true; });
+
+  var html = '';
+  // Edges
+  net.edges.forEach(function(e){
+    var na=net.nodes[e[0]], nb=net.nodes[e[1]];
+    var isHot = hotSet[e[0]+'-'+e[1]];
+    html += '<line x1="'+na.x+'" y1="'+na.y+'" x2="'+nb.x+'" y2="'+nb.y+'" class="net-edge'+(isHot?' hot':'')+'" '+(isHot?'stroke-dasharray="6 3"':'')+'/>';
+  });
+
+  // Nodes
+  var colors = { customer:'#00e68a', bank:'#38bdf8', company:'#ffb833', jurisdiction:'#ff4d6a' };
+  var icons = { customer:'🧑', bank:'🏦', company:'🏢', jurisdiction:'🌍' };
+  net.nodes.forEach(function(n){
+    var col = colors[n.type] || '#a78bfa';
+    html += '<g class="net-node" onclick="showNetTip(event,'+n.id+')" data-nid="'+n.id+'">'
+      + '<circle cx="'+n.x+'" cy="'+n.y+'" r="18" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>'
+      + '<circle cx="'+n.x+'" cy="'+n.y+'" r="12" fill="'+col+'" fill-opacity=".25"/>'
+      + '<text x="'+n.x+'" y="'+(n.y+4)+'" text-anchor="middle" style="font-size:12px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text>'
+      + '<text x="'+n.x+'" y="'+(n.y+32)+'" class="net-label">'+n.label+'</text>'
+      + '</g>';
+  });
+  svg.innerHTML = html;
+}
+
+function showNetTip(evt, nodeId) {
+  var c = CASES[state.currentCase];
+  var n = c.network.nodes[nodeId];
+  var tip = document.getElementById('net-tip');
+  tip.innerHTML = '<strong style="color:#fff">'+n.label+'</strong><br>'+n.info;
+  tip.classList.add('show');
+  var rect = tip.parentElement.getBoundingClientRect();
+  var x = evt.clientX - rect.left;
+  var y = evt.clientY - rect.top;
+  tip.style.left = Math.min(x + 10, rect.width - 200) + 'px';
+  tip.style.top = Math.max(y - 70, 5) + 'px';
+  clearTimeout(tip._t);
+  tip._t = setTimeout(function(){ tip.classList.remove('show'); }, 4000);
+}
+
+// ═══════════════════════════════════════════════════
+// 11. DECISION + FEEDBACK
+// ═══════════════════════════════════════════════════
+function decide(action) {
+  if (navigator.vibrate) navigator.vibrate(30);
+  var c = CASES[state.currentCase];
+  var fb = c.feedback[action];
+  var isCorrect = (action === c.correct);
+
+  var icons = { excellent:'🎯', partial:'🔶', bad:'❌' };
+  var titleColors = { excellent:'#00e68a', partial:'#ffb833', bad:'#ff4d6a' };
+  document.getElementById('fb-icon').textContent = icons[fb.grade];
+  document.getElementById('fb-title').textContent = fb.title;
+  document.getElementById('fb-title').style.color = titleColors[fb.grade];
+  document.getElementById('fb-points').innerHTML = '<span style="color:'+(fb.points>=0?'#00e68a':'#ff4d6a')+';font-family:\'Anybody\',sans-serif;font-size:1.2rem">'+(fb.points>=0?'+':'')+fb.points+' XP</span>';
+  document.getElementById('fb-explain').innerHTML = fb.explain;
+  document.getElementById('fb-coach').innerHTML = fb.coach;
+
+  var result = { id: c.id, decision: action, correct: isCorrect, points: fb.points };
+  state.casesCompleted.push(result);
+  state.shiftResults.push(result);
+  state.xp = Math.max(0, state.xp + fb.points);
+  state.lastPlayDate = new Date().toISOString().slice(0,10);
+
+  checkBadges(c, action);
+  saveState();
+
+  var allDone = state.shiftResults.length >= CASES.length;
+  document.getElementById('fb-btn').textContent = allDone ? 'View Shift Summary' : 'Continue to Next Case';
+  document.getElementById('fb-btn').dataset.allDone = allDone;
+
+  document.getElementById('ov-feedback').classList.add('show');
+  if (fb.grade === 'excellent') spawnConfetti();
+}
+
+function afterFeedback() {
+  document.getElementById('ov-feedback').classList.remove('show');
+  if (document.getElementById('fb-btn').dataset.allDone === 'true') {
+    showShiftSummary();
+  } else {
+    document.getElementById('mainNav').style.display = '';
+    showScreen('shift');
+    renderShift();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// 12. SHIFT FLOW
+// ═══════════════════════════════════════════════════
+function startShift() {
+  state.shiftResults = [];
+  var today = new Date().toISOString().slice(0,10);
+  if (state.lastPlayDate !== today) state.streak = (state.streak || 0) + 1;
+  state.lastPlayDate = today;
+  saveState();
+  showScreen('shift');
+  renderShift();
+  document.querySelectorAll('.bnav-b').forEach(function(b){ b.classList.remove('act'); });
+}
+
+function showShiftSummary() {
+  var pts = state.shiftResults.reduce(function(s,r){ return s + r.points; }, 0);
+  var correct = state.shiftResults.filter(function(r){ return r.correct; }).length;
+  var acc = Math.round((correct / state.shiftResults.length) * 100);
+
+  document.getElementById('sum-pts').textContent = (pts >= 0 ? '+' : '') + pts;
+  document.getElementById('sum-pts').style.color = pts >= 0 ? '#00e68a' : '#ff4d6a';
+  document.getElementById('sum-cases').textContent = state.shiftResults.length;
+  document.getElementById('sum-acc').textContent = acc + '%';
+
+  var newBadges = state.badges.filter(function(b){ return b.shift; });
+  document.getElementById('sum-badges').innerHTML = newBadges.map(function(b){
+    return '<div class="badge-card"><div class="badge-ico">'+b.icon+'</div><div><div style="font-size:.78rem;font-weight:700;color:#a78bfa">'+b.name+'</div><div style="font-size:.6rem;color:#4a6a8a">New badge earned!</div></div></div>';
+  }).join('');
+
+  document.getElementById('sum-msg').textContent = acc === 100
+    ? "Perfect shift! You're a natural investigator. 🎯"
+    : acc >= 50
+    ? "Solid work. Review the feedback to sharpen your skills."
+    : "Tough shift — but every case is a learning opportunity.";
+
+  document.getElementById('ov-feedback').classList.remove('show');
+  document.getElementById('ov-summary').classList.add('show');
+  if (acc === 100) spawnConfetti();
+  state.badges.forEach(function(b){ delete b.shift; });
+  saveState();
+}
+
+function closeSummary() {
+  document.getElementById('ov-summary').classList.remove('show');
+  state.shiftResults = [];
+  nav('dashboard');
+}
+
+// ═══════════════════════════════════════════════════
+// 13. BADGES
+// ═══════════════════════════════════════════════════
+function checkBadges(caseData, action) {
+  function has(n){ return state.badges.some(function(b){ return b.name===n; }); }
+  if (caseData.id==='AML-2026-0447' && action==='sar' && !has('Structuring Spotter'))
+    state.badges.push({ icon:'🔍', name:'Structuring Spotter', shift:true });
+  if (caseData.id==='AML-2026-0512' && action==='sar' && !has('PEP Watchdog'))
+    state.badges.push({ icon:'🐕', name:'PEP Watchdog', shift:true });
+  if (state.casesCompleted.filter(function(c){return c.correct;}).length >= 2 && !has('Sharp Eye'))
+    state.badges.push({ icon:'🎯', name:'Sharp Eye', shift:true });
+  if (state.streak >= 3 && !has('Dedicated Analyst'))
+    state.badges.push({ icon:'🔥', name:'Dedicated Analyst', shift:true });
+  if (state.xp >= 500 && !has('Rising Star'))
+    state.badges.push({ icon:'⭐', name:'Rising Star', shift:true });
+  saveState();
+}
+
+// ═══════════════════════════════════════════════════
+// 14. CASE LOG
+// ═══════════════════════════════════════════════════
+function renderCaseLog() {
+  var list = document.getElementById('cases-list');
+  var empty = document.getElementById('cases-empty');
+  if (!state.casesCompleted.length) { list.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  var seen = {};
+  var unique = [];
+  state.casesCompleted.slice().reverse().forEach(function(c){ if (!seen[c.id]) { seen[c.id]=true; unique.push(c); } });
+  list.innerHTML = unique.map(function(c){
+    var cd = CASES.find(function(x){return x.id===c.id;});
+    return '<div class="gc p-4">'
+      + '<div class="flex justify-between items-center mb-1"><span style="font-size:.54rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace;font-weight:600">'+c.id+'</span>'
+      + '<span style="font-size:.62rem;font-weight:700;color:'+(c.correct?'#00e68a':'#ff4d6a')+'">'+(c.correct?'✓ Correct':'✗ Incorrect')+'</span></div>'
+      + '<div style="font-weight:700;color:#fff;font-size:.86rem;margin-bottom:.15rem">'+(cd?cd.name:c.id)+'</div>'
+      + '<div class="flex justify-between items-center"><span style="font-size:.64rem;color:#4a6a8a">Decision: <strong style="color:#8ba4c0">'+c.decision.toUpperCase()+'</strong></span>'
+      + '<span style="font-size:.72rem;font-weight:700;color:'+(c.points>=0?'#00e68a':'#ff4d6a')+'">'+(c.points>=0?'+':'')+c.points+' XP</span></div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// 15. LEADERBOARD
+// ═══════════════════════════════════════════════════
+function renderLeaderboard() {
+  var lb = FAKE_LB.map(function(p){ return p.me ? { name:p.name, xp:state.xp, lvl:getLevel()+1, me:true } : Object.assign({},p); });
+  lb.sort(function(a,b){ return b.xp - a.xp; });
+  var rankColors = ['#ffb833','#c8daf0','#cd7f32'];
+  document.getElementById('lb-list').innerHTML = lb.map(function(p,i){
+    return '<div class="lb-row" style="'+(p.me?'background:rgba(0,230,138,.06);border:1px solid rgba(0,230,138,.12);border-radius:12px':'')+'">'
+      + '<div class="lb-rank" style="background:'+(i<3?rankColors[i]+'18':'rgba(74,106,138,.1)')+';color:'+(i<3?rankColors[i]:'#4a6a8a')+'">'+(i+1)+'</div>'
+      + '<div class="flex-1"><div style="font-size:.8rem;font-weight:700;color:'+(p.me?'#00e68a':'#fff')+'">'+p.name+'</div>'
+      + '<div style="font-size:.56rem;color:#4a6a8a">Level '+p.lvl+'</div></div>'
+      + '<div style="font-family:\'Anybody\',sans-serif;font-size:.92rem;font-weight:800;color:'+(p.me?'#00e68a':'#ffb833')+'">'+p.xp.toLocaleString()+'</div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// 16. PROFILE
+// ═══════════════════════════════════════════════════
+function renderProfile() {
+  var li = getLevelInfo();
+  var acc = getAccuracy();
+  document.getElementById('p-level').textContent = li.title;
+  document.getElementById('p-lvl').textContent = li.level;
+  document.getElementById('p-xp').textContent = state.xp;
+  document.getElementById('p-cases').textContent = state.casesCompleted.length;
+  document.getElementById('p-acc').textContent = acc !== null ? acc + '%' : '—';
+  document.getElementById('p-streak').textContent = state.streak;
+  var bEl = document.getElementById('p-badges');
+  var nbEl = document.getElementById('p-no-badges');
+  if (state.badges.length) {
+    nbEl.style.display = 'none';
+    bEl.innerHTML = state.badges.map(function(b){
+      return '<div class="badge-card"><div class="badge-ico">'+b.icon+'</div><div style="font-size:.78rem;font-weight:700;color:#a78bfa">'+b.name+'</div></div>';
+    }).join('');
+  } else { nbEl.style.display = ''; bEl.innerHTML = ''; }
+}
+
+// ═══════════════════════════════════════════════════
+// 17. CONFETTI
+// ═══════════════════════════════════════════════════
+function spawnConfetti() {
+  var colors = ['#00e68a','#38bdf8','#ffb833','#a78bfa','#ff4d6a','#fff'];
+  for (var i = 0; i < 50; i++) {
+    var el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.top = '-10px';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = (Math.random()*.8)+'s';
+    el.style.animationDuration = (2+Math.random()*1.5)+'s';
+    el.style.width = (6+Math.random()*6)+'px';
+    el.style.height = (4+Math.random()*4)+'px';
+    el.style.borderRadius = Math.random()>.5?'50%':'2px';
+    document.body.appendChild(el);
+    setTimeout(function(e){e.remove();}.bind(null,el), 3500);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// 18. INIT
+// ═══════════════════════════════════════════════════
+loadState();
+renderDashboard();
+</script>
+</body>
+</html>
