@@ -3,7 +3,7 @@
 // 5 Cases — All names are entirely fictional constructions.
 // No real person, company, bank, or trust bears these names.
 // To add a case: push a new object following the same structure.
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════ 
 
 const KYC_CASES = [
 
