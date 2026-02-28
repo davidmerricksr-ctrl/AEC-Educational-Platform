@@ -72,10 +72,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 
 /* ── Network / Ownership graph ── */
 .net-node{cursor:pointer;transition:filter .2s}.net-node:hover{filter:brightness(1.3)}
-.net-label{font-family:'DM Sans',sans-serif;font-size:8.5px;fill:#8ba4c0;pointer-events:none;text-anchor:middle}
-.net-edge{stroke:rgba(74,106,138,.3);stroke-width:1.5}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2}
-.net-elabel{font-family:'JetBrains Mono',monospace;font-size:7.5px;fill:#ffb833;pointer-events:none;text-anchor:middle}
-.net-tip{position:absolute;background:rgba(6,14,26,.96);border:1px solid rgba(74,106,138,.25);border-radius:10px;padding:10px 14px;font-size:.68rem;color:#c8daf0;pointer-events:none;z-index:60;max-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.4}
+.net-label{font-family:'DM Sans',sans-serif;font-size:11px;fill:#c8daf0;pointer-events:none;text-anchor:middle;font-weight:600}
+.net-edge{stroke:rgba(74,106,138,.3);stroke-width:2}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2.5}
+.net-elabel{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ffb833;pointer-events:none;text-anchor:middle;font-weight:600}
+.net-tip{position:absolute;background:rgba(6,14,26,.96);border:1px solid rgba(74,106,138,.25);border-radius:10px;padding:12px 16px;font-size:.78rem;color:#c8daf0;pointer-events:none;z-index:60;max-width:260px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transform:translateY(6px);transition:.2s;line-height:1.45}
 .net-tip.show{opacity:1;transform:translateY(0)}
 
 /* ── Doc card ── */
@@ -100,10 +100,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 @keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.1) rotate(2deg)}}
 .fire{display:inline-block;animation:flick 1.2s ease-in-out infinite}
 
-/* ── Leaderboard ── */
-.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px}.lb-row:nth-child(odd){background:rgba(22,42,74,.3)}
-.lb-rank{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:.7rem;font-weight:800;flex-shrink:0}
-
 /* ── Badge ── */
 .badge-card{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.14);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
 .badge-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.2rem;background:rgba(167,139,250,.1);flex-shrink:0}
@@ -122,7 +118,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 <div class="bnav-inner">
   <button class="bnav-b act" data-s="dashboard" onclick="nav('dashboard')"><span class="bnav-ico">🏠</span>Dashboard</button>
   <button class="bnav-b" data-s="cases" onclick="nav('cases')"><span class="bnav-ico">📋</span>My Cases</button>
-  <button class="bnav-b" data-s="leaderboard" onclick="nav('leaderboard')"><span class="bnav-ico">🏆</span>Leaderboard</button>
   <button class="bnav-b" data-s="profile" onclick="nav('profile')"><span class="bnav-ico">👤</span>Profile</button>
 </div>
 </nav>
@@ -193,7 +188,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
           </div>
         </div>
         <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review new account applications, trace beneficial ownership hierarchies, verify documentation, and assess customer risk. Decide whether to approve, reject, or require EDD.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">2 cases • Ownership graph explorer • Document review</div>
+        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">5 cases • Ownership graph explorer • Document review</div>
       </div>
     </div>
   </div>
@@ -230,8 +225,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Relationship Network</div>
-    <div class="gc p-3 relative" style="min-height:260px">
-      <svg id="aml-net" width="100%" height="260" viewBox="0 0 340 260"></svg>
+    <div class="gc p-3 relative" style="min-height:380px">
+      <svg id="aml-net" width="100%" height="380" viewBox="0 0 400 340"></svg>
       <div class="net-tip" id="aml-tip"></div>
     </div>
   </div>
@@ -270,8 +265,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.45rem">🏛️ Beneficial Ownership Structure</div>
     <p style="font-size:.66rem;color:#4a6a8a;margin-bottom:.4rem">Tap any entity to see details. Trace ownership down to the ultimate beneficial owners.</p>
-    <div class="gc p-3 relative" style="min-height:320px">
-      <svg id="kyc-net" width="100%" height="320" viewBox="0 0 400 320"></svg>
+    <div class="gc p-3 relative" style="min-height:460px">
+      <svg id="kyc-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
       <div class="net-tip" id="kyc-tip"></div>
     </div>
   </div>
@@ -311,15 +306,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
     <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem">My Cases</h2>
     <div id="cases-list" class="space-y-3"></div>
     <div id="cases-empty" class="text-center py-12" style="color:#4a6a8a;font-size:.82rem">No cases reviewed yet. Start a shift!</div>
-  </div>
-</div>
-
-<!-- ═══ LEADERBOARD ═══ -->
-<div class="screen" id="scr-leaderboard">
-  <div class="p-5">
-    <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffb833;margin-bottom:.15rem">Rankings</div>
-    <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem">Leaderboard</h2>
-    <div id="lb-list" class="space-y-2"></div>
   </div>
 </div>
 
@@ -374,8 +360,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 </div>
 
 <!-- ── DATA ── -->
-<script src="cases/aml-cases.js"></script>
-<script src="cases/kyc-cases.js"></script>
+<script src="/cases/aml-cases.js"></script>
+<script src="/cases/kyc-cases.js"></script>
 
 <!-- ── APP LOGIC ── -->
 <script>
@@ -391,8 +377,12 @@ var TIPS=[
   "Golden visa schemes have been exploited for money laundering — several EU programmes have been suspended.",
   "Shell companies with no employees, no website, and virtual offices are classic laundering vehicles.",
   "Source of wealth and source of funds are different concepts — both must be verified for high-risk customers.",
+  "FATF Recommendation 8 addresses NPO vulnerabilities to terrorist financing — apply risk-based measures, not blanket rejection.",
+  "De-risking (blanket rejection of entire sectors) is discouraged by FATF and national regulators. Apply proportionate EDD instead.",
+  "Estonia revoked 80%+ of VASP licences in 2023 — always verify crypto licence status independently.",
+  "Sanctions proximity (close associates of sanctioned persons) can be as serious as a direct sanctions match.",
+  "A low-risk customer approved quickly is as important as a high-risk customer flagged correctly — both demonstrate good judgement.",
 ];
-var FAKE_LB=[{name:"Sarah C.",xp:4850,lvl:8},{name:"James O.",xp:4320,lvl:7},{name:"Ana P.",xp:3980,lvl:7},{name:"YOU",xp:0,lvl:1,me:true},{name:"David K.",xp:2100,lvl:5},{name:"Priya S.",xp:1850,lvl:4},{name:"Tom W.",xp:1420,lvl:3},{name:"Lina A.",xp:980,lvl:2}];
 var LEVELS=[{title:"Trainee Analyst",xp:0},{title:"Junior Analyst",xp:200},{title:"Analyst",xp:500},{title:"Senior Analyst",xp:900},{title:"Lead Investigator",xp:1500},{title:"AML Manager",xp:2500},{title:"Compliance Officer",xp:4000},{title:"Head of Financial Crime",xp:6000},{title:"Chief Compliance Officer",xp:9000}];
 
 // ═══ STATE ═══
@@ -406,7 +396,7 @@ function getCases(){return state.currentRole==='kyc'?KYC_CASES:AML_CASES;}
 
 // ═══ NAV ═══
 function nav(id){showScreen(id);document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.toggle('act',b.dataset.s===id);});document.getElementById('mainNav').style.display='';}
-function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('scr-'+id);if(el){el.classList.add('active');el.scrollTop=0;}if(id==='dashboard')renderDashboard();if(id==='leaderboard')renderLeaderboard();if(id==='cases')renderCaseLog();if(id==='profile')renderProfile();}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('scr-'+id);if(el){el.classList.add('active');el.scrollTop=0;}if(id==='dashboard')renderDashboard();if(id==='cases')renderCaseLog();if(id==='profile')renderProfile();}
 function backToShift(){document.getElementById('mainNav').style.display='';showScreen('shift');renderShift();}
 
 // ═══ DASHBOARD ═══
@@ -437,7 +427,7 @@ function renderNetworkAML(net){
   var hotSet={};net.hotEdges.forEach(function(e){hotSet[e[0]+'-'+e[1]]=true;});
   var h='';var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
   net.edges.forEach(function(e){var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];h+='<line x1="'+na.x+'" y1="'+na.y+'" x2="'+nb.x+'" y2="'+nb.y+'" class="net-edge'+(hot?' hot':'')+'" '+(hot?'stroke-dasharray="6 3"':'')+'/>'; });
-  net.nodes.forEach(function(n){var col=colors[n.type]||'#a78bfa';h+='<g class="net-node" onclick="showTip(\'aml-tip\','+n.id+')"><circle cx="'+n.x+'" cy="'+n.y+'" r="18" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/><circle cx="'+n.x+'" cy="'+n.y+'" r="12" fill="'+col+'" fill-opacity=".25"/><text x="'+n.x+'" y="'+(n.y+4)+'" text-anchor="middle" style="font-size:12px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text><text x="'+n.x+'" y="'+(n.y+32)+'" class="net-label">'+n.label+'</text></g>';});
+  net.nodes.forEach(function(n){var col=colors[n.type]||'#a78bfa';h+='<g class="net-node" onclick="showTip(\'aml-tip\','+n.id+')"><circle cx="'+n.x+'" cy="'+n.y+'" r="24" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/><circle cx="'+n.x+'" cy="'+n.y+'" r="16" fill="'+col+'" fill-opacity=".25"/><text x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:16px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text><text x="'+n.x+'" y="'+(n.y+40)+'" class="net-label">'+n.label+'</text></g>';});
   svg.innerHTML=h;
 }
 
@@ -452,7 +442,9 @@ function openKYC(c){
   // Screening
   document.getElementById('kyc-scr').innerHTML=c.screening.map(function(s){return '<div class="scr-row'+(s.flag?' flagged':'')+'"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.68rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+'">'+s.result+'</div></div>';}).join('');
   // Flags
-  document.getElementById('kyc-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
+  var flagsEl=document.getElementById('kyc-flags');var flagsHeader=flagsEl.previousElementSibling;
+  if(c.flags.length){flagsHeader.style.display='';flagsEl.innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');}
+  else{flagsHeader.style.display='none';flagsEl.innerHTML='<div class="gc-s p-3 text-center" style="font-size:.74rem;color:#00e68a">✅ No red flags identified. Standard risk profile.</div>';}
   document.getElementById('kyc-notes').value=state.notes[c.id]||'';
   showScreen('kyc');
 }
@@ -470,17 +462,17 @@ function renderOwnershipGraph(h){
     var isHot=to.risk==='critical'||from.risk==='critical';
     html+='<line x1="'+from.x+'" y1="'+from.y+'" x2="'+to.x+'" y2="'+to.y+'" class="net-edge'+(isHot?' hot':'')+'" '+(isHot?'stroke-dasharray="6 3"':'')+'/>'; 
     var mx=(from.x+to.x)/2,my=(from.y+to.y)/2;
-    html+='<rect x="'+(mx-22)+'" y="'+(my-7)+'" width="44" height="14" rx="3" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>';
-    html+='<text x="'+mx+'" y="'+(my+3)+'" class="net-elabel">'+e.label+'</text>';
+    html+='<rect x="'+(mx-26)+'" y="'+(my-8)+'" width="52" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/>';
+    html+='<text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+e.label+'</text>';
   });
   // Nodes
   h.nodes.forEach(function(n){
     var col=riskCol[n.risk]||'#8ba4c0';var ico=typeIco[n.type]||'🔷';
     html+='<g class="net-node" onclick="showTip(\'kyc-tip\',\''+n.id+'\')">';
-    html+='<rect x="'+(n.x-22)+'" y="'+(n.y-16)+'" width="44" height="32" rx="8" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>';
-    html+='<text x="'+n.x+'" y="'+(n.y+4)+'" text-anchor="middle" style="font-size:14px;fill:#fff;pointer-events:none">'+ico+'</text>';
-    html+='<text x="'+n.x+'" y="'+(n.y+28)+'" class="net-label" style="font-size:7.5px">'+n.label+'</text>';
-    if(n.risk==='critical'){html+='<circle cx="'+(n.x+18)+'" cy="'+(n.y-12)+'" r="4" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>';}
+    html+='<rect x="'+(n.x-28)+'" y="'+(n.y-20)+'" width="56" height="40" rx="10" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>';
+    html+='<text x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:18px;fill:#fff;pointer-events:none">'+ico+'</text>';
+    html+='<text x="'+n.x+'" y="'+(n.y+36)+'" class="net-label">'+n.label+'</text>';
+    if(n.risk==='critical'){html+='<circle cx="'+(n.x+24)+'" cy="'+(n.y-16)+'" r="5" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>';}
     html+='</g>';
   });
   svg.innerHTML=html;
@@ -544,9 +536,14 @@ function checkBadges(c,action){
   if(c.id==='AML-2026-0512'&&action==='sar'&&!has('PEP Watchdog'))state.badges.push({icon:'🐕',name:'PEP Watchdog',shift:true});
   if(c.id==='KYC-2026-0831'&&action==='edd'&&!has('UBO Detective'))state.badges.push({icon:'🏛️',name:'UBO Detective',shift:true});
   if(c.id==='KYC-2026-0847'&&action==='reject'&&!has('Gatekeeper'))state.badges.push({icon:'🚫',name:'Gatekeeper',shift:true});
+  if(c.id==='KYC-2026-0903'&&action==='edd'&&!has('NPO Watchdog'))state.badges.push({icon:'🏥',name:'NPO Watchdog',shift:true});
+  if(c.id==='KYC-2026-0914'&&action==='approve'&&!has('Fair Analyst'))state.badges.push({icon:'⚖️',name:'Fair Analyst',shift:true});
+  if(c.id==='KYC-2026-0929'&&action==='edd'&&!has('Crypto Sleuth'))state.badges.push({icon:'🪙',name:'Crypto Sleuth',shift:true});
   if(state.casesCompleted.filter(function(cc){return cc.correct;}).length>=4&&!has('Sharp Eye'))state.badges.push({icon:'🎯',name:'Sharp Eye',shift:true});
+  if(state.casesCompleted.filter(function(cc){return cc.correct;}).length>=7&&!has('Eagle Eye'))state.badges.push({icon:'🦅',name:'Eagle Eye',shift:true});
   if(state.streak>=3&&!has('Dedicated Analyst'))state.badges.push({icon:'🔥',name:'Dedicated Analyst',shift:true});
   if(state.xp>=500&&!has('Rising Star'))state.badges.push({icon:'⭐',name:'Rising Star',shift:true});
+  if(state.xp>=1500&&!has('Compliance Pro'))state.badges.push({icon:'💎',name:'Compliance Pro',shift:true});
   saveState();
 }
 
@@ -555,12 +552,9 @@ function renderCaseLog(){
   var list=document.getElementById('cases-list'),empty=document.getElementById('cases-empty');
   if(!state.casesCompleted.length){list.innerHTML='';empty.style.display='';return;}empty.style.display='none';
   var seen={},unique=[];state.casesCompleted.slice().reverse().forEach(function(c){if(!seen[c.id]){seen[c.id]=true;unique.push(c);}});
-  var allCases=AML_CASES.concat(kyc_cases);
+  var allCases=AML_CASES.concat(KYC_CASES);
   list.innerHTML=unique.map(function(c){var cd=allCases.find(function(x){return x.id===c.id;});var roleLabel=c.role==='kyc'?'KYC':'AML';return '<div class="gc p-4"><div class="flex justify-between items-center mb-1"><span style="font-size:.54rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</span><span style="font-size:.62rem;font-weight:700;color:'+(c.correct?'#00e68a':'#ff4d6a')+'">'+(c.correct?'✓':'✗')+' '+c.decision.toUpperCase()+'</span></div><div style="font-weight:700;color:#fff;font-size:.86rem;margin-bottom:.15rem">'+(cd?cd.name:c.id)+'</div><div class="flex justify-between items-center"><span style="font-size:.6rem;padding:2px 8px;border-radius:4px;font-weight:700;background:rgba('+(c.role==='kyc'?'56,189,248':'255,77,106')+',.1);color:'+(c.role==='kyc'?'#38bdf8':'#ff4d6a')+'">'+roleLabel+'</span><span style="font-size:.72rem;font-weight:700;color:'+(c.points>=0?'#00e68a':'#ff4d6a')+'">'+(c.points>=0?'+':'')+c.points+' XP</span></div></div>';}).join('');
 }
-
-// ═══ LEADERBOARD ═══
-function renderLeaderboard(){var lb=FAKE_LB.map(function(p){return p.me?{name:p.name,xp:state.xp,lvl:getLevel()+1,me:true}:Object.assign({},p);});lb.sort(function(a,b){return b.xp-a.xp;});var rc=['#ffb833','#c8daf0','#cd7f32'];document.getElementById('lb-list').innerHTML=lb.map(function(p,i){return '<div class="lb-row" style="'+(p.me?'background:rgba(0,230,138,.06);border:1px solid rgba(0,230,138,.12);border-radius:12px':'')+'"><div class="lb-rank" style="background:'+(i<3?rc[i]+'18':'rgba(74,106,138,.1)')+';color:'+(i<3?rc[i]:'#4a6a8a')+'">'+(i+1)+'</div><div class="flex-1"><div style="font-size:.8rem;font-weight:700;color:'+(p.me?'#00e68a':'#fff')+'">'+p.name+'</div><div style="font-size:.56rem;color:#4a6a8a">Level '+p.lvl+'</div></div><div style="font-family:\'Anybody\',sans-serif;font-size:.92rem;font-weight:800;color:'+(p.me?'#00e68a':'#ffb833')+'">'+p.xp.toLocaleString()+'</div></div>';}).join('');}
 
 // ═══ PROFILE ═══
 function renderProfile(){var li=getLevelInfo(),acc=getAccuracy();document.getElementById('p-level').textContent=li.title;document.getElementById('p-lvl').textContent=li.level;document.getElementById('p-xp').textContent=state.xp;document.getElementById('p-cases').textContent=state.casesCompleted.length;document.getElementById('p-acc').textContent=acc!==null?acc+'%':'—';document.getElementById('p-streak').textContent=state.streak;var b=document.getElementById('p-badges'),nb=document.getElementById('p-no-badges');if(state.badges.length){nb.style.display='none';b.innerHTML=state.badges.map(function(bd){return '<div class="badge-card"><div class="badge-ico">'+bd.icon+'</div><div style="font-size:.78rem;font-weight:700;color:#a78bfa">'+bd.name+'</div></div>';}).join('');}else{nb.style.display='';b.innerHTML='';}}
