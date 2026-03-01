@@ -1,728 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>EconCrime Edu</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg:#f6f5f0;--sf:#fff;--ink:#111;--sub:#555;--mute:#888;--line:#e5e3dc;
---crim:#b82d24;--crim-bg:rgba(184,45,36,.06);--crim-bdr:rgba(184,45,36,.14);
---navy:#1a3a5c;--navy-bg:rgba(26,58,92,.06);
---teal:#18725f;--teal-bg:rgba(24,114,95,.06);
---amber:#b07d1e;--amber-bg:rgba(176,125,30,.06);--amber-bdr:rgba(176,125,30,.18);
---gold:#c8952a;
---r:14px;--rs:10px;
---fd:'DM Serif Display',Georgia,serif;
---fb:'DM Sans',system-ui,sans-serif;
---nav:72px;--sab:env(safe-area-inset-bottom,0px);
-}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.62;overflow-x:hidden;padding-bottom:calc(var(--nav)+var(--sab)+4px);-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:0;height:0}
-a{color:var(--navy);text-decoration:none}
-.disc{position:sticky;top:0;z-index:9990;background:var(--ink);color:rgba(255,255,255,.65);text-align:center;font-size:.57rem;font-weight:600;letter-spacing:.03em;padding:.42rem 1rem;line-height:1.3}
-.disc b{color:var(--gold)}
-#home .disc{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4)}
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);padding-bottom:var(--sab);height:calc(var(--nav)+var(--sab))}
-.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
-.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:var(--mute);cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
-.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
-.nb.act{color:var(--crim);font-weight:700}
-.nb.act .bi{transform:scale(1.08)}
-.nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
-.mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
-.mo.open{display:flex}
-.msh{background:var(--sf);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1rem 1.1rem calc(var(--nav)+var(--sab)+.8rem);animation:su .22s ease}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.msh h3{font-family:var(--fd);font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem}
-.mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:var(--rs);cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
-.mi:active{background:var(--bg)}
-.mi .ic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:var(--bg);flex-shrink:0}
-.mi .ml{font-weight:600;font-size:.8rem}
-.mi .ms{font-size:.63rem;color:var(--mute)}
-.page{display:none;min-height:100vh}.page.active{display:block;animation:fu .25s ease}
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.pi{padding:1.2rem 1.1rem 3rem;max-width:680px;margin:0 auto}
-.se{font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--crim);margin-bottom:.2rem}
-.st{font-family:var(--fd);font-size:1.5rem;line-height:1.14;letter-spacing:-.01em;margin-bottom:.3rem}
-.sd{font-size:.82rem;color:var(--sub);margin-bottom:1.3rem;line-height:1.5}
-.sec-hdr{position:sticky;top:25px;z-index:40;background:var(--bg);padding-top:.4rem;padding-bottom:.15rem;margin-bottom:0}
-.sec-hdr .sd{margin-bottom:.65rem}
-#home{background:var(--ink);color:#fff;position:relative;overflow:hidden}
-#home::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 35%,rgba(184,45,36,.07),transparent),radial-gradient(ellipse 60% 50% at 75% 65%,rgba(26,58,92,.1),transparent)}
-.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:48px 48px;opacity:.5}
-.hero{position:relative;z-index:2;padding:2.4rem 1.3rem 1.8rem;text-align:center}
-.hbadge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(200,149,42,.1);border:1px solid rgba(200,149,42,.2);color:var(--gold);font-size:.54rem;font-weight:700;letter-spacing:.06em;padding:.36rem .8rem;border-radius:100px;margin-bottom:1.2rem}
-.hbadge .pulse{width:5px;height:5px;background:var(--gold);border-radius:50%;animation:pu 2s infinite}
-@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.55)}}
-.hero h1{font-family:var(--fd);font-size:1.95rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:.75rem}
-.hero h1 em{font-style:italic;color:var(--gold)}
-.hero>p{font-size:.85rem;color:rgba(255,255,255,.4);max-width:400px;margin:0 auto 1.3rem;font-weight:300;line-height:1.6}
-.hbtns{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.15rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;font-family:var(--fb);transition:.2s;-webkit-tap-highlight-color:transparent}
-.bp{background:linear-gradient(135deg,var(--crim),#d44a3a);color:#fff;box-shadow:0 4px 16px rgba(184,45,36,.3)}.bp:active{transform:scale(.97)}
-.bgh{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.12)}
-.sbar{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.06);border-radius:var(--r);overflow:hidden;max-width:520px;margin:0 auto 1.8rem;width:calc(100% - 2.6rem)}
-.sb{padding:.9rem .6rem;text-align:center;background:rgba(255,255,255,.03)}
-.sb .sv{font-family:var(--fd);font-size:1.2rem;color:var(--gold);margin-bottom:.04rem}
-.sb .sl{font-size:.55rem;color:rgba(255,255,255,.34);font-weight:500;line-height:1.3}
-.habout{position:relative;z-index:2;padding:0 1.3rem 1.4rem;max-width:520px;margin:0 auto;text-align:center}
-.habout h2{font-family:var(--fd);font-size:1.15rem;color:#fff;margin-bottom:.5rem;line-height:1.2}
-.habout h2 em{color:var(--gold);font-style:italic}
-.habout p{font-size:.78rem;color:rgba(255,255,255,.36);line-height:1.6;margin-bottom:.4rem}
-.tagrow{display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;margin-top:.7rem}
-.tpill{font-size:.54rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:.22rem .55rem;border-radius:100px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.38)}
-.hdisc{position:relative;z-index:2;background:rgba(200,149,42,.08);border-top:1px solid rgba(200,149,42,.12);padding:.45rem 1.2rem;text-align:center;font-size:.58rem;color:var(--gold);font-weight:500;margin-top:1.3rem}
-.hsrc{position:relative;z-index:2;padding:.9rem 1.2rem;text-align:center}
-.hsrc p{font-size:.6rem;color:rgba(255,255,255,.18);line-height:1.6}
-.hsrc a{color:rgba(200,149,42,.32);text-decoration:underline}
-.pills{display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.65rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.pills::-webkit-scrollbar{display:none}
-.pill{padding:.4rem .75rem;border:1px solid var(--line);border-radius:100px;font-size:.68rem;font-weight:600;color:var(--mute);cursor:pointer;transition:.2s;background:var(--sf);white-space:nowrap;flex-shrink:0;font-family:var(--fb);-webkit-tap-highlight-color:transparent}
-.pill:active{transform:scale(.96)}
-.pill.act{background:var(--crim);border-color:var(--crim);color:#fff}
-.pill.dark.act{background:var(--ink);border-color:var(--ink);color:#fff}
-.farea{border:1px solid var(--line);border-radius:var(--r);padding:1.1rem .9rem;margin-bottom:.8rem;position:relative;overflow:hidden;background:var(--sf)}
-.farea::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(184,45,36,.03),transparent)}
-.fstages{position:relative;z-index:1}
-.fstage{margin-bottom:1rem}.fstage:last-child{margin-bottom:0}
-.fslabel{font-size:.48rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:.2rem .5rem;border-radius:5px;margin-bottom:.45rem;display:inline-block;margin-left:50%;transform:translateX(-50%)}
-.fsteps{display:flex;flex-direction:column;gap:.3rem}
-.fnode{padding:.6rem .75rem;border-radius:8px;cursor:pointer;transition:.2s;border:1.5px solid var(--line);-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:.55rem}
-.fnode:active{transform:scale(.98)}
-.fnode.sel{border-color:rgba(184,45,36,.5)!important;box-shadow:0 0 14px rgba(184,45,36,.1)}
-.fni{font-size:1.05rem;flex-shrink:0}
-.fnt{font-size:.72rem;font-weight:600;color:var(--ink)}
-.fns{font-size:.58rem;color:var(--mute);margin-top:.02rem}
-.farrow{text-align:center;color:var(--line);font-size:.6rem;padding:.08rem 0;letter-spacing:2px}
-.fdetail{position:relative;z-index:2;background:var(--bg);border-top:1px solid var(--line);padding:.95rem;border-radius:0 0 var(--r) var(--r);min-height:80px}
-.fdbadge{font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.13rem .45rem;border-radius:4px;display:inline-block;margin-bottom:.25rem}
-.fdetail h4{font-family:var(--fd);color:var(--ink);font-size:.9rem;margin-bottom:.22rem}
-.fdetail p{font-size:.74rem;color:var(--sub);line-height:1.5}
-.fdflags{margin-top:.35rem;display:flex;flex-wrap:wrap;gap:.2rem}
-.fdflags span{display:inline-block;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);padding:.07rem .35rem;border-radius:4px;font-size:.56rem}
-.fsrc{text-align:center;padding:.3rem;font-size:.52rem;color:var(--mute);position:relative;z-index:1}
-.tcard{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:1.05rem;margin-bottom:.65rem}
-.tcard .th{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.45rem}
-.tcard .ti{width:32px;height:32px;border-radius:7px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
-.tcard h3{font-family:var(--fd);font-size:.88rem;line-height:1.2}
-.tcard p{font-size:.76rem;color:var(--sub);line-height:1.48;margin-bottom:.35rem}
-.rf{margin-top:.15rem;padding-top:.45rem;border-top:1px solid var(--line)}
-.rf h4{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim);margin-bottom:.2rem}
-.rf li{font-size:.7rem;color:var(--sub);margin-bottom:.08rem;margin-left:.8rem}
-.tc-cases{border-top:1px solid var(--line);margin-top:.35rem;padding-top:.45rem}
-.tc-cases h4{color:var(--navy)}
-.tc-links{display:flex;flex-direction:column;gap:.25rem}
-.tc-link{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:600;color:var(--navy);padding:.3rem .5rem;border:1px solid var(--line);border-radius:6px;transition:.1s;-webkit-tap-highlight-color:transparent}
-.tc-link:active{background:var(--navy-bg)}
-.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--navy);flex-shrink:0}
-/* ══ FRAUD TYPOLOGIES EXAMPLES ══ */
-.tc-examples{border-top:1px solid var(--line);margin-top:.35rem;padding-top:.45rem}
-.tc-examples h4{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#18725f;margin-bottom:.3rem}
-.tc-ex{display:flex;align-items:flex-start;gap:.4rem;font-size:.7rem;color:var(--sub);line-height:1.45;padding:.35rem .5rem;background:rgba(24,114,95,.04);border-left:2px solid #18725f;border-radius:0 6px 6px 0;margin-bottom:.25rem}
-.tc-ex-num{font-weight:700;color:#18725f;flex-shrink:0;font-size:.62rem;min-width:14px;margin-top:1px}
-.impstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:1.4rem}
-.ist{background:var(--ink);padding:.85rem .5rem;text-align:center}
-.ist .sv{font-family:var(--fd);font-size:1.15rem;color:var(--gold)}
-.ist .sl{font-size:.54rem;color:rgba(255,255,255,.38);font-weight:500;line-height:1.25;margin-top:.04rem}
-.iblock{padding:1.1rem;border:1px solid var(--line);border-radius:var(--r);margin-bottom:.75rem;background:var(--sf)}
-.iblock h3{font-family:var(--fd);font-size:.92rem;margin-bottom:.45rem}
-.iblock p{font-size:.78rem;color:var(--sub);line-height:1.52;margin-bottom:.4rem}
-.stags{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.3rem}
-.stag{font-size:.56rem;font-weight:600;padding:.14rem .42rem;border-radius:4px;display:inline-block}
-.stag a{color:inherit;text-decoration:none}
-.s1{background:var(--teal-bg);color:var(--teal)}.s2{background:var(--navy-bg);color:var(--navy)}
-.s3{background:var(--crim-bg);color:var(--crim)}.s4{background:var(--amber-bg);color:var(--amber)}
-.acc{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:.95rem;margin-bottom:.65rem;cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent;position:relative}
-.acc:active{transform:scale(.985)}
-.acc.exp{border-color:var(--amber-bdr)}
-.acc .a-i{font-size:1.15rem;margin-bottom:.35rem;display:block}
-.acc h3{font-family:var(--fd);font-size:.9rem;margin-bottom:.18rem}
-.acc .a-b{font-size:.75rem;color:var(--sub);line-height:1.42}
-.acc .a-d{display:none;margin-top:.55rem;padding-top:.55rem;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink);line-height:1.58}
-.acc.exp .a-d{display:block;animation:fu .2s ease}
-.acc .a-c{position:absolute;top:.85rem;right:.85rem;font-size:.48rem;color:var(--mute);transition:.3s}
-.acc.exp .a-c{transform:rotate(180deg);color:var(--amber)}
-.acc .a-certs{margin-top:.6rem;padding-top:.5rem;border-top:1px dashed var(--line)}
-.acc .a-certs-title{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--crim);margin-bottom:.4rem}
-.cert-pill{display:inline-flex;align-items:center;gap:4px;font-size:.64rem;padding:.25rem .55rem;border-radius:6px;background:var(--sf);border:1px solid var(--line);margin:0 .3rem .3rem 0;color:var(--ink);font-weight:600;text-decoration:none;transition:.12s}
-.cert-pill:hover{border-color:var(--amber-bdr);background:rgba(184,45,36,.04)}
-.cert-pill .cp-org{font-size:.52rem;color:var(--sub);font-weight:400}
-.org-group{margin-bottom:.25rem}
-.org-group-hdr{font-family:var(--fd);font-size:.78rem;font-weight:700;color:var(--crim);text-transform:uppercase;letter-spacing:.06em;padding:.6rem 0 .25rem;margin-top:.6rem;border-bottom:1px solid var(--line);margin-bottom:.55rem}
-.org-group-hdr:first-child{margin-top:0}
-.gbar{position:sticky;top:30px;z-index:50;background:var(--bg);padding:.4rem 0 .3rem;margin-bottom:.5rem}
-.gbar input{width:100%;padding:.55rem .8rem;border:1px solid var(--line);border-radius:8px;font-family:var(--fb);font-size:.82rem;color:var(--ink);background:var(--sf);-webkit-appearance:none}
-.gbar input:focus{outline:none;border-color:var(--crim);box-shadow:0 0 0 3px rgba(184,45,36,.08)}
-.gletter{font-family:var(--fd);font-size:1.05rem;color:var(--crim);padding:.5rem 0 .15rem;border-bottom:1px solid var(--line);margin-bottom:.45rem;margin-top:.7rem}
-.gletter:first-of-type{margin-top:0}
-.gterm{padding:.55rem 0;border-bottom:1px solid rgba(229,227,220,.5)}
-.gterm:last-child{border-bottom:none}
-.gterm h4{font-family:var(--fd);font-size:.84rem;margin-bottom:.12rem}
-.gterm p{font-size:.74rem;color:var(--sub);line-height:1.48}
-.gnone{text-align:center;padding:2rem 1rem;color:var(--mute);font-size:.82rem}
-.ocard{display:block;background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:.95rem;margin-bottom:.65rem;transition:.12s;-webkit-tap-highlight-color:transparent}
-.ocard:active{transform:scale(.985)}
-.ocard .oi{width:30px;height:30px;border-radius:6px;display:grid;place-items:center;font-size:.9rem;margin-bottom:.4rem}
-.ocard h3{font-family:var(--fd);font-size:.85rem;margin-bottom:.12rem}
-.ocard p{font-size:.72rem;color:var(--sub);line-height:1.42;margin-bottom:.3rem}
-.otag{font-size:.52rem;font-weight:700;padding:.12rem .38rem;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
-.fcard{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.65rem}
-.fcard .fi{font-size:1.1rem;margin-bottom:.35rem;display:block}
-.fcard h3{font-family:var(--fd);font-size:.88rem;margin-bottom:.2rem}
-.fcard p{font-size:.76rem;color:var(--sub);line-height:1.48}
-.pcard{border:1px solid var(--line);border-radius:var(--r);padding:.95rem;display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.65rem;background:var(--sf)}
-.pbadge{font-size:1.3rem;flex-shrink:0;width:38px;height:38px;display:grid;place-items:center;background:var(--amber-bg);border-radius:var(--rs)}
-.pcard h3{font-family:var(--fd);font-size:.83rem;margin-bottom:.06rem}
-.pmeta{font-size:.6rem;color:var(--mute);margin-bottom:.25rem;font-weight:500}
-.pcard p{font-size:.73rem;color:var(--sub);line-height:1.45}
-.ptag{display:inline-block;font-size:.51rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.09rem .36rem;border-radius:3px;margin-top:.3rem}
-.rcard{border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.65rem;background:var(--sf)}
-.rcard h3{font-family:var(--fd);font-size:.85rem;margin-bottom:.18rem}
-.rcard p{font-size:.74rem;color:var(--sub);line-height:1.42;margin-bottom:.35rem}
-.rcard a{color:var(--navy);font-size:.72rem;font-weight:600}
-.atext p{color:var(--sub);font-size:.84rem;line-height:1.58;margin-bottom:.65rem}
-.abox{border-radius:var(--r);padding:1rem;margin-bottom:.8rem}
-.abox h3{font-family:var(--fd);font-size:.9rem;margin-bottom:.3rem}
-.abox p{font-size:.76rem;color:var(--sub);line-height:1.48;margin-bottom:.2rem}
-.abox ul{margin:.2rem 0 0 .85rem;font-size:.76rem;color:var(--sub)}.abox li{margin-bottom:.1rem}
-.abox.warn{background:var(--crim-bg);border:1px solid var(--crim-bdr)}.abox.warn h3{color:var(--crim)}
-.srcbox{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:var(--r);padding:1rem}
-.srcbox h4{font-size:.56rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:.35rem}
-.srcbox p{font-size:.72rem;color:var(--sub);line-height:1.5}
-.srcbox a{color:var(--navy);text-decoration:underline}
-.cta{margin-top:1.4rem;background:var(--ink);border-radius:var(--r);padding:1.5rem 1.1rem;text-align:center;color:#fff}
-.cta h3{font-family:var(--fd);font-size:1rem;margin-bottom:.35rem}
-.cta p{font-size:.78rem;opacity:.42;max-width:360px;margin:0 auto}
-/* ══ INTELLIGENCE DIRECTORY ══ */
-.id-disclaimer{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:var(--rs);padding:.55rem .75rem;margin-bottom:.8rem;font-size:.6rem;color:var(--amber);line-height:1.45;font-weight:500}
-.id-sbar{position:sticky;top:30px;z-index:50;background:var(--bg);padding:.35rem 0 .2rem;margin-bottom:.3rem}
-.id-sbar input{width:100%;padding:.55rem .8rem;border:1px solid var(--line);border-radius:8px;font-family:var(--fb);font-size:.82rem;color:var(--ink);background:var(--sf);-webkit-appearance:none}
-.id-sbar input:focus{outline:none;border-color:var(--crim);box-shadow:0 0 0 3px rgba(184,45,36,.08)}
-.id-fgroup{margin-bottom:.3rem}
-.id-flabel{font-size:.48rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:.2rem 0 .15rem}
-.id-filters{display:flex;gap:.25rem;overflow-x:auto;padding-bottom:.25rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.id-filters::-webkit-scrollbar{display:none}
-.id-fbtn{padding:.3rem .6rem;border:1px solid var(--line);border-radius:100px;font-size:.6rem;font-weight:600;color:var(--mute);cursor:pointer;transition:.15s;background:var(--sf);white-space:nowrap;flex-shrink:0;font-family:var(--fb);-webkit-tap-highlight-color:transparent}
-.id-fbtn:active{transform:scale(.96)}
-.id-fbtn.act{background:var(--navy);border-color:var(--navy);color:#fff}
-.id-clearall{padding:.3rem .6rem;border:1px solid var(--crim-bdr);border-radius:100px;font-size:.58rem;font-weight:700;color:var(--crim);cursor:pointer;background:var(--crim-bg);white-space:nowrap;flex-shrink:0;font-family:var(--fb);-webkit-tap-highlight-color:transparent;margin-left:.15rem}
-.id-count{font-size:.64rem;color:var(--mute);padding:.45rem 0 .35rem;font-weight:500}
-.id-count b{color:var(--ink);font-weight:700}
-.id-card{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:.95rem;margin-bottom:.6rem;cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent;position:relative}
-.id-card:active{transform:scale(.985)}
-.id-card .idc-icon{font-size:1.2rem;margin-bottom:.2rem;display:block}
-.id-card .idc-name{font-family:var(--fd);font-size:.86rem;line-height:1.2;margin-bottom:.03rem}
-.id-card .idc-acr{font-size:.56rem;font-weight:700;color:var(--navy);letter-spacing:.03em;margin-bottom:.25rem}
-.id-card .idc-desc{font-size:.72rem;color:var(--sub);line-height:1.42;margin-bottom:.35rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.id-card .idc-tags{display:flex;flex-wrap:wrap;gap:.18rem;margin-bottom:.3rem}
-.id-card .idc-tag{font-size:.48rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.09rem .32rem;border-radius:3px}
-.idc-tag.geo{background:var(--teal-bg);color:var(--teal)}
-.idc-tag.typ{background:var(--navy-bg);color:var(--navy)}
-.idc-tag.thm{background:var(--amber-bg);color:var(--amber)}
-.id-card .idc-res{display:flex;flex-wrap:wrap;gap:.2rem;margin-bottom:.25rem}
-.id-card .idc-res a{font-size:.58rem;font-weight:600;color:var(--navy);padding:.15rem .4rem;border-radius:4px;background:var(--navy-bg);display:inline-block;-webkit-tap-highlight-color:transparent}
-.id-card .idc-res a:active{opacity:.7}
-.id-card .idc-attr{font-size:.48rem;color:var(--mute);line-height:1.35;font-style:italic}
-.id-card .idc-arrow{position:absolute;top:.9rem;right:.9rem;font-size:.55rem;color:var(--mute)}
-.id-none{text-align:center;padding:2rem 1rem;color:var(--mute);font-size:.82rem}
-.id-cat-hdr{font-family:var(--fd);font-size:.82rem;font-weight:700;color:var(--crim);text-transform:uppercase;letter-spacing:.05em;padding:.7rem 0 .3rem;margin-top:.5rem;border-bottom:1.5px solid var(--line);margin-bottom:.55rem}
-.id-cat-hdr:first-child{margin-top:0}
-.id-cat-count{font-family:var(--fb);font-size:.6rem;font-weight:500;color:var(--mute);text-transform:none;letter-spacing:0}
-/* Directory modal */
-.idm-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem}
-.idm-icon{font-size:1.5rem;flex-shrink:0}
-.idm-head h3{font-family:var(--fd);font-size:1rem;line-height:1.18;margin-bottom:0!important;padding:0!important}
-.idm-acr{font-size:.58rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
-.idm-section{margin-bottom:.55rem}
-.idm-label{font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim);margin-bottom:.18rem}
-.idm-text{font-size:.76rem;color:var(--sub);line-height:1.52}
-.idm-why{background:var(--teal-bg);border-radius:var(--rs);padding:.65rem .75rem;margin-bottom:.55rem}
-.idm-why .idm-label{color:var(--teal)}
-.idm-why .idm-text{color:var(--ink)}
-.idm-resources{margin-bottom:.55rem}
-.idm-res-link{display:flex;align-items:center;gap:.35rem;padding:.38rem .5rem;border:1px solid var(--line);border-radius:6px;margin-bottom:.3rem;font-size:.7rem;font-weight:600;color:var(--navy);transition:.1s;-webkit-tap-highlight-color:transparent}
-.idm-res-link:active{background:var(--bg)}
-.idm-res-link span{font-size:.7rem;flex-shrink:0}
-.idm-attr{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:var(--rs);padding:.6rem .7rem;margin-bottom:.55rem}
-.idm-attr p{font-size:.56rem;color:var(--sub);line-height:1.4;font-style:italic}
-.idm-visit{display:block;text-align:center;padding:.6rem;border-radius:8px;background:var(--navy);color:#fff;font-size:.78rem;font-weight:700;font-family:var(--fb);margin-bottom:.2rem;-webkit-tap-highlight-color:transparent;transition:.12s}
-.idm-visit:active{opacity:.85;transform:scale(.98)}
-.idm-close{display:block;text-align:center;padding:.45rem;font-size:.72rem;font-weight:600;color:var(--mute);cursor:pointer;-webkit-tap-highlight-color:transparent}
-
-footer{background:var(--ink);color:rgba(255,255,255,.35);padding:1.4rem 1.1rem calc(var(--nav)+var(--sab)+1rem);text-align:center;font-size:.68rem;line-height:1.6}
-footer a{color:rgba(255,255,255,.48);text-decoration:underline}
-footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
-@media(min-width:700px){
-  .sbar,.impstats{grid-template-columns:repeat(4,1fr)}
-  .hero h1{font-size:2.5rem}
-  .pi{padding:1.6rem 2rem 4rem}
-  .st{font-size:1.85rem}
-  .fsteps{flex-direction:row;gap:.3rem}
-  .fnode{flex:1;flex-direction:column;text-align:center;padding:.6rem .4rem}
-  .farrow{display:none}
-}
-</style>
-</head>
-<body>
-<nav class="bnav"><div class="bni">
-<button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">&#x1F3E0;</span>Home</button>
-<button class="nb" data-pg="explorer" onclick="go('explorer')"><span class="bi">&#x1F5FA;&#xFE0F;</span>Explorer</button>
-<button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Reference</button>
-<button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
-<button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
-<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
-<button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
-</div></nav>
-<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
-<div class="msh">
-<h3>More Sections</h3>
-<div class="mi" onclick="go('competencies');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>
-<div class="mi" onclick="go('glossary');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>
-
-<div class="mi" onclick="go('future');closeMore()"><div class="ic">&#x1F680;</div><div><div class="ml">Future</div><div class="ms">Emerging technologies</div></div></div>
-
-<div class="mi" onclick="go('about');closeMore()"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>
-</div>
-</div>
-
-<!-- HOME -->
-<div class="page active" id="home">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="hgrid"></div>
-<div class="hero">
-<div class="hbadge"><span class="pulse"></span> EconomicCrimeHub.org — an educational platform</div>
-<h1>Understanding<br><em>Economic Crime</em></h1>
-<p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
-</div>
-<div class="sbar" id="homeStats"></div>
-<div onclick="go('popculture')" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;padding:.55rem 1rem;background:#111;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:.9rem">🎬</span><span style="font-size:.74rem;font-weight:600;color:#fff;letter-spacing:.03em">Economic Crime in Pop Culture — Films, TV, Books &amp; Podcasts</span><span style="font-size:.9rem">🎬</span></div>
-<div class="habout">
-<h2>A Career That <em>Matters</em></h2>
-<p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world — from compliance and data science to cybersecurity and intelligence analysis.</p>
-<div class="tagrow">
-<span class="tpill">Compliance</span><span class="tpill">Data Science</span><span class="tpill">Cybersecurity</span>
-<span class="tpill">Intelligence</span><span class="tpill">Law</span><span class="tpill">RegTech</span>
-<span class="tpill">Policy</span><span class="tpill">Forensic Accounting</span>
-</div>
-</div>
-<div class="hdisc">⚠ Strictly for educational purposes. Does not constitute professional advice of any kind.</div>
-<div class="hsrc"><p>Sources: <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> · <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> · <a href="https://www.fincen.gov/" target="_blank">FinCEN</a> · <a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> · <a href="https://www.justice.gov/" target="_blank">DOJ</a> · <a href="https://home.treasury.gov/" target="_blank">US Treasury</a> · <a href="https://www.interpol.int/" target="_blank">INTERPOL</a></p></div>
-</div>
-
-<!-- EXPLORER -->
-<div class="page" id="explorer">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Typology Explorer</div>
-<div class="st">How Economic Crime Works</div>
-<div class="sd">Select a crime type to trace its stages step by step. Tap any step to see how it works and the red flags that expose it.</div>
-</div>
-<div class="pills" id="flowPick"></div>
-<div class="farea" id="flowArea">
-<div class="fstages" id="flowStages"></div>
-<div class="fdetail" id="flowDetail">
-<div class="fdbadge" id="fdBadge" style="background:rgba(232,169,58,.15);color:#e8a93a">OVERVIEW</div>
-<h4 id="fdTitle">Select a step above</h4>
-<p id="fdDesc">Tap any step in the flow to see how it works and the red flags that can expose it.</p>
-<div class="fdflags" id="fdFlags"></div>
-</div>
-<div class="fsrc" id="flowSrc"></div>
-</div>
-</div>
-</div>
-
-<!-- REFERENCE -->
-<div class="page" id="reference">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Typology Reference</div>
-<div class="st">Patterns of Economic Crime</div>
-<div class="sd">Browse categories of financial crime — how criminals exploit systems and the red flags to watch for.</div>
-</div>
-<div class="pills" id="typoTabs"></div>
-<div id="typoContent"></div>
-</div>
-</div>
-
-<!-- IMPACT -->
-<div class="page" id="impact">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Societal Impact</div>
-<div class="st">The Human Cost</div>
-<div class="sd">Economic crime is not victimless — it devastates lives, communities, and entire economies.</div>
-</div>
-<div class="impstats" id="impactStats"></div>
-<div id="impactBlocks"></div>
-</div>
-</div>
-
-<!-- INTELLIGENCE DIRECTORY -->
-<div class="page" id="intelligence">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Intelligence &amp; Resources</div>
-<div class="st">Economic Crime Directory</div>
-<div class="sd">Independent educational directory of intelligence agencies, industry bodies, professional associations, and key frameworks shaping the fight against economic crime. Search, filter, and tap any entry for details.</div>
-</div>
-<div class="id-disclaimer">⚠ This is an independent educational resource. All descriptions are original neutral paraphrases. This directory is not endorsed by, affiliated with, or sponsored by any listed organisation.</div>
-<div class="id-sbar"><input type="text" id="idSearch" placeholder="Search organisations, resources, frameworks…" oninput="filterIntelDir()"></div>
-<div class="id-fgroup"><div class="id-flabel">Category</div><div class="id-filters" id="idFiltCat"></div></div>
-<div class="id-fgroup"><div class="id-flabel">Geography</div><div class="id-filters" id="idFiltGeo"></div></div>
-<div class="id-fgroup"><div class="id-flabel">Type</div><div class="id-filters" id="idFiltType"></div></div>
-<div class="id-fgroup"><div class="id-flabel">Focus Area</div><div class="id-filters" id="idFiltTheme"></div></div>
-<div class="id-count" id="idCount"></div>
-<div id="idGrid"></div>
-</div>
-</div>
-<!-- Intelligence Directory Modal -->
-<div class="mo" id="idModal" onclick="if(event.target===this)closeIdModal()">
-<div class="msh" id="idModalContent" style="max-height:85vh;overflow-y:auto"></div>
-</div>
-
-<!-- COMPETENCIES -->
-<div class="page" id="competencies">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Competencies</div>
-<div class="st">Essential Competencies</div>
-<div class="sd">Tap any competency to explore it in depth. Only one expands at a time.</div>
-</div>
-<div id="compGrid"></div>
-</div>
-</div>
-
-<!-- GLOSSARY -->
-<div class="page" id="glossary">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Glossary</div>
-<div class="st">A–Z Terminology</div>
-<div class="sd">Searchable reference of economic crime terminology, acronyms, and concepts.</div>
-</div>
-<div class="gbar"><input type="text" id="gSearch" placeholder="Search terms…" oninput="filterGlossary()"></div>
-<div id="glossaryList"></div>
-</div>
-</div>
-
-
-
-<!-- FUTURE -->
-<div class="page" id="future">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Looking Ahead</div>
-<div class="st">The Future of the Fight</div>
-<div class="sd">Emerging technologies transforming the battle against financial crime.</div>
-</div>
-<div id="futureGrid"></div>
-<div class="cta"><h3>Join the Fight Against Economic Crime</h3><p>The field is growing rapidly and needs talented, passionate people from all backgrounds.</p></div>
-</div>
-</div>
-
-<!-- POP CULTURE -->
-<div class="page" id="popculture">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Pop Culture</div>
-<div class="st">Economic Crime on Screen &amp; Page</div>
-<div class="sd">How popular culture has brought financial crime into the mainstream.</div>
-</div>
-<div id="pcGrid"></div>
-</div>
-</div>
-
-
-
-<!-- ABOUT -->
-<div class="page" id="about">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">About</div>
-<div class="st">Educational Purpose</div>
-<div class="sd">An independent, non-commercial resource for learning about economic crime.</div>
-</div>
-<div class="atext">
-<p>This platform brings together educational content from leading organisations and US government public domain resources to help students, researchers, and professionals understand the landscape of financial crime.</p>
-<p>All content is sourced from publicly available materials — including US government publications (public domain under 17 U.S.C. § 105) and UK public interest resources.</p>
-</div>
-<div class="abox warn">
-<h3>Educational Use Only</h3>
-<p>This platform is strictly non-commercial and does not:</p>
-<ul><li>Provide legal or financial advice</li><li>Promote any commercial product or service</li><li>Collect personal data from visitors</li><li>Represent any organisation’s official position</li></ul>
-<p style="margin-top:.4rem;font-size:.72rem;color:var(--sub)">US Government materials are in the public domain under 17 U.S.C. § 105.</p>
-</div>
-<div class="srcbox" style="margin-top:.7rem">
-<h4>Content Sources</h4>
-<p><a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> — Modern slavery prevention<br>
-<a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> — Online safety (Crown Copyright)<br>
-<a href="https://www.fincen.gov/" target="_blank">FinCEN</a> — Financial Crimes Enforcement Network<br>
-<a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> — Internet Crime Complaint Center<br>
-<a href="https://www.justice.gov/" target="_blank">US Department of Justice</a> — Financial crime cases<br>
-<a href="https://home.treasury.gov/" target="_blank">US Treasury</a> — Sanctions &amp; TF intelligence<br>
-<a href="https://www.state.gov/trafficking-in-persons-report/" target="_blank">US State Department</a> — Trafficking in Persons Report<br>
-<a href="https://www.interpol.int/en/Crimes/Financial-crime" target="_blank">INTERPOL</a> — Financial crime assessments</p>
-</div>
-</div>
-</div>
-
-<footer>
-<div>EconCrime<em style="opacity:.32;font-style:italic;font-size:.62rem"> edu</em> — Strictly educational. Non-commercial.</div>
-<div style="margin-top:.25rem">Sources: <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> · <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> · <a href="https://www.fincen.gov/" target="_blank">FinCEN</a> · <a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> · <a href="https://www.justice.gov/" target="_blank">DOJ</a> · <a href="https://home.treasury.gov/" target="_blank">US Treasury</a></div>
-<div class="fd">Educational purposes only — not legal, financial, or regulatory advice. © Educational Use 2026.</div>
-</footer>
-
-<!-- DATA -->
-<script src="data/competencies.js"></script>
-<script src="data/flows.js"></script>
-<script src="data/typologies.js"></script>
-<script src="data/impact.js"></script>
-<script src="data/future.js"></script>
-<script src="data/popculture.js"></script>
-<script src="data/glossary.js"></script>
-<script src="data/intel-directory.js"></script>
-
-<!-- APP LOGIC -->
-<script>
-function go(id){
-    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nb[data-pg]').forEach(function(b){b.classList.toggle('act',b.dataset.pg===id)});
-    window.scrollTo(0,0);
-}
-function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
-function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
-function accordion(el){
-    var parent=el.parentNode;
-    var wasOpen=el.classList.contains('exp');
-    parent.querySelectorAll('.acc.exp').forEach(function(a){a.classList.remove('exp')});
-    if(!wasOpen) el.classList.add('exp');
-}
-
-/* Home Stats */
-document.getElementById('homeStats').innerHTML=impactStats.map(function(s){return '<div class="sb"><div class="sv">'+s.value+'</div><div class="sl">'+s.label+'</div></div>'}).join('');
-
-/* Competencies */
-document.getElementById('compGrid').innerHTML=competencies.map(function(c){
-    var certsHtml='';
-    if(c.certs&&c.certs.length){
-        certsHtml='<div class="a-certs"><div class="a-certs-title">\ud83c\udf93 Associated Certifications</div><div>'+
-        c.certs.map(function(ct){return '<a href="'+ct.url+'" target="_blank" class="cert-pill" onclick="event.stopPropagation()">'+ct.name+' <span class="cp-org">\u2014 '+ct.org+'</span></a>'}).join('')+
-        '</div></div>';
-    }
-    return '<div class="acc" onclick="accordion(this)"><span class="a-c">\u25bc</span><span class="a-i">'+c.icon+'</span><h3>'+c.title+'</h3><div class="a-b">'+c.brief+'</div><div class="a-d">'+c.detail+certsHtml+'</div></div>';
-}).join('');
-
-/* Flow Explorer */
-var curFlow=0;
-document.getElementById('flowPick').innerHTML=crimeFlows.map(function(f,i){
-    return '<button class="pill dark'+(i===0?' act':'')+'" onclick="showFlow('+i+')">'+f.icon+' '+f.name+'</button>';
-}).join('');
-
-function showFlow(idx){
-    curFlow=idx;
-    document.querySelectorAll('#flowPick .pill').forEach(function(b,i){b.classList.toggle('act',i===idx)});
-    var f=crimeFlows[idx];
-    var h='';
-    f.stages.forEach(function(stage,si){
-        var c=stage.color;
-        h+='<div class="fstage"><div class="fslabel" style="background:rgba('+c+',.15);color:rgba('+c+',1)">'+stage.name+'</div><div class="fsteps">';
-        stage.steps.forEach(function(step,sti){
-            h+='<div class="fnode" id="fn-'+si+'-'+sti+'" style="background:rgba('+c+',.06)" onclick="showStep('+si+','+sti+')"><span class="fni">'+step.icon+'</span><div><div class="fnt">'+step.label+'</div><div class="fns">'+step.sub+'</div></div></div>';
-            if(sti<stage.steps.length-1) h+='<div class="farrow">\u25bc</div>';
-        });
-        h+='</div></div>';
-        if(si<f.stages.length-1) h+='<div class="farrow" style="text-align:center;padding:.2rem 0">\u2b07\ufe0e</div>';
-    });
-    document.getElementById('flowStages').innerHTML=h;
-    document.getElementById('flowSrc').textContent=f.source;
-    document.getElementById('fdBadge').style.cssText='background:rgba(232,169,58,.15);color:#e8a93a';
-    document.getElementById('fdBadge').textContent='OVERVIEW';
-    document.getElementById('fdTitle').textContent=f.name+' \u2014 Step-by-Step';
-    document.getElementById('fdDesc').textContent='Tap any step in the flow above to see how it works and the red flags that can expose it.';
-    document.getElementById('fdFlags').innerHTML='';
-}
-
-function showStep(si,sti){
-    var f=crimeFlows[curFlow],stage=f.stages[si],step=stage.steps[sti],c=stage.color;
-    document.querySelectorAll('.fnode').forEach(function(n){n.classList.remove('sel')});
-    document.getElementById('fn-'+si+'-'+sti).classList.add('sel');
-    var b=document.getElementById('fdBadge');
-    b.style.cssText='background:rgba('+c+',.18);color:rgba('+c+',1)';
-    b.textContent=stage.name;
-    document.getElementById('fdTitle').textContent=step.title;
-    document.getElementById('fdDesc').textContent=step.desc;
-    document.getElementById('fdFlags').innerHTML=step.flags.map(function(fl){return '<span>\ud83d\udea9 '+fl+'</span>'}).join('');
-    var d=document.getElementById('flowDetail');d.style.animation='none';d.offsetHeight;d.style.animation='fu .2s ease';
-    d.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-showFlow(0);
-
-/* Typology Reference */
-document.getElementById('typoTabs').innerHTML=typologyCategories.map(function(c,i){
-    return '<button class="pill'+(i===0?' act':'')+'" onclick="showTypo('+i+')">'+c.name+'</button>';
-}).join('');
-
-function showTypo(idx){
-    document.querySelectorAll('#typoTabs .pill').forEach(function(t,i){t.classList.toggle('act',i===idx)});
-    document.getElementById('typoContent').innerHTML=typologyCategories[idx].cards.map(function(c){
-        var casesHtml='';
-        if(c.cases&&c.cases.length){
-            casesHtml='<div class="rf tc-cases"><h4>Real-World Cases</h4><div class="tc-links">'+c.cases.map(function(cs){return '<a href="'+cs.url+'" target="_blank" class="tc-link" onclick="event.stopPropagation()"><span class="tc-dot"></span>'+cs.title+'</a>'}).join('')+'</div></div>';
-        }
-        var exHtml='';
-        if(c.examples&&c.examples.length){
-            exHtml='<div class="rf tc-examples"><h4>How It Works \u2014 Examples</h4>'+c.examples.map(function(ex,i){return '<div class="tc-ex"><span class="tc-ex-num">'+(i+1)+'</span>'+ex+'</div>'}).join('')+'</div>';
-        }
-        return '<div class="tcard"><div class="th"><div class="ti" style="background:'+c.bg+'">'+c.icon+'</div><h3>'+c.title+'</h3></div><p>'+c.desc+'</p><div class="rf"><h4>Red Flags</h4><ul>'+c.flags.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul></div>'+exHtml+casesHtml+'</div>';
-    }).join('');
-}
-showTypo(0);
-
-/* Impact */
-document.getElementById('impactStats').innerHTML=impactStats.map(function(s){return '<div class="ist"><div class="sv">'+s.value+'</div><div class="sl">'+s.label+'</div></div>'}).join('');
-document.getElementById('impactBlocks').innerHTML=impacts.map(function(b){return '<div class="iblock"><h3>'+b.icon+' '+b.title+'</h3>'+b.paras.map(function(p){return '<p>'+p+'</p>'}).join('')+'<div class="stags">'+b.tags.map(function(t){return '<span class="stag '+t.cls+'"><a href="'+t.url+'" target="_blank">'+t.text+'</a></span>'}).join('')+'</div></div>'}).join('');
-
-/* Glossary */
-var sortedGlossary=glossary.slice().sort(function(a,b){return a.term.localeCompare(b.term,'en',{sensitivity:'base'})});
-function renderGlossary(terms){
-    if(!terms.length){document.getElementById('glossaryList').innerHTML='<div class="gnone">No matching terms found.</div>';return;}
-    var html='',curLetter='';
-    terms.forEach(function(t){
-        var first=t.term.replace(/^[^a-zA-Z]/,'#')[0].toUpperCase();
-        var letter=/[A-Z]/.test(first)?first:'#';
-        if(letter!==curLetter){curLetter=letter;html+='<div class="gletter">'+letter+'</div>';}
-        html+='<div class="gterm"><h4>'+t.term+'</h4><p>'+t.def+'</p></div>';
-    });
-    document.getElementById('glossaryList').innerHTML=html;
-}
-function filterGlossary(){
-    var q=document.getElementById('gSearch').value.trim().toLowerCase();
-    if(!q){renderGlossary(sortedGlossary);return;}
-    renderGlossary(sortedGlossary.filter(function(t){return t.term.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)}));
-}
-renderGlossary(sortedGlossary);
-
-
-
-/* Future */
-document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p></div>'}).join('');
-
-/* Pop Culture */
-document.getElementById('pcGrid').innerHTML=popCulture.map(function(p){return '<div class="pcard"><div class="pbadge">'+p.icon+'</div><div><h3>'+p.title+'</h3><div class="pmeta">'+p.meta+'</div><p>'+p.desc+'</p><span class="ptag '+p.cls+'">'+p.tag+'</span></div></div>'}).join('');
-
-
-
-/* ===== INTELLIGENCE DIRECTORY ===== */
-var idFilters={cat:[],geo:[],type:[],theme:[]};
-var idCats=["Intelligence & Law Enforcement","Industry Body & Standards","Key Resource & Framework"];
-var idGeos=["UK National","UK Regional","European","Global/International"];
-var idTypes=["Law Enforcement & Intelligence","Financial Intelligence Unit (FIU)","Regulator","Public-Private Partnership","NGO & Think Tank","Standards Body","Professional Association"];
-var idThemes=["Money Laundering","Fraud & Organised Crime","Bribery & Corruption","Sanctions Evasion","Asset Recovery","Emerging Threats (Crypto/AI)"];
-
-function renderIdFilters(){
-    document.getElementById('idFiltCat').innerHTML=idCats.map(function(c){return '<button class="id-fbtn'+(idFilters.cat.indexOf(c)>-1?' act':'')+'" onclick="toggleIdFilter(\'cat\',this.textContent)">'+c+'</button>'}).join('')+'<button class="id-clearall" onclick="clearIdFilters()">Clear All</button>';
-    document.getElementById('idFiltGeo').innerHTML=idGeos.map(function(g){return '<button class="id-fbtn'+(idFilters.geo.indexOf(g)>-1?' act':'')+'" onclick="toggleIdFilter(\'geo\',\''+g+'\')">'+g+'</button>'}).join('');
-    document.getElementById('idFiltType').innerHTML=idTypes.map(function(t){return '<button class="id-fbtn'+(idFilters.type.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'type\',this.textContent)">'+t+'</button>'}).join('');
-    document.getElementById('idFiltTheme').innerHTML=idThemes.map(function(t){return '<button class="id-fbtn'+(idFilters.theme.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'theme\',this.textContent)">'+t+'</button>'}).join('');
-}
-
-function toggleIdFilter(cat,val){
-    var arr=idFilters[cat];
-    var idx=arr.indexOf(val);
-    if(idx>-1) arr.splice(idx,1); else arr.push(val);
-    renderIdFilters();
-    filterIntelDir();
-}
-
-function clearIdFilters(){
-    idFilters={cat:[],geo:[],type:[],theme:[]};
-    document.getElementById('idSearch').value='';
-    renderIdFilters();
-    filterIntelDir();
-}
-
-function filterIntelDir(){
-    var q=(document.getElementById('idSearch').value||'').trim().toLowerCase();
-    var results=intelligenceOrgs.filter(function(o){
-        if(q&&o.name.toLowerCase().indexOf(q)===-1&&o.acronym.toLowerCase().indexOf(q)===-1&&o.shortDesc.toLowerCase().indexOf(q)===-1&&o.themes.join(' ').toLowerCase().indexOf(q)===-1&&(o.category||'').toLowerCase().indexOf(q)===-1) return false;
-        if(idFilters.cat.length&&idFilters.cat.indexOf(o.category)===-1) return false;
-        if(idFilters.geo.length&&idFilters.geo.indexOf(o.geography)===-1) return false;
-        if(idFilters.type.length&&idFilters.type.indexOf(o.type)===-1) return false;
-        if(idFilters.theme.length){var match=false;idFilters.theme.forEach(function(t){if(o.themes.indexOf(t)>-1) match=true});if(!match) return false;}
-        return true;
-    });
-    document.getElementById('idCount').innerHTML='Showing <b>'+results.length+'</b> of '+intelligenceOrgs.length+' entries (independent educational summaries)';
-    if(!results.length){document.getElementById('idGrid').innerHTML='<div class="id-none">No entries match your filters. Try adjusting your search or clearing filters.</div>';return;}
-    /* Group by category */
-    var cats=[];var grouped={};
-    results.forEach(function(o){
-        var c=o.category||'Other';
-        if(!grouped[c]){grouped[c]=[];cats.push(c);}
-        grouped[c].push(o);
-    });
-    var html='';
-    cats.forEach(function(cat){
-        html+='<div class="id-cat-hdr">'+cat+' <span class="id-cat-count">('+grouped[cat].length+')</span></div>';
-        grouped[cat].forEach(function(o){
-            var origIdx=intelligenceOrgs.indexOf(o);
-            var topRes=o.keyResources.slice(0,2);
-            html+='<div class="id-card" onclick="openIdModal('+origIdx+')">'+
-                '<span class="idc-arrow">\u2192</span>'+
-                '<span class="idc-icon">'+o.icon+'</span>'+
-                '<div class="idc-name">'+o.name+'</div>'+
-                '<div class="idc-acr">'+o.acronym+'</div>'+
-                '<div class="idc-desc">'+o.shortDesc+'</div>'+
-                '<div class="idc-tags">'+
-                    '<span class="idc-tag geo">'+o.geography+'</span>'+
-                    '<span class="idc-tag typ">'+o.type+'</span>'+
-                    o.themes.slice(0,3).map(function(t){return '<span class="idc-tag thm">'+t+'</span>'}).join('')+
-                '</div>'+
-                '<div class="idc-res">'+topRes.map(function(r){return '<a href="'+r.url+'" target="_blank" onclick="event.stopPropagation()">'+r.title+'</a>'}).join('')+'</div>'+
-                '<div class="idc-attr">'+o.attributionText+'</div>'+
-            '</div>';
-        });
-    });
-    document.getElementById('idGrid').innerHTML=html;
-}
-
-function openIdModal(idx){
-    var o=intelligenceOrgs[idx];
-    var h='';
-    h+='<div class="idm-head"><span class="idm-icon">'+o.icon+'</span><h3>'+o.name+'</h3></div>';
-    h+='<div class="idm-acr">'+o.acronym+' \u00b7 '+o.geography+' \u00b7 '+o.type+'</div>';
-    if(o.category) h+='<div style="margin-bottom:.45rem"><span class="idc-tag" style="background:var(--crim-bg);color:var(--crim);font-size:.5rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.12rem .4rem;border-radius:3px">'+o.category+'</span></div>';
-    h+='<div class="idm-section"><div class="idm-label">Overview (Independent Educational Summary)</div><div class="idm-text">'+o.longDesc+'</div></div>';
-    h+='<div class="idm-why"><div class="idm-label">\ud83c\udf93 Why This Matters for Learners</div><div class="idm-text">'+o.whyMatters+'</div></div>';
-    h+='<div class="idm-resources"><div class="idm-label">Key Official Resources</div>';
-    o.keyResources.forEach(function(r){
-        h+='<a href="'+r.url+'" target="_blank" class="idm-res-link"><span>\ud83d\udcc4</span> '+r.title+'</a>';
-    });
-    h+='</div>';
-    h+='<div class="idm-attr"><p>'+o.attributionText+'</p></div>';
-    h+='<a href="'+o.website+'" target="_blank" class="idm-visit">Visit Official Website \u2192</a>';
-    h+='<div class="idm-close" onclick="closeIdModal()">Close</div>';
-    document.getElementById('idModalContent').innerHTML=h;
-    document.getElementById('idModal').classList.add('open');
-}
-
-function closeIdModal(){document.getElementById('idModal').classList.remove('open')}
-
-renderIdFilters();
-filterIntelDir();
-</script>
-</body>
-</html>
+/* ══ TYPOLOGY REFERENCE DATA ══ */
+var typologyCategories = [
+  /* ── Money Laundering (8 cards with examples + disruption) ── */
+  {name:"Money Laundering", cards:[
+    {icon:"\ud83d\udd04",bg:"#b82d24",title:"Trade-Based Money Laundering (TBML)",
+     desc:"One of the most sophisticated and widely used methods globally. Criminals manipulate international trade documents and shipments to move and disguise illicit funds. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Over- or under-invoicing","Phantom shipments","Multiple invoicing for the same goods","False description/quality/quantity of goods","Unusual third-country routing or free trade zones"],
+     examples:["Exporter invoices goods at three times market value; the overseas buyer pays the inflated price and the excess is laundered profit disguised as legitimate trade revenue","A company ships empty containers between free trade zones, generating invoices and wire transfers that create a paper trail for millions in illicit funds","The same shipment of electronics is invoiced by three different shell companies to three different importers, multiplying the apparent trade value to justify large cross-border transfers"],
+     disruption:["Screen trade finance transactions for pricing anomalies using commodity price databases","Flag businesses with trade volumes inconsistent with their size, sector, or logistics capacity","Cross-reference shipping documents with customs declarations and vessel tracking data","Apply enhanced due diligence to clients operating through free trade zones or transshipment hubs","Share intelligence on suspicious trade patterns through public-private partnerships like JMLIT"]},
+    {icon:"\ud83c\udfdb\ufe0f",bg:"#1a3a5c",title:"Professional Services & Legal Sector",
+     desc:"Misuse of lawyers, accountants, and company formation agents to layer and legitimise criminal proceeds through client accounts and complex structures. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Unusual cash payments for professional fees","Misuse of client trust accounts","Rapid creation and dissolution of companies/trusts","Requests for offshore structures with no legitimate business reason"],
+     examples:["A solicitor creates a chain of shell companies across three jurisdictions to purchase UK property on behalf of an anonymous client, using the firm\u2019s client account to obscure the source of funds","An accountant helps a client restructure business invoices to create the appearance of legitimate consulting income, layering payments through multiple nominee accounts","A company formation agent registers 40 companies in a single week for the same beneficial owner, each used once to receive a large transfer before being dissolved"],
+     disruption:["Ensure law firms and accountancy practices conduct source-of-funds checks on all client account deposits","Supervisory bodies to conduct risk-based inspections of trust account activity","Mandate beneficial ownership verification for all company formation requests","Report suspicious patterns of rapid incorporation and dissolution to the UKFIU","Apply the \u2018all-crimes\u2019 approach to professional sector AML supervision"]},
+    {icon:"\u20bf",bg:"#18725f",title:"Crypto & Virtual Asset Laundering",
+     desc:"Using cryptocurrencies, mixers, chain-hopping, and privacy coins to obscure the origin of illicit funds. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Rapid fiat-to-crypto conversions","Use of mixing/tumbling services","High-volume small transactions across wallets","NFTs or digital assets used as stores of value"],
+     examples:["Proceeds from ransomware attacks are converted to Bitcoin, run through a mixing service, then withdrawn as Monero at an unregulated exchange in a high-risk jurisdiction","A fraud network buys high-value NFTs with stolen funds, transfers ownership through several wallets, then sells for clean cryptocurrency on a mainstream platform","Criminal converts \u00a3500,000 into stablecoins, splits across 200 wallets, then chain-hops through five different blockchains before converting back to fiat via a peer-to-peer platform"],
+     disruption:["Implement blockchain analytics tools to trace transaction flows across chains","Apply travel rule requirements to virtual asset service providers (VASPs)","Flag wallets interacting with known mixing services or sanctioned addresses","Require VASPs to conduct full KYC before allowing fiat off-ramps","Monitor for sudden large-value NFT trades with no collecting history"]},
+    {icon:"\ud83c\udfb0",bg:"#b07d1e",title:"Gambling & Casino Laundering",
+     desc:"Buying casino chips with dirty cash, minimal gambling, then cashing out as \u2018winnings\u2019 \u2014 including junket operators. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Large cash buy-ins with quick cash-outs","Minimal actual play time","Purchasing winning tickets from others","Cross-border junket activity"],
+     examples:["Individual buys \u00a350,000 in casino chips with cash, plays a few hands of low-stakes blackjack, then cashes out the remainder as a cheque \u2014 now appearing as gambling winnings","A junket operator brings a group of high-net-worth individuals to a casino, pooling cash buy-ins under multiple names and splitting payouts across several accounts","Criminals buy winning betting slips from legitimate gamblers at a premium, then present them to bookmakers to cash out and create a clean paper trail"],
+     disruption:["Require casinos to verify source of funds for all cash buy-ins above thresholds","Monitor chip-to-play ratios and flag customers who cash out with minimal gambling activity","Apply AML controls to junket operators including customer due diligence and transaction monitoring","Implement facial recognition and linked-play analysis to detect structured buy-ins across visits","Require bookmakers to record ID for winning ticket redemptions above set values"]},
+    {icon:"\ud83d\uddbc\ufe0f",bg:"#b82d24",title:"Art, Antiques & Cultural Property",
+     desc:"Using high-value art, antiques and collectibles to store and move value anonymously through private sales and freeports. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Transactions via third-party agents","Significant over-/undervaluation","Storage in freeports or bonded warehouses","Private sales with limited documentation"],
+     examples:["A PEP purchases a \u00a34M painting through an intermediary at a private sale, stores it in a Geneva freeport for three years, then sells at auction \u2014 converting illicit wealth into a legitimate sale with published provenance","Criminal network uses shell companies to buy and sell the same sculpture between related parties at escalating prices, creating the illusion of appreciating legitimate investment value","Looted antiquities are given false provenance documents, sold through a respected dealer, and the proceeds deposited into a bank account as art sales income"],
+     disruption:["Extend AML obligations to art market participants above transaction thresholds (as per 5AMLD/6AMLD)","Require freeport operators to conduct due diligence on stored assets and their owners","Implement provenance verification requirements for high-value art and antiquities transactions","Flag transactions involving rapid resale, related-party trades, or significant price inflation","Share intelligence on looted cultural property through INTERPOL\u2019s Stolen Works of Art database"]},
+    {icon:"\ud83d\udc65",bg:"#1a3a5c",title:"Money Mules & Structuring",
+     desc:"Recruiting individuals to receive and forward funds in small amounts to avoid detection thresholds (smurfing/structuring). \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Unexplained funds into personal accounts","Immediate onward transfers overseas","Job offers requiring use of personal bank accounts","Multiple deposits just below reporting limits"],
+     examples:["A student is recruited via social media with a \u2018money transfer agent\u2019 job offer \u2014 they receive \u00a33,000 into their account, keep \u00a3300, and wire the rest to an overseas account within hours","An organised crime group deposits \u00a39,500 cash at 12 different bank branches on the same day using different mules, staying just below the \u00a310,000 reporting threshold each time","A network of 30 mule accounts receives fraud proceeds from hundreds of victims, each account forwarding funds to a central collection account before the banks can react"],
+     disruption:["Deploy real-time transaction monitoring to detect rapid receive-and-forward patterns across accounts","Use network analytics to identify clusters of accounts opened in similar timeframes with linked contact details","Run public awareness campaigns targeting vulnerable groups about mule recruitment tactics","Implement velocity checks that flag multiple near-threshold deposits across branches","Coordinate cross-bank intelligence sharing to identify mule networks operating across institutions"]},
+    {icon:"\ud83c\udfe0",bg:"#18725f",title:"Real Estate Laundering",
+     desc:"Purchasing property with criminal proceeds, often using shell companies, cash components, or rapid flipping. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Cash elements in purchases","Opaque corporate ownership","Rapid buy-and-sell with unexplained profit","Buyers with no obvious connection to the property"],
+     examples:["A shell company registered in the BVI purchases a \u00a32M London flat with no mortgage \u2014 the beneficial owner is a convicted drug trafficker using layered corporate structures to hide their identity","Criminal buys a run-down property for \u00a3200,000 cash, commissions minimal renovations, then sells six months later for \u00a3450,000 to an associate \u2014 creating a paper profit that explains the wealth","A network buys multiple properties through different nominee purchasers, rents them out to generate apparently legitimate income, and gradually sells to repatriate clean capital"],
+     disruption:["Mandate beneficial ownership disclosure for all legal entities purchasing property (Register of Overseas Entities)","Apply Unexplained Wealth Orders where property ownership is inconsistent with known lawful income","Require estate agents, conveyancers, and solicitors to conduct enhanced CDD on cash or corporate purchases","Flag rapid property flipping with disproportionate price increases for investigation","Use Geographic Targeting Orders to require reporting on all-cash purchases in high-risk areas"]},
+    {icon:"\ud83c\udf0d",bg:"#b07d1e",title:"Alternative Remittance Systems (Hawala)",
+     desc:"Informal value transfer networks that move money across borders outside traditional banking systems. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
+     flags:["Large value transfers with minimal documentation","Settlement through goods or trade","Ethnic/family/community-based networks"],
+     examples:["A hawalader in London receives \u00a350,000 cash from a client and calls a counterpart in Dubai, who pays the equivalent to a named recipient \u2014 no money crosses a border and no bank is involved","A trade-based settlement sees a London hawalader owed \u00a3200,000 by a Karachi counterpart; instead of cash settlement, the debt is cleared by shipping undervalued textiles which are sold at full market price in the UK","A network of convenience stores acts as informal money service bureaus, collecting small cash deposits from dozens of customers and consolidating transfers through a single hawala channel"],
+     disruption:["Require registration and supervision of all money service businesses including informal value transfer providers","Conduct outreach and education in diaspora communities about legal remittance alternatives","Monitor businesses with cash flows inconsistent with their visible trade \u2014 e.g. convenience stores with unusually high turnover","Apply cross-border cash declaration requirements at ports and airports","Share intelligence on unregistered MSBs through multi-agency financial crime taskforces"]}
+  ]},
+  /* ── Fraud (8 cards with examples + disruption) ── */
+  {name:"Fraud", cards:[
+    {icon:"\ud83d\udce7",bg:"#b82d24",title:"Business Email Compromise (BEC)",
+     desc:"Spoofed or hacked email accounts trick staff into wiring funds. FBI IC3 reports BEC/EAC as the costliest fraud type, with $2.77 billion in losses in 2024 alone.",
+     flags:["Urgent payment requests from senior executives","Last-minute bank detail changes","Pressure to bypass normal approval processes"],
+     examples:["CEO\u2019s email is spoofed to instruct the finance team to wire \u00a3250,000 to a \u2018confidential acquisition\u2019 account; the urgency prevents normal checks","A supplier\u2019s email is compromised and sends updated bank details for a \u00a3180,000 invoice payment \u2014 the money goes to a mule account instead","Fraudster registers a domain one letter different from a law firm\u2019s, emails clients \u2018updated completion funds\u2019 bank details during property transactions"],
+     disruption:["Implement dual-authorisation and verbal call-back procedures for all payment instruction changes","Deploy email authentication protocols (SPF, DKIM, DMARC) to prevent domain spoofing","Train staff with realistic BEC simulation exercises at least quarterly","Use AI-powered email analysis to flag anomalous sender behaviour or domain impersonation","Establish a clear escalation process for any \u2018urgent\u2019 or \u2018confidential\u2019 payment requests"]},
+    {icon:"\ud83d\udcb0",bg:"#1a3a5c",title:"Authorised Push Payment (APP) Fraud",
+     desc:"Victims are tricked into transferring money directly to criminal accounts. APP fraud overtook card fraud as the UK\u2019s largest fraud loss category.",
+     flags:["Impersonation of banks, HMRC, or police","Romance or investment pretexts","Urgency or secrecy demands"],
+     examples:["Victim receives a call from someone claiming to be their bank\u2019s fraud team, told their account is compromised and instructed to move savings to a \u2018safe account\u2019 controlled by the fraudster","An online romance scam cultivates trust over six months before the \u2018partner\u2019 requests \u00a340,000 for a fabricated medical emergency","Fraudster poses as HMRC, tells victim they owe \u00a35,000 in back tax and will be arrested unless they pay immediately by bank transfer"],
+     disruption:["Implement Confirmation of Payee to match account names with payment details before transfers","Apply behavioural analytics to detect unusual payment patterns at point of instruction","Deploy in-app and branch intervention scripts when customers show signs of being coached","Mandate scam warnings and cooling-off periods for first-time high-value payments to new payees","Reimburse victims under the PSR mandatory reimbursement scheme to incentivise sending bank prevention"]},
+    {icon:"\ud83d\udcc8",bg:"#18725f",title:"Investment & Ponzi Schemes",
+     desc:"Fraudulent investment schemes promising guaranteed high returns. The FBI IC3 reported $6.57 billion in investment fraud losses in 2024 \u2014 the highest of any category.",
+     flags:["Guaranteed above-market returns","Unregistered schemes","Difficulty withdrawing funds"],
+     examples:["A crypto \u2018trading platform\u2019 shows fabricated dashboard returns of 15% monthly; early investors are paid with new investor deposits until the scheme collapses","A \u2018property crowdfunding\u2019 opportunity promises 20% annual returns backed by \u2018prime London developments\u2019 that don\u2019t exist \u2014 \u00a38M collected before the operator disappears","An affinity fraud targets a religious community with a \u2018faith-based\u2019 investment fund; trusted community leaders unknowingly recruit victims"],
+     disruption:["Check the FCA Register and Warning List before investing in any product or scheme","Require FCA authorisation for all investment products offered to UK consumers","Deploy social media monitoring to detect and report fraudulent investment advertisements","Educate the public that guaranteed high returns with no risk are hallmarks of fraud","Enable rapid freezing of accounts linked to suspected investment fraud through bank cooperation"]},
+    {icon:"\ud83d\udcb3",bg:"#b07d1e",title:"Identity Fraud & Synthetic ID",
+     desc:"Stolen personal data used to open accounts, obtain credit, and commit fraud. Synthetic ID fraud combines real and fabricated information to create new identities.",
+     flags:["Multiple applications with slight name/address variations","Credit building with no genuine history","Sudden bust-out after period of good behaviour"],
+     examples:["Fraudster combines a real child\u2019s National Insurance number with a fabricated name and date of birth to create a synthetic identity, builds credit over two years, then maxes out \u00a350,000 in credit and vanishes","Stolen passport details are used to open bank accounts, apply for credit cards, and take out loans \u2014 the victim only discovers it when debt collectors call","A criminal ring manufactures fake utility bills and payslips to support mortgage applications using stolen identities"],
+     disruption:["Implement multi-factor identity verification at account opening including biometric checks","Cross-reference applications against mortality data, credit bureau records, and known fraud databases","Deploy device fingerprinting and behavioural biometrics to detect automated application fraud","Share confirmed fraud data through CIFAS National Fraud Database to prevent repeat victimisation","Monitor for credit file activity on dormant or child identities"]},
+    {icon:"\ud83d\udcb3",bg:"#1a3a5c",title:"Card-Not-Present (CNP) Fraud",
+     desc:"Using stolen card details for online, phone, or mail-order purchases without the physical card present.",
+     flags:["Unusual online spending patterns","High-value purchases from new devices","Frequent small test transactions"],
+     examples:["Stolen card data from a breach used to buy gift cards online; gift cards immediately resold for cash","Fraudster places \u00a30.50 test charges on hundreds of cards to identify active ones, then makes bulk high-value orders","Phished card details loaded into a digital wallet and used for contactless tap-to-pay at retailers"],
+     disruption:["Mandate Strong Customer Authentication (SCA) for all online card payments","Deploy real-time fraud scoring using device, location, and behavioural signals","Implement velocity checks to detect and block rapid small test transactions","Use tokenisation to prevent stolen card numbers from being reused across merchants","Enable instant card freeze capabilities through banking apps for customer self-service"]},
+    {icon:"\ud83e\uddd1\u200d\ud83d\udcbc",bg:"#18725f",title:"Insider & Employee Fraud",
+     desc:"Staff abusing their position to commit fraud, steal data, or facilitate external crime.",
+     flags:["Unexplained expenses or payroll changes","Access to sensitive systems outside normal hours","Sudden lifestyle changes by employees"],
+     examples:["Payroll clerk adds ghost employees and diverts salaries to personal accounts over several years","Branch manager overrides transaction limits to process fraudulent loans for associates, earning kickbacks","IT administrator exports client database and sells records to a competitor via an encrypted channel"],
+     disruption:["Implement segregation of duties so no single employee controls end-to-end financial processes","Conduct regular payroll audits including ghost employee checks and segregation reviews","Monitor for abnormal system access patterns including out-of-hours logins and bulk data downloads","Establish confidential whistleblowing channels with protection for reporters","Perform pre-employment screening and periodic re-screening for staff in sensitive roles"]},
+    {icon:"\ud83e\udd16",bg:"#b07d1e",title:"AI-Powered & Emerging Fraud",
+     desc:"Deepfakes, voice cloning, automated phishing, and AI-generated documents accelerating almost all other fraud types.",
+     flags:["Realistic deepfake video calls","AI-generated documents or voice clones","Automated large-scale phishing campaigns"],
+     examples:["Deepfake video call impersonates a CFO instructing finance staff to wire $25M to a new account","AI voice clone replicates a CEO\u2019s voice to authorise an urgent payment over the phone","GPT-generated phishing emails with perfect grammar and personalisation sent to 50,000 targets in minutes"],
+     disruption:["Implement code-word verification protocols for high-value payment instructions received by video or voice","Deploy deepfake detection tools that analyse facial micro-expressions and audio artefacts","Train staff to recognise AI-generated content and establish secondary verification channels","Use email AI analysis to detect machine-generated phishing at scale","Stay current with emerging AI threats through intelligence sharing with industry bodies and law enforcement"]},
+    {icon:"\ud83c\udfe0",bg:"#b82d24",title:"Mortgage & Lending Fraud",
+     desc:"Falsifying information on mortgage or loan applications to obtain credit fraudulently, or colluding to inflate property values.",
+     flags:["Inflated income or employment details","Fake documentation supporting applications","Collusion between borrower and valuer"],
+     examples:["Applicant submits fabricated payslips and bank statements showing \u00a380,000 salary \u2014 actual income is \u00a325,000 \u2014 to secure a \u00a3350,000 mortgage","A broker and valuer collude to overvalue a property by \u00a3150,000, enabling the borrower to extract equity that is never repaid","Buy-to-let fraudster uses the same deposit across multiple simultaneous purchases, completing before any lender realises the funds have been recycled"],
+     disruption:["Verify income directly with employers and HMRC rather than relying on applicant-supplied documents","Use automated document authentication to detect manipulated payslips, bank statements, and tax returns","Implement cross-lender checks to detect simultaneous applications and recycled deposits","Flag properties where valuation significantly exceeds recent comparable sales","Require panel managers to monitor and rotate valuers to prevent collusion"]}
+  ]},
+  /* ── Bribery & Corruption ── */
+  {name:"Bribery & Corruption", cards:[
+    {icon:"\ud83d\udcbc",bg:"rgba(192,57,43,.06)",title:"Facilitation Payments & FCPA",
+     desc:"Bribes to foreign officials for business advantages. The DOJ and SEC enforce the Foreign Corrupt Practices Act, which has resulted in over $31 billion in penalties since 1977.",
+     flags:["Unexplained \u2018consulting fees\u2019","Payments to officials via intermediaries","Contracts awarded without competition"],
+     examples:["A multinational pays a \u2018consulting fee\u2019 to a government minister\u2019s relative to secure a public infrastructure contract worth \u00a3100M","An agent in a high-risk jurisdiction requests a \u2018facilitation payment\u2019 to expedite customs clearance \u2014 the payment is routed through a shell company to obscure its destination","A company inflates the value of a subcontract and kicks back the excess to a procurement official who awarded the deal"],
+     disruption:["Implement a zero-tolerance policy on facilitation payments with board-level accountability","Conduct risk-based due diligence on all third-party agents, consultants, and intermediaries","Require pre-approval and documentation for all gifts, hospitality, and entertainment","Deploy data analytics to detect unusual consulting fees, commission structures, or agent payments","Build a speak-up culture with protected whistleblowing channels and visible enforcement"]},
+    {icon:"\ud83c\udfdb\ufe0f",bg:"rgba(26,58,92,.08)",title:"Political Corruption",
+     desc:"Misuse of public office for private gain. The DOJ Public Integrity Section is the nation\u2019s primary federal prosecutor of government corruption.",
+     flags:["Unexplained official wealth","Contracts to politically connected parties","Lack of procurement transparency"],
+     examples:["A government official steers a \u00a320M healthcare contract to a company owned by a family member, circumventing competitive tender requirements","A PEP accumulates property worth \u00a35M on an annual salary of \u00a360,000, with no declared alternative income","Political party receives large anonymous donations shortly before a vote on legislation favourable to the donor\u2019s industry"],
+     disruption:["Screen all high-value government contracts for connections to PEPs and their associates","Require asset declarations from public officials and monitor for lifestyle inconsistencies","Strengthen procurement transparency through open contracting standards and public registers","Apply enhanced due diligence to all PEP relationships including family members and close associates","Support independent anti-corruption institutions with adequate funding and legal protections"]},
+    {icon:"\ud83e\udd1d",bg:"rgba(26,107,90,.07)",title:"Private Sector Bribery",
+     desc:"Offering or accepting inducements in commercial transactions \u2014 kickbacks, secret commissions, and gifts designed to influence business decisions.",
+     flags:["Lavish gifts to procurement officials","Third-party agents in weak governance areas","Unusual commission structures"],
+     examples:["Supplier pays a 5% \u2018referral fee\u2019 to a procurement manager who consistently awards contracts to that supplier above market rates","A sales director receives luxury holidays and event tickets from a vendor in exchange for recommending their products to the board","An intermediary charges a 15% commission on deals in a market where 3-5% is standard, with the excess paid as kickbacks to the buyer\u2019s decision-makers"],
+     disruption:["Mandate competitive tendering for all contracts above defined thresholds","Require all employees to declare gifts, hospitality, and outside interests in a central register","Conduct periodic audits of procurement decisions, vendor selection, and commission payments","Implement conflict-of-interest policies with mandatory recusal from compromised decisions","Use data analytics to identify vendors with unusually high win rates or inflated pricing"]}
+  ]},
+  /* ── Cyber-Enabled Crime ── */
+  {name:"Cyber-Enabled Crime", cards:[
+    {icon:"\ud83c\udfa3",bg:"rgba(192,57,43,.06)",title:"Phishing & Social Engineering",
+     desc:"Deceptive communications tricking people into revealing information. As Get Safe Online and the FBI warn, these attacks grow more targeted each year.",
+     flags:["Urgent or threatening language","Links mimicking legitimate sites","Requests for passwords or financial details"],
+     examples:["A spear-phishing email impersonates the IT department, asking staff to \u2018verify their credentials\u2019 via a cloned login page that captures usernames and passwords","An SMS claims to be from Royal Mail with a \u2018missed delivery\u2019 link that installs malware harvesting banking credentials","A fraudster calls posing as Microsoft support, gains remote access to the victim\u2019s computer, and transfers funds from their online banking"],
+     disruption:["Deploy multi-factor authentication across all systems to limit the impact of compromised credentials","Conduct regular phishing simulation exercises and provide immediate feedback to staff who click","Implement email filtering and link-scanning tools that detect and quarantine suspicious messages","Educate customers and staff to independently verify unexpected requests through official channels","Report phishing attempts to Action Fraud and the National Cyber Security Centre"]},
+    {icon:"\ud83d\udd10",bg:"rgba(26,58,92,.08)",title:"Ransomware",
+     desc:"Malware encrypting data with ransom demands in cryptocurrency. FBI IC3 and CISA report escalating attacks on critical infrastructure, healthcare, and government systems.",
+     flags:["Unexpected system lockouts","Ransom demands in cryptocurrency","Unusual network activity or data exfiltration"],
+     examples:["Ransomware gang exploits an unpatched VPN vulnerability to encrypt a hospital\u2019s systems, demanding $2M in Bitcoin while patient records are inaccessible","A phishing email delivers ransomware that spreads across a firm\u2019s network, exfiltrating sensitive client data before encrypting files \u2014 a double-extortion approach","An SME\u2019s backup systems are also encrypted because they were connected to the main network, leaving no recovery option without paying the ransom"],
+     disruption:["Maintain offline, air-gapped backups tested regularly for recovery capability","Apply security patches promptly, especially for internet-facing systems and VPNs","Segment networks to prevent lateral movement and isolate critical systems","Implement endpoint detection and response (EDR) tools with 24/7 monitoring","Develop and rehearse an incident response plan including communication and legal notification procedures"]},
+    {icon:"\ud83d\udcb3",bg:"rgba(200,144,46,.07)",title:"Payment & Card Fraud",
+     desc:"Unauthorised use of card details from breaches or skimming. FBI IC3 data shows payment fraud among the fastest-growing cyber crime categories.",
+     flags:["Transactions in unusual locations","Rapid card-not-present transactions","Small \u2018test\u2019 charges then larger ones"],
+     examples:["Criminals install a card skimmer on an ATM that captures card data and PINs; cloned cards are used to withdraw cash at ATMs in another country","A data breach at an online retailer exposes 500,000 card numbers; bulk sales of card data appear on darknet markets within days","Point-of-sale malware at a restaurant chain captures card details in real time, forwarding them to a collection server for immediate fraudulent use"],
+     disruption:["Mandate chip-and-PIN and contactless with SCA for all point-of-sale and online transactions","Deploy real-time transaction monitoring with machine learning models trained on fraud patterns","Implement PCI DSS compliance requirements for all merchants handling card data","Enable instant push notifications for every transaction so cardholders can flag fraud immediately","Coordinate cross-border card fraud intelligence through Europol\u2019s European Cybercrime Centre"]}
+  ]},
+  /* ── Terrorist Financing ── */
+  {name:"Terrorist Financing", cards:[
+    {icon:"\ud83c\udf10",bg:"rgba(192,57,43,.06)",title:"Abuse of Charitable Organisations",
+     desc:"Exploiting charity structures to fund terrorism. The US Treasury has designated numerous entities under Executive Order 13224 for charity-based terrorist financing.",
+     flags:["Funds diverted to conflict zones","Lack of transparency in allocation","Minimal legitimate charitable activities"],
+     examples:["A charity raises \u00a3500,000 for \u2018humanitarian relief\u2019 but diverts 80% of funds to a designated organisation operating in a conflict zone","Donor makes large contributions to a charity whose field operations overlap with territory controlled by a proscribed group","A charity uses funds to purchase dual-use goods (vehicles, communications equipment) that are delivered to areas with no legitimate charitable programme"],
+     disruption:["Apply enhanced due diligence to donations routed to or through high-risk jurisdictions","Require charities to maintain transparent records of fund allocation and beneficiary verification","Screen charity trustees, donors, and partner organisations against sanctions and terrorism lists","Regulate and supervise charity banking relationships with specific CTF-focused controls","Cooperate internationally to share intelligence on charity abuse through the Egmont Group and FATF"]},
+    {icon:"\ud83d\udcb0",bg:"rgba(26,58,92,.08)",title:"Informal Value Transfer",
+     desc:"Using hawala networks to move money without formal banking. FinCEN advisories highlight these systems as high-risk for terrorist financing and sanctions evasion.",
+     flags:["Large cash transactions without business purpose","Counterpart transactions in high-risk areas","No formal records or paper trail"],
+     examples:["A network of hawaladars moves \u00a3100,000 from diaspora communities in the UK to a conflict zone without any transaction touching the formal banking system","Funds are collected in small amounts at community gatherings, consolidated by a coordinator, and transferred informally to an overseas contact linked to a proscribed group","A shop in a high-risk area operates as both a legitimate business and an unlicensed MSB, collecting cash for onward transfer to designated entities"],
+     disruption:["Register and supervise all money service businesses including informal value transfer systems","Conduct community outreach to promote regulated remittance channels as safe alternatives","Monitor businesses with cash turnover inconsistent with their visible trade for potential unlicensed MSB activity","Apply cross-border cash declaration and seizure powers at ports and airports","Share intelligence on unlicensed MSBs through multi-agency partnerships including HMRC and NCA"]},
+    {icon:"\ud83d\udcf1",bg:"rgba(26,107,90,.07)",title:"Digital Platform Exploitation",
+     desc:"Using crowdfunding, crypto, and encrypted messaging to raise and move funds. The US Treasury has identified growing virtual asset exploitation for terrorist financing.",
+     flags:["Crowdfunding with vague purposes","Crypto to designated-entity wallets","Coordinated small donations"],
+     examples:["A crowdfunding campaign for \u2018refugee support\u2019 uses emotive imagery and encrypted messaging channels to coordinate donations that are ultimately funnelled to a proscribed organisation","Crypto wallets shared via Telegram channels receive hundreds of small donations in Bitcoin, which are consolidated and converted to cash via a non-compliant exchange","A social media campaign uses coded language and symbols to solicit donations for a cause that fronts for terrorist financing"],
+     disruption:["Require crowdfunding platforms to verify campaign organisers and monitor fund disbursement","Apply blockchain analytics to identify wallets associated with designated entities or known terrorist financing patterns","Monitor social media and encrypted channels for coded fundraising appeals using AI-powered content analysis","Screen all crowdfunding donations against sanctions lists and PEP databases","Coordinate with platform operators to rapidly take down campaigns linked to terrorism"]}
+  ]}
+];
