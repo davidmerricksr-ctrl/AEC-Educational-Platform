@@ -1,4 +1,3 @@
-
 class Organisation { constructor({icon,bg,name,desc,url,tag,cls,type}){this.icon=icon;this.bg=bg;this.name=name;this.desc=desc;this.url=url;this.tag=tag;this.cls=cls;this.type=type;} }
 const organisations=[
     // ── Standards & Policy ──
