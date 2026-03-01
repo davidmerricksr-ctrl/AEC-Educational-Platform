@@ -1,421 +1,383 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>The Vault — Economic Crime Media Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config={theme:{extend:{
-  fontFamily:{display:['Playfair Display','Georgia','serif'],body:['IBM Plex Sans','system-ui','sans-serif'],mono:['IBM Plex Mono','monospace']},
-  colors:{vault:{bg:'#09090b',surface:'#111113',surface2:'#1a1a1e',surface3:'#222228',
-    red:'#b91c1c',redGlow:'rgba(185,28,28,.35)',redSoft:'rgba(185,28,28,.08)',redBright:'#dc2626',
-    gold:'#c8952a',goldDim:'rgba(200,149,42,.12)',goldBright:'#d4a843',
-    silver:'#a8a8b3',mute:'#6b6b76',dim:'#3a3a44',text:'#e8e6e3',paper:'#d4c9a8'}}
-}}}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{-webkit-tap-highlight-color:transparent}
+:root{
+  --vbg:#09090b;--vs:#111113;--vs2:#18181b;--vs3:#222228;
+  --vred:#b91c1c;--vredB:#dc2626;--vredG:rgba(185,28,28,.3);
+  --vgold:#c8952a;--vgoldD:rgba(200,149,42,.12);
+  --vtxt:#e8e6e3;--vmute:#7a7a86;--vdim:#3a3a44;--vsilver:#a8a8b3;
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'IBM Plex Sans',system-ui,sans-serif;
+  --fm:'IBM Plex Mono',monospace;
+  --nav:54px;--sab:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-bottom:calc(var(--nav) + var(--sab) + 8px)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(185,28,28,.3);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(185,28,28,.5)}
-.vault-scanlines::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
-  mix-blend-mode:multiply;opacity:.5}
-.vault-noise::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-  opacity:.4}
-.dossier-tape{position:absolute;top:14px;right:-26px;z-index:10;
-  background:linear-gradient(90deg,#b91c1c,#991b1b);
-  color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;
-  letter-spacing:.22em;text-transform:uppercase;padding:3px 32px;
-  transform:rotate(35deg);transform-origin:center;
-  box-shadow:0 1px 4px rgba(0,0,0,.5);text-shadow:0 1px 1px rgba(0,0,0,.3)}
-.stamp{display:inline-flex;align-items:center;gap:4px;
-  border:2px solid;padding:2px 8px;border-radius:3px;
-  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;
-  letter-spacing:.15em;text-transform:uppercase;opacity:.85;transform:rotate(-2deg)}
-.stamp-red{border-color:#b91c1c;color:#b91c1c}
-.stamp-gold{border-color:#c8952a;color:#c8952a}
-.card-shine{position:absolute;inset:0;
-  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.03) 45%,transparent 60%);
-  pointer-events:none;z-index:3}
-.shelf-track{-ms-overflow-style:none;scrollbar-width:none}
-.shelf-track::-webkit-scrollbar{display:none}
-@keyframes heroFadeIn{from{opacity:0;filter:brightness(2) contrast(.5)}to{opacity:1;filter:brightness(1) contrast(1)}}
-.hero-fade{animation:heroFadeIn .8s ease}
-@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-animate{animation:modalIn .3s ease}
-.stamp-tilt-1{transform:rotate(-3deg)}
-.stamp-tilt-2{transform:rotate(2deg)}
-.stamp-tilt-3{transform:rotate(-1.5deg)}
-.dossier-edge{position:absolute;top:0;left:0;width:100%;height:4px;
-  background:linear-gradient(90deg,#b91c1c 0%,#b91c1c 30%,transparent 30%,transparent 70%,#b91c1c 70%,#b91c1c 100%)}
-@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(185,28,28,.4)}70%{box-shadow:0 0 0 8px rgba(185,28,28,0)}}
-.pulse-dot{animation:pulse-red 2s infinite}
+::-webkit-scrollbar-thumb{background:rgba(185,28,28,.25);border-radius:3px}
+
+/* ── Sticky Disclaimer ── */
+.v-disc{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05);padding:7px 16px;text-align:center;font-size:.68rem;color:var(--vmute)}
+.v-disc b{color:var(--vtxt);font-weight:600}
+
+/* ── Hero ── */
+.v-hero{position:relative;overflow:hidden;padding:2.5rem 1.2rem 2rem}
+.v-hero-bg{position:absolute;inset:0;opacity:.5;transition:background .7s}
+.v-hero-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,9,11,.3) 0%,rgba(9,9,11,.75) 60%,var(--vbg) 100%)}
+.v-hero-grid{position:absolute;inset:0;opacity:.08;background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(185,28,28,.1) 1px,rgba(185,28,28,.1) 2px),repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(185,28,28,.06) 1px,rgba(185,28,28,.06) 2px);background-size:3px 3px}
+.v-hero-inner{position:relative;z-index:2;max-width:720px}
+.v-hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--vred);color:#fff;font-family:var(--fm);font-size:.56rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:10px}
+.v-hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}70%{box-shadow:0 0 0 6px rgba(255,255,255,0)}}
+.v-hero h1{font-family:var(--fd);font-size:2rem;font-weight:900;color:#fff;line-height:1.1;margin-bottom:8px}
+.v-hero-tag{font-size:.88rem;color:rgba(255,255,255,.55);font-style:italic;margin-bottom:16px;line-height:1.4}
+.v-hero-cta{display:inline-flex;align-items:center;gap:8px;background:var(--vred);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-family:var(--fb);font-size:.8rem;font-weight:700;cursor:pointer;transition:.2s}
+.v-hero-cta:hover{background:var(--vredB);transform:translateY(-1px);box-shadow:0 6px 20px var(--vredG)}
+.v-hero-nav{position:absolute;top:50%;z-index:5;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:1px solid rgba(255,255,255,.12);width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:grid;place-items:center;transition:.2s;backdrop-filter:blur(6px)}
+.v-hero-nav:hover{background:var(--vred);border-color:var(--vred)}
+.v-hero-nav.l{left:10px}.v-hero-nav.r{right:10px}
+.v-hero-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:6px}
+.v-hero-dots button{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;padding:0;transition:.2s}
+.v-hero-dots button.on{background:var(--vred);width:20px;border-radius:4px;box-shadow:0 0 8px var(--vredG)}
+.v-hero-back{position:absolute;top:14px;left:14px;z-index:5;color:rgba(255,255,255,.45);font-family:var(--fm);font-size:.65rem;letter-spacing:.08em;text-decoration:none;transition:.15s}
+.v-hero-back:hover{color:#fff}
+.v-hero-stamp{display:inline-flex;align-items:center;gap:4px;border:2px solid var(--vgold);color:var(--vgold);font-family:var(--fm);font-size:.5rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;border-radius:3px;transform:rotate(2deg);margin-left:10px}
+
+/* ── Control Bar ── */
+.v-bar{background:rgba(17,17,19,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05);padding:10px 16px}
+.v-bar-inner{max-width:960px;margin:0 auto}
+.v-bar-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.v-bar-title{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.v-bar-title .diamond{color:var(--vred);font-size:1rem}
+.v-bar-title h2{font-family:var(--fd);font-size:1rem;font-weight:700;color:#fff}
+.v-bar-title small{font-family:var(--fm);font-size:.5rem;color:var(--vmute);letter-spacing:.18em;text-transform:uppercase}
+.v-search{flex:1;min-width:180px;position:relative}
+.v-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--vmute);pointer-events:none}
+.v-search input{width:100%;background:var(--vs);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px 12px 8px 32px;font-family:var(--fb);font-size:.78rem;color:var(--vtxt);outline:none;transition:.2s}
+.v-search input:focus{border-color:var(--vred);box-shadow:0 0 0 2px rgba(185,28,28,.15)}
+.v-search input::placeholder{color:var(--vdim)}
+.v-chips{display:flex;flex-wrap:wrap;gap:5px}
+.v-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.06);background:var(--vs);font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--vmute);cursor:pointer;transition:.15s;white-space:nowrap}
+.v-chip:hover{border-color:rgba(255,255,255,.15);color:var(--vtxt)}
+.v-chip.on{background:var(--vred);border-color:var(--vred);color:#fff;box-shadow:0 2px 10px var(--vredG)}
+.v-chip .ct{font-size:.5rem;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:8px}
+.v-chip.on .ct{background:rgba(255,255,255,.2)}
+.v-theme{padding:3px 10px;border-radius:14px;border:1px solid var(--vdim);font-family:var(--fm);font-size:.55rem;font-weight:500;color:var(--vmute);cursor:pointer;transition:.15s;background:transparent}
+.v-theme:hover{border-color:rgba(200,149,42,.4);color:rgba(200,149,42,.7)}
+.v-theme.on{background:var(--vgoldD);border-color:var(--vgold);color:var(--vgold)}
+
+/* ── Shelf Section ── */
+.v-shelf{max-width:960px;margin:0 auto;padding:1.5rem 16px .5rem}
+.v-shelf-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.v-shelf-hdr h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.v-shelf-hdr .cnt{font-family:var(--fm);font-size:.55rem;color:var(--vdim);letter-spacing:.12em;text-transform:uppercase}
+.v-shelf-hdr .sub{font-family:var(--fm);font-size:.55rem;color:rgba(122,122,134,.5);font-style:italic;display:none}
+@media(min-width:600px){.v-shelf-hdr .sub{display:inline}}
+.v-shelf-sep{border:0;border-top:1px solid rgba(255,255,255,.04);margin:0 auto;max-width:960px}
+
+/* ═══ CARD — Landscape Intel Briefing ═══ */
+.v-card{display:flex;border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s;background:var(--vs);margin-bottom:8px}
+.v-card:hover{border-color:rgba(185,28,28,.3);box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 0 1px rgba(185,28,28,.15);transform:translateY(-1px)}
+.v-card:active{transform:scale(.995)}
+.v-card-accent{width:6px;flex-shrink:0;border-radius:10px 0 0 10px}
+.v-card-icon{width:54px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0;position:relative}
+.v-card-icon .emoji{font-size:1.5rem;opacity:.7}
+.v-card-icon .yr{font-family:var(--fm);font-size:.5rem;font-weight:700;color:var(--vgold);letter-spacing:.05em}
+.v-card-body{flex:1;padding:10px 14px 10px 4px;min-width:0}
+.v-card-top{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
+.v-card-type{font-family:var(--fm);font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--vred);background:rgba(185,28,28,.1);padding:2px 7px;border-radius:3px;white-space:nowrap}
+.v-card-title{font-family:var(--fd);font-size:.88rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:2px}
+.v-card-creator{font-family:var(--fm);font-size:.6rem;color:var(--vgold);opacity:.75;margin-bottom:5px}
+.v-card-desc{font-size:.72rem;color:rgba(232,230,227,.6);line-height:1.55}
+.v-card-themes{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.v-card-themes span{font-family:var(--fm);font-size:.48rem;color:var(--vmute);border:1px solid var(--vdim);padding:1px 6px;border-radius:8px}
+.v-card-stamp{position:absolute;top:4px;right:-2px;font-family:var(--fm);font-size:.35rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--vred);opacity:.35;transform:rotate(-4deg)}
+.v-card-line{width:3px;flex-shrink:0;background:transparent;transition:.2s;border-radius:0 10px 10px 0}
+.v-card:hover .v-card-line{background:var(--vred)}
+
+/* ── Grid ── */
+.v-grid{max-width:960px;margin:0 auto;padding:1rem 16px}
+
+/* ── Empty ── */
+.v-empty{text-align:center;padding:3rem 1rem}
+.v-empty .icon{font-size:2.5rem;opacity:.25;margin-bottom:8px}
+.v-empty h4{font-family:var(--fd);font-size:1rem;color:var(--vmute)}
+.v-empty p{font-size:.72rem;color:var(--vdim)}
+
+/* ── Modal ── */
+.v-modal-bg{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.v-modal-bg.open{display:flex}
+.v-modal{background:var(--vs);border:1px solid rgba(255,255,255,.08);border-radius:16px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;animation:mIn .25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:none}}
+.v-modal-hero{position:relative;height:140px;overflow:hidden;border-radius:16px 16px 0 0}
+.v-modal-hero .bg{position:absolute;inset:0}
+.v-modal-hero .fade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,var(--vs) 100%)}
+.v-modal-hero .emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3.5rem;opacity:.1}
+.v-modal-hero .stamp{position:absolute;top:14px;right:14px;border:2px solid var(--vred);color:var(--vred);font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;border-radius:3px;opacity:.5;transform:rotate(-3deg)}
+.v-modal-close{position:absolute;top:10px;right:10px;z-index:2;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:.75rem;transition:.15s;backdrop-filter:blur(6px)}
+.v-modal-close:hover{background:var(--vred);border-color:var(--vred)}
+.v-modal-body{padding:0 20px 20px;margin-top:-20px;position:relative;z-index:2}
+.v-modal-body .badge{display:inline-flex;align-items:center;gap:5px;background:var(--vred);color:#fff;font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:8px}
+.v-modal-body h2{font-family:var(--fd);font-size:1.5rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:4px}
+.v-modal-body .creator{font-family:var(--fm);font-size:.65rem;color:var(--vmute);margin-bottom:14px}
+.v-modal-body .desc{border-left:3px solid var(--vred);padding-left:14px;font-size:.78rem;color:rgba(232,230,227,.8);line-height:1.6;margin-bottom:14px}
+.v-modal-body .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.v-modal-body .tags span{font-family:var(--fm);font-size:.55rem;color:var(--vgold);border:1px solid var(--vgoldD);padding:2px 9px;border-radius:14px}
+.v-modal-body .src-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--vred);color:#fff;font-weight:700;font-size:.8rem;padding:12px;border-radius:10px;text-decoration:none;transition:.2s;border:none;cursor:pointer}
+.v-modal-body .src-btn:hover{background:var(--vredB);box-shadow:0 4px 16px var(--vredG);transform:translateY(-1px)}
+.v-modal-body .note{font-family:var(--fm);font-size:.5rem;color:var(--vdim);text-align:center;margin-top:10px}
+
+/* ── Bottom Nav ── */
+.v-bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(17,17,19,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.06);padding-bottom:var(--sab);height:calc(var(--nav) + var(--sab))}
+.v-bnav-inner{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
+.v-nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:var(--vmute);cursor:pointer;transition:.15s;padding:3px 1px;position:relative;min-width:0;text-decoration:none}
+.v-nb .bi{font-size:1.15rem;line-height:1}
+.v-nb:hover,.v-nb.act{color:var(--vred)}
+.v-nb.act::after{content:'';position:absolute;top:2px;left:30%;right:30%;height:2px;background:var(--vred);border-radius:2px}
+
+/* ── Footer ── */
+.v-footer{border-top:1px solid rgba(255,255,255,.04);padding:2rem 16px;text-align:center}
+.v-footer .l1{font-family:var(--fm);font-size:.55rem;color:var(--vdim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
+.v-footer .l2{font-size:.65rem;color:var(--vmute)}
+.v-footer a{color:var(--vgold);text-decoration:none}
+.v-footer a:hover{color:#d4a843}
+
+@media(max-width:600px){
+  .v-hero h1{font-size:1.5rem}
+  .v-hero{padding:2rem 1rem 1.5rem}
+  .v-card-icon{width:42px}.v-card-icon .emoji{font-size:1.2rem}
+  .v-card-desc{font-size:.66rem}
+  .v-card-title{font-size:.8rem}
+  .v-bar-title small{display:none}
+}
 </style>
 </head>
+<body>
 
-<body class="bg-vault-bg text-vault-text font-body vault-scanlines vault-noise">
+<!-- ══ STICKY DISCLAIMER ══ -->
+<div class="v-disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
 
-<!-- ══ DISCLAIMER ══ -->
-<div class="bg-vault-surface border-b border-white/[.06]">
-  <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-center gap-2">
-    <span class="text-vault-gold text-sm">⚠</span>
-    <p class="font-body text-[11px] text-vault-mute"><b class="text-vault-text/80">Educational purposes only</b> — not legal, financial, or regulatory advice.</p>
-  </div>
-</div>
-
-<!-- ══ HERO BANNER ══ -->
-<section id="hero" class="relative h-[420px] md:h-[480px] overflow-hidden bg-black select-none">
-  <div id="heroBg" class="absolute inset-0 transition-all duration-700 hero-fade"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-vault-bg z-[1]"></div>
-  <div class="absolute inset-0 z-[2] opacity-10" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(185,28,28,.08) 1px,rgba(185,28,28,.08) 2px),repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(185,28,28,.04) 1px,rgba(185,28,28,.04) 2px);background-size:3px 3px"></div>
-  <div class="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-10 pb-10">
-    <div class="max-w-3xl">
-      <div class="flex items-center gap-3 mb-4">
-        <span class="inline-flex items-center gap-2 bg-vault-red/90 text-white font-mono text-[10px] font-bold tracking-[.18em] uppercase px-3 py-1 rounded">
-          <span class="w-2 h-2 rounded-full bg-white/80 pulse-dot"></span>
-          <span id="heroBadge">FEATURED</span>
-        </span>
-        <span class="stamp stamp-gold stamp-tilt-2 text-[8px]" id="heroStamp">CLASSIFIED</span>
-      </div>
-      <h1 id="heroTitle" class="font-display text-3xl md:text-5xl font-black text-white leading-[1.05] mb-3 tracking-tight"></h1>
-      <p id="heroTagline" class="font-body text-sm md:text-base text-white/60 italic max-w-lg leading-relaxed mb-5"></p>
-      <button onclick="openModal(heroItems[heroIdx].id)" class="inline-flex items-center gap-2 bg-vault-red hover:bg-vault-redBright text-white font-bold text-sm px-6 py-3 rounded-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(185,28,28,.4)] active:scale-95">
-        Open Dossier <span class="text-lg">→</span>
-      </button>
+<!-- ══ HERO ══ -->
+<section class="v-hero" id="hero">
+  <div class="v-hero-bg" id="heroBg"></div>
+  <div class="v-hero-fade"></div>
+  <div class="v-hero-grid"></div>
+  <a href="index.html" class="v-hero-back">← ECONOMICCRIMEHUB</a>
+  <div class="v-hero-inner">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+      <span class="v-hero-badge"><span class="dot"></span> <span id="heroBadge">FEATURED</span></span>
+      <span class="v-hero-stamp" id="heroStamp">CLASSIFIED</span>
     </div>
+    <h1 id="heroTitle"></h1>
+    <p class="v-hero-tag" id="heroTag"></p>
+    <button class="v-hero-cta" onclick="openModal(heroItems[heroIdx].id)">Open Dossier →</button>
   </div>
-  <button onclick="heroNav(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white text-xl grid place-items-center hover:bg-vault-red hover:border-vault-red transition backdrop-blur-sm">‹</button>
-  <button onclick="heroNav(1)" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white text-xl grid place-items-center hover:bg-vault-red hover:border-vault-red transition backdrop-blur-sm">›</button>
-  <div id="heroDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2"></div>
-  <a href="index.html" class="absolute top-4 left-4 z-20 flex items-center gap-2 text-white/50 hover:text-white text-xs font-mono tracking-wider transition group">
-    <span class="group-hover:-translate-x-0.5 transition">←</span> ECONOMICCRIMEHUB
-  </a>
+  <button class="v-hero-nav l" onclick="heroNav(-1)">‹</button>
+  <button class="v-hero-nav r" onclick="heroNav(1)">›</button>
+  <div class="v-hero-dots" id="heroDots"></div>
 </section>
 
-<!-- ══ STICKY CONTROL BAR ══ -->
-<div id="controlBar" class="sticky top-0 z-50 bg-vault-bg/95 backdrop-blur-xl border-b border-white/[.06]">
-  <div class="max-w-7xl mx-auto px-4 py-3 space-y-2.5">
-    <div class="flex items-center gap-4 flex-wrap">
-      <div class="flex items-center gap-2 shrink-0">
-        <span class="text-vault-red text-lg">◆</span>
-        <span class="font-display text-base md:text-lg font-bold text-white tracking-tight">The Vault</span>
-        <span class="font-mono text-[9px] text-vault-mute tracking-[.2em] uppercase hidden sm:inline">Classified Media Archive</span>
+<!-- ══ CONTROL BAR ══ -->
+<div class="v-bar" id="controlBar">
+  <div class="v-bar-inner">
+    <div class="v-bar-top">
+      <div class="v-bar-title">
+        <span class="diamond">◆</span>
+        <h2>The Vault</h2>
+        <small>Classified Media Archive</small>
       </div>
-      <div class="relative flex-1 min-w-[200px]">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-vault-mute pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="searchInput" placeholder="Search dossiers…" class="w-full bg-vault-surface border border-white/[.08] rounded-lg pl-10 pr-4 py-2.5 text-sm text-vault-text placeholder-vault-mute font-body focus:outline-none focus:border-vault-red focus:ring-2 focus:ring-vault-red/20 transition">
+      <div class="v-search">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search dossiers…">
       </div>
     </div>
-    <div id="typeFilters" class="flex flex-wrap gap-1.5"></div>
-    <div id="themeChips" class="flex flex-wrap gap-1"></div>
+    <div class="v-chips" id="typeFilters"></div>
+    <div class="v-chips" id="themeChips" style="margin-top:4px"></div>
   </div>
 </div>
 
 <!-- ══ CONTENT DISCLAIMER ══ -->
-<div class="max-w-7xl mx-auto px-4 py-3 border-b border-white/[.04]">
-  <p class="font-mono text-[10px] text-vault-mute leading-relaxed">
-    <span class="text-vault-gold font-bold">⚠ EDUCATIONAL REFERENCE ONLY.</span>
+<div style="max-width:960px;margin:0 auto;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.03)">
+  <p style="font-family:var(--fm);font-size:.52rem;color:var(--vdim);line-height:1.5">
+    <span style="color:var(--vgold);font-weight:700">⚠ EDUCATIONAL REFERENCE ONLY.</span>
     Inclusion does not imply endorsement of, or affiliation with, any content creator, publisher, broadcaster, or platform.
     All descriptions are original summaries. Copyright and trademarks remain with their respective owners.
   </p>
 </div>
 
 <!-- ══ SHELVES ══ -->
-<main id="shelvesContainer" class="pb-20"></main>
+<div id="shelvesContainer"></div>
 
-<!-- ══ GRID (filtered) ══ -->
-<div id="gridContainer" class="hidden max-w-7xl mx-auto px-4 py-6">
-  <div id="gridResults" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+<!-- ══ GRID ══ -->
+<div id="gridContainer" style="display:none">
+  <div class="v-grid" id="gridResults"></div>
 </div>
 
-<!-- ══ EMPTY STATE ══ -->
-<div id="emptyState" class="hidden text-center py-20 px-4">
-  <div class="text-5xl opacity-30 mb-4">🔍</div>
-  <div class="font-display text-xl text-vault-mute mb-2">No dossiers found</div>
-  <div class="text-sm text-vault-dim">Try adjusting your search or declassification filters</div>
+<!-- ══ EMPTY ══ -->
+<div id="emptyState" class="v-empty" style="display:none">
+  <div class="icon">🔍</div>
+  <h4>No dossiers found</h4>
+  <p>Try adjusting your search or declassification filters</p>
 </div>
 
 <!-- ══ MODAL ══ -->
-<div id="modal" class="fixed inset-0 z-[9000] bg-black/85 backdrop-blur-xl hidden items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this)closeModal()">
-  <div id="modalCard" class="modal-animate bg-vault-surface border border-white/[.08] rounded-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto relative"></div>
+<div class="v-modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="v-modal" id="modalCard"></div>
 </div>
 
 <!-- ══ FOOTER ══ -->
-<footer class="border-t border-white/[.04] py-8 px-4 text-center">
-  <div class="font-mono text-[10px] text-vault-dim tracking-[.15em] uppercase mb-1">The Vault — Classified Media Archive</div>
-  <div class="font-body text-xs text-vault-mute">Part of <a href="index.html" class="text-vault-gold hover:text-vault-goldBright transition">EconomicCrimeHub.org</a> · Educational purposes only · © 2026</div>
+<footer class="v-footer">
+  <div class="l1">The Vault — Classified Media Archive</div>
+  <div class="l2">Part of <a href="index.html">EconomicCrimeHub.org</a> · Educational purposes only · © 2026</div>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     DATA
-     ══════════════════════════════════════════ -->
-<script>
-var mediaItems=[
-{id:1,title:"The Big Short",type:"film",year:2015,creator:"Dir. Adam McKay",desc:"The true story of the traders who predicted and profited from the 2008 financial crisis, exposing systemic fraud in mortgage-backed securities. A visceral, fourth-wall-breaking masterpiece that makes CDOs and credit default swaps terrifyingly entertaining.",themes:["Wall Street","Corporate Fraud","Banking"],shelves:["hero","films","mustwatch"],featured:true,featuredTagline:"The film that taught a generation how the banks really work.",url:"https://www.imdb.com/title/tt1596363/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
-{id:2,title:"The Wolf of Wall Street",type:"film",year:2013,creator:"Dir. Martin Scorsese",desc:"Jordan Belfort\u2019s rise and fall through securities fraud, money laundering, and corruption on Wall Street. A masterclass in how pump-and-dump schemes work \u2014 excess, greed, and zero remorse.",themes:["Wall Street","Money Laundering","Fraud"],shelves:["hero","films","mustwatch"],featured:true,featuredTagline:"Greed is good. Until the FBI shows up.",url:"https://www.imdb.com/title/tt0993846/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0d0d0d,#1a0a0a,#2d1010)"},
-{id:3,title:"The Laundromat",type:"film",year:2019,creator:"Dir. Steven Soderbergh",desc:"Based on the Panama Papers scandal, exploring how shell companies and offshore structures enable the global elite to hide wealth and evade taxes. Meryl Streep leads this dark comedy about the machinery of financial secrecy.",themes:["Money Laundering","Offshore","Corporate Fraud"],shelves:["films"],url:"https://www.imdb.com/title/tt5865326/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
-{id:4,title:"Ozark",type:"tv",year:2017,creator:"Netflix \u00b7 2017\u20132022",desc:"A financial planner launders money for a Mexican drug cartel in Missouri\u2019s Lake of the Ozarks. One of the most detailed fictional portrayals of placement, layering, and integration in TV history. Four seasons of escalating moral bankruptcy.",themes:["Money Laundering","Organised Crime"],shelves:["hero","films","mustwatch"],featured:true,featuredTagline:"Every dollar has a story. Most of them are lies.",url:"https://www.imdb.com/title/tt5071412/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0b1622,#162447,#1f4068)"},
-{id:5,title:"McMafia",type:"tv",year:2018,creator:"BBC/AMC \u00b7 2018",desc:"A Russian-British banker is drawn into the world of organised crime. Highlights trade-based money laundering, hawala networks, and the role of professional enablers who make global dirty money flows possible.",themes:["Money Laundering","Organised Crime","Sanctions"],shelves:["films"],url:"https://www.imdb.com/title/tt6271080/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#1a0000,#2d0a0a,#0d1117)"},
-{id:6,title:"Bad Blood: The Final Chapter",type:"tv",year:2022,creator:"TV Series \u00b7 2022",desc:"Based on the true story of the Rizzuto crime family in Montreal, showing how organised crime infiltrates legitimate business through money laundering and intimidation.",themes:["Organised Crime","Money Laundering"],shelves:["films"],url:"https://www.imdb.com/title/tt6423776/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#2d1515)"},
-{id:7,title:"Dirty Money",type:"documentary",year:2018,creator:"Netflix \u00b7 2018\u20132020",desc:"Documentary series exploring corporate fraud, corruption, and financial crime. Each episode covers a different scandal \u2014 from VW emissions fraud to payday lending empires to maple syrup cartels. Essential viewing for compliance professionals.",themes:["Corporate Fraud","Regulation","Banking"],shelves:["films","mustwatch"],url:"https://www.imdb.com/title/tt7889220/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0a0a0a,#1a1a0a,#2d2d0a)"},
-{id:8,title:"Moneyland",type:"book",year:2018,creator:"Oliver Bullough",desc:"How the world\u2019s ultra-rich and corrupt exploit offshore havens, anonymous companies, and complicit professionals to hide their stolen wealth. A tour through the borderless country where the rules don\u2019t apply \u2014 if you can afford the entry fee.",themes:["Money Laundering","Offshore","Kleptocracy"],shelves:["books","mustwatch"],url:"https://www.goodreads.com/book/show/36099412-moneyland",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a0a2e,#16213e,#0f3460)"},
-{id:9,title:"Tracers in the Dark",type:"book",year:2022,creator:"Andy Greenberg",desc:"The true story of how a small team of investigators developed blockchain forensics to bring down the world\u2019s biggest darknet markets and crypto launderers. The definitive account of how cryptocurrency lost its anonymity.",themes:["Crypto Crime","Cyber Crime","Investigation"],shelves:["hero","books","mustwatch"],featured:true,featuredTagline:"The blockchain never forgets. Neither do they.",url:"https://www.goodreads.com/book/show/60462182-tracers-in-the-dark",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0d1117,#161b22,#21262d)"},
-{id:10,title:"Kleptopia",type:"book",year:2020,creator:"Tom Burgis",desc:"How dirty money is conquering the world. Traces the flows of corrupt cash from Central Asia through the City of London and into Western democracies. A masterwork of investigative journalism that reads like a thriller.",themes:["Kleptocracy","Money Laundering","Offshore"],shelves:["books"],url:"https://www.goodreads.com/book/show/49114729-kleptopia",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0a0a1a,#1a0a2e,#2d0a3e)"},
-{id:11,title:"Billion Dollar Whale",type:"book",year:2018,creator:"Tom Wright & Bradley Hope",desc:"The incredible true story of 1MDB \u2014 how one young man stole billions from Malaysia\u2019s sovereign wealth fund and lived the most extravagant life imaginable. Yachts, Hollywood, and a trail of devastation.",themes:["Fraud","Money Laundering","Kleptocracy"],shelves:["books","mustwatch"],url:"https://www.goodreads.com/book/show/38743564-billion-dollar-whale",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a1a0a,#2d2d0a,#3d3d0a)"},
-{id:12,title:"Butler to the World",type:"book",year:2022,creator:"Oliver Bullough",desc:"How Britain became the servant of corrupt wealth \u2014 from kleptocrats parking dirty money in London property to the army of lawyers, accountants, and fixers who make it all possible.",themes:["Money Laundering","Offshore","Kleptocracy","Regulation"],shelves:["books"],url:"https://www.goodreads.com/book/show/58950859-butler-to-the-world",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0d1117,#1a0a0a,#2d1515)"},
-{id:13,title:"The Spider Network",type:"book",year:2017,creator:"David Enrich",desc:"The true story of Tom Hayes and the LIBOR rigging scandal \u2014 how a small group of traders manipulated the world\u2019s most important interest rate, affecting trillions in financial contracts worldwide.",themes:["Wall Street","Banking","Corporate Fraud"],shelves:["books"],url:"https://www.goodreads.com/book/show/30755418-the-spider-network",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a1a2e,#0a0a1a,#16213e)"},
-{id:14,title:"How Russian Sabotage Is Financed & How to Disrupt It",type:"podcast",year:2026,creator:"RUSI STR \u00b7 Tom Keatinge",desc:"RUSI\u2019s Tom Keatinge examines how Russian sabotage campaigns in Europe are funded \u2014 from low-cost disposal agents to social media recruitment and crypto transfers \u2014 and where financial disruption is possible.",themes:["Sanctions","Money Laundering","Terrorism Financing"],shelves:["recent","podcasts"],url:"https://www.rusi.org/podcasts/suspicious-transaction-report/episode-11-how-russian-sabotage-financed-and-how-disrupt-it",srcLabel:"RUSI.org",gradient:"linear-gradient(135deg,#1a0000,#2d0a0a,#0d1117)"},
-{id:15,title:"Incentivising Whistleblowers to Expose Economic Crime",type:"podcast",year:2026,creator:"RUSI STR",desc:"Explores whether financial incentives for whistleblowers could accelerate the detection and reporting of money laundering, fraud, and sanctions evasion across the UK and EU.",themes:["Regulation","Money Laundering","Whistleblowing"],shelves:["recent","podcasts"],url:"https://www.rusi.org/podcast-series/suspicious-transaction-report-podcasts",srcLabel:"RUSI.org",gradient:"linear-gradient(135deg,#0d1117,#161b22,#21262d)"},
-{id:16,title:"Canada Under Pressure \u2014 Tariffs, Illicit Finance & Trump",type:"podcast",year:2026,creator:"RUSI STR",desc:"Examines how shifting US trade policy and tariff regimes are creating new vulnerabilities for illicit finance flows across the US-Canada border and impacting AML cooperation.",themes:["Money Laundering","Sanctions","Regulation"],shelves:["recent","podcasts"],url:"https://www.rusi.org/podcast-series/suspicious-transaction-report-podcasts",srcLabel:"RUSI.org",gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
-{id:17,title:"Sanctions Evasion, FCA Enforcement & ECL",type:"podcast",year:2026,creator:"Financial Crime Weekly \u00b7 Ep 206",desc:"Covers 113 Russian shadow vessels moving \u20ac4.7B in oil, FCA insider dealing charges, HMRC\u2019s higher Economic Crime Levy rates for April 2026, and INTERPOL\u2019s strategy against transnational scam centres.",themes:["Sanctions","Regulation","Organised Crime"],shelves:["recent","podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#2d2d2d)"},
-{id:18,title:"Crypto Regulatory Shifts Reshaping 2026",type:"podcast",year:2026,creator:"Financial Crime Weekly \u00b7 Special",desc:"Examines how MiCA in the EU, UK Financial Promotions rules, and US stablecoin legislation have ended the era of crypto regulatory ambiguity. Covers chain-hopping, DeFi mixers, and AI-driven compliance.",themes:["Crypto Crime","Regulation"],shelves:["recent","podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#1a0a2e,#0d1117,#16213e)"},
-{id:19,title:"AUSTRAC CEO on Australia\u2019s AML Extension",type:"podcast",year:2026,creator:"ACAMS \u00b7 Kieran Beer",desc:"AUSTRAC CEO Brendan Thomas discusses extending AML obligations to 80,000 new entities \u2014 law firms, accountants, estate agents \u2014 under Australia\u2019s Tranche 2 legislation, effective July 2026.",themes:["Regulation","Money Laundering"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-matters/id1456666158",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#0a192f,#112240)"},
-{id:20,title:"Wolfsberg Group on Stablecoin Banking",type:"podcast",year:2026,creator:"ACAMS \u00b7 Kieran Beer",desc:"Ned Conway of the Wolfsberg Group discusses new guidance for banks dealing with stablecoin producers, adapting correspondent banking due diligence frameworks for the digital asset era.",themes:["Crypto Crime","Banking","Regulation"],shelves:["recent","podcasts"],url:"https://open.spotify.com/show/5OMCuodxLcTKERGXTJaUO9",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d0d0d,#161b22,#21262d)"},
-{id:21,title:"Nacha & Proactive Fraud Detection",type:"podcast",year:2026,creator:"DataVisor \u00b7 What the F Happened?",desc:"How Nacha\u2019s latest guidance is shifting fraud programmes from reactive investigation to real-time detection, covering AI-enabled attacks and coordinated fraud across the payments ecosystem.",themes:["Fraud","Cyber Crime","Regulation"],shelves:["recent","podcasts"],url:"https://www.datavisor.com/defend-podcast",srcLabel:"DataVisor",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
-{id:22,title:"What You Need to Know About Money Laundering in 2026",type:"podcast",year:2026,creator:"ICAEW Insights",desc:"ICAEW\u2019s Head of AML Michelle Giddings explores how sanctions evasion, AI-generated laundering instructions, complex corporate structures, and Companies House reforms are reshaping ML risk.",themes:["Money Laundering","Regulation"],shelves:["recent","podcasts"],url:"https://www.icaew.com/insights/viewpoints-on-the-news/2026/feb-2026/what-you-need-to-know-about-money-laundering-in-2026",srcLabel:"ICAEW",gradient:"linear-gradient(135deg,#0a0a1a,#0d1117,#1a1a2e)"},
-{id:23,title:"Cybersecurity Outlook 2026 \u2014 Interpol & OT Threats",type:"podcast",year:2026,creator:"Radio Davos \u00b7 WEF",desc:"INTERPOL\u2019s cybercrime director Neal Jetton discusses global cyber threats from ransomware to sextortion, alongside WEF\u2019s Global Cybersecurity Outlook 2026 findings on operational technology risks.",themes:["Cyber Crime","Organised Crime"],shelves:["recent","podcasts"],url:"https://www.weforum.org/podcasts/radio-davos/episodes/global-cybersecurity-outlook-2026-interpol-dragos/",srcLabel:"WEF",gradient:"linear-gradient(135deg,#0d1117,#161b22,#0a192f)"},
-{id:24,title:"Inside the World of Phishing",type:"podcast",year:2026,creator:"Scam Detectors \u00b7 BBC\u2019s Jane Wakefield",desc:"Deep dive into phishing attacks \u2014 billions of deceptive emails sent daily. BBC tech journalist Jane Wakefield and fraud experts reveal how to spot clues and protect yourself from criminals.",themes:["Cyber Crime","Fraud"],shelves:["recent","podcasts"],url:"https://open.spotify.com/show/1d7RkfbP3NEfn0kdik4NCu",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d0d0d,#1a0a0a,#2d1010)"},
-{id:25,title:"Tigran Gambaryan & Tracers in the Dark",type:"podcast",year:2026,creator:"ACAMS \u00b7 Kieran Beer",desc:"WIRED\u2019s Andy Greenberg and Binance\u2019s Tigran Gambaryan discuss blockchain forensics, the Binance Nigeria detention saga, and the future of crypto crime investigation.",themes:["Crypto Crime","Investigation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-matters/id1456666158",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a0a2e,#0a192f)"},
-{id:26,title:"FATF Cyber Fraud Report 2026",type:"report",year:2026,creator:"FATF",desc:"FATF\u2019s landmark report links cyber-enabled fraud directly to money laundering, terror financing, and proliferation financing. UK fraud now exceeds 40% of all recorded crime. A wake-up call for the global financial system.",themes:["Fraud","Cyber Crime","Regulation","Money Laundering"],shelves:["recent","reports","mustwatch"],url:"https://www.fatf-gafi.org/",srcLabel:"FATF",gradient:"linear-gradient(135deg,#0a0a1a,#1a0a0a,#2d1515)"},
-{id:27,title:"2026 Crypto Crime Report",type:"report",year:2026,creator:"TRM Labs",desc:"Data-driven analysis showing $35 billion in cryptocurrency sent to fraud schemes in 2025. Covers sanctions evasion, nation-state actors, pig butchering scams, ransomware, and industrialised money laundering.",themes:["Crypto Crime","Fraud","Money Laundering"],shelves:["recent","reports"],url:"https://www.trmlabs.com/reports-and-whitepapers/2026-crypto-crime-report",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
-{id:28,title:"2026 Global AFC Threats Report",type:"report",year:2026,creator:"ACAMS / Compliance Week",desc:"Scams targeting individuals ranked as the highest current financial crime risk globally. 47% of respondents cite lack of skilled resources and training as a major operational threat to effective AML.",themes:["Fraud","Regulation","Money Laundering"],shelves:["recent","reports"],url:"https://www.complianceweek.com/opinion/a-snapshot-of-the-state-of-financial-crime-in-the-united-states/36498.article",srcLabel:"Compliance Week",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
-{id:29,title:"Is the AML Project Achieving Anything?",type:"report",year:2026,creator:"Money Laundering Bulletin",desc:"Four-decade retrospective on anti-money laundering \u2014 from narcotics focus to today\u2019s expanded regime. Asks whether the growing regulatory burden is actually stopping criminal money flows.",themes:["Money Laundering","Regulation"],shelves:["recent","reports"],url:"https://www.moneylaunderingbulletin.com/",srcLabel:"MLB",gradient:"linear-gradient(135deg,#0a0a0a,#1a1a1a,#2d2d2d)"},
-{id:30,title:"Bribe, Swindle or Steal",type:"podcast-series",year:2017,creator:"Alexandra Wrage \u00b7 TRACE",desc:"TRACE president interviews experts on bribery, fraud, money laundering, insider trading and sanctions. One of the longest-running and most respected financial crime podcasts \u2014 weekly since 2017.",themes:["Fraud","Money Laundering","Sanctions"],shelves:["podcasts","mustwatch"],url:"https://podcasts.apple.com/us/podcast/bribe-swindle-or-steal/id1240837890",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a0a,#2d1515,#0d1117)"},
-{id:31,title:"The Dark Money Files",type:"podcast-series",year:2019,creator:"Graham Barrow & Ray Blake",desc:"Two veteran financial crime experts explain how dirty money enters the financial system. Accessible 20-minute episodes covering sanctions evasion, money laundering, shell companies, and fraud. Weekly since 2019.",themes:["Money Laundering","Offshore","Fraud"],shelves:["podcasts","mustwatch"],url:"https://podcasts.apple.com/gb/podcast/the-dark-money-files/id1470693335",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#0d1117)"},
-{id:32,title:"Themis FinCrime Podcast",type:"podcast-series",year:2020,creator:"Themis",desc:"Interviews with leading investigative journalists, senior business leaders and changemakers at the forefront of tackling financial crime. Specialist risk management perspective from a leading advisory firm.",themes:["Regulation","Money Laundering","Corporate Fraud"],shelves:["podcasts"],url:"https://www.themisservices.co.uk/",srcLabel:"Themis",gradient:"linear-gradient(135deg,#0a192f,#112240,#0d1117)"},
-{id:33,title:"The Perfect Scam",type:"podcast-series",year:2019,creator:"AARP \u00b7 Bob Sullivan",desc:"True stories of people targeted by scams, with professional con artists and experts pulling back the curtain on how fraudsters operate. Practical advice on recognising and avoiding scams.",themes:["Fraud","Cyber Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/the-perfect-scam/id1455651468",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
-{id:34,title:"FINCast",type:"podcast-series",year:2020,creator:"Juan Zarate \u00b7 K2 Integrity",desc:"Hub of conversation covering AML/CFT, anti-bribery and corruption, cyber crime vulnerabilities, and fintech. Hosted by former Deputy National Security Advisor Juan Zarate \u2014 the architect of modern financial warfare.",themes:["Sanctions","Terrorism Financing","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/fincast/id1530197302",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#0a192f,#1a0a2e)"}
-];
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="v-bnav"><div class="v-bnav-inner">
+  <a href="index.html" class="v-nb"><span class="bi">🏠</span>Home</a>
+  <a href="index.html#impact" class="v-nb"><span class="bi">📊</span>Impact</a>
+  <a href="index.html#reference" class="v-nb"><span class="bi">📋</span>Typologies</a>
+  <a href="simulator.html" class="v-nb"><span class="bi">🕵️</span>Ops Sim</a>
+  <button class="v-nb act"><span class="bi">◆</span>Vault</button>
+  <a href="index.html#intelligence" class="v-nb"><span class="bi">🔎</span>Directory</a>
+</div></nav>
 
-var mediaShelves=[
-{id:"mustwatch",title:"Must-Watch \u00b7 Must-Read \u00b7 Must-Listen",icon:"\ud83d\udd25",subtitle:"The essential dossiers every investigator needs"},
-{id:"recent",title:"Fresh Intelligence \u2014 Feb/Mar 2026",icon:"\u26a1",subtitle:"Just declassified"},
-{id:"films",title:"Films & Television",icon:"\ud83c\udfac",subtitle:"On screen"},
-{id:"books",title:"Landmark Books on Economic Crime",icon:"\ud83d\udcda",subtitle:"Required reading"},
-{id:"podcasts",title:"Podcast Deep Dives",icon:"\ud83c\udfa7",subtitle:"Listen in"},
-{id:"reports",title:"Reports & Analysis",icon:"\ud83d\udcca",subtitle:"Intelligence briefs"}
-];
+<!-- ══ DATA ══ -->
+<script src="data/vault-config.js"></script>
+<script src="data/vault-films.js"></script>
+<script src="data/vault-books.js"></script>
+<script src="data/vault-podcasts.js"></script>
+<script src="data/vault-reports.js"></script>
 
-var mediaThemes=["Money Laundering","Fraud","Crypto Crime","Wall Street","Sanctions","Corporate Fraud","Organised Crime","Cyber Crime","Regulation","Offshore","Kleptocracy","Investigation","Banking","Terrorism Financing","Whistleblowing"];
-var mediaTypeLabels={film:"Film",tv:"TV Series",documentary:"Documentary",book:"Book",podcast:"Podcast","podcast-series":"Podcast Series",report:"Report"};
-var mediaTypeIcons={film:"\ud83c\udfac",tv:"\ud83d\udcfa",documentary:"\ud83c\udfa5",book:"\ud83d\udcd6",podcast:"\ud83c\udfa7","podcast-series":"\ud83c\udf99\ufe0f",report:"\ud83d\udcca"};
-var typeGroups={
-  all:{label:"All Dossiers",types:null},
-  films:{label:"Films & TV",types:["film","tv","documentary"]},
-  books:{label:"Books",types:["book"]},
-  podcasts:{label:"Podcasts",types:["podcast","podcast-series"]},
-  reports:{label:"Reports",types:["report"]}
-};
-</script>
-
-<!-- ══════════════════════════════════════════
-     ENGINE
-     ══════════════════════════════════════════ -->
+<!-- ══ ENGINE ══ -->
 <script>
 var heroItems=mediaItems.filter(function(m){return m.featured});
-var heroIdx=0;
-var heroTimer=null;
-var activeType="all";
-var activeTheme=null;
-var searchQuery="";
-var stampTilts=["stamp-tilt-1","stamp-tilt-2","stamp-tilt-3"];
+var heroIdx=0,heroTimer=null;
+var activeType="all",activeTheme=null,searchQuery="";
+var stamps=["CLASSIFIED","TOP SECRET","RESTRICTED","EYES ONLY"];
 
-/* ── HERO ── */
 function renderHero(){
-  var item=heroItems[heroIdx];
-  var bg=document.getElementById("heroBg");
-  bg.style.background=item.gradient;
-  bg.className="absolute inset-0 transition-all duration-700 hero-fade";
-  document.getElementById("heroTitle").textContent=item.title;
-  document.getElementById("heroTagline").textContent=item.featuredTagline||item.desc.substring(0,100)+"\u2026";
-  document.getElementById("heroBadge").textContent=mediaTypeLabels[item.type].toUpperCase()+" \u00b7 "+item.year;
-  var stamps=["CLASSIFIED","TOP SECRET","RESTRICTED","EYES ONLY"];
+  var it=heroItems[heroIdx];
+  document.getElementById("heroBg").style.background=it.gradient;
+  document.getElementById("heroTitle").textContent=it.title;
+  document.getElementById("heroTag").textContent=it.featuredTagline||it.desc.substring(0,100)+"\u2026";
+  document.getElementById("heroBadge").textContent=mediaTypeLabels[it.type].toUpperCase()+" \u00b7 "+it.year;
   document.getElementById("heroStamp").textContent=stamps[heroIdx%stamps.length];
   document.getElementById("heroDots").innerHTML=heroItems.map(function(_,i){
-    return '<button onclick="heroGo('+i+')" class="w-2 h-2 rounded-full transition-all duration-300 '+(i===heroIdx?"bg-vault-red w-6 rounded shadow-[0_0_8px_rgba(185,28,28,.5)]":"bg-white/25 hover:bg-white/40")+'"></button>';
+    return '<button onclick="heroGo('+i+')" class="'+(i===heroIdx?"on":"")+'"></button>';
   }).join("");
 }
-function heroGo(idx){heroIdx=idx;renderHero();resetHeroTimer()}
-function heroNav(dir){heroGo((heroIdx+dir+heroItems.length)%heroItems.length)}
-function resetHeroTimer(){clearInterval(heroTimer);heroTimer=setInterval(function(){heroNav(1)},5500)}
+function heroGo(i){heroIdx=i;renderHero();clearInterval(heroTimer);heroTimer=setInterval(function(){heroNav(1)},5500)}
+function heroNav(d){heroGo((heroIdx+d+heroItems.length)%heroItems.length)}
 
-/* ── FILTERS ── */
 function buildFilters(){
   var counts={all:mediaItems.length};
-  Object.keys(typeGroups).forEach(function(k){
-    if(k==="all")return;
-    counts[k]=mediaItems.filter(function(m){return typeGroups[k].types.indexOf(m.type)!==-1}).length;
-  });
+  Object.keys(typeGroups).forEach(function(k){if(k!=="all")counts[k]=mediaItems.filter(function(m){return typeGroups[k].types.indexOf(m.type)!==-1}).length});
   document.getElementById("typeFilters").innerHTML=Object.keys(typeGroups).map(function(k){
-    var isA=k===activeType;
-    return '<button onclick="setType(\''+k+'\')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold font-mono tracking-wide uppercase border transition-all duration-200 '+
-      (isA?"bg-vault-red border-vault-red text-white shadow-[0_2px_12px_rgba(185,28,28,.3)]":"bg-vault-surface border-white/[.08] text-vault-mute hover:border-white/20 hover:text-vault-text")+
-    '">'+typeGroups[k].label+' <span class="text-[9px] px-1.5 py-0.5 rounded-full '+(isA?"bg-white/20":"bg-white/[.06]")+'">'+counts[k]+'</span></button>';
+    return '<button class="v-chip'+(k===activeType?" on":"")+'" onclick="setType(\''+k+'\')">'+typeGroups[k].label+' <span class="ct">'+counts[k]+'</span></button>';
   }).join("");
   document.getElementById("themeChips").innerHTML=mediaThemes.map(function(t){
-    var isA=t===activeTheme;
-    return '<button onclick="setTheme(\''+t+'\')" class="px-2.5 py-1 rounded-xl text-[10px] font-medium border transition-all duration-150 '+
-      (isA?"bg-vault-goldDim border-vault-gold text-vault-gold":"bg-transparent border-vault-dim text-vault-mute hover:border-vault-gold/50 hover:text-vault-gold/70")+
-    '">'+t+'</button>';
+    return '<button class="v-theme'+(t===activeTheme?" on":"")+'" onclick="setTheme(\''+t+'\')">'+t+'</button>';
   }).join("");
 }
 function setType(k){activeType=k;buildFilters();renderContent()}
 function setTheme(t){activeTheme=activeTheme===t?null:t;buildFilters();renderContent()}
 
-/* ── SEARCH ── */
-document.getElementById("searchInput").addEventListener("input",function(){
-  searchQuery=this.value.trim().toLowerCase();
-  renderContent();
-});
+document.getElementById("searchInput").addEventListener("input",function(){searchQuery=this.value.trim().toLowerCase();renderContent()});
 
-/* ── FILTER LOGIC ── */
 function getFiltered(){
   var items=mediaItems;
-  if(activeType!=="all"){
-    var types=typeGroups[activeType].types;
-    items=items.filter(function(m){return types.indexOf(m.type)!==-1});
-  }
-  if(activeTheme){items=items.filter(function(m){return m.themes.indexOf(activeTheme)!==-1})}
-  if(searchQuery){
-    items=items.filter(function(m){
-      return m.title.toLowerCase().indexOf(searchQuery)!==-1||
-             m.creator.toLowerCase().indexOf(searchQuery)!==-1||
-             m.desc.toLowerCase().indexOf(searchQuery)!==-1||
-             m.themes.join(" ").toLowerCase().indexOf(searchQuery)!==-1;
-    });
-  }
+  if(activeType!=="all"){var t=typeGroups[activeType].types;items=items.filter(function(m){return t.indexOf(m.type)!==-1})}
+  if(activeTheme)items=items.filter(function(m){return m.themes.indexOf(activeTheme)!==-1});
+  if(searchQuery)items=items.filter(function(m){
+    return m.title.toLowerCase().indexOf(searchQuery)!==-1||m.creator.toLowerCase().indexOf(searchQuery)!==-1||m.desc.toLowerCase().indexOf(searchQuery)!==-1||m.themes.join(" ").toLowerCase().indexOf(searchQuery)!==-1;
+  });
   return items;
 }
 
-/* ── CARD (description always visible) ── */
-function buildCard(item,large){
-  var w=large?"w-[280px] md:w-[300px]":"w-[230px] md:w-[250px]";
-  var h=large?"h-[360px] md:h-[380px]":"h-[300px] md:h-[330px]";
-  var tiltClass=stampTilts[item.id%3];
-  var descLen=large?180:130;
-  return '<div onclick="openModal('+item.id+')" class="'+w+' '+h+' flex-shrink-0 rounded-xl overflow-hidden relative cursor-pointer group transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.6),0_0_0_1px_rgba(185,28,28,.25)] border border-white/[.06] hover:border-vault-red/40">'+
-    '<div class="absolute inset-0" style="background:'+item.gradient+'"></div>'+
-    '<div class="card-shine"></div>'+
-    '<div class="dossier-edge"></div>'+
-    '<div class="dossier-tape">CONFIDENTIAL</div>'+
-    '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-5xl opacity-[.05] pointer-events-none z-0 select-none">'+mediaTypeIcons[item.type]+'</div>'+
-    '<div class="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-vault-silver font-mono text-[9px] font-bold tracking-[.1em] uppercase px-2 py-1 rounded">'+
-      '<span class="text-xs">'+mediaTypeIcons[item.type]+'</span> '+mediaTypeLabels[item.type]+
+function buildCard(item){
+  return '<div class="v-card" onclick="openModal('+item.id+')">'+
+    '<div class="v-card-accent" style="background:'+item.gradient+'"></div>'+
+    '<div class="v-card-icon">'+
+      '<span class="emoji">'+mediaTypeIcons[item.type]+'</span>'+
+      '<span class="yr">'+item.year+'</span>'+
+      '<span class="v-card-stamp">CONFIDENTIAL</span>'+
     '</div>'+
-    '<div class="absolute top-3 right-3 z-10 stamp stamp-gold '+tiltClass+' text-[8px]">'+item.year+'</div>'+
-    '<div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/20 z-[1]"></div>'+
-    '<div class="absolute bottom-0 left-0 right-0 z-10 p-3.5">'+
-      '<h3 class="font-display text-[15px] md:text-base font-bold text-white leading-tight mb-1">'+item.title+'</h3>'+
-      '<p class="font-mono text-[10px] text-vault-gold/80 mb-2">'+item.creator+'</p>'+
-      '<p class="text-[11px] text-white/55 leading-[1.5]" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">'+item.desc.substring(0,descLen)+'\u2026</p>'+
-      '<div class="flex items-center gap-1.5 mt-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">'+
-        '<span class="font-mono text-[9px] text-vault-red font-bold tracking-wider uppercase">Open dossier \u2192</span>'+
-      '</div>'+
+    '<div class="v-card-body">'+
+      '<div class="v-card-top"><span class="v-card-type">'+mediaTypeLabels[item.type]+'</span></div>'+
+      '<div class="v-card-title">'+item.title+'</div>'+
+      '<div class="v-card-creator">'+item.creator+'</div>'+
+      '<div class="v-card-desc">'+item.desc+'</div>'+
+      '<div class="v-card-themes">'+item.themes.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>'+
     '</div>'+
-    '<div class="absolute bottom-0 left-0 right-0 h-[3px] bg-vault-red z-20 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></div>'+
+    '<div class="v-card-line"></div>'+
   '</div>';
 }
 
-/* ── SHELF ── */
 function buildShelf(shelf,items){
   if(!items.length)return "";
-  var uid="shelf_"+shelf.id;
-  var isHero=shelf.id==="mustwatch";
-  return '<section class="py-6 md:py-8">'+
-    '<div class="max-w-7xl mx-auto px-4 mb-3 flex items-baseline gap-3">'+
-      '<h2 class="font-display text-lg md:text-xl font-bold text-white flex items-center gap-2">'+
-        '<span class="text-base">'+shelf.icon+'</span> '+shelf.title+
-      '</h2>'+
-      '<span class="font-mono text-[10px] text-vault-dim tracking-wider uppercase">'+items.length+' dossier'+(items.length!==1?"s":"")+'</span>'+
-      (shelf.subtitle?'<span class="hidden sm:inline font-mono text-[10px] text-vault-mute/50 italic">\u2014 '+shelf.subtitle+'</span>':"")+
+  return '<div class="v-shelf">'+
+    '<div class="v-shelf-hdr">'+
+      '<h3><span>'+shelf.icon+'</span> '+shelf.title+'</h3>'+
+      '<span class="cnt">'+items.length+' dossier'+(items.length!==1?'s':'')+'</span>'+
+      (shelf.subtitle?'<span class="sub">\u2014 '+shelf.subtitle+'</span>':'')+
     '</div>'+
-    '<div class="relative group/shelf">'+
-      '<button onclick="shelfScroll(\''+uid+'\',-1)" class="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/70 border border-white/10 text-white text-lg grid place-items-center backdrop-blur-md opacity-0 group-hover/shelf:opacity-100 transition hover:bg-vault-red hover:border-vault-red">\u2039</button>'+
-      '<div id="'+uid+'" class="shelf-track flex gap-3.5 overflow-x-auto scroll-smooth px-4">'+
-        items.map(function(m){return buildCard(m,isHero)}).join("")+
-      '</div>'+
-      '<button onclick="shelfScroll(\''+uid+'\',1)" class="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/70 border border-white/10 text-white text-lg grid place-items-center backdrop-blur-md opacity-0 group-hover/shelf:opacity-100 transition hover:bg-vault-red hover:border-vault-red">\u203a</button>'+
-    '</div>'+
-  '</section>';
-}
-function shelfScroll(id,dir){
-  var el=document.getElementById(id);
-  if(el)el.scrollBy({left:dir*380,behavior:"smooth"});
+    items.map(buildCard).join("")+
+  '</div><hr class="v-shelf-sep">';
 }
 
-/* ── RENDER ── */
 function renderContent(){
   var filtered=getFiltered();
   var isFiltered=activeType!=="all"||activeTheme||searchQuery;
   document.getElementById("hero").style.display=isFiltered?"none":"";
-  document.getElementById("emptyState").style.display=filtered.length===0?"block":"none";
+  document.getElementById("emptyState").style.display=filtered.length?"none":"block";
   if(isFiltered){
     document.getElementById("shelvesContainer").style.display="none";
-    document.getElementById("gridContainer").classList.remove("hidden");
-    document.getElementById("gridResults").innerHTML=filtered.map(function(m){
-      return '<div>'+buildCard(m,false).replace(/w-\[230px\] md:w-\[250px\]/g,"w-full").replace(/flex-shrink-0/g,"")+'</div>';
-    }).join("");
+    document.getElementById("gridContainer").style.display="";
+    document.getElementById("gridResults").innerHTML=filtered.length?filtered.map(buildCard).join(""):"";
   }else{
-    document.getElementById("gridContainer").classList.add("hidden");
+    document.getElementById("gridContainer").style.display="none";
     document.getElementById("shelvesContainer").style.display="";
-    document.getElementById("shelvesContainer").innerHTML=mediaShelves.map(function(shelf){
-      var items=mediaItems.filter(function(m){return m.shelves.indexOf(shelf.id)!==-1});
-      return buildShelf(shelf,items);
+    document.getElementById("shelvesContainer").innerHTML=mediaShelves.map(function(s){
+      var items=mediaItems.filter(function(m){return m.shelves.indexOf(s.id)!==-1});
+      return buildShelf(s,items);
     }).join("");
   }
 }
 
-/* ── MODAL ── */
 function openModal(id){
-  var item=mediaItems.find(function(m){return m.id===id});
-  if(!item)return;
-  var sc=stampTilts[item.id%3];
+  var it=mediaItems.find(function(m){return m.id===id});if(!it)return;
   document.getElementById("modalCard").innerHTML=
-    '<div class="relative h-48 md:h-56 overflow-hidden rounded-t-2xl">'+
-      '<div class="absolute inset-0" style="background:'+item.gradient+'"></div>'+
-      '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl opacity-[.1] pointer-events-none select-none">'+mediaTypeIcons[item.type]+'</div>'+
-      '<div class="absolute inset-0 bg-gradient-to-b from-transparent via-vault-surface/30 to-vault-surface"></div>'+
-      '<div class="absolute top-6 right-6 z-10 stamp stamp-red '+sc+' text-xs !opacity-60 !border-[3px]">CLASSIFIED</div>'+
-      '<button onclick="closeModal()" class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/15 text-white grid place-items-center backdrop-blur-md hover:bg-vault-red hover:border-vault-red transition text-sm">\u2715</button>'+
+    '<div class="v-modal-hero">'+
+      '<div class="bg" style="background:'+it.gradient+'"></div>'+
+      '<div class="fade"></div>'+
+      '<div class="emoji">'+mediaTypeIcons[it.type]+'</div>'+
+      '<div class="stamp">CLASSIFIED</div>'+
+      '<button class="v-modal-close" onclick="closeModal()">\u2715</button>'+
     '</div>'+
-    '<div class="relative z-10 px-5 md:px-6 pb-6 -mt-8">'+
-      '<div class="flex items-center gap-2 mb-3">'+
-        '<span class="inline-flex items-center gap-1.5 bg-vault-red text-white font-mono text-[10px] font-bold tracking-[.12em] uppercase px-2.5 py-1 rounded">'+mediaTypeIcons[item.type]+' '+mediaTypeLabels[item.type]+'</span>'+
-        '<span class="stamp stamp-gold '+sc+' text-[9px]">'+item.year+'</span>'+
-      '</div>'+
-      '<h2 class="font-display text-2xl md:text-3xl font-black text-white leading-tight mb-1.5">'+item.title+'</h2>'+
-      '<p class="font-mono text-xs text-vault-mute mb-5">'+item.creator+'</p>'+
-      '<div class="border-l-[3px] border-vault-red pl-4 mb-5">'+
-        '<p class="text-sm text-vault-text/85 leading-relaxed">'+item.desc+'</p>'+
-      '</div>'+
-      '<div class="flex flex-wrap gap-1.5 mb-5">'+
-        item.themes.map(function(t){return '<span class="font-mono text-[10px] text-vault-gold border border-vault-goldDim px-2.5 py-1 rounded-full">'+t+'</span>'}).join("")+
-      '</div>'+
-      (item.url?'<a href="'+item.url+'" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full bg-vault-red hover:bg-vault-redBright text-white font-bold text-sm py-3.5 rounded-xl transition-all duration-200 hover:shadow-[0_6px_24px_rgba(185,28,28,.4)] hover:-translate-y-0.5 mb-3 no-underline">\ud83d\udd17 Open Source \u2014 '+item.srcLabel+' \u2192</a>':"")+
-      '<p class="font-mono text-[9px] text-vault-dim text-center mt-3">This listing is for educational reference only. Not an endorsement.</p>'+
+    '<div class="v-modal-body">'+
+      '<span class="badge">'+mediaTypeIcons[it.type]+' '+mediaTypeLabels[it.type]+' \u00b7 '+it.year+'</span>'+
+      '<h2>'+it.title+'</h2>'+
+      '<div class="creator">'+it.creator+'</div>'+
+      '<div class="desc">'+it.desc+'</div>'+
+      '<div class="tags">'+it.themes.map(function(t){return '<span>'+t+'</span>'}).join("")+'</div>'+
+      (it.url?'<a href="'+it.url+'" target="_blank" rel="noopener" class="src-btn">\ud83d\udd17 Open Source \u2014 '+it.srcLabel+' \u2192</a>':'')+
+      '<div class="note">This listing is for educational reference only. Not an endorsement.</div>'+
     '</div>';
-  var modal=document.getElementById("modal");
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
+  document.getElementById("modal").classList.add("open");
   document.body.style.overflow="hidden";
 }
-function closeModal(){
-  var modal=document.getElementById("modal");
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-  document.body.style.overflow="";
-}
+function closeModal(){document.getElementById("modal").classList.remove("open");document.body.style.overflow=""}
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
 
-/* ── INIT ── */
 renderHero();
-resetHeroTimer();
+heroTimer=setInterval(function(){heroNav(1)},5500);
 buildFilters();
 renderContent();
 </script>
