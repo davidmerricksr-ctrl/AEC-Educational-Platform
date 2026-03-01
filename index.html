@@ -113,6 +113,12 @@ a{color:var(--navy);text-decoration:none}
 .rf{margin-top:.15rem;padding-top:.45rem;border-top:1px solid var(--line)}
 .rf h4{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim);margin-bottom:.2rem}
 .rf li{font-size:.7rem;color:var(--sub);margin-bottom:.08rem;margin-left:.8rem}
+.tc-cases{border-top:1px solid var(--line);margin-top:.35rem;padding-top:.45rem}
+.tc-cases h4{color:var(--navy)}
+.tc-links{display:flex;flex-direction:column;gap:.25rem}
+.tc-link{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:600;color:var(--navy);padding:.3rem .5rem;border:1px solid var(--line);border-radius:6px;transition:.1s;-webkit-tap-highlight-color:transparent}
+.tc-link:active{background:var(--navy-bg)}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--navy);flex-shrink:0}
 .impstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:1.4rem}
 .ist{background:var(--ink);padding:.85rem .5rem;text-align:center}
 .ist .sv{font-family:var(--fd);font-size:1.15rem;color:var(--gold)}
@@ -589,7 +595,11 @@ document.getElementById('typoTabs').innerHTML=typologyCategories.map(function(c,
 function showTypo(idx){
     document.querySelectorAll('#typoTabs .pill').forEach(function(t,i){t.classList.toggle('act',i===idx)});
     document.getElementById('typoContent').innerHTML=typologyCategories[idx].cards.map(function(c){
-        return '<div class="tcard"><div class="th"><div class="ti" style="background:'+c.bg+'">'+c.icon+'</div><h3>'+c.title+'</h3></div><p>'+c.desc+'</p><div class="rf"><h4>Red Flags</h4><ul>'+c.flags.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul></div></div>';
+        var casesHtml='';
+        if(c.cases&&c.cases.length){
+            casesHtml='<div class="rf tc-cases"><h4>Real-World Cases</h4><div class="tc-links">'+c.cases.map(function(cs){return '<a href="'+cs.url+'" target="_blank" class="tc-link" onclick="event.stopPropagation()"><span class="tc-dot"></span>'+cs.title+'</a>'}).join('')+'</div></div>';
+        }
+        return '<div class="tcard"><div class="th"><div class="ti" style="background:'+c.bg+'">'+c.icon+'</div><h3>'+c.title+'</h3></div><p>'+c.desc+'</p><div class="rf"><h4>Red Flags</h4><ul>'+c.flags.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul></div>'+casesHtml+'</div>';
     }).join('');
 }
 showTypo(0);
