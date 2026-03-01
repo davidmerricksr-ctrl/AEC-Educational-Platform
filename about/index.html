@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>About — EconomicCrimeHub.org</title>
+<meta name="description" content="About EconomicCrimeHub.org — who built it, why, disclaimers, sourcing, and important legal notices.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf9f6;--card:#fff;--border:#e5e3dc;
+  --crim:#b82d24;--crimL:rgba(184,45,36,.08);--crimB:rgba(184,45,36,.15);
+  --gold:#8b6914;--goldL:rgba(139,105,20,.07);--goldB:rgba(139,105,20,.12);
+  --txt:#1a1a1a;--mute:#555;--dim:#888;--light:#b0ada5;
+  --fd:'DM Serif Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+  --nav:72px
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.7;-webkit-font-smoothing:antialiased;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 24px)}
+a{color:var(--crim);text-decoration:none}
+a:hover{text-decoration:underline}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Section wrapper ── */
+.about-section{max-width:760px;margin:0 auto;padding:2.5rem 1.25rem 2rem}
+
+/* ── Section header ── */
+.about-hdr{text-align:center;margin-bottom:2.5rem;animation:fadeUp .5s ease both}
+.about-hdr .icon{font-size:1.6rem;margin-bottom:.5rem}
+.about-hdr h1{font-family:var(--fd);font-size:1.65rem;color:var(--txt);margin-bottom:.3rem}
+.about-hdr .sub{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.18em;text-transform:uppercase}
+
+/* ── Author card ── */
+.author-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem 1.75rem;margin-bottom:2rem;position:relative;overflow:hidden;animation:fadeUp .5s ease .05s both}
+.author-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--crim),#d4713b,var(--gold))}
+.author-greeting{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.author-avatar{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--crim),#d4713b);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0;color:#fff;font-family:var(--fd);font-weight:700}
+.author-name{font-family:var(--fd);font-size:1.2rem;color:var(--txt)}
+.author-meta{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.06em}
+.author-body p{font-size:.88rem;color:#333;line-height:1.75;margin-bottom:1rem}
+.author-body p:last-child{margin-bottom:0}
+.author-body strong{color:var(--txt);font-weight:600}
+
+/* ── Feature grid ── */
+.hub-features{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.5rem 0}
+@media(max-width:540px){.hub-features{grid-template-columns:1fr}}
+.hub-feat{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem}
+.hub-feat .feat-icon{font-size:1.1rem;margin-bottom:.35rem}
+.hub-feat .feat-title{font-family:var(--fd);font-size:.82rem;color:var(--txt);margin-bottom:.2rem}
+.hub-feat .feat-desc{font-size:.72rem;color:var(--mute);line-height:1.55}
+
+/* ── Vibe note ── */
+.vibe-note{background:linear-gradient(135deg,rgba(184,45,36,.04),rgba(139,105,20,.04));border:1px solid rgba(184,45,36,.1);border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0}
+.vibe-note .vn-hdr{font-family:var(--fd);font-size:.88rem;color:var(--crim);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.vibe-note p{font-size:.82rem;color:#444;line-height:1.65}
+
+/* ── Connect card ── */
+.connect-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.75rem;margin-top:1.5rem;text-align:center}
+.connect-card .sig{font-family:var(--fd);font-size:1.1rem;color:var(--txt);margin-bottom:.1rem}
+.connect-card .loc{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.1em;margin-bottom:1rem}
+.connect-btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--crim);color:#fff;border:none;border-radius:10px;padding:.7rem 1.5rem;font-family:var(--fb);font-size:.8rem;font-weight:600;cursor:pointer;text-decoration:none;transition:.2s}
+.connect-btn:hover{background:#9a2520;transform:translateY(-1px);box-shadow:0 4px 16px rgba(184,45,36,.25);text-decoration:none;color:#fff}
+.connect-btn svg{width:18px;height:18px;fill:currentColor}
+.connect-sub{font-size:.72rem;color:var(--dim);margin-top:.75rem;line-height:1.5}
+
+/* ── Disclaimers ── */
+.disclaimers{margin-top:2.5rem;border-top:1px solid var(--border);padding-top:2rem}
+.disclaimers-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem}
+.disclaimers-hdr h2{font-family:var(--fd);font-size:1.1rem;color:var(--txt)}
+.disclaimers-hdr .badge{font-family:var(--fm);font-size:.5rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--crim);background:var(--crimL);border:1px solid var(--crimB);padding:3px 10px;border-radius:4px}
+.disc-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1rem;position:relative}
+.disc-block::before{content:'';position:absolute;top:12px;left:0;width:4px;height:calc(100% - 24px);border-radius:0 3px 3px 0}
+.disc-block.warn::before{background:var(--crim)}
+.disc-block.info::before{background:var(--gold)}
+.disc-block.neutral::before{background:var(--light)}
+.disc-title{font-family:var(--fd);font-size:.88rem;color:var(--txt);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.disc-body{font-size:.78rem;color:#444;line-height:1.7}
+.disc-body p{margin-bottom:.6rem}
+.disc-body p:last-child{margin-bottom:0}
+.disc-body strong{color:var(--txt);font-weight:600}
+.disc-list{margin:.4rem 0 .6rem 0;padding:0;list-style:none}
+.disc-list li{position:relative;padding-left:1rem;margin-bottom:.35rem;font-size:.78rem;color:#444;line-height:1.65}
+.disc-list li::before{content:'•';position:absolute;left:0;color:var(--crim);font-weight:700}
+
+/* ── Sources ── */
+.sourcing{margin-top:2.5rem;border-top:1px solid var(--border);padding-top:2rem}
+.sourcing>h2{font-family:var(--fd);font-size:1.1rem;color:var(--txt);margin-bottom:1rem}
+.src-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1rem}
+.src-block h3{font-family:var(--fd);font-size:.85rem;color:var(--txt);margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem}
+.src-block p{font-size:.78rem;color:#444;line-height:1.7;margin-bottom:.5rem}
+.src-block p:last-child{margin-bottom:0}
+.src-list{margin:.4rem 0 0 0;padding:0;list-style:none}
+.src-list li{position:relative;padding-left:1rem;margin-bottom:.35rem;font-size:.78rem;color:#444;line-height:1.65}
+.src-list li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:700}
+.src-list li strong{color:var(--txt);font-weight:600}
+
+/* ── Footer stamp ── */
+.about-footer{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.about-footer p{font-family:var(--fm);font-size:.55rem;color:var(--dim);letter-spacing:.1em;line-height:1.8}
+
+/* ═══ SITE NAV ═══ */
+.site-bnav{position:fixed;bottom:0;left:0;right:0;z-index:901;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid #e5e3dc;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(72px + env(safe-area-inset-bottom,0px))}
+.site-bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:72px}
+.snb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
+.snb .sbi{font-size:1.31rem;line-height:1;transition:.12s}
+.snb.act{color:var(--crim);font-weight:700}
+.snb.act .sbi{transform:scale(1.08)}
+.snb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
+.site-mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.site-mo.open{display:flex}
+.site-msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(72px + env(safe-area-inset-bottom,0px) + .8rem);animation:sitesu .22s ease}
+@keyframes sitesu{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.site-msh h3{font-family:var(--fd);font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;color:#111}
+.site-mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
+.site-mi:active{background:#f6f5f0}
+.site-mic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f6f5f0;flex-shrink:0}
+.site-ml{font-weight:600;font-size:.8rem;color:#111}
+.site-ms{font-size:.63rem;color:#888}
+</style>
+</head>
+<body>
+
+<section class="about-section" id="about">
+
+  <!-- ── Header ── -->
+  <div class="about-hdr">
+    <div class="icon">ℹ️</div>
+    <h1>About This Project</h1>
+    <div class="sub">Educational Purpose · Sources · Disclaimers</div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- ABOUT THE CREATOR                     -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="author-card">
+    <div class="author-greeting">
+      <div class="author-avatar">DM</div>
+      <div>
+        <div class="author-name">Dave Merrick</div>
+        <div class="author-meta">Creator · London, 2026</div>
+      </div>
+    </div>
+
+    <div class="author-body">
+      <p>Hi — I'm Dave, and I created <strong>EconomicCrimeHub.org</strong> entirely as a personal, independent side project.</p>
+      <p>It began as a straightforward experiment: I wanted to understand what people meant when they talked about AI-assisted coding, so I used it — together with a great deal of my own editing and structuring — to help build the site you see now. What started as a technical curiosity quickly evolved into something more substantial — a free, non-commercial resource intended to help anyone interested in economic crime get a clearer picture of how it actually works and how the world is trying to fight it.</p>
+    </div>
+
+    <!-- What's in the hub -->
+    <div class="hub-features">
+      <div class="hub-feat">
+        <div class="feat-icon">📋</div>
+        <div class="feat-title">Crime Typologies</div>
+        <div class="feat-desc">Explanations of common economic crime typologies and red-flag patterns so people can recognise what they're seeing.</div>
+      </div>
+      <div class="hub-feat">
+        <div class="feat-icon">🕵️</div>
+        <div class="feat-title">Operations Simulator</div>
+        <div class="feat-desc">A simple operations simulator to walk through realistic detection and response scenarios hands-on.</div>
+      </div>
+      <div class="hub-feat">
+        <div class="feat-icon">🔎</div>
+        <div class="feat-title">Directory</div>
+        <div class="feat-desc">A growing directory of organisations, regulators, industry bodies, and specialist firms active in the economic crime space.</div>
+      </div>
+      <div class="hub-feat">
+        <div class="feat-icon">🎬</div>
+        <div class="feat-title">The Vault</div>
+        <div class="feat-desc">A curated archive of books, documentaries, films, podcasts, reports, and media that have shaped my understanding of financial crime.</div>
+      </div>
+    </div>
+
+    <div class="author-body">
+      <p>This is not meant to be an authoritative textbook, professional training platform, or official reference. It's simply one person's collection of explanations, tools, and resources that I've found useful — shared openly in the hope that students, early-career professionals, journalists, researchers, compliance practitioners, or anyone curious about economic crime might find value here too.</p>
+    </div>
+
+    <!-- Vibe coding note -->
+    <div class="vibe-note">
+      <div class="vn-hdr">⚡ On Building This</div>
+      <p>What has surprised and inspired me most is how much I've learned and how energising the whole process has been. "Vibe coding" this site — letting ideas flow freely with AI help while shaping them into something coherent — has unlocked a ton of creativity. I now have a long list of ideas and features I plan to roll out in the coming days and weeks to make the hub even more useful and engaging.</p>
+    </div>
+
+    <!-- Connect -->
+    <div class="connect-card">
+      <div class="sig">Dave Merrick</div>
+      <div class="loc">London · 2026</div>
+      <a class="connect-btn" href="https://www.linkedin.com/in/davidmerrick/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Connect on LinkedIn
+      </a>
+      <p class="connect-sub">I'd love to hear your thoughts, suggestions, or resource recommendations.<br>If your organisation produces high-quality content related to economic crime<br>that you'd like considered for inclusion, please reach out.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DISCLAIMERS                           -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="disclaimers">
+    <div class="disclaimers-hdr">
+      <h2>⚠️ Important Disclaimers</h2>
+      <span class="badge">Please Read</span>
+    </div>
+
+    <div class="disc-block warn">
+      <div class="disc-title">⚖️ Not Professional Advice</div>
+      <div class="disc-body">
+        <p><strong>Nothing on this site constitutes legal, regulatory, compliance, financial, investment, tax, or any other form of professional advice.</strong> The content is provided for general educational and informational purposes only.</p>
+        <p>The explanations, typologies, scenarios, and resources presented here are simplified for accessibility and should not be relied upon as complete, accurate, or current statements of law, regulation, or professional practice. Laws, regulations, and enforcement priorities vary by jurisdiction and change frequently.</p>
+        <p><strong>Always seek qualified professional guidance</strong> from appropriately licensed and regulated advisors before making decisions related to compliance, legal, regulatory, or financial matters.</p>
+      </div>
+    </div>
+
+    <div class="disc-block warn">
+      <div class="disc-title">🏢 No Employer or Organisational Affiliation</div>
+      <div class="disc-body">
+        <p>EconomicCrimeHub.org is a <strong>100% personal, independent initiative</strong> by Dave Merrick. It has absolutely no connection to any employer, client, or any organisation the creator is or has been associated with — past, present, or future.</p>
+        <p>The site reflects only the creator's own views, opinions, and curation decisions. It is not endorsed by, affiliated with, representative of, or authorised by any employer, company, institution, regulatory body, or other entity.</p>
+      </div>
+    </div>
+
+    <div class="disc-block info">
+      <div class="disc-title">🎓 Educational Purpose Only</div>
+      <div class="disc-body">
+        <p>This site is a <strong>free, non-commercial educational resource</strong>. It is not a professional training platform, certification programme, textbook, or authoritative reference.</p>
+        <p>The operations simulator presents fictional scenarios using entirely invented names, entities, and situations. <strong>No real person, company, bank, trust, or institution is depicted.</strong> Any resemblance to real entities is purely coincidental. Simulator scenarios are simplified for educational purposes and do not represent the full complexity of real-world investigations.</p>
+        <p>Use the materials here as a starting point for your own research and learning — not as a substitute for formal education, accredited training, or qualified professional guidance.</p>
+      </div>
+    </div>
+
+    <div class="disc-block info">
+      <div class="disc-title">💰 Non-Commercial · No Endorsement</div>
+      <div class="disc-body">
+        <p>This site is entirely free and non-commercial. It does not generate revenue, accept advertising, offer paid services, or collect payments of any kind.</p>
+        <p>Inclusion of any organisation, company, product, service, publication, or individual in the Directory, the Vault, or elsewhere on this site <strong>does not imply endorsement, recommendation, affiliation, or any commercial relationship</strong>. Listings reflect the creator's personal curation and editorial judgement for educational purposes only.</p>
+      </div>
+    </div>
+
+    <div class="disc-block info">
+      <div class="disc-title">©️ Copyright, Trademarks &amp; Intellectual Property</div>
+      <div class="disc-body">
+        <p>All descriptions, summaries, and explanatory text on this site are <strong>original compositions</strong> written for educational purposes. No copyrighted material from any third-party source has been knowingly reproduced.</p>
+        <p>Trademarks, trade names, logos, and brand names referenced anywhere on this site (including in the Directory and the Vault) are the property of their respective owners and are used solely for identification and educational reference purposes. Their use does not imply any affiliation with or endorsement by those owners.</p>
+        <p>The site's own original content — including text, code, designs, and simulator scenarios — is © 2026 Dave Merrick unless otherwise stated.</p>
+      </div>
+    </div>
+
+    <div class="disc-block neutral">
+      <div class="disc-title">🔒 Data Protection &amp; Privacy</div>
+      <div class="disc-body">
+        <p>This site does not collect, store, or process personal data. There are no user accounts, login systems, analytics trackers, cookies (beyond those inherent to the hosting platform), or contact forms.</p>
+        <p>The operations simulator stores progress data locally in your browser (via <code style="font-family:var(--fm);font-size:.72rem;background:var(--bg);padding:1px 5px;border-radius:3px">localStorage</code>) only. This data never leaves your device, is not transmitted to any server, and can be cleared at any time through your browser settings.</p>
+        <p>If you choose to contact the creator via LinkedIn, that interaction is governed by LinkedIn's own privacy policy.</p>
+      </div>
+    </div>
+
+    <div class="disc-block neutral">
+      <div class="disc-title">🤖 AI-Assisted Creation</div>
+      <div class="disc-body">
+        <p>This site was built with the assistance of AI coding tools, with extensive human editing, structuring, review, and editorial control by the creator. AI was used to assist with code generation, layout, and drafting — not as the sole or unsupervised author of any content.</p>
+        <p>All educational content, curation decisions, editorial choices, and factual claims have been reviewed and shaped by the creator. However, given the volume of material and the nature of AI-assisted workflows, errors or inaccuracies may exist. If you identify any, please let the creator know.</p>
+      </div>
+    </div>
+
+    <div class="disc-block neutral">
+      <div class="disc-title">📌 Accuracy &amp; No Warranty</div>
+      <div class="disc-body">
+        <p>While reasonable efforts have been made to ensure the accuracy of information presented, <strong>no warranty or guarantee is given</strong> — express or implied — as to the completeness, accuracy, reliability, suitability, or currency of any content on this site.</p>
+        <p>Economic crime typologies, regulations, sanctions lists, and enforcement practices evolve rapidly. Information that was accurate at the time of writing may become outdated. Always verify current information through official and authoritative sources.</p>
+        <p>The creator accepts no liability for any loss, damage, or consequence arising from the use of, or reliance on, any information or material on this site.</p>
+      </div>
+    </div>
+
+    <div class="disc-block neutral">
+      <div class="disc-title">🔗 External Links</div>
+      <div class="disc-body">
+        <p>This site contains links to external websites, resources, and publications. These links are provided for convenience and educational reference only. The creator has no control over the content, availability, or practices of linked sites and accepts no responsibility for them.</p>
+        <p>Inclusion of a link does not imply endorsement of, or agreement with, the content of the linked resource. External links may break or change without notice.</p>
+      </div>
+    </div>
+
+    <div class="disc-block warn">
+      <div class="disc-title">📋 Regulatory Communications</div>
+      <div class="disc-body">
+        <p>This site is not a regulated communication. It has not been approved or reviewed by any financial services regulator, supervisory authority, or professional body in any jurisdiction.</p>
+        <p>Nothing on this site should be interpreted as a financial promotion, investment recommendation, or solicitation. The site does not provide, and is not intended to provide, services that would require regulatory authorisation in any jurisdiction.</p>
+        <p>The creator has taken all steps reasonably known to them to ensure the content and operation of this site comply with applicable laws, rules, and regulations concerning information sharing, copyright, data protection, and financial services communications.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SOURCING & REFERENCES                 -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="sourcing">
+    <h2>📚 Sources &amp; References</h2>
+
+    <div class="src-block">
+      <h3>📖 Typologies &amp; Educational Content</h3>
+      <p>The economic crime typologies and explanatory content on this site draw on publicly available materials from authoritative sources including:</p>
+      <ul class="src-list">
+        <li><strong>Financial Action Task Force (FATF)</strong> — Recommendations, guidance papers, mutual evaluation reports, and typology studies</li>
+        <li><strong>FinCEN</strong> (Financial Crimes Enforcement Network) — Advisories, SAR filing guidance, and AML/CFT regulations</li>
+        <li><strong>Wolfsberg Group</strong> — Correspondent banking principles, guidance on PEPs, and AML standards</li>
+        <li><strong>EU Anti-Money Laundering Directives</strong> (AMLD4, AMLD5, AMLD6) and the EU's Anti-Money Laundering Authority (AMLA) framework</li>
+        <li><strong>Basel Committee on Banking Supervision</strong> — Sound management of risks related to money laundering and financing of terrorism</li>
+        <li><strong>Transparency International</strong> — Corruption Perceptions Index and anti-corruption research</li>
+        <li><strong>ACAMS, ICA, RUSI, Chatham House</strong> and other professional and research bodies active in financial crime</li>
+      </ul>
+      <p style="margin-top:.5rem">All descriptions and explanations are original compositions by the creator. No text has been copied from these or any other sources.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>🕵️ Operations Simulator</h3>
+      <p>The simulator scenarios are entirely fictional and created for educational purposes. Case structures, red-flag patterns, and investigation workflows are inspired by publicly available typology reports and educational materials from:</p>
+      <ul class="src-list">
+        <li>FATF typology reports and case studies</li>
+        <li>FinCEN advisories and SAR Activity Review publications</li>
+        <li>Wolfsberg Group guidance on correspondent banking, PEPs, and sanctions screening</li>
+        <li>ACAMS study materials and examination preparation resources</li>
+        <li>The Basel AML Index methodology</li>
+      </ul>
+      <p style="margin-top:.5rem"><strong>All names, entities, banks, companies, trusts, and individuals in the simulator are entirely fictional.</strong> No real-world case data, confidential information, or proprietary materials from any employer or organisation have been used.</p>
+    </div>
+
+    <div class="src-block">
+      <h3>🎬 The Vault (Media Archive)</h3>
+      <p>The Vault is a curated list of publicly available books, films, documentaries, podcasts, reports, and other media. All entries are:</p>
+      <ul class="src-list">
+        <li>Publicly available publications, broadcasts, or releases</li>
+        <li>Described using original summaries written by the creator — no publisher blurbs, jacket copy, or third-party descriptions have been reproduced</li>
+        <li>Linked to their official or primary distribution sources (IMDb, Goodreads, Apple Podcasts, publisher websites, etc.)</li>
+        <li>Listed for educational reference only — inclusion does not imply endorsement of the content or affiliation with the creator, publisher, or platform</li>
+      </ul>
+    </div>
+
+    <div class="src-block">
+      <h3>🔎 Directory</h3>
+      <p>The Directory lists organisations, regulators, industry bodies, and specialist firms active in the economic crime space. All entries are based on publicly available information and:</p>
+      <ul class="src-list">
+        <li>Descriptions are original summaries — not copied from the organisations' own marketing or about pages</li>
+        <li>Inclusion is based on the creator's editorial judgement of relevance to economic crime professionals and researchers</li>
+        <li>No organisation has paid for, requested, or approved their listing</li>
+        <li>Links are provided to each organisation's official website for users to verify information independently</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Footer stamp ── -->
+  <div class="about-footer">
+    <p>EconomicCrimeHub.org · An independent, non-commercial educational resource</p>
+    <p>Created by Dave Merrick · London · © 2026</p>
+    <p style="margin-top:.3rem">Last updated: March 2026</p>
+  </div>
+
+</section>
+
+<!-- ═══ SITE NAV ═══ -->
+<nav class="site-bnav">
+<div class="site-bni">
+  <button class="snb" onclick="window.location.href='../index.html'"><span class="sbi">&#x1F3E0;</span>Home</button>
+  <button class="snb" onclick="window.location.href='../index.html#impact'"><span class="sbi">&#x1F4CA;</span>Impact</button>
+  <button class="snb" onclick="window.location.href='../index.html#reference'"><span class="sbi">&#x1F4CB;</span>Typologies</button>
+  <button class="snb" onclick="window.location.href='../simulator/index.html'"><span class="sbi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+  <button class="snb" onclick="window.location.href='../index.html#future'"><span class="sbi">&#x1F680;</span>Evolution</button>
+  <button class="snb" onclick="window.location.href='../index.html#intelligence'"><span class="sbi">&#x1F50E;</span>Directory</button>
+  <button class="snb" onclick="toggleSiteMore()"><span class="sbi">&#x2261;</span>More</button>
+</div>
+</nav>
+
+<div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
+<div class="site-msh">
+  <h3>More Sections</h3>
+  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">🎬</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">📓</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
+</div>
+</div>
+
+<script>
+function toggleSiteMore(){document.getElementById('siteMoreOverlay').classList.add('open');}
+function closeSiteMore(){document.getElementById('siteMoreOverlay').classList.remove('open');}
+</script>
+</body>
+</html>
