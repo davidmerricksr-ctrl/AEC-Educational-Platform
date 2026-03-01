@@ -107,6 +107,27 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .badge-card{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.14);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
 .badge-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.2rem;background:rgba(167,139,250,.1);flex-shrink:0}
 
+/* ── Collapsible sections ── */
+.coll-hdr{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:8px 0;user-select:none;-webkit-tap-highlight-color:transparent}
+.coll-hdr:active{opacity:.7}
+.coll-title{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.coll-right{display:flex;align-items:center;gap:8px}
+.coll-count{font-size:.56rem;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.coll-chev{font-size:.7rem;color:#4a6a8a;transition:transform .25s ease;display:inline-block;line-height:1}
+.coll.open .coll-chev{transform:rotate(90deg)}
+.coll-body{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease;opacity:0}
+.coll.open .coll-body{max-height:2000px;opacity:1}
+.coll-body-inner{padding-top:6px}
+
+/* ── Flag summary table ── */
+.fsum{border-radius:10px;background:rgba(255,77,106,.04);border:1px solid rgba(255,77,106,.1);padding:10px 12px}
+.fsum-title{font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:8px}
+.fsum-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:.64rem}
+.fsum-label{color:#8ba4c0;display:flex;align-items:center;gap:5px}
+.fsum-val{font-weight:700;min-width:18px;text-align:center;padding:1px 6px;border-radius:4px;font-size:.58rem}
+.fsum-val.hit{background:rgba(255,77,106,.12);color:#ff4d6a}
+.fsum-val.ok{background:rgba(0,230,138,.08);color:#00e68a}
+
 /* ── Role select ── */
 .role-card{border-radius:16px;padding:1.3rem;cursor:pointer;transition:.2s;border:2px solid transparent}
 .role-card:active{transform:scale(.97)}
@@ -242,8 +263,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
     </div>
   </div>
   <div class="px-5 mb-3"><div class="gc p-4">
-    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.55rem">Customer Profile</div>
-    <div id="aml-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.55rem">Customer Profile</div>
+        <div id="aml-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+      </div>
+      <div id="aml-flagsum" style="flex:0 0 auto;min-width:140px"></div>
+    </div>
   </div></div>
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Relationship Network</div>
@@ -254,8 +280,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
     </div>
   </div>
   <div class="px-5 mb-3">
-    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Transaction History</div>
-    <div id="aml-txs" class="space-y-2"></div>
+    <div class="coll" id="aml-txs-coll">
+      <div class="coll-hdr" onclick="toggleColl('aml-txs-coll')">
+        <div class="coll-title" style="color:#4a6a8a">Transaction History</div>
+        <div class="coll-right"><span class="coll-count" id="aml-txs-count" style="background:rgba(74,106,138,.1);color:#4a6a8a"></span><span class="coll-chev">▸</span></div>
+      </div>
+      <div class="coll-body"><div class="coll-body-inner"><div id="aml-txs" class="space-y-2"></div></div></div>
+    </div>
   </div>
   <div class="px-5 mb-3">
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">🚩 Red Flags</div>
@@ -285,8 +316,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
   <!-- Application summary -->
   <div class="px-5 mb-3"><div class="gc p-4">
-    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#38bdf8;margin-bottom:.55rem">Application Summary</div>
-    <div id="kyc-app" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#38bdf8;margin-bottom:.55rem">Application Summary</div>
+        <div id="kyc-app" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+      </div>
+      <div id="kyc-flagsum" style="flex:0 0 auto;min-width:140px"></div>
+    </div>
   </div></div>
   <!-- Ownership Graph -->
   <div class="px-5 mb-3">
@@ -338,8 +374,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
   <!-- Profile -->
   <div class="px-5 mb-3"><div class="gc p-4">
-    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.55rem">👤 Customer Profile</div>
-    <div id="eddi-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.55rem">👤 Customer Profile</div>
+        <div id="eddi-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+      </div>
+      <div id="eddi-flagsum" style="flex:0 0 auto;min-width:140px"></div>
+    </div>
   </div></div>
   <!-- Network -->
   <div class="px-5 mb-3">
@@ -362,13 +403,23 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div></div>
   <!-- Adverse Media -->
   <div class="px-5 mb-3">
-    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">📰 Adverse Media</div>
-    <div id="eddi-media" class="space-y-2"></div>
+    <div class="coll" id="eddi-media-coll">
+      <div class="coll-hdr" onclick="toggleColl('eddi-media-coll')">
+        <div class="coll-title" style="color:#ff4d6a">📰 Adverse Media</div>
+        <div class="coll-right"><span class="coll-count" id="eddi-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a"></span><span class="coll-chev">▸</span></div>
+      </div>
+      <div class="coll-body"><div class="coll-body-inner"><div id="eddi-media" class="space-y-2"></div></div></div>
+    </div>
   </div>
   <!-- Transactions -->
   <div class="px-5 mb-3">
-    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Recent Transaction Activity</div>
-    <div id="eddi-txs" class="space-y-2"></div>
+    <div class="coll" id="eddi-txs-coll">
+      <div class="coll-hdr" onclick="toggleColl('eddi-txs-coll')">
+        <div class="coll-title" style="color:#4a6a8a">Recent Transaction Activity</div>
+        <div class="coll-right"><span class="coll-count" id="eddi-txs-count" style="background:rgba(74,106,138,.1);color:#4a6a8a"></span><span class="coll-chev">▸</span></div>
+      </div>
+      <div class="coll-body"><div class="coll-body-inner"><div id="eddi-txs" class="space-y-2"></div></div></div>
+    </div>
   </div>
   <!-- Documents -->
   <div class="px-5 mb-3">
@@ -411,8 +462,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div>
   <!-- Entity Profile -->
   <div class="px-5 mb-3"><div class="gc p-4">
-    <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.55rem">🏢 Entity Profile</div>
-    <div id="edde-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffb833;margin-bottom:.55rem">🏢 Entity Profile</div>
+        <div id="edde-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
+      </div>
+      <div id="edde-flagsum" style="flex:0 0 auto;min-width:140px"></div>
+    </div>
   </div></div>
   <!-- Network -->
   <div class="px-5 mb-3">
@@ -435,13 +491,23 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   </div></div>
   <!-- Adverse Media -->
   <div class="px-5 mb-3">
-    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:.45rem">📰 Adverse Media</div>
-    <div id="edde-media" class="space-y-2"></div>
+    <div class="coll" id="edde-media-coll">
+      <div class="coll-hdr" onclick="toggleColl('edde-media-coll')">
+        <div class="coll-title" style="color:#ff4d6a">📰 Adverse Media</div>
+        <div class="coll-right"><span class="coll-count" id="edde-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a"></span><span class="coll-chev">▸</span></div>
+      </div>
+      <div class="coll-body"><div class="coll-body-inner"><div id="edde-media" class="space-y-2"></div></div></div>
+    </div>
   </div>
   <!-- Transactions -->
   <div class="px-5 mb-3">
-    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.45rem">Recent Transaction Activity</div>
-    <div id="edde-txs" class="space-y-2"></div>
+    <div class="coll" id="edde-txs-coll">
+      <div class="coll-hdr" onclick="toggleColl('edde-txs-coll')">
+        <div class="coll-title" style="color:#4a6a8a">Recent Transaction Activity</div>
+        <div class="coll-right"><span class="coll-count" id="edde-txs-count" style="background:rgba(74,106,138,.1);color:#4a6a8a"></span><span class="coll-chev">▸</span></div>
+      </div>
+      <div class="coll-body"><div class="coll-body-inner"><div id="edde-txs" class="space-y-2"></div></div></div>
+    </div>
   </div>
   <!-- Documents -->
   <div class="px-5 mb-3">
@@ -604,6 +670,9 @@ function openAML(c){
   renderNetworkAML(c.network);
   document.getElementById('aml-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
   document.getElementById('aml-notes').value=state.notes[c.id]||'';
+  renderFlagSummary('aml-flagsum',c.flags);
+  var txFlagged=c.transactions.filter(function(t){return t.flag;}).length;
+  setCollCount('aml-txs-count',c.transactions.length,txFlagged);
   showScreen('aml');
 }
 
@@ -674,6 +743,7 @@ function openKYC(c){
   if(c.flags.length){flagsHeader.style.display='';flagsEl.innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');}
   else{flagsHeader.style.display='none';flagsEl.innerHTML='<div class="gc-s p-3 text-center" style="font-size:.74rem;color:#00e68a">✅ No red flags identified. Standard risk profile.</div>';}
   document.getElementById('kyc-notes').value=state.notes[c.id]||'';
+  renderFlagSummary('kyc-flagsum',c.flags);
   showScreen('kyc');
 }
 
@@ -741,6 +811,10 @@ function openEDDI(c){
   renderOwnershipGraph_EDD(c.network,'eddi-net','eddi-tip','eddi');
   document.getElementById('eddi-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
   document.getElementById('eddi-notes').value=state.notes[c.id]||'';
+  renderFlagSummary('eddi-flagsum',c.flags);
+  setCollCount('eddi-media-count',c.adverseMedia.length,c.adverseMedia.filter(function(m){return m.flag;}).length);
+  var txFlagged=c.transactions.filter(function(t){return t.flag;}).length;
+  setCollCount('eddi-txs-count',c.transactions.length,txFlagged);
   showScreen('eddi');
 }
 
@@ -773,10 +847,49 @@ function openEDDE(c){
   renderOwnershipGraph_EDD(c.network,'edde-net','edde-tip','edde');
   document.getElementById('edde-flags').innerHTML=c.flags.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
   document.getElementById('edde-notes').value=state.notes[c.id]||'';
+  renderFlagSummary('edde-flagsum',c.flags);
+  setCollCount('edde-media-count',c.adverseMedia.length,c.adverseMedia.filter(function(m){return m.flag;}).length);
+  var txFlagged=c.transactions.filter(function(t){return t.flag;}).length;
+  setCollCount('edde-txs-count',c.transactions.length,txFlagged);
   showScreen('edde');
 }
 
 // ═══ SHARED EDD RENDERERS ═══
+// ═══ COLLAPSIBLE TOGGLE ═══
+function toggleColl(id){var el=document.getElementById(id);if(el)el.classList.toggle('open');}
+function setCollCount(id,total,flagged){
+  var el=document.getElementById(id);if(!el)return;
+  el.textContent=flagged>0?flagged+' flagged / '+total:total+' items';
+}
+
+// ═══ FLAG SUMMARY TABLE ═══
+function renderFlagSummary(elId,flags){
+  var cats=[
+    {icon:'🌍',label:'Jurisdiction',keys:['jurisdiction','fatf','grey-list','grey list','high-risk','offshore','panama','uae','cyprus','lebanon','bvi','seychelles']},
+    {icon:'💰',label:'Source of Funds',keys:['source of','income','salary','wealth','mismatch','declared','earnings','revenue','turnover']},
+    {icon:'📄',label:'Documentation',keys:['document','missing','outdated','not provided','no invoice','unverifiable','no shipping','not declared']},
+    {icon:'🏢',label:'Shell / Structure',keys:['shell','nominee','bearer','no employees','no web','single-member','circular','loan-back','funnel']},
+    {icon:'⚠️',label:'Sanctions',keys:['sanction','ofac','sdn','designated','irgc','proximity']},
+    {icon:'👤',label:'PEP',keys:['pep','politically exposed','minister','government','corruption','procurement']},
+    {icon:'📊',label:'Volume / Pattern',keys:['structuring','smurfing','threshold','volume','increase','rapid','same-day','multiple','p2p','mule']},
+    {icon:'📰',label:'Adverse Media',keys:['adverse','media','investigation','leaked','press','report','nca']}
+  ];
+  var html='<div class="fsum"><div class="fsum-title">🚩 Flag Summary</div>';
+  var anyHit=false;
+  cats.forEach(function(cat){
+    var count=0;
+    flags.forEach(function(f){
+      var fl=f.toLowerCase();
+      for(var i=0;i<cat.keys.length;i++){if(fl.indexOf(cat.keys[i])!==-1){count++;break;}}
+    });
+    if(count>0)anyHit=true;
+    html+='<div class="fsum-row"><span class="fsum-label">'+cat.icon+' '+cat.label+'</span><span class="fsum-val '+(count>0?'hit':'ok')+'">'+count+'</span></div>';
+  });
+  html+='<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,77,106,.08)"><div class="fsum-row"><span class="fsum-label" style="font-weight:700;color:#fff">Total Flags</span><span class="fsum-val hit" style="font-size:.62rem">'+flags.length+'</span></div></div>';
+  html+='</div>';
+  var el=document.getElementById(elId);if(el){el.innerHTML=flags.length?html:'';}
+}
+
 function renderSOW(elId,sow){
   document.getElementById(elId).innerHTML=
     '<div style="margin-bottom:8px"><div style="font-size:.55rem;font-weight:700;color:#4a6a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Declared</div><div style="color:#8ba4c0;line-height:1.5">'+sow.declared+'</div></div>'
