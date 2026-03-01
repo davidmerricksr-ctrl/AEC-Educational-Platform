@@ -210,14 +210,12 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 <button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
 </div></nav>
 
-<div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
-<div class="site-msh">
-  <h3>More Sections</h3>
-  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">&#x25C6;</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">&#x1F4D3;</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
+<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
+<div class="msh">
+<h3>More Sections</h3>
+<a class="mi" href="index.html#competencies"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></a>
+<a class="mi" href="index.html#glossary"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></a>
+<a class="mi" href="index.html#about"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></a>
 </div>
 </div>
 
