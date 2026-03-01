@@ -218,15 +218,88 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 </div>
 </div>
 
-<!-- ══ DATA ══ -->
-<script src="vault-config.js"></script>
-<script src="vault-films.js"></script>
-<script src="vault-books.js"></script>
-<script src="vault-podcasts.js"></script>
-<script src="vault-reports.js"></script>
-
-<!-- ══ ENGINE ══ -->
+<!-- ══ DATA + ENGINE ══ -->
 <script>
+/* ═══ Configuration ═══ */
+var mediaItems = [];
+
+var mediaShelves = [
+  { id: "recent",    title: "Fresh Intelligence \u2014 Feb/Mar 2026",        icon: "\u26a1",       subtitle: "Just declassified" },
+  { id: "films",     title: "Films & Television",                           icon: "\ud83c\udfac", subtitle: "On screen" },
+  { id: "books",     title: "Landmark Books on Economic Crime",             icon: "\ud83d\udcda", subtitle: "Required reading" },
+  { id: "podcasts",  title: "Podcast Deep Dives",                           icon: "\ud83c\udfa7", subtitle: "Listen in" },
+  { id: "reports",   title: "Reports & Analysis",                           icon: "\ud83d\udcca", subtitle: "Intelligence briefs" }
+];
+
+var mediaThemes = [
+  "Money Laundering", "Fraud", "Crypto Crime", "Wall Street", "Sanctions",
+  "Corporate Fraud", "Organised Crime", "Cyber Crime", "Regulation", "Offshore",
+  "Kleptocracy", "Investigation", "Banking", "Terrorism Financing", "Whistleblowing"
+];
+
+var mediaTypeLabels = {
+  film: "Film", tv: "TV Series", documentary: "Documentary",
+  book: "Book", podcast: "Podcast", "podcast-series": "Podcast Series", report: "Report"
+};
+
+var mediaTypeIcons = {
+  film: "\ud83c\udfac", tv: "\ud83d\udcfa", documentary: "\ud83c\udfa5",
+  book: "\ud83d\udcd6", podcast: "\ud83c\udfa7", "podcast-series": "\ud83c\udf99\ufe0f", report: "\ud83d\udcca"
+};
+
+var typeGroups = {
+  all:      { label: "All Dossiers", types: null },
+  films:    { label: "Films & TV",   types: ["film", "tv", "documentary"] },
+  books:    { label: "Books",        types: ["book"] },
+  podcasts: { label: "Podcasts",     types: ["podcast", "podcast-series"] },
+  reports:  { label: "Reports",      types: ["report"] }
+};
+
+/* ═══ Films & Television ═══ */
+mediaItems.push(
+{id:101,title:"The Big Short",type:"film",year:2015,creator:"Dir. Adam McKay",desc:"The true story of the traders who predicted and profited from the 2008 financial crisis, exposing systemic fraud in mortgage-backed securities.",themes:["Wall Street","Corporate Fraud","Banking"],shelves:["films"],url:"https://www.imdb.com/title/tt1596363/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
+{id:102,title:"The Wolf of Wall Street",type:"film",year:2013,creator:"Dir. Martin Scorsese",desc:"Jordan Belfort\u2019s rise and fall through securities fraud, money laundering, and corruption on Wall Street.",themes:["Wall Street","Money Laundering","Fraud"],shelves:["films"],url:"https://www.imdb.com/title/tt0993846/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0d0d0d,#1a0a0a,#2d1010)"},
+{id:103,title:"The Laundromat",type:"film",year:2019,creator:"Dir. Steven Soderbergh",desc:"Based on the Panama Papers scandal, exploring how shell companies and offshore structures enable the global elite to hide wealth.",themes:["Money Laundering","Offshore","Corporate Fraud"],shelves:["films"],url:"https://www.imdb.com/title/tt5865326/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
+{id:104,title:"Ozark",type:"tv",year:2017,creator:"Netflix \u00b7 2017\u20132022",desc:"A financial planner launders money for a Mexican drug cartel in Missouri\u2019s Lake of the Ozarks. One of the most detailed fictional portrayals of placement, layering, and integration.",themes:["Money Laundering","Organised Crime"],shelves:["films"],url:"https://www.imdb.com/title/tt5071412/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0b1622,#162447,#1f4068)"},
+{id:105,title:"McMafia",type:"tv",year:2018,creator:"BBC/AMC \u00b7 2018",desc:"A Russian-British banker is drawn into the world of organised crime. Highlights trade-based money laundering, hawala networks, and the role of professional enablers.",themes:["Money Laundering","Organised Crime","Sanctions"],shelves:["films"],url:"https://www.imdb.com/title/tt6271080/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#1a0000,#2d0a0a,#0d1117)"},
+{id:106,title:"Bad Blood: The Final Chapter",type:"tv",year:2022,creator:"TV Series \u00b7 2022",desc:"Based on the true story of the Rizzuto crime family in Montreal, showing how organised crime infiltrates legitimate business through money laundering.",themes:["Organised Crime","Money Laundering"],shelves:["films"],url:"https://www.imdb.com/title/tt6423776/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#2d1515)"},
+{id:107,title:"Dirty Money",type:"documentary",year:2018,creator:"Netflix \u00b7 2018\u20132020",desc:"Documentary series exploring corporate fraud, corruption, and financial crime. Each episode covers a different scandal \u2014 from VW emissions fraud to payday lending empires.",themes:["Corporate Fraud","Regulation","Banking"],shelves:["films"],url:"https://www.imdb.com/title/tt7889220/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#0a0a0a,#1a1a0a,#2d2d0a)"}
+);
+
+/* ═══ Books ═══ */
+mediaItems.push(
+{id:201,title:"Moneyland",type:"book",year:2018,creator:"Oliver Bullough",desc:"How the world\u2019s ultra-rich and corrupt exploit offshore havens, anonymous companies, and complicit professionals to hide their stolen wealth.",themes:["Money Laundering","Offshore","Kleptocracy"],shelves:["books"],url:"https://www.goodreads.com/book/show/36099412-moneyland",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a0a2e,#16213e,#0f3460)"},
+{id:202,title:"Tracers in the Dark",type:"book",year:2022,creator:"Andy Greenberg",desc:"The true story of how a small team of investigators developed blockchain forensics to bring down the world\u2019s biggest darknet markets and crypto launderers.",themes:["Crypto Crime","Cyber Crime","Investigation"],shelves:["books"],url:"https://www.goodreads.com/book/show/60462182-tracers-in-the-dark",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0d1117,#161b22,#21262d)"},
+{id:203,title:"Kleptopia",type:"book",year:2020,creator:"Tom Burgis",desc:"How dirty money is conquering the world. Traces the flows of corrupt cash from Central Asia through the City of London and into Western democracies.",themes:["Kleptocracy","Money Laundering","Offshore"],shelves:["books"],url:"https://www.goodreads.com/book/show/49114729-kleptopia",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0a0a1a,#1a0a2e,#2d0a3e)"},
+{id:204,title:"Billion Dollar Whale",type:"book",year:2018,creator:"Tom Wright & Bradley Hope",desc:"The incredible true story of 1MDB \u2014 how one young man stole billions from Malaysia\u2019s sovereign wealth fund.",themes:["Fraud","Money Laundering","Kleptocracy"],shelves:["books"],url:"https://www.goodreads.com/book/show/38743564-billion-dollar-whale",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a1a0a,#2d2d0a,#3d3d0a)"},
+{id:205,title:"Butler to the World",type:"book",year:2022,creator:"Oliver Bullough",desc:"How Britain became the servant of corrupt wealth \u2014 from kleptocrats parking dirty money in London property to the army of lawyers and fixers who make it possible.",themes:["Money Laundering","Offshore","Kleptocracy","Regulation"],shelves:["books"],url:"https://www.goodreads.com/book/show/58950859-butler-to-the-world",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#0d1117,#1a0a0a,#2d1515)"},
+{id:206,title:"The Spider Network",type:"book",year:2017,creator:"David Enrich",desc:"The true story of Tom Hayes and the LIBOR rigging scandal \u2014 how a small group of traders manipulated the world\u2019s most important interest rate.",themes:["Wall Street","Banking","Corporate Fraud"],shelves:["books"],url:"https://www.goodreads.com/book/show/30755418-the-spider-network",srcLabel:"Goodreads",gradient:"linear-gradient(135deg,#1a1a2e,#0a0a1a,#16213e)"}
+);
+
+/* ═══ Podcasts ═══ */
+mediaItems.push(
+{id:301,title:"Financial Crime Weekly Ep 228 \u2013 Global Sanctions & Iran Shadow Fleet",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Global sanctions roundup, US Iran shadow fleet penalties, UK TI report on Russia trade, SFO UWO use and Harlequin confiscation.",themes:["Sanctions","Money Laundering","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-episode-228/id1526719222?i=1000752296226",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
+{id:302,title:"Financial Crime Weekly Ep 227 \u2013 2025 Corruption Perceptions Index",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International\u2019s 2025 Corruption Perceptions Index and the global decline in corruption controls.",themes:["Regulation","Kleptocracy"],shelves:["recent","podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast/ep/502f7fb3-f19a-47de-8829-5852ff8611e6",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
+{id:303,title:"Financial Crime Weekly Ep 226 \u2013 INTERPOL, CJNG Timeshare Fraud & RSF Sanctions",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"INTERPOL enforcement push, US Treasury targeting CJNG timeshare fraud network, and Sudanese RSF sanctions.",themes:["Sanctions","Fraud","Organised Crime"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/pt/podcast/financial-crime-weekly-episode-226/id1526719222?i=1000750861262",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#0d1117,#16213e)"},
+{id:304,title:"Financial Crime Weekly Ep 225 \u2013 Insider Trading & OECD Bribery Reform",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Recent insider trading convictions and OECD recommendations for foreign bribery reform.",themes:["Wall Street","Corporate Fraud","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-podcast/id1526719222",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#16213e,#1a1a2e,#0f3460)"},
+{id:305,title:"Financial Crime Weekly Ep 223 \u2013 CPI Warnings on Democracy Decay",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International\u2019s 2025 CPI warnings on democracy decay and weakening anti-corruption frameworks.",themes:["Regulation","Kleptocracy"],shelves:["recent","podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a1a2e)"},
+{id:306,title:"Financial Crime Weekly \u2013 2026 Horizon Scan Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Localization and divergence in global FinCrime regulation, AMLA rollout, US CTA compliance, and UK Failure to Prevent Fraud Act.",themes:["Regulation","Fraud","Money Laundering"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-special-episode-2026-horizon-scan/id1526719222?i=1000743401918",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
+{id:307,title:"Financial Crime Weekly \u2013 Crypto Regulation & Financial Crime Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"MiCA EU Fortress, UK promotions regime, US stablecoin clarity, chain-hopping and DeFi laundering risks.",themes:["Crypto Crime","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/dz/podcast/financial-crime-weekly-special-edition-crypto-regulation/id1526719222?i=1000743678466&l=ar",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a0a2e,#161b22)"},
+{id:308,title:"Financial Crime Matters \u2013 Countering Canada\u2019s Drug Trade",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Inspector Nick Souccar (RCMP) on border security, fentanyl precursors, and fentanyl czar efforts.",themes:["Money Laundering","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/countering-canadas-deadly-drug-trade-with-nick-souccar/id1456666158?i=1000741393205",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d1117,#0f3460)"},
+{id:309,title:"Financial Crime Matters \u2013 Big Banks, Stablecoins & Digital Assets",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Ned Conway on how major banks view stablecoins, digital asset due diligence, and modernization.",themes:["Crypto Crime","Banking","Regulation"],shelves:["podcasts"],url:"https://open.spotify.com/episode/11Xvq39WXtqvL6ODRJyoNm",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#16213e,#0d1117,#1a0a2e)"},
+{id:310,title:"The Dark Money Files \u2013 Crime on the High Street Part 2",type:"podcast",year:2026,creator:"Graham Barrow",desc:"BBC investigation into illicit cigarettes and vapes, modern slavery, tax evasion, corruption and laundering on the high street.",themes:["Money Laundering","Investigation","Organised Crime"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/in/podcast/crime-on-the-high-street-part-two/id1448635132?i=1000744446308",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a2e,#16213e)"},
+{id:311,title:"The Dark Money Files \u2013 Crime on the High Street Part 1",type:"podcast",year:2025,creator:"Graham Barrow",desc:"BBC high-street crime and money laundering probe \u2014 part one of the investigative series.",themes:["Money Laundering","Investigation"],shelves:["podcasts"],url:"https://open.spotify.com/show/3KBjasejvrGSKriVFmCigx",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#0f3460)"},
+{id:312,title:"The Hidden Third",type:"podcast-series",year:2025,creator:"Mariana van Zeller",desc:"Ongoing episodes exploring underground markets, scams and kleptocracy from National Geographic journalist Mariana van Zeller.",themes:["Organised Crime","Kleptocracy","Fraud"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/the-hidden-third/id1845989117",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#161b22,#1a1a2e,#0d1117)"},
+{id:313,title:"Bribe, Swindle or Steal",type:"podcast-series",year:2025,creator:"TRACE International",desc:"Weekly episodes on bribery, fraud and sanctions evasion from the global anti-bribery organisation TRACE.",themes:["Corporate Fraud","Sanctions","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/bribe-swindle-or-steal/id1240837890",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0f3460,#16213e,#1a1a2e)"},
+{id:314,title:"Dirty Money Moves: Women in White Collar Crime",type:"podcast-series",year:2025,creator:"Dirty Money Moves",desc:"Episodes profiling female financial criminals, fraud schemes and the stories behind them.",themes:["Fraud","Corporate Fraud","Investigation"],shelves:["podcasts"],url:"https://podcasts.apple.com/ca/podcast/dirty-money-moves-women-in-white-collar-crime/id1619521092",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#1a1a2e,#0d1117)"},
+{id:315,title:"The Ponzi Playbook",type:"podcast-series",year:2025,creator:"The Ponzi Playbook",desc:"Ongoing episodes dissecting Ponzi schemes, investment fraud and victim recovery efforts.",themes:["Fraud","Wall Street","Investigation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/the-ponzi-playbook/id1684528129",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#0f3460,#1a1a2e)"}
+);
+
+/* ═══ Reports & Analysis ═══ */
+mediaItems.push(
+{id:402,title:"2026 Crypto Crime Report",type:"report",year:2026,creator:"TRM Labs",desc:"Data-driven analysis identifying record $158 billion in illicit crypto flows in 2025 \u2014 a 145% surge. Covers sanctions evasion, nation-state actors, pig butchering scams, ransomware, and industrialised money laundering.",themes:["Crypto Crime","Fraud","Money Laundering"],shelves:["recent","reports"],url:"https://www.trmlabs.com/reports-and-whitepapers/2026-crypto-crime-report",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
+{id:403,title:"2026 Global AFC Threats Report",type:"report",year:2026,creator:"ACAMS",desc:"Scams targeting individuals ranked as the highest current financial crime risk globally. 84% of respondents focus on fraud, 79% cite sanctions evasion. Nearly 1,400 AFC professionals across 200+ jurisdictions surveyed.",themes:["Fraud","Regulation","Money Laundering"],shelves:["recent","reports"],url:"https://www.acams.org/en/opinion/how-ai-and-fraud-are-reshaping-afc-inside-acams-global-threats-report-2026",srcLabel:"ACAMS",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"}
+);
 var activeType="all",activeTheme=null,searchQuery="";
 
 /* ── Filters ── */
