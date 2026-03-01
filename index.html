@@ -229,6 +229,9 @@ a{color:var(--navy);text-decoration:none}
 .id-card .idc-attr{font-size:.48rem;color:var(--mute);line-height:1.35;font-style:italic}
 .id-card .idc-arrow{position:absolute;top:.9rem;right:.9rem;font-size:.55rem;color:var(--mute)}
 .id-none{text-align:center;padding:2rem 1rem;color:var(--mute);font-size:.82rem}
+.id-cat-hdr{font-family:var(--fd);font-size:.82rem;font-weight:700;color:var(--crim);text-transform:uppercase;letter-spacing:.05em;padding:.7rem 0 .3rem;margin-top:.5rem;border-bottom:1.5px solid var(--line);margin-bottom:.55rem}
+.id-cat-hdr:first-child{margin-top:0}
+.id-cat-count{font-family:var(--fb);font-size:.6rem;font-weight:500;color:var(--mute);text-transform:none;letter-spacing:0}
 /* Directory modal */
 .idm-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem}
 .idm-icon{font-size:1.5rem;flex-shrink:0}
@@ -270,7 +273,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb" data-pg="explorer" onclick="go('explorer')"><span class="bi">&#x1F5FA;&#xFE0F;</span>Explorer</button>
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Reference</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
-<button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Intel</button>
+<button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
 <button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
 </div></nav>
@@ -279,9 +282,9 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <h3>More Sections</h3>
 <div class="mi" onclick="go('competencies');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>
 <div class="mi" onclick="go('glossary');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>
-<div class="mi" onclick="go('orgs');closeMore()"><div class="ic">&#x1F3DB;&#xFE0F;</div><div><div class="ml">Organisations</div><div class="ms">Key bodies in economic crime</div></div></div>
+
 <div class="mi" onclick="go('future');closeMore()"><div class="ic">&#x1F680;</div><div><div class="ml">Future</div><div class="ms">Emerging technologies</div></div></div>
-<div class="mi" onclick="go('resources');closeMore()"><div class="ic">&#x1F4DA;</div><div><div class="ml">Resources</div><div class="ms">Further study</div></div></div>
+
 <div class="mi" onclick="go('about');closeMore()"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>
 </div>
 </div>
@@ -366,12 +369,13 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
 <div class="pi">
 <div class="sec-hdr">
-<div class="se">Intelligence Ecosystem</div>
-<div class="st">Economic Crime Intelligence Directory</div>
-<div class="sd">Independent educational directory of organisations producing official threat assessments, typologies, SAR intelligence and reports. All content is neutral, paraphrased, and not endorsed by any listed organisation.</div>
+<div class="se">Intelligence &amp; Resources</div>
+<div class="st">Economic Crime Directory</div>
+<div class="sd">Independent educational directory of intelligence agencies, industry bodies, professional associations, and key frameworks shaping the fight against economic crime. Search, filter, and tap any entry for details.</div>
 </div>
 <div class="id-disclaimer">⚠ This is an independent educational resource. All descriptions are original neutral paraphrases. This directory is not endorsed by, affiliated with, or sponsored by any listed organisation.</div>
-<div class="id-sbar"><input type="text" id="idSearch" placeholder="Search organisations…" oninput="filterIntelDir()"></div>
+<div class="id-sbar"><input type="text" id="idSearch" placeholder="Search organisations, resources, frameworks…" oninput="filterIntelDir()"></div>
+<div class="id-fgroup"><div class="id-flabel">Category</div><div class="id-filters" id="idFiltCat"></div></div>
 <div class="id-fgroup"><div class="id-flabel">Geography</div><div class="id-filters" id="idFiltGeo"></div></div>
 <div class="id-fgroup"><div class="id-flabel">Type</div><div class="id-filters" id="idFiltType"></div></div>
 <div class="id-fgroup"><div class="id-flabel">Focus Area</div><div class="id-filters" id="idFiltTheme"></div></div>
@@ -411,18 +415,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 </div>
 </div>
 
-<!-- ORGANISATIONS -->
-<div class="page" id="orgs">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Industry Bodies</div>
-<div class="st">Key Organisations</div>
-<div class="sd">The global network of bodies working to prevent and combat economic crime.</div>
-</div>
-<div id="orgsGrid"></div>
-</div>
-</div>
+
 
 <!-- FUTURE -->
 <div class="page" id="future">
@@ -451,18 +444,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 </div>
 </div>
 
-<!-- RESOURCES -->
-<div class="page" id="resources">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Learn More</div>
-<div class="st">Key Resources</div>
-<div class="sd">Authoritative sources for further study and professional development.</div>
-</div>
-<div id="resGrid"></div>
-</div>
-</div>
+
 
 <!-- ABOUT -->
 <div class="page" id="about">
@@ -508,10 +490,8 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <script src="data/flows.js"></script>
 <script src="data/typologies.js"></script>
 <script src="data/impact.js"></script>
-<script src="data/organisations.js"></script>
 <script src="data/future.js"></script>
 <script src="data/popculture.js"></script>
-<script src="data/resources.js"></script>
 <script src="data/glossary.js"></script>
 <script src="data/intel-directory.js"></script>
 
@@ -636,23 +616,7 @@ function filterGlossary(){
 }
 renderGlossary(sortedGlossary);
 
-/* Organisations */
-(function(){
-    var types=[];var grouped={};
-    organisations.forEach(function(o){
-        if(!grouped[o.type]){grouped[o.type]=[];types.push(o.type);}
-        grouped[o.type].push(o);
-    });
-    var h='';
-    types.forEach(function(t){
-        h+='<div class="org-group"><div class="org-group-hdr">'+t+'</div>';
-        grouped[t].forEach(function(o){
-            h+='<a href="'+o.url+'" target="_blank" class="ocard"><div class="oi" style="background:'+o.bg+'">'+o.icon+'</div><h3>'+o.name+'</h3><p>'+o.desc+'</p><span class="otag '+o.cls+'">'+o.tag+'</span></a>';
-        });
-        h+='</div>';
-    });
-    document.getElementById('orgsGrid').innerHTML=h;
-})();
+
 
 /* Future */
 document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p></div>'}).join('');
@@ -660,17 +624,18 @@ document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '
 /* Pop Culture */
 document.getElementById('pcGrid').innerHTML=popCulture.map(function(p){return '<div class="pcard"><div class="pbadge">'+p.icon+'</div><div><h3>'+p.title+'</h3><div class="pmeta">'+p.meta+'</div><p>'+p.desc+'</p><span class="ptag '+p.cls+'">'+p.tag+'</span></div></div>'}).join('');
 
-/* Resources */
-document.getElementById('resGrid').innerHTML=resources.map(function(r){return '<div class="rcard"><h3>'+r.icon+' '+r.title+'</h3><p>'+r.desc+'</p><a href="'+r.url+'" target="_blank">'+r.url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'')+" \u2192</a></div>"}).join('');
+
 
 /* ===== INTELLIGENCE DIRECTORY ===== */
-var idFilters={geo:[],type:[],theme:[]};
+var idFilters={cat:[],geo:[],type:[],theme:[]};
+var idCats=["Intelligence & Law Enforcement","Industry Body & Standards","Key Resource & Framework"];
 var idGeos=["UK National","UK Regional","European","Global/International"];
 var idTypes=["Law Enforcement & Intelligence","Financial Intelligence Unit (FIU)","Regulator","Public-Private Partnership","NGO & Think Tank","Standards Body","Professional Association"];
 var idThemes=["Money Laundering","Fraud & Organised Crime","Bribery & Corruption","Sanctions Evasion","Asset Recovery","Emerging Threats (Crypto/AI)"];
 
 function renderIdFilters(){
-    document.getElementById('idFiltGeo').innerHTML=idGeos.map(function(g){return '<button class="id-fbtn'+(idFilters.geo.indexOf(g)>-1?' act':'')+'" onclick="toggleIdFilter(\'geo\',\''+g+'\')">'+g+'</button>'}).join('')+'<button class="id-clearall" onclick="clearIdFilters()">Clear All</button>';
+    document.getElementById('idFiltCat').innerHTML=idCats.map(function(c){return '<button class="id-fbtn'+(idFilters.cat.indexOf(c)>-1?' act':'')+'" onclick="toggleIdFilter(\'cat\',this.textContent)">'+c+'</button>'}).join('')+'<button class="id-clearall" onclick="clearIdFilters()">Clear All</button>';
+    document.getElementById('idFiltGeo').innerHTML=idGeos.map(function(g){return '<button class="id-fbtn'+(idFilters.geo.indexOf(g)>-1?' act':'')+'" onclick="toggleIdFilter(\'geo\',\''+g+'\')">'+g+'</button>'}).join('');
     document.getElementById('idFiltType').innerHTML=idTypes.map(function(t){return '<button class="id-fbtn'+(idFilters.type.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'type\',this.textContent)">'+t+'</button>'}).join('');
     document.getElementById('idFiltTheme').innerHTML=idThemes.map(function(t){return '<button class="id-fbtn'+(idFilters.theme.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'theme\',this.textContent)">'+t+'</button>'}).join('');
 }
@@ -684,7 +649,7 @@ function toggleIdFilter(cat,val){
 }
 
 function clearIdFilters(){
-    idFilters={geo:[],type:[],theme:[]};
+    idFilters={cat:[],geo:[],type:[],theme:[]};
     document.getElementById('idSearch').value='';
     renderIdFilters();
     filterIntelDir();
@@ -693,32 +658,45 @@ function clearIdFilters(){
 function filterIntelDir(){
     var q=(document.getElementById('idSearch').value||'').trim().toLowerCase();
     var results=intelligenceOrgs.filter(function(o){
-        if(q&&o.name.toLowerCase().indexOf(q)===-1&&o.acronym.toLowerCase().indexOf(q)===-1&&o.shortDesc.toLowerCase().indexOf(q)===-1&&o.themes.join(' ').toLowerCase().indexOf(q)===-1) return false;
+        if(q&&o.name.toLowerCase().indexOf(q)===-1&&o.acronym.toLowerCase().indexOf(q)===-1&&o.shortDesc.toLowerCase().indexOf(q)===-1&&o.themes.join(' ').toLowerCase().indexOf(q)===-1&&(o.category||'').toLowerCase().indexOf(q)===-1) return false;
+        if(idFilters.cat.length&&idFilters.cat.indexOf(o.category)===-1) return false;
         if(idFilters.geo.length&&idFilters.geo.indexOf(o.geography)===-1) return false;
         if(idFilters.type.length&&idFilters.type.indexOf(o.type)===-1) return false;
         if(idFilters.theme.length){var match=false;idFilters.theme.forEach(function(t){if(o.themes.indexOf(t)>-1) match=true});if(!match) return false;}
         return true;
     });
-    document.getElementById('idCount').innerHTML='Showing <b>'+results.length+'</b> of '+intelligenceOrgs.length+' organisations (independent educational summaries)';
-    if(!results.length){document.getElementById('idGrid').innerHTML='<div class="id-none">No organisations match your filters. Try adjusting your search or clearing filters.</div>';return;}
-    document.getElementById('idGrid').innerHTML=results.map(function(o,i){
-        var origIdx=intelligenceOrgs.indexOf(o);
-        var topRes=o.keyResources.slice(0,2);
-        return '<div class="id-card" onclick="openIdModal('+origIdx+')">'+
-            '<span class="idc-arrow">\u2192</span>'+
-            '<span class="idc-icon">'+o.icon+'</span>'+
-            '<div class="idc-name">'+o.name+'</div>'+
-            '<div class="idc-acr">'+o.acronym+'</div>'+
-            '<div class="idc-desc">'+o.shortDesc+'</div>'+
-            '<div class="idc-tags">'+
-                '<span class="idc-tag geo">'+o.geography+'</span>'+
-                '<span class="idc-tag typ">'+o.type+'</span>'+
-                o.themes.slice(0,3).map(function(t){return '<span class="idc-tag thm">'+t+'</span>'}).join('')+
-            '</div>'+
-            '<div class="idc-res">'+topRes.map(function(r){return '<a href="'+r.url+'" target="_blank" onclick="event.stopPropagation()">'+r.title+'</a>'}).join('')+'</div>'+
-            '<div class="idc-attr">'+o.attributionText+'</div>'+
-        '</div>';
-    }).join('');
+    document.getElementById('idCount').innerHTML='Showing <b>'+results.length+'</b> of '+intelligenceOrgs.length+' entries (independent educational summaries)';
+    if(!results.length){document.getElementById('idGrid').innerHTML='<div class="id-none">No entries match your filters. Try adjusting your search or clearing filters.</div>';return;}
+    /* Group by category */
+    var cats=[];var grouped={};
+    results.forEach(function(o){
+        var c=o.category||'Other';
+        if(!grouped[c]){grouped[c]=[];cats.push(c);}
+        grouped[c].push(o);
+    });
+    var html='';
+    cats.forEach(function(cat){
+        html+='<div class="id-cat-hdr">'+cat+' <span class="id-cat-count">('+grouped[cat].length+')</span></div>';
+        grouped[cat].forEach(function(o){
+            var origIdx=intelligenceOrgs.indexOf(o);
+            var topRes=o.keyResources.slice(0,2);
+            html+='<div class="id-card" onclick="openIdModal('+origIdx+')">'+
+                '<span class="idc-arrow">\u2192</span>'+
+                '<span class="idc-icon">'+o.icon+'</span>'+
+                '<div class="idc-name">'+o.name+'</div>'+
+                '<div class="idc-acr">'+o.acronym+'</div>'+
+                '<div class="idc-desc">'+o.shortDesc+'</div>'+
+                '<div class="idc-tags">'+
+                    '<span class="idc-tag geo">'+o.geography+'</span>'+
+                    '<span class="idc-tag typ">'+o.type+'</span>'+
+                    o.themes.slice(0,3).map(function(t){return '<span class="idc-tag thm">'+t+'</span>'}).join('')+
+                '</div>'+
+                '<div class="idc-res">'+topRes.map(function(r){return '<a href="'+r.url+'" target="_blank" onclick="event.stopPropagation()">'+r.title+'</a>'}).join('')+'</div>'+
+                '<div class="idc-attr">'+o.attributionText+'</div>'+
+            '</div>';
+        });
+    });
+    document.getElementById('idGrid').innerHTML=html;
 }
 
 function openIdModal(idx){
@@ -726,6 +704,7 @@ function openIdModal(idx){
     var h='';
     h+='<div class="idm-head"><span class="idm-icon">'+o.icon+'</span><h3>'+o.name+'</h3></div>';
     h+='<div class="idm-acr">'+o.acronym+' \u00b7 '+o.geography+' \u00b7 '+o.type+'</div>';
+    if(o.category) h+='<div style="margin-bottom:.45rem"><span class="idc-tag" style="background:var(--crim-bg);color:var(--crim);font-size:.5rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.12rem .4rem;border-radius:3px">'+o.category+'</span></div>';
     h+='<div class="idm-section"><div class="idm-label">Overview (Independent Educational Summary)</div><div class="idm-text">'+o.longDesc+'</div></div>';
     h+='<div class="idm-why"><div class="idm-label">\ud83c\udf93 Why This Matters for Learners</div><div class="idm-text">'+o.whyMatters+'</div></div>';
     h+='<div class="idm-resources"><div class="idm-label">Key Official Resources</div>';
