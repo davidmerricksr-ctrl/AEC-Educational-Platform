@@ -263,8 +263,8 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <h3>More Sections</h3>
 <div class="mi" onclick="go('competencies');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>
 <div class="mi" onclick="go('glossary');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>
-<div class="mi" onclick="go('about');closeMore()"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>
-</div>
+<div class="mi" onclick="window.location.href='journey/index.html'"><div class="ic">📓</div><div><div class="ml">Building Journey</div><div class="ms">AI interview journal</div></div></div>
+<div class="mi" onclick="window.location.href='about/index.html'"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div></div>
 </div>
 
 <!-- HOME -->
@@ -408,38 +408,16 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 
 
 <!-- ABOUT -->
+<!-- ABOUT (now standalone at about/index.html) -->
 <div class="page" id="about">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
+<div class="pi" style="text-align:center;padding-top:3rem">
 <div class="se">About</div>
-<div class="st">Educational Purpose</div>
-<div class="sd">An independent, non-commercial resource for learning about economic crime.</div>
-</div>
-<div class="atext">
-<p>This platform brings together educational content from leading organisations and US government public domain resources to help students, researchers, and professionals understand the landscape of financial crime.</p>
-<p>All content is sourced from publicly available materials — including US government publications (public domain under 17 U.S.C. § 105) and UK public interest resources.</p>
-</div>
-<div class="abox warn">
-<h3>Educational Use Only</h3>
-<p>This platform is strictly non-commercial and does not:</p>
-<ul><li>Provide legal or financial advice</li><li>Promote any commercial product or service</li><li>Collect personal data from visitors</li><li>Represent any organisation’s official position</li></ul>
-<p style="margin-top:.4rem;font-size:.72rem;color:var(--sub)">US Government materials are in the public domain under 17 U.S.C. § 105.</p>
-</div>
-<div class="srcbox" style="margin-top:.7rem">
-<h4>Content Sources</h4>
-<p><a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> — Modern slavery prevention<br>
-<a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> — Online safety (Crown Copyright)<br>
-<a href="https://www.fincen.gov/" target="_blank">FinCEN</a> — Financial Crimes Enforcement Network<br>
-<a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> — Internet Crime Complaint Center<br>
-<a href="https://www.justice.gov/" target="_blank">US Department of Justice</a> — Financial crime cases<br>
-<a href="https://home.treasury.gov/" target="_blank">US Treasury</a> — Sanctions &amp; TF intelligence<br>
-<a href="https://www.state.gov/trafficking-in-persons-report/" target="_blank">US State Department</a> — Trafficking in Persons Report<br>
-<a href="https://www.interpol.int/en/Crimes/Financial-crime" target="_blank">INTERPOL</a> — Financial crime assessments</p>
+<div class="st">About This Project</div>
+<div class="sd">Redirecting…</div>
+<script>if(document.getElementById('about').classList.contains('active'))window.location.assign('about/index.html');</script>
 </div>
 </div>
-</div>
-
+  
 <footer>
 <div>EconCrime<em style="opacity:.32;font-style:italic;font-size:.62rem"> edu</em> — Strictly educational. Non-commercial.</div>
 <div style="margin-top:.25rem">Sources: <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> · <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> · <a href="https://www.fincen.gov/" target="_blank">FinCEN</a> · <a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> · <a href="https://www.justice.gov/" target="_blank">DOJ</a> · <a href="https://home.treasury.gov/" target="_blank">US Treasury</a></div>
@@ -458,7 +436,8 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <!-- APP LOGIC -->
 <script>
 function go(id){
-    if(id==='popculture'){window.location.assign('vault.html');return;}
+  if(id==='popculture'){window.location.assign('vault.html');return;}
+    if(id==='about'){window.location.assign('about/index.html');return;}
     document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
     document.getElementById(id).classList.add('active');
     document.querySelectorAll('.nb[data-pg]').forEach(function(b){b.classList.toggle('act',b.dataset.pg===id)});
