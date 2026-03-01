@@ -268,7 +268,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">&#x1F3E0;</span>Home</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Typologies</button>
-<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+<button class="nb" onclick="window.location.href='/simulator/'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
 <button class="nb" data-pg="future" onclick="go('future')"><span class="bi">&#x1F680;</span>Evolution</button>
 <button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
@@ -292,7 +292,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
 </div>
 <div class="sbar" id="homeStats"></div>
-<a href="vault.html" style="display:block;position:relative;z-index:2;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;background:linear-gradient(135deg,#0d0d0d 0%,#1a0a0a 40%,#0d0d0d 100%);border-top:1px solid rgba(185,28,28,.15);border-bottom:1px solid rgba(185,28,28,.15);text-decoration:none">
+<a href="/vault/" style="display:block;position:relative;z-index:2;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;background:linear-gradient(135deg,#0d0d0d 0%,#1a0a0a 40%,#0d0d0d 100%);border-top:1px solid rgba(185,28,28,.15);border-bottom:1px solid rgba(185,28,28,.15);text-decoration:none">
 <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(185,28,28,.08) 0%,transparent 70%);animation:vaultPulse 3s ease-in-out infinite;pointer-events:none"></div>
 <div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:.85rem 1.2rem;position:relative;z-index:1">
 <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);font-size:.85rem">&#x25C6;</span>
@@ -415,7 +415,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="se">Media</div>
 <div class="st">The Vault &#x2014; Media Archive</div>
 <div class="sd">Opening The Vault&#x2026;</div>
-<script>if(document.getElementById('popculture').classList.contains('active'))window.location.href='vault.html';</script>
+<script>if(document.getElementById('popculture').classList.contains('active'))window.location.href='/vault/';</script>
 </div>
 </div>
 
@@ -522,7 +522,7 @@ David Merrick
 <!-- APP LOGIC -->
 <script>
 function go(id){
-    if(id==='popculture'){window.location.href='vault.html';return;}
+    if(id==='popculture'){window.location.href='/vault/';return;}
     document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
     document.getElementById(id).classList.add('active');
     document.querySelectorAll('.nb[data-pg]').forEach(function(b){b.classList.toggle('act',b.dataset.pg===id)});
