@@ -1,181 +1,143 @@
 /* ══ TYPOLOGY REFERENCE DATA ══ */
 var typologyCategories = [
-  /* ── Money Laundering (8 cards + real-world cases) ── */
+  /* ── Money Laundering (8 cards with examples + disruption) ── */
   {name:"Money Laundering", cards:[
     {icon:"\ud83d\udd04",bg:"#b82d24",title:"Trade-Based Money Laundering (TBML)",
      desc:"One of the most sophisticated and widely used methods globally. Criminals manipulate international trade documents and shipments to move and disguise illicit funds. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Over- or under-invoicing","Phantom shipments","Multiple invoicing for the same goods","False description/quality/quantity of goods","Unusual third-country routing or free trade zones"],
-     cases:[
-       {title:"Lebanese Canadian Bank \u2014 $102M forfeiture for Hezbollah trade-based laundering (DOJ)",url:"https://www.justice.gov/archive/usao/nys/pressreleases/June13/LCBSettlementPR.php"},
-       {title:"Altaf Khanani \u2014 Treasury designates global TBML network as transnational criminal org (Treasury)",url:"https://home.treasury.gov/news/press-releases/jl0265"},
-       {title:"FATF \u2014 Trade-Based Money Laundering: Trends & Developments",url:"https://www.fatf-gafi.org/en/publications/Methodsandtrends/Trade-basedmoneylaundering.html"}
-     ]},
+     examples:["Exporter invoices goods at three times market value; the overseas buyer pays the inflated price and the excess is laundered profit disguised as legitimate trade revenue","A company ships empty containers between free trade zones, generating invoices and wire transfers that create a paper trail for millions in illicit funds","The same shipment of electronics is invoiced by three different shell companies to three different importers, multiplying the apparent trade value to justify large cross-border transfers"],
+     disruption:["Screen trade finance transactions for pricing anomalies using commodity price databases","Flag businesses with trade volumes inconsistent with their size, sector, or logistics capacity","Cross-reference shipping documents with customs declarations and vessel tracking data","Apply enhanced due diligence to clients operating through free trade zones or transshipment hubs","Share intelligence on suspicious trade patterns through public-private partnerships like JMLIT"]},
     {icon:"\ud83c\udfdb\ufe0f",bg:"#1a3a5c",title:"Professional Services & Legal Sector",
      desc:"Misuse of lawyers, accountants, and company formation agents to layer and legitimise criminal proceeds through client accounts and complex structures. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Unusual cash payments for professional fees","Misuse of client trust accounts","Rapid creation and dissolution of companies/trusts","Requests for offshore structures with no legitimate business reason"],
-     cases:[
-       {title:"Panama Papers \u2014 Four charged over global tax evasion via Mossack Fonseca (DOJ)",url:"https://www.justice.gov/archives/opa/pr/four-defendants-charged-panama-papers-investigation-their-roles-panamanian-based-global-law"},
-       {title:"Danske Bank \u2014 $2B fraud conspiracy through Estonian branch (DOJ)",url:"https://www.justice.gov/usao-sdny/pr/danske-bank-pleads-guilty-fraud-us-banks-multi-billion-dollar-scheme-access-us"},
-       {title:"NCA \u2014 Professional enablers of money laundering",url:"https://www.nationalcrimeagency.gov.uk/what-we-do/crime-threats/money-laundering-and-illicit-finance"}
-     ]},
+     examples:["A solicitor creates a chain of shell companies across three jurisdictions to purchase UK property on behalf of an anonymous client, using the firm\u2019s client account to obscure the source of funds","An accountant helps a client restructure business invoices to create the appearance of legitimate consulting income, layering payments through multiple nominee accounts","A company formation agent registers 40 companies in a single week for the same beneficial owner, each used once to receive a large transfer before being dissolved"],
+     disruption:["Ensure law firms and accountancy practices conduct source-of-funds checks on all client account deposits","Supervisory bodies to conduct risk-based inspections of trust account activity","Mandate beneficial ownership verification for all company formation requests","Report suspicious patterns of rapid incorporation and dissolution to the UKFIU","Apply the \u2018all-crimes\u2019 approach to professional sector AML supervision"]},
     {icon:"\u20bf",bg:"#18725f",title:"Crypto & Virtual Asset Laundering",
      desc:"Using cryptocurrencies, mixers, chain-hopping, and privacy coins to obscure the origin of illicit funds. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Rapid fiat-to-crypto conversions","Use of mixing/tumbling services","High-volume small transactions across wallets","NFTs or digital assets used as stores of value"],
-     cases:[
-       {title:"Hydra Market \u2014 Shutdown of largest darknet marketplace (DOJ)",url:"https://www.justice.gov/archives/opa/pr/justice-department-investigation-leads-shutdown-largest-online-darknet-marketplace"},
-       {title:"BitConnect \u2014 Director sentenced for $2.4B crypto fraud (DOJ)",url:"https://www.justice.gov/archives/opa/pr/director-bitconnect-sentenced-38-months-prison"},
-       {title:"Silk Road \u2014 Ross Ulbricht sentenced for operating darknet market (DOJ)",url:"https://www.justice.gov/usao-sdny/pr/ross-ulbricht-aka-dread-pirate-roberts-sentenced-manhattan-federal-court-life-prison"}
-     ]},
+     examples:["Proceeds from ransomware attacks are converted to Bitcoin, run through a mixing service, then withdrawn as Monero at an unregulated exchange in a high-risk jurisdiction","A fraud network buys high-value NFTs with stolen funds, transfers ownership through several wallets, then sells for clean cryptocurrency on a mainstream platform","Criminal converts \u00a3500,000 into stablecoins, splits across 200 wallets, then chain-hops through five different blockchains before converting back to fiat via a peer-to-peer platform"],
+     disruption:["Implement blockchain analytics tools to trace transaction flows across chains","Apply travel rule requirements to virtual asset service providers (VASPs)","Flag wallets interacting with known mixing services or sanctioned addresses","Require VASPs to conduct full KYC before allowing fiat off-ramps","Monitor for sudden large-value NFT trades with no collecting history"]},
     {icon:"\ud83c\udfb0",bg:"#b07d1e",title:"Gambling & Casino Laundering",
      desc:"Buying casino chips with dirty cash, minimal gambling, then cashing out as \u2018winnings\u2019 \u2014 including junket operators. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Large cash buy-ins with quick cash-outs","Minimal actual play time","Purchasing winning tickets from others","Cross-border junket activity"],
-     cases:[
-       {title:"Wynn Las Vegas \u2014 $35.5M FinCEN penalty for AML failures (FinCEN)",url:"https://www.fincen.gov/news/news-releases/fincen-assesses-355-million-penalty-against-wynn-las-vegas-llc"},
-       {title:"Tinian Dynasty Casino \u2014 $75M FinCEN penalty for facilitating laundering (FinCEN)",url:"https://www.fincen.gov/news/news-releases/fincen-fines-tinian-dynasty-hotel-casino-75-million-significant-anti-money"},
-       {title:"FATF \u2014 Vulnerabilities of casinos & gaming sector",url:"https://www.fatf-gafi.org/en/publications/Methodsandtrends/Vulnerabilitiesofcasinosandgamingsector.html"}
-     ]},
+     examples:["Individual buys \u00a350,000 in casino chips with cash, plays a few hands of low-stakes blackjack, then cashes out the remainder as a cheque \u2014 now appearing as gambling winnings","A junket operator brings a group of high-net-worth individuals to a casino, pooling cash buy-ins under multiple names and splitting payouts across several accounts","Criminals buy winning betting slips from legitimate gamblers at a premium, then present them to bookmakers to cash out and create a clean paper trail"],
+     disruption:["Require casinos to verify source of funds for all cash buy-ins above thresholds","Monitor chip-to-play ratios and flag customers who cash out with minimal gambling activity","Apply AML controls to junket operators including customer due diligence and transaction monitoring","Implement facial recognition and linked-play analysis to detect structured buy-ins across visits","Require bookmakers to record ID for winning ticket redemptions above set values"]},
     {icon:"\ud83d\uddbc\ufe0f",bg:"#b82d24",title:"Art, Antiques & Cultural Property",
      desc:"Using high-value art, antiques and collectibles to store and move value anonymously through private sales and freeports. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Transactions via third-party agents","Significant over-/undervaluation","Storage in freeports or bonded warehouses","Private sales with limited documentation"],
-     cases:[
-       {title:"1MDB \u2014 US seeks $540M+ in art, real estate & other assets from corruption (DOJ)",url:"https://www.justice.gov/archives/opa/pr/united-states-seeks-recover-approximately-540-million-obtained-corruption-involving-malaysian"},
-       {title:"Subhash Kapoor \u2014 Stolen antiquities trafficking network (FBI)",url:"https://www.fbi.gov/news/stories/stolen-art-and-antiquities-returned-to-countries-of-origin"},
-       {title:"FATF \u2014 Money laundering in the art & antiquities market",url:"https://www.fatf-gafi.org/en/publications/Methodsandtrends/Money-Laundering-Terrorist-Financing-Art-Antiquities-Market.html"}
-     ]},
+     examples:["A PEP purchases a \u00a34M painting through an intermediary at a private sale, stores it in a Geneva freeport for three years, then sells at auction \u2014 converting illicit wealth into a legitimate sale with published provenance","Criminal network uses shell companies to buy and sell the same sculpture between related parties at escalating prices, creating the illusion of appreciating legitimate investment value","Looted antiquities are given false provenance documents, sold through a respected dealer, and the proceeds deposited into a bank account as art sales income"],
+     disruption:["Extend AML obligations to art market participants above transaction thresholds (as per 5AMLD/6AMLD)","Require freeport operators to conduct due diligence on stored assets and their owners","Implement provenance verification requirements for high-value art and antiquities transactions","Flag transactions involving rapid resale, related-party trades, or significant price inflation","Share intelligence on looted cultural property through INTERPOL\u2019s Stolen Works of Art database"]},
     {icon:"\ud83d\udc65",bg:"#1a3a5c",title:"Money Mules & Structuring",
      desc:"Recruiting individuals to receive and forward funds in small amounts to avoid detection thresholds (smurfing/structuring). \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Unexplained funds into personal accounts","Immediate onward transfers overseas","Job offers requiring use of personal bank accounts","Multiple deposits just below reporting limits"],
-     cases:[
-       {title:"European Money Mule Action (EMMA) \u2014 474 mules identified across Europe (Europol)",url:"https://www.europol.europa.eu/media-press/newsroom/news/european-money-mule-action-leads-to-identification-of-474-money-mules"},
-       {title:"NCA \u2014 Money mule enforcement & awareness campaigns",url:"https://www.nationalcrimeagency.gov.uk/what-we-do/crime-threats/money-laundering-and-illicit-finance"},
-       {title:"FinCEN \u2014 Advisory on structuring transactions to evade reporting",url:"https://www.fincen.gov/resources/advisories/fincen-advisory-fin-2014-a005"}
-     ]},
+     examples:["A student is recruited via social media with a \u2018money transfer agent\u2019 job offer \u2014 they receive \u00a33,000 into their account, keep \u00a3300, and wire the rest to an overseas account within hours","An organised crime group deposits \u00a39,500 cash at 12 different bank branches on the same day using different mules, staying just below the \u00a310,000 reporting threshold each time","A network of 30 mule accounts receives fraud proceeds from hundreds of victims, each account forwarding funds to a central collection account before the banks can react"],
+     disruption:["Deploy real-time transaction monitoring to detect rapid receive-and-forward patterns across accounts","Use network analytics to identify clusters of accounts opened in similar timeframes with linked contact details","Run public awareness campaigns targeting vulnerable groups about mule recruitment tactics","Implement velocity checks that flag multiple near-threshold deposits across branches","Coordinate cross-bank intelligence sharing to identify mule networks operating across institutions"]},
     {icon:"\ud83c\udfe0",bg:"#18725f",title:"Real Estate Laundering",
      desc:"Purchasing property with criminal proceeds, often using shell companies, cash components, or rapid flipping. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Cash elements in purchases","Opaque corporate ownership","Rapid buy-and-sell with unexplained profit","Buyers with no obvious connection to the property"],
-     cases:[
-       {title:"FinCEN \u2014 Geographic Targeting Orders for all-cash real estate purchases",url:"https://www.fincen.gov/news/news-releases/fincen-renews-and-expands-real-estate-geographic-targeting-orders"},
-       {title:"Zamira Hajiyeva \u2014 UK\u2019s first Unexplained Wealth Order on \u00a311.5M property (NCA)",url:"https://www.nationalcrimeagency.gov.uk/news/first-unexplained-wealth-order-upheld-by-supreme-court"},
-       {title:"Transparency International \u2014 Faulty Towers: UK property & corruption",url:"https://www.transparency.org.uk/publications/faulty-towers-understanding-impact-overseas-corruption-london-property-market"}
-     ]},
+     examples:["A shell company registered in the BVI purchases a \u00a32M London flat with no mortgage \u2014 the beneficial owner is a convicted drug trafficker using layered corporate structures to hide their identity","Criminal buys a run-down property for \u00a3200,000 cash, commissions minimal renovations, then sells six months later for \u00a3450,000 to an associate \u2014 creating a paper profit that explains the wealth","A network buys multiple properties through different nominee purchasers, rents them out to generate apparently legitimate income, and gradually sells to repatriate clean capital"],
+     disruption:["Mandate beneficial ownership disclosure for all legal entities purchasing property (Register of Overseas Entities)","Apply Unexplained Wealth Orders where property ownership is inconsistent with known lawful income","Require estate agents, conveyancers, and solicitors to conduct enhanced CDD on cash or corporate purchases","Flag rapid property flipping with disproportionate price increases for investigation","Use Geographic Targeting Orders to require reporting on all-cash purchases in high-risk areas"]},
     {icon:"\ud83c\udf0d",bg:"#b07d1e",title:"Alternative Remittance Systems (Hawala)",
      desc:"Informal value transfer networks that move money across borders outside traditional banking systems. \u2014 Common typology reported by FATF, NCA, Europol & Basel Institute",
      flags:["Large value transfers with minimal documentation","Settlement through goods or trade","Ethnic/family/community-based networks"],
-     cases:[
-       {title:"DOJ \u2014 Unlicensed hawala network dismantled, $3.6M seized",url:"https://www.justice.gov/archives/opa/pr/four-individuals-charged-operating-unlicensed-money-transmitting-business"},
-       {title:"FATF \u2014 Role of hawala and similar service providers in ML/TF",url:"https://www.fatf-gafi.org/en/publications/Methodsandtrends/Role-hawalas-in-ml-tf.html"},
-       {title:"FinCEN \u2014 Advisory on informal value transfer systems",url:"https://www.fincen.gov/resources/advisories"}
-     ]}
+     examples:["A hawalader in London receives \u00a350,000 cash from a client and calls a counterpart in Dubai, who pays the equivalent to a named recipient \u2014 no money crosses a border and no bank is involved","A trade-based settlement sees a London hawalader owed \u00a3200,000 by a Karachi counterpart; instead of cash settlement, the debt is cleared by shipping undervalued textiles which are sold at full market price in the UK","A network of convenience stores acts as informal money service bureaus, collecting small cash deposits from dozens of customers and consolidating transfers through a single hawala channel"],
+     disruption:["Require registration and supervision of all money service businesses including informal value transfer providers","Conduct outreach and education in diaspora communities about legal remittance alternatives","Monitor businesses with cash flows inconsistent with their visible trade \u2014 e.g. convenience stores with unusually high turnover","Apply cross-border cash declaration requirements at ports and airports","Share intelligence on unregistered MSBs through multi-agency financial crime taskforces"]}
   ]},
-  /* ── Fraud (8 cards + real-world cases) ── */
+  /* ── Fraud (8 cards with examples + disruption) ── */
   {name:"Fraud", cards:[
-    {icon:"\ud83c\udd94",bg:"#b82d24",title:"Identity & Synthetic Identity Fraud",
-     desc:"Using stolen personal data or fabricated \u2018Frankenstein\u2019 identities to open accounts, apply for credit, insurance, or services.",
-     flags:["Unusual application patterns","Mismatched personal details","High-volume applications from new identities","Synthetic data combinations bypassing KYC"],
-     examples:["Fraudster combines a real stolen SSN with a fabricated name and DOB to build a \u2018Frankenstein\u2019 credit profile over months","A ring opens 50+ bank accounts using synthetic IDs generated with AI-produced fake driver\u2019s licences","Stolen child\u2019s identity used to build credit history undetected for years"],
-     cases:[
-       {title:"DOJ \u2014 Synthetic identity bank fraud \u2014 300+ fake IDs discovered (DOJ WDNC)",url:"https://www.justice.gov/usao-wdnc/pr/south-carolina-man-sentenced-two-years-synthetic-id-bank-fraud"},
-       {title:"DOJ \u2014 700 synthetic identities used to steal $3M+ from banks & COVID relief (DOJ SDFL)",url:"https://www.justice.gov/usao-sdfl/pr/two-men-who-allegedly-used-synthetic-identities-existing-shell-companies-and-prior-0"},
-       {title:"FBI \u2014 IC3 2024 Annual Report \u2014 $16.6B total losses, identity fraud rising (FBI)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"}
-     ]},
-    {icon:"\ud83d\udd11",bg:"#1a3a5c",title:"Account Takeover Fraud",
-     desc:"Criminals hijack existing bank, mobile, retail, or insurance accounts using phishing, SIM swap, or credential stuffing.",
-     flags:["Sudden changes to contact details","Unrecognised logins or device changes","SIM swap attempts","Rapid password resets followed by large transfers"],
-     examples:["Victim\u2019s phone number ported to a new SIM; attacker resets banking passwords and drains the account in minutes","Credential-stuffing bot tries leaked email/password combos against 200+ banking sites overnight","Phishing email mimics a bank\u2019s MFA page, capturing the one-time code in real time to log in"],
-     cases:[
-       {title:"FBI \u2014 SIM swapping advisory \u2014 $262M+ in losses reported (FBI IC3)",url:"https://www.ic3.gov/PSA/2024/PSA240911"},
-       {title:"FBI \u2014 Generative AI used to facilitate financial fraud (FBI IC3 PSA)",url:"https://www.ic3.gov/PSA/2024/PSA241203"},
-       {title:"FBI \u2014 2024 Internet Crime Report \u2014 record $16.6B losses (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"}
-     ]},
-    {icon:"\ud83d\udcb8",bg:"#18725f",title:"Authorised Push Payment (APP) Scams",
-     desc:"Victims are tricked into voluntarily transferring money to fraudsters \u2014 the fastest-growing and highest-harm fraud type in the UK.",
-     flags:["Investment or romance scams","Fake invoice or purchase requests","Courier or police impersonation","Payment diversion via spoofed emails"],
-     examples:["Caller impersonates bank\u2019s fraud team, convinces victim to \u2018move money to a safe account\u2019 \u2014 which is the criminal\u2019s","Spoofed email from a solicitor changes completion payment details on a house purchase","Fake HMRC officer threatens arrest unless victim makes an immediate bank transfer"],
-     cases:[
-       {title:"UK PSR \u2014 Mandatory APP fraud reimbursement rules effective Oct 2024 (PSR)",url:"https://www.psr.org.uk/our-work/app-scams/"},
-       {title:"UK Finance \u2014 Annual Fraud Report \u2014 APP scam trends & data (UK Finance)",url:"https://www.ukfinance.org.uk/policy-and-guidance/reports-and-publications/annual-fraud-report"},
-       {title:"FCA \u2014 Warning list of unauthorised firms and scam activity (FCA)",url:"https://www.fca.org.uk/scamsmart/warning-list"}
-     ]},
-    {icon:"\ud83d\udce7",bg:"#b07d1e",title:"Business Email Compromise (BEC) / CEO Fraud",
-     desc:"Spoofed emails impersonating executives or suppliers to trick staff into authorising large payments or changing account details.",
-     flags:["Urgent payment requests from spoofed domains","Requests to change supplier bank details","Executive impersonation under pressure"],
-     examples:["CFO receives email from \u2018CEO\u2019 during overseas trip requesting urgent wire to new account; domain is one letter off","Supplier\u2019s email hacked; fake invoice with updated bank details sent to accounts payable","Threat actor monitors email thread for weeks, then inserts fraudulent payment instructions at the right moment"],
-     cases:[
-       {title:"FBI IC3 \u2014 BEC: The $55 Billion Scam \u2014 global BEC losses advisory (IC3)",url:"https://www.ic3.gov/PSA/2024/PSA240911"},
-       {title:"FBI \u2014 IC3 2024 Report: BEC caused $2.77B in losses in 2024 alone (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"},
-       {title:"Europol \u2014 BEC fraud: how it works and how to prevent it (Europol)",url:"https://www.europol.europa.eu/crime-areas-and-statistics/crime-areas/economic-crime/online-fraud"}
-     ]},
-    {icon:"\u2764\ufe0f",bg:"#b82d24",title:"Romance & Investment Scams",
-     desc:"Fraudsters build fake relationships or promote fake investment opportunities to extract money or turn victims into money mules.",
-     flags:["Rapid escalation to financial requests","Crypto or \u2018high-return\u2019 investment platforms","Pig butchering variants","Pressure to act quickly"],
-     examples:["\u2018Pig butchering\u2019: scammer cultivates an online relationship for weeks, then introduces a \u2018guaranteed\u2019 crypto trading platform that shows fake profits","Instagram ad promotes an FCA-clone investment firm; victims see fabricated returns on a dashboard before being asked for larger deposits","Romance scammer asks victim to receive and forward parcels containing fraudulently purchased goods"],
-     cases:[
-       {title:"FBI \u2014 Operation Level Up: 4,300+ crypto fraud victims identified, $286M saved (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"},
-       {title:"FBI IC3 \u2014 Investment fraud topped $6.57B in 2024 losses (IC3)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"},
-       {title:"DOJ \u2014 Pig butchering crypto fraud networks dismantled (DOJ)",url:"https://www.justice.gov/criminal/criminal-fraud/case/related-enforcement-actions/2024"}
-     ]},
+    {icon:"\ud83d\udce7",bg:"#b82d24",title:"Business Email Compromise (BEC)",
+     desc:"Spoofed or hacked email accounts trick staff into wiring funds. FBI IC3 reports BEC/EAC as the costliest fraud type, with $2.77 billion in losses in 2024 alone.",
+     flags:["Urgent payment requests from senior executives","Last-minute bank detail changes","Pressure to bypass normal approval processes"],
+     examples:["CEO\u2019s email is spoofed to instruct the finance team to wire \u00a3250,000 to a \u2018confidential acquisition\u2019 account; the urgency prevents normal checks","A supplier\u2019s email is compromised and sends updated bank details for a \u00a3180,000 invoice payment \u2014 the money goes to a mule account instead","Fraudster registers a domain one letter different from a law firm\u2019s, emails clients \u2018updated completion funds\u2019 bank details during property transactions"],
+     disruption:["Implement dual-authorisation and verbal call-back procedures for all payment instruction changes","Deploy email authentication protocols (SPF, DKIM, DMARC) to prevent domain spoofing","Train staff with realistic BEC simulation exercises at least quarterly","Use AI-powered email analysis to flag anomalous sender behaviour or domain impersonation","Establish a clear escalation process for any \u2018urgent\u2019 or \u2018confidential\u2019 payment requests"]},
+    {icon:"\ud83d\udcb0",bg:"#1a3a5c",title:"Authorised Push Payment (APP) Fraud",
+     desc:"Victims are tricked into transferring money directly to criminal accounts. APP fraud overtook card fraud as the UK\u2019s largest fraud loss category.",
+     flags:["Impersonation of banks, HMRC, or police","Romance or investment pretexts","Urgency or secrecy demands"],
+     examples:["Victim receives a call from someone claiming to be their bank\u2019s fraud team, told their account is compromised and instructed to move savings to a \u2018safe account\u2019 controlled by the fraudster","An online romance scam cultivates trust over six months before the \u2018partner\u2019 requests \u00a340,000 for a fabricated medical emergency","Fraudster poses as HMRC, tells victim they owe \u00a35,000 in back tax and will be arrested unless they pay immediately by bank transfer"],
+     disruption:["Implement Confirmation of Payee to match account names with payment details before transfers","Apply behavioural analytics to detect unusual payment patterns at point of instruction","Deploy in-app and branch intervention scripts when customers show signs of being coached","Mandate scam warnings and cooling-off periods for first-time high-value payments to new payees","Reimburse victims under the PSR mandatory reimbursement scheme to incentivise sending bank prevention"]},
+    {icon:"\ud83d\udcc8",bg:"#18725f",title:"Investment & Ponzi Schemes",
+     desc:"Fraudulent investment schemes promising guaranteed high returns. The FBI IC3 reported $6.57 billion in investment fraud losses in 2024 \u2014 the highest of any category.",
+     flags:["Guaranteed above-market returns","Unregistered schemes","Difficulty withdrawing funds"],
+     examples:["A crypto \u2018trading platform\u2019 shows fabricated dashboard returns of 15% monthly; early investors are paid with new investor deposits until the scheme collapses","A \u2018property crowdfunding\u2019 opportunity promises 20% annual returns backed by \u2018prime London developments\u2019 that don\u2019t exist \u2014 \u00a38M collected before the operator disappears","An affinity fraud targets a religious community with a \u2018faith-based\u2019 investment fund; trusted community leaders unknowingly recruit victims"],
+     disruption:["Check the FCA Register and Warning List before investing in any product or scheme","Require FCA authorisation for all investment products offered to UK consumers","Deploy social media monitoring to detect and report fraudulent investment advertisements","Educate the public that guaranteed high returns with no risk are hallmarks of fraud","Enable rapid freezing of accounts linked to suspected investment fraud through bank cooperation"]},
+    {icon:"\ud83d\udcb3",bg:"#b07d1e",title:"Identity Fraud & Synthetic ID",
+     desc:"Stolen personal data used to open accounts, obtain credit, and commit fraud. Synthetic ID fraud combines real and fabricated information to create new identities.",
+     flags:["Multiple applications with slight name/address variations","Credit building with no genuine history","Sudden bust-out after period of good behaviour"],
+     examples:["Fraudster combines a real child\u2019s National Insurance number with a fabricated name and date of birth to create a synthetic identity, builds credit over two years, then maxes out \u00a350,000 in credit and vanishes","Stolen passport details are used to open bank accounts, apply for credit cards, and take out loans \u2014 the victim only discovers it when debt collectors call","A criminal ring manufactures fake utility bills and payslips to support mortgage applications using stolen identities"],
+     disruption:["Implement multi-factor identity verification at account opening including biometric checks","Cross-reference applications against mortality data, credit bureau records, and known fraud databases","Deploy device fingerprinting and behavioural biometrics to detect automated application fraud","Share confirmed fraud data through CIFAS National Fraud Database to prevent repeat victimisation","Monitor for credit file activity on dormant or child identities"]},
     {icon:"\ud83d\udcb3",bg:"#1a3a5c",title:"Card-Not-Present (CNP) Fraud",
      desc:"Using stolen card details for online, phone, or mail-order purchases without the physical card present.",
      flags:["Unusual online spending patterns","High-value purchases from new devices","Frequent small test transactions"],
      examples:["Stolen card data from a breach used to buy gift cards online; gift cards immediately resold for cash","Fraudster places \u00a30.50 test charges on hundreds of cards to identify active ones, then makes bulk high-value orders","Phished card details loaded into a digital wallet and used for contactless tap-to-pay at retailers"],
-     cases:[
-       {title:"FBI IC3 \u2014 Credit card & check fraud: $200M+ losses in 2024 (IC3)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"},
-       {title:"Europol \u2014 E-commerce fraud and card-not-present threats (Europol)",url:"https://www.europol.europa.eu/crime-areas-and-statistics/crime-areas/economic-crime/online-fraud"},
-       {title:"UK Finance \u2014 Card fraud data and prevention measures (UK Finance)",url:"https://www.ukfinance.org.uk/policy-and-guidance/reports-and-publications/annual-fraud-report"}
-     ]},
+     disruption:["Mandate Strong Customer Authentication (SCA) for all online card payments","Deploy real-time fraud scoring using device, location, and behavioural signals","Implement velocity checks to detect and block rapid small test transactions","Use tokenisation to prevent stolen card numbers from being reused across merchants","Enable instant card freeze capabilities through banking apps for customer self-service"]},
     {icon:"\ud83e\uddd1\u200d\ud83d\udcbc",bg:"#18725f",title:"Insider & Employee Fraud",
      desc:"Staff abusing their position to commit fraud, steal data, or facilitate external crime.",
      flags:["Unexplained expenses or payroll changes","Access to sensitive systems outside normal hours","Sudden lifestyle changes by employees"],
      examples:["Payroll clerk adds ghost employees and diverts salaries to personal accounts over several years","Branch manager overrides transaction limits to process fraudulent loans for associates, earning kickbacks","IT administrator exports client database and sells records to a competitor via an encrypted channel"],
-     cases:[
-       {title:"ACFE \u2014 Report to the Nations: occupational fraud costs 5% of revenue annually (ACFE)",url:"https://www.acfe.com/fraud-resources/reports-to-the-nations"},
-       {title:"DOJ \u2014 2024 Fraud Section Year in Review \u2014 record $2.3B in corporate resolutions (DOJ)",url:"https://www.justice.gov/criminal/criminal-fraud/case/related-enforcement-actions/2024"},
-       {title:"NCA \u2014 Fraud threats including insider risk overview (NCA)",url:"https://www.nationalcrimeagency.gov.uk/what-we-do/crime-threats/fraud"}
-     ]},
+     disruption:["Implement segregation of duties so no single employee controls end-to-end financial processes","Conduct regular payroll audits including ghost employee checks and segregation reviews","Monitor for abnormal system access patterns including out-of-hours logins and bulk data downloads","Establish confidential whistleblowing channels with protection for reporters","Perform pre-employment screening and periodic re-screening for staff in sensitive roles"]},
     {icon:"\ud83e\udd16",bg:"#b07d1e",title:"AI-Powered & Emerging Fraud",
      desc:"Deepfakes, voice cloning, automated phishing, and AI-generated documents accelerating almost all other fraud types.",
      flags:["Realistic deepfake video calls","AI-generated documents or voice clones","Automated large-scale phishing campaigns"],
      examples:["Deepfake video call impersonates a CFO instructing finance staff to wire $25M to a new account","AI voice clone replicates a CEO\u2019s voice to authorise an urgent payment over the phone","GPT-generated phishing emails with perfect grammar and personalisation sent to 50,000 targets in minutes"],
-     cases:[
-       {title:"FBI IC3 \u2014 Criminals use generative AI to facilitate financial fraud (IC3 PSA)",url:"https://www.ic3.gov/PSA/2024/PSA241203"},
-       {title:"Europol \u2014 Facing reality: law enforcement and the challenge of deepfakes (Europol)",url:"https://www.europol.europa.eu/publications-events/publications/facing-reality-law-enforcement-and-challenge-of-deepfakes"},
-       {title:"FATF \u2014 Opportunities & challenges of new technologies for AML/CFT (FATF)",url:"https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Opportunities-challenges-new-technologies-for-aml-cft.html"}
-     ]}
+     disruption:["Implement code-word verification protocols for high-value payment instructions received by video or voice","Deploy deepfake detection tools that analyse facial micro-expressions and audio artefacts","Train staff to recognise AI-generated content and establish secondary verification channels","Use email AI analysis to detect machine-generated phishing at scale","Stay current with emerging AI threats through intelligence sharing with industry bodies and law enforcement"]},
+    {icon:"\ud83c\udfe0",bg:"#b82d24",title:"Mortgage & Lending Fraud",
+     desc:"Falsifying information on mortgage or loan applications to obtain credit fraudulently, or colluding to inflate property values.",
+     flags:["Inflated income or employment details","Fake documentation supporting applications","Collusion between borrower and valuer"],
+     examples:["Applicant submits fabricated payslips and bank statements showing \u00a380,000 salary \u2014 actual income is \u00a325,000 \u2014 to secure a \u00a3350,000 mortgage","A broker and valuer collude to overvalue a property by \u00a3150,000, enabling the borrower to extract equity that is never repaid","Buy-to-let fraudster uses the same deposit across multiple simultaneous purchases, completing before any lender realises the funds have been recycled"],
+     disruption:["Verify income directly with employers and HMRC rather than relying on applicant-supplied documents","Use automated document authentication to detect manipulated payslips, bank statements, and tax returns","Implement cross-lender checks to detect simultaneous applications and recycled deposits","Flag properties where valuation significantly exceeds recent comparable sales","Require panel managers to monitor and rotate valuers to prevent collusion"]}
   ]},
   /* ── Bribery & Corruption ── */
   {name:"Bribery & Corruption", cards:[
     {icon:"\ud83d\udcbc",bg:"rgba(192,57,43,.06)",title:"Facilitation Payments & FCPA",
      desc:"Bribes to foreign officials for business advantages. The DOJ and SEC enforce the Foreign Corrupt Practices Act, which has resulted in over $31 billion in penalties since 1977.",
-     flags:["Unexplained \u2018consulting fees\u2019","Payments to officials via intermediaries","Contracts awarded without competition"]},
+     flags:["Unexplained \u2018consulting fees\u2019","Payments to officials via intermediaries","Contracts awarded without competition"],
+     examples:["A multinational pays a \u2018consulting fee\u2019 to a government minister\u2019s relative to secure a public infrastructure contract worth \u00a3100M","An agent in a high-risk jurisdiction requests a \u2018facilitation payment\u2019 to expedite customs clearance \u2014 the payment is routed through a shell company to obscure its destination","A company inflates the value of a subcontract and kicks back the excess to a procurement official who awarded the deal"],
+     disruption:["Implement a zero-tolerance policy on facilitation payments with board-level accountability","Conduct risk-based due diligence on all third-party agents, consultants, and intermediaries","Require pre-approval and documentation for all gifts, hospitality, and entertainment","Deploy data analytics to detect unusual consulting fees, commission structures, or agent payments","Build a speak-up culture with protected whistleblowing channels and visible enforcement"]},
     {icon:"\ud83c\udfdb\ufe0f",bg:"rgba(26,58,92,.08)",title:"Political Corruption",
      desc:"Misuse of public office for private gain. The DOJ Public Integrity Section is the nation\u2019s primary federal prosecutor of government corruption.",
-     flags:["Unexplained official wealth","Contracts to politically connected parties","Lack of procurement transparency"]},
+     flags:["Unexplained official wealth","Contracts to politically connected parties","Lack of procurement transparency"],
+     examples:["A government official steers a \u00a320M healthcare contract to a company owned by a family member, circumventing competitive tender requirements","A PEP accumulates property worth \u00a35M on an annual salary of \u00a360,000, with no declared alternative income","Political party receives large anonymous donations shortly before a vote on legislation favourable to the donor\u2019s industry"],
+     disruption:["Screen all high-value government contracts for connections to PEPs and their associates","Require asset declarations from public officials and monitor for lifestyle inconsistencies","Strengthen procurement transparency through open contracting standards and public registers","Apply enhanced due diligence to all PEP relationships including family members and close associates","Support independent anti-corruption institutions with adequate funding and legal protections"]},
     {icon:"\ud83e\udd1d",bg:"rgba(26,107,90,.07)",title:"Private Sector Bribery",
      desc:"Offering or accepting inducements in commercial transactions \u2014 kickbacks, secret commissions, and gifts designed to influence business decisions.",
-     flags:["Lavish gifts to procurement officials","Third-party agents in weak governance areas","Unusual commission structures"]}
+     flags:["Lavish gifts to procurement officials","Third-party agents in weak governance areas","Unusual commission structures"],
+     examples:["Supplier pays a 5% \u2018referral fee\u2019 to a procurement manager who consistently awards contracts to that supplier above market rates","A sales director receives luxury holidays and event tickets from a vendor in exchange for recommending their products to the board","An intermediary charges a 15% commission on deals in a market where 3-5% is standard, with the excess paid as kickbacks to the buyer\u2019s decision-makers"],
+     disruption:["Mandate competitive tendering for all contracts above defined thresholds","Require all employees to declare gifts, hospitality, and outside interests in a central register","Conduct periodic audits of procurement decisions, vendor selection, and commission payments","Implement conflict-of-interest policies with mandatory recusal from compromised decisions","Use data analytics to identify vendors with unusually high win rates or inflated pricing"]}
   ]},
   /* ── Cyber-Enabled Crime ── */
   {name:"Cyber-Enabled Crime", cards:[
     {icon:"\ud83c\udfa3",bg:"rgba(192,57,43,.06)",title:"Phishing & Social Engineering",
      desc:"Deceptive communications tricking people into revealing information. As Get Safe Online and the FBI warn, these attacks grow more targeted each year.",
-     flags:["Urgent or threatening language","Links mimicking legitimate sites","Requests for passwords or financial details"]},
+     flags:["Urgent or threatening language","Links mimicking legitimate sites","Requests for passwords or financial details"],
+     examples:["A spear-phishing email impersonates the IT department, asking staff to \u2018verify their credentials\u2019 via a cloned login page that captures usernames and passwords","An SMS claims to be from Royal Mail with a \u2018missed delivery\u2019 link that installs malware harvesting banking credentials","A fraudster calls posing as Microsoft support, gains remote access to the victim\u2019s computer, and transfers funds from their online banking"],
+     disruption:["Deploy multi-factor authentication across all systems to limit the impact of compromised credentials","Conduct regular phishing simulation exercises and provide immediate feedback to staff who click","Implement email filtering and link-scanning tools that detect and quarantine suspicious messages","Educate customers and staff to independently verify unexpected requests through official channels","Report phishing attempts to Action Fraud and the National Cyber Security Centre"]},
     {icon:"\ud83d\udd10",bg:"rgba(26,58,92,.08)",title:"Ransomware",
      desc:"Malware encrypting data with ransom demands in cryptocurrency. FBI IC3 and CISA report escalating attacks on critical infrastructure, healthcare, and government systems.",
-     flags:["Unexpected system lockouts","Ransom demands in cryptocurrency","Unusual network activity or data exfiltration"]},
+     flags:["Unexpected system lockouts","Ransom demands in cryptocurrency","Unusual network activity or data exfiltration"],
+     examples:["Ransomware gang exploits an unpatched VPN vulnerability to encrypt a hospital\u2019s systems, demanding $2M in Bitcoin while patient records are inaccessible","A phishing email delivers ransomware that spreads across a firm\u2019s network, exfiltrating sensitive client data before encrypting files \u2014 a double-extortion approach","An SME\u2019s backup systems are also encrypted because they were connected to the main network, leaving no recovery option without paying the ransom"],
+     disruption:["Maintain offline, air-gapped backups tested regularly for recovery capability","Apply security patches promptly, especially for internet-facing systems and VPNs","Segment networks to prevent lateral movement and isolate critical systems","Implement endpoint detection and response (EDR) tools with 24/7 monitoring","Develop and rehearse an incident response plan including communication and legal notification procedures"]},
     {icon:"\ud83d\udcb3",bg:"rgba(200,144,46,.07)",title:"Payment & Card Fraud",
      desc:"Unauthorised use of card details from breaches or skimming. FBI IC3 data shows payment fraud among the fastest-growing cyber crime categories.",
-     flags:["Transactions in unusual locations","Rapid card-not-present transactions","Small \u2018test\u2019 charges then larger ones"]}
+     flags:["Transactions in unusual locations","Rapid card-not-present transactions","Small \u2018test\u2019 charges then larger ones"],
+     examples:["Criminals install a card skimmer on an ATM that captures card data and PINs; cloned cards are used to withdraw cash at ATMs in another country","A data breach at an online retailer exposes 500,000 card numbers; bulk sales of card data appear on darknet markets within days","Point-of-sale malware at a restaurant chain captures card details in real time, forwarding them to a collection server for immediate fraudulent use"],
+     disruption:["Mandate chip-and-PIN and contactless with SCA for all point-of-sale and online transactions","Deploy real-time transaction monitoring with machine learning models trained on fraud patterns","Implement PCI DSS compliance requirements for all merchants handling card data","Enable instant push notifications for every transaction so cardholders can flag fraud immediately","Coordinate cross-border card fraud intelligence through Europol\u2019s European Cybercrime Centre"]}
   ]},
   /* ── Terrorist Financing ── */
   {name:"Terrorist Financing", cards:[
     {icon:"\ud83c\udf10",bg:"rgba(192,57,43,.06)",title:"Abuse of Charitable Organisations",
      desc:"Exploiting charity structures to fund terrorism. The US Treasury has designated numerous entities under Executive Order 13224 for charity-based terrorist financing.",
-     flags:["Funds diverted to conflict zones","Lack of transparency in allocation","Minimal legitimate charitable activities"]},
+     flags:["Funds diverted to conflict zones","Lack of transparency in allocation","Minimal legitimate charitable activities"],
+     examples:["A charity raises \u00a3500,000 for \u2018humanitarian relief\u2019 but diverts 80% of funds to a designated organisation operating in a conflict zone","Donor makes large contributions to a charity whose field operations overlap with territory controlled by a proscribed group","A charity uses funds to purchase dual-use goods (vehicles, communications equipment) that are delivered to areas with no legitimate charitable programme"],
+     disruption:["Apply enhanced due diligence to donations routed to or through high-risk jurisdictions","Require charities to maintain transparent records of fund allocation and beneficiary verification","Screen charity trustees, donors, and partner organisations against sanctions and terrorism lists","Regulate and supervise charity banking relationships with specific CTF-focused controls","Cooperate internationally to share intelligence on charity abuse through the Egmont Group and FATF"]},
     {icon:"\ud83d\udcb0",bg:"rgba(26,58,92,.08)",title:"Informal Value Transfer",
      desc:"Using hawala networks to move money without formal banking. FinCEN advisories highlight these systems as high-risk for terrorist financing and sanctions evasion.",
-     flags:["Large cash transactions without business purpose","Counterpart transactions in high-risk areas","No formal records or paper trail"]},
+     flags:["Large cash transactions without business purpose","Counterpart transactions in high-risk areas","No formal records or paper trail"],
+     examples:["A network of hawaladars moves \u00a3100,000 from diaspora communities in the UK to a conflict zone without any transaction touching the formal banking system","Funds are collected in small amounts at community gatherings, consolidated by a coordinator, and transferred informally to an overseas contact linked to a proscribed group","A shop in a high-risk area operates as both a legitimate business and an unlicensed MSB, collecting cash for onward transfer to designated entities"],
+     disruption:["Register and supervise all money service businesses including informal value transfer systems","Conduct community outreach to promote regulated remittance channels as safe alternatives","Monitor businesses with cash turnover inconsistent with their visible trade for potential unlicensed MSB activity","Apply cross-border cash declaration and seizure powers at ports and airports","Share intelligence on unlicensed MSBs through multi-agency partnerships including HMRC and NCA"]},
     {icon:"\ud83d\udcf1",bg:"rgba(26,107,90,.07)",title:"Digital Platform Exploitation",
      desc:"Using crowdfunding, crypto, and encrypted messaging to raise and move funds. The US Treasury has identified growing virtual asset exploitation for terrorist financing.",
-     flags:["Crowdfunding with vague purposes","Crypto to designated-entity wallets","Coordinated small donations"]}
+     flags:["Crowdfunding with vague purposes","Crypto to designated-entity wallets","Coordinated small donations"],
+     examples:["A crowdfunding campaign for \u2018refugee support\u2019 uses emotive imagery and encrypted messaging channels to coordinate donations that are ultimately funnelled to a proscribed organisation","Crypto wallets shared via Telegram channels receive hundreds of small donations in Bitcoin, which are consolidated and converted to cash via a non-compliant exchange","A social media campaign uses coded language and symbols to solicit donations for a cause that fronts for terrorist financing"],
+     disruption:["Require crowdfunding platforms to verify campaign organisers and monitor fund disbursement","Apply blockchain analytics to identify wallets associated with designated entities or known terrorist financing patterns","Monitor social media and encrypted channels for coded fundraising appeals using AI-powered content analysis","Screen all crowdfunding donations against sanctions lists and PEP databases","Coordinate with platform operators to rapidly take down campaigns linked to terrorism"]}
   ]}
 ];
