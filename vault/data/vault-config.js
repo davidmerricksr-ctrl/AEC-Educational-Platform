@@ -5,7 +5,6 @@
 var mediaItems = [];  /* populated by category files */
 
 var mediaShelves = [
-  { id: "mustwatch", title: "Must-Watch \u00b7 Must-Read \u00b7 Must-Listen", icon: "\ud83d\udd25", subtitle: "The essential dossiers every investigator needs" },
   { id: "recent",    title: "Fresh Intelligence \u2014 Feb/Mar 2026",        icon: "\u26a1",       subtitle: "Just declassified" },
   { id: "films",     title: "Films & Television",                           icon: "\ud83c\udfac", subtitle: "On screen" },
   { id: "books",     title: "Landmark Books on Economic Crime",             icon: "\ud83d\udcda", subtitle: "Required reading" },
