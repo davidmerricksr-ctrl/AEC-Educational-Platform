@@ -35,7 +35,7 @@ a{color:var(--navy);text-decoration:none}
 .nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
 .mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .mo.open{display:flex}
-.msh{background:var(--sf);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1rem 1.1rem calc(var(--nav)+var(--sab)+.8rem);animation:su .22s ease}
+.msh{background:var(--sf);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(var(--nav)+var(--sab)+.8rem);animation:su .22s ease}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .msh h3{font-family:var(--fd);font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem}
 .mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:var(--rs);cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
@@ -203,21 +203,21 @@ a{color:var(--navy);text-decoration:none}
 .id-cat-hdr:first-child{margin-top:0}
 .id-cat-count{font-family:var(--fb);font-size:.6rem;font-weight:500;color:var(--mute);text-transform:none;letter-spacing:0}
 /* Directory modal */
-.idm-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem}
+.idm-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem;padding:0 .15rem}
 .idm-icon{font-size:1.5rem;flex-shrink:0}
 .idm-head h3{font-family:var(--fd);font-size:1rem;line-height:1.18;margin-bottom:0!important;padding:0!important}
-.idm-acr{font-size:.58rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
-.idm-section{margin-bottom:.55rem}
+.idm-acr{font-size:.58rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;padding:0 .15rem}
+.idm-section{margin-bottom:.55rem;padding:0 .15rem}
 .idm-label{font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim);margin-bottom:.18rem}
 .idm-text{font-size:.76rem;color:var(--sub);line-height:1.52}
-.idm-why{background:var(--teal-bg);border-radius:var(--rs);padding:.65rem .75rem;margin-bottom:.55rem}
+.idm-why{background:var(--teal-bg);border-radius:var(--rs);padding:.65rem .85rem;margin-bottom:.55rem}
 .idm-why .idm-label{color:var(--teal)}
 .idm-why .idm-text{color:var(--ink)}
-.idm-resources{margin-bottom:.55rem}
+.idm-resources{margin-bottom:.55rem;padding:0 .15rem}
 .idm-res-link{display:flex;align-items:center;gap:.35rem;padding:.38rem .5rem;border:1px solid var(--line);border-radius:6px;margin-bottom:.3rem;font-size:.7rem;font-weight:600;color:var(--navy);transition:.1s;-webkit-tap-highlight-color:transparent}
 .idm-res-link:active{background:var(--bg)}
 .idm-res-link span{font-size:.7rem;flex-shrink:0}
-.idm-attr{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:var(--rs);padding:.6rem .7rem;margin-bottom:.55rem}
+.idm-attr{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:var(--rs);padding:.6rem .85rem;margin-bottom:.55rem}
 .idm-attr p{font-size:.56rem;color:var(--sub);line-height:1.4;font-style:italic}
 .idm-visit{display:block;text-align:center;padding:.6rem;border-radius:8px;background:var(--navy);color:#fff;font-size:.78rem;font-weight:700;font-family:var(--fb);margin-bottom:.2rem;-webkit-tap-highlight-color:transparent;transition:.12s}
 .idm-visit:active{opacity:.85;transform:scale(.98)}
@@ -268,7 +268,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:.85rem 1.2rem;position:relative;z-index:1">
 <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);font-size:.85rem">◆</span>
 <div style="text-align:center">
-<div style="font-family:'DM Serif Display',Georgia,serif;font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2">The Vault <span style="color:rgba(185,28,28,.8)">—</span> a Fun Classified Media Archive</div>
+<div style="font-family:'DM Serif Display',Georgia,serif;font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2">The Vault <span style="color:rgba(185,28,28,.8)">—</span> Classified Media Archive</div>
 <div style="font-size:.58rem;color:rgba(200,149,42,.7);font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-top:2px">Books · Films · Podcasts · Reports · Intelligence Briefs</div>
 </div>
 <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(185,28,28,.12);border:1px solid rgba(185,28,28,.25);color:rgba(255,255,255,.5);font-size:.7rem;font-weight:700;transition:.2s">→</span>
