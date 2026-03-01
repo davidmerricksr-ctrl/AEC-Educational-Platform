@@ -119,6 +119,11 @@ a{color:var(--navy);text-decoration:none}
 .tc-link{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:600;color:var(--navy);padding:.3rem .5rem;border:1px solid var(--line);border-radius:6px;transition:.1s;-webkit-tap-highlight-color:transparent}
 .tc-link:active{background:var(--navy-bg)}
 .tc-dot{width:6px;height:6px;border-radius:50%;background:var(--navy);flex-shrink:0}
+/* ══ FRAUD TYPOLOGIES EXAMPLES ══ */
+.tc-examples{border-top:1px solid var(--line);margin-top:.35rem;padding-top:.45rem}
+.tc-examples h4{font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#18725f;margin-bottom:.3rem}
+.tc-ex{display:flex;align-items:flex-start;gap:.4rem;font-size:.7rem;color:var(--sub);line-height:1.45;padding:.35rem .5rem;background:rgba(24,114,95,.04);border-left:2px solid #18725f;border-radius:0 6px 6px 0;margin-bottom:.25rem}
+.tc-ex-num{font-weight:700;color:#18725f;flex-shrink:0;font-size:.62rem;min-width:14px;margin-top:1px}
 .impstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:1.4rem}
 .ist{background:var(--ink);padding:.85rem .5rem;text-align:center}
 .ist .sv{font-family:var(--fd);font-size:1.15rem;color:var(--gold)}
@@ -598,7 +603,11 @@ function showTypo(idx){
         if(c.cases&&c.cases.length){
             casesHtml='<div class="rf tc-cases"><h4>Real-World Cases</h4><div class="tc-links">'+c.cases.map(function(cs){return '<a href="'+cs.url+'" target="_blank" class="tc-link" onclick="event.stopPropagation()"><span class="tc-dot"></span>'+cs.title+'</a>'}).join('')+'</div></div>';
         }
-        return '<div class="tcard"><div class="th"><div class="ti" style="background:'+c.bg+'">'+c.icon+'</div><h3>'+c.title+'</h3></div><p>'+c.desc+'</p><div class="rf"><h4>Red Flags</h4><ul>'+c.flags.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul></div>'+casesHtml+'</div>';
+        var exHtml='';
+        if(c.examples&&c.examples.length){
+            exHtml='<div class="rf tc-examples"><h4>How It Works \u2014 Examples</h4>'+c.examples.map(function(ex,i){return '<div class="tc-ex"><span class="tc-ex-num">'+(i+1)+'</span>'+ex+'</div>'}).join('')+'</div>';
+        }
+        return '<div class="tcard"><div class="th"><div class="ti" style="background:'+c.bg+'">'+c.icon+'</div><h3>'+c.title+'</h3></div><p>'+c.desc+'</p><div class="rf"><h4>Red Flags</h4><ul>'+c.flags.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul></div>'+exHtml+casesHtml+'</div>';
     }).join('');
 }
 showTypo(0);
