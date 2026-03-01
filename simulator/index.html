@@ -1,4 +1,3 @@
-
 <!--
   ═══════════════════════════════════════════════════════════════
   ECONOMIC CRIME HUNTER SIMULATOR
@@ -30,16 +29,39 @@ tailwind.config={theme:{extend:{colors:{
 html{height:100%;overflow:hidden}
 body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0;height:100%;overflow:hidden}
 ::-webkit-scrollbar{width:0;height:0}
-.screen{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px}
+.screen{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:110px}
 .screen.active{display:block;animation:sIn .32s cubic-bezier(.22,1,.36,1)}
 @keyframes sIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Nav ── */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(6,14,26,.94);border-top:1px solid rgba(74,106,138,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:68px}
-.bnav-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:600;cursor:pointer;transition:.15s;position:relative}
-.bnav-b.act{color:#00e68a}.bnav-b.act::before{content:'';position:absolute;top:3px;width:4px;height:4px;background:#00e68a;border-radius:50%}
-.bnav-ico{font-size:1.56rem;line-height:1}
+/* ── Standard Site Nav (white, matches home/vault) ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.08);padding-bottom:env(safe-area-inset-bottom,0px);height:calc(54px + env(safe-area-inset-bottom,0px))}
+.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:54px}
+.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0;text-decoration:none}
+.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
+.nb.act{color:#b91c1c;font-weight:700}
+.nb.act .bi{transform:scale(1.08)}
+.nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#b91c1c;border-radius:50%}
+
+/* ── Sim Toolbar (dark, above standard nav) ── */
+.sim-bar{position:fixed;bottom:calc(54px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:899;background:rgba(6,14,26,.96);border-top:1px solid rgba(74,106,138,.15);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);height:46px;transition:transform .25s ease,opacity .25s ease}
+.sim-bar.hidden{transform:translateY(100%);opacity:0;pointer-events:none}
+.sim-bar-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:46px}
+.sb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:600;cursor:pointer;transition:.15s;position:relative;-webkit-tap-highlight-color:transparent}
+.sb .si{font-size:1.25rem;line-height:1}
+.sb.act{color:#00e68a}
+.sb.act::before{content:'';position:absolute;top:2px;width:4px;height:4px;background:#00e68a;border-radius:50%}
+
+/* ── More overlay ── */
+.mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.mo.open{display:flex}
+.msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(54px + env(safe-area-inset-bottom,0px) + .8rem);animation:su .22s ease;color:#1a1a1a}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.msh h3{font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;font-weight:700}
+.mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit}
+.mi:active{background:#f5f5f5}
+.mi .ic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f5f5f5;flex-shrink:0}
+.mi .ml{font-weight:600;font-size:.8rem}
+.mi .ms{font-size:.63rem;color:#888}
 
 /* ── Cards ── */
 .gc{background:rgba(22,42,74,.6);border:1px solid rgba(74,106,138,.14);border-radius:16px;backdrop-filter:blur(8px)}
@@ -142,15 +164,35 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav class="bnav" id="mainNav">
-<div class="bnav-inner">
-  <button class="bnav-b" onclick="window.location.href='index.html'"><span class="bnav-ico">🏠</span>Home</button>
-  <button class="bnav-b act" data-s="dashboard" onclick="nav('dashboard')"><span class="bnav-ico">🕵️</span>Dashboard</button>
-  <button class="bnav-b" data-s="cases" onclick="nav('cases')"><span class="bnav-ico">📋</span>My Cases</button>
-  <button class="bnav-b" data-s="profile" onclick="nav('profile')"><span class="bnav-ico">👤</span>Profile</button>
+<!-- ── SIM TOOLBAR (sim-specific features) ── -->
+<div class="sim-bar" id="simBar">
+<div class="sim-bar-inner">
+  <button class="sb act" data-s="dashboard" onclick="simNav('dashboard')"><span class="si">🕵️</span>Dashboard</button>
+  <button class="sb" data-s="cases" onclick="simNav('cases')"><span class="si">📋</span>My Cases</button>
+  <button class="sb" data-s="profile" onclick="simNav('profile')"><span class="si">👤</span>Profile</button>
+</div>
+</div>
+
+<!-- ── STANDARD SITE NAV ── -->
+<nav class="bnav">
+<div class="bni">
+<a class="nb" href="../index.html"><span class="bi">&#x1F3E0;</span>Home</a>
+<a class="nb" href="../index.html#impact"><span class="bi">&#x1F4CA;</span>Impact</a>
+<a class="nb" href="../index.html#reference"><span class="bi">&#x1F4CB;</span>Typologies</a>
+<a class="nb act" href="simulator.html"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</a>
+<a class="nb" href="../index.html#future"><span class="bi">&#x1F680;</span>Evolution</a>
+<a class="nb" href="../index.html#intelligence"><span class="bi">&#x1F50E;</span>Directory</a>
+<button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
 </div>
 </nav>
+<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
+<div class="msh">
+<h3>More Sections</h3>
+<a class="mi" href="../index.html#competencies"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></a>
+<a class="mi" href="../index.html#glossary"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></a>
+<a class="mi" href="../index.html#about"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></a>
+</div>
+</div>
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="screen active" id="scr-dashboard">
@@ -193,7 +235,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 <!-- ═══ ROLE SELECT ═══ -->
 <div class="screen" id="scr-roleselect">
   <div class="p-5">
-    <button onclick="nav('dashboard')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:1rem">← Back</button>
+    <button onclick="simNav('dashboard')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:1rem">← Back</button>
     <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a;margin-bottom:.15rem">Select Your Role</div>
     <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Choose Your Desk</h2>
     <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Each role has different cases and investigation tools.</p>
@@ -315,13 +357,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div id="kyc-pill"></div>
     </div>
   </div>
-  <!-- Application summary -->
   <div class="px-5 mb-3"><div class="gc p-4">
     <div class="sec-hdr" style="color:#38bdf8">Application Summary</div>
     <div id="kyc-app" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
   </div></div>
   <div class="px-5 mb-3" id="kyc-flagsum"></div>
-  <!-- Ownership Graph -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#ffb833">🏛️ Beneficial Ownership Structure</div>
     <p style="font-size:.66rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
@@ -330,27 +370,22 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="net-tip" id="kyc-tip"></div>
     </div>
   </div>
-  <!-- Documents -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">📄 Document Review</div>
     <div id="kyc-docs" class="space-y-2"></div>
   </div>
-  <!-- Screening -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">🛡️ Screening Results</div>
     <div id="kyc-scr" class="space-y-2"></div>
   </div>
-  <!-- Red Flags -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#ff4d6a">🚩 CDD Red Flags</div>
     <div id="kyc-flags" class="space-y-2"></div>
   </div>
-  <!-- Notes -->
   <div class="px-5 mb-4">
     <div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div>
     <textarea id="kyc-notes" rows="3" placeholder="Add CDD notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
   </div>
-  <!-- KYC Action buttons -->
   <div class="act-grid" style="padding-bottom:1.5rem">
     <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('approve')"><span class="act-ico">✅</span>Approve</button>
     <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('reject')"><span class="act-ico">🚫</span>Reject</button>
@@ -369,13 +404,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div id="eddi-pill"></div>
     </div>
   </div>
-  <!-- Profile -->
   <div class="px-5 mb-3"><div class="gc p-4">
     <div class="sec-hdr" style="color:#a78bfa">👤 Customer Profile</div>
     <div id="eddi-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
   </div></div>
   <div class="px-5 mb-3" id="eddi-flagsum"></div>
-  <!-- Network -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#a78bfa">🔗 Relationship Map</div>
     <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
@@ -384,17 +417,14 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="net-tip" id="eddi-tip"></div>
     </div>
   </div>
-  <!-- Review Trigger -->
   <div class="px-5 mb-3"><div class="gc-s p-3">
     <div class="sec-hdr" style="color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div>
     <p id="eddi-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
   </div></div>
-  <!-- Source of Wealth -->
   <div class="px-5 mb-3"><div class="gc p-4">
     <div class="sec-hdr" style="color:#ffb833">💰 Source of Wealth Assessment</div>
     <div id="eddi-sow" style="font-size:.72rem"></div>
   </div></div>
-  <!-- Adverse Media -->
   <div class="px-5 mb-3">
     <div class="coll" id="eddi-media-coll">
       <div class="coll-hdr" onclick="toggleColl('eddi-media-coll')">
@@ -404,7 +434,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="coll-body"><div class="coll-body-inner"><div id="eddi-media" class="space-y-2"></div></div></div>
     </div>
   </div>
-  <!-- Transactions -->
   <div class="px-5 mb-3">
     <div class="coll" id="eddi-txs-coll">
       <div class="coll-hdr" onclick="toggleColl('eddi-txs-coll')">
@@ -414,27 +443,22 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="coll-body"><div class="coll-body-inner"><div id="eddi-txs" class="space-y-2"></div></div></div>
     </div>
   </div>
-  <!-- Documents -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">📄 Document Review</div>
     <div id="eddi-docs" class="space-y-2"></div>
   </div>
-  <!-- Screening -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">🛡️ Screening Results</div>
     <div id="eddi-scr" class="space-y-2"></div>
   </div>
-  <!-- Red Flags -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#ff4d6a">🚩 EDD Red Flags</div>
     <div id="eddi-flags" class="space-y-2"></div>
   </div>
-  <!-- Notes -->
   <div class="px-5 mb-4">
     <div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div>
     <textarea id="eddi-notes" rows="3" placeholder="Add EDD review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
   </div>
-  <!-- EDD Individual Action buttons -->
   <div class="act-grid" style="padding-bottom:1.5rem">
     <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
     <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
@@ -453,13 +477,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div id="edde-pill"></div>
     </div>
   </div>
-  <!-- Entity Profile -->
   <div class="px-5 mb-3"><div class="gc p-4">
     <div class="sec-hdr" style="color:#ffb833">🏢 Entity Profile</div>
     <div id="edde-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
   </div></div>
   <div class="px-5 mb-3" id="edde-flagsum"></div>
-  <!-- Network -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#ffb833">🏛️ Ownership & Relationship Structure</div>
     <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
@@ -468,17 +490,14 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="net-tip" id="edde-tip"></div>
     </div>
   </div>
-  <!-- Review Trigger -->
   <div class="px-5 mb-3"><div class="gc-s p-3">
     <div class="sec-hdr" style="color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div>
     <p id="edde-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
   </div></div>
-  <!-- Source of Wealth -->
   <div class="px-5 mb-3"><div class="gc p-4">
     <div class="sec-hdr" style="color:#ffb833">💰 Source of Wealth / Funds Assessment</div>
     <div id="edde-sow" style="font-size:.72rem"></div>
   </div></div>
-  <!-- Adverse Media -->
   <div class="px-5 mb-3">
     <div class="coll" id="edde-media-coll">
       <div class="coll-hdr" onclick="toggleColl('edde-media-coll')">
@@ -488,7 +507,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="coll-body"><div class="coll-body-inner"><div id="edde-media" class="space-y-2"></div></div></div>
     </div>
   </div>
-  <!-- Transactions -->
   <div class="px-5 mb-3">
     <div class="coll" id="edde-txs-coll">
       <div class="coll-hdr" onclick="toggleColl('edde-txs-coll')">
@@ -498,27 +516,22 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
       <div class="coll-body"><div class="coll-body-inner"><div id="edde-txs" class="space-y-2"></div></div></div>
     </div>
   </div>
-  <!-- Documents -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">📄 Document Review</div>
     <div id="edde-docs" class="space-y-2"></div>
   </div>
-  <!-- Screening -->
   <div class="px-5 mb-3">
     <div class="sec-hdr">🛡️ Screening Results</div>
     <div id="edde-scr" class="space-y-2"></div>
   </div>
-  <!-- Red Flags -->
   <div class="px-5 mb-3">
     <div class="sec-hdr" style="color:#ff4d6a">🚩 EDD Red Flags</div>
     <div id="edde-flags" class="space-y-2"></div>
   </div>
-  <!-- Notes -->
   <div class="px-5 mb-4">
     <div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div>
     <textarea id="edde-notes" rows="3" placeholder="Add EDD entity review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
   </div>
-  <!-- EDD Entity Action buttons -->
   <div class="act-grid" style="padding-bottom:1.5rem">
     <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
     <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
@@ -588,13 +601,17 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 </div>
 
 <!-- ── DATA ── -->
-<script src="/cases/aml-cases.js"></script>
-<script src="/cases/kyc-cases.js"></script>
-<script src="/cases/edd-individual-cases.js"></script>
-<script src="/cases/edd-entity-cases.js"></script>
+<script src="cases/aml-cases.js"></script>
+<script src="cases/kyc-cases.js"></script>
+<script src="cases/edd-individual-cases.js"></script>
+<script src="cases/edd-entity-cases.js"></script>
 
 <!-- ── APP LOGIC ── -->
 <script>
+// ═══ MORE OVERLAY ═══
+function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
+function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
+
 // ═══ TIPS ═══
 var TIPS=[
   "Structuring is a federal crime under 31 U.S.C. § 5324 — even if the funds are legitimate.",
@@ -625,20 +642,23 @@ function getAccuracy(){if(!state.casesCompleted.length)return null;return Math.r
 function getCases(){return state.currentRole==='kyc'?KYC_CASES:state.currentRole==='eddi'?EDD_INDIVIDUAL_CASES:state.currentRole==='edde'?EDD_ENTITY_CASES:AML_CASES;}
 
 // ═══ NAV ═══
-function nav(id){showScreen(id);document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.toggle('act',b.dataset.s===id);});document.getElementById('mainNav').style.display='';}
+function simNav(id){showScreen(id);document.querySelectorAll('.sb').forEach(function(b){b.classList.toggle('act',b.dataset.s===id);});showSimBar();}
+function nav(id){simNav(id);}
+function showSimBar(){document.getElementById('simBar').classList.remove('hidden');}
+function hideSimBar(){document.getElementById('simBar').classList.add('hidden');}
 function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('scr-'+id);if(el){el.classList.add('active');el.scrollTop=0;}if(id==='dashboard')renderDashboard();if(id==='cases')renderCaseLog();if(id==='profile')renderProfile();}
-function backToShift(){document.getElementById('mainNav').style.display='';showScreen('shift');renderShift();}
+function backToShift(){showSimBar();showScreen('shift');renderShift();}
 
 // ═══ DASHBOARD ═══
 function renderDashboard(){var li=getLevelInfo(),acc=getAccuracy();document.getElementById('d-streak').innerHTML='<span class="fire">🔥</span> '+state.streak+' day streak';document.getElementById('d-level').textContent=li.title;document.getElementById('d-lvl-num').textContent=li.level;document.getElementById('d-xp-cur').textContent=state.xp;document.getElementById('d-xp-max').textContent=li.xpForNext;document.getElementById('d-xp-bar').style.width=li.progress+'%';document.getElementById('d-score').textContent=state.xp;document.getElementById('d-cases').textContent=state.casesCompleted.length;document.getElementById('d-acc').textContent=acc!==null?acc+'%':'—';document.getElementById('d-tip').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];}
 
 // ═══ SHIFT ═══
-function startShift(role){state.currentRole=role;state.shiftResults=[];var today=new Date().toISOString().slice(0,10);if(state.lastPlayDate!==today)state.streak=(state.streak||0)+1;state.lastPlayDate=today;saveState();var badge=document.getElementById('shift-role-badge');var labels={aml:'AML Analyst — Suspicious Activity',kyc:'KYC Analyst — Customer Due Diligence',eddi:'EDD Analyst — Individual Reviews',edde:'EDD Analyst — Entity Reviews'};var cols={aml:'#ff4d6a',kyc:'#38bdf8',eddi:'#a78bfa',edde:'#ffb833'};badge.textContent=labels[role]||role;badge.style.color=cols[role]||'#00e68a';showScreen('shift');renderShift();document.querySelectorAll('.bnav-b').forEach(function(b){b.classList.remove('act');});}
+function startShift(role){state.currentRole=role;state.shiftResults=[];var today=new Date().toISOString().slice(0,10);if(state.lastPlayDate!==today)state.streak=(state.streak||0)+1;state.lastPlayDate=today;saveState();var badge=document.getElementById('shift-role-badge');var labels={aml:'AML Analyst — Suspicious Activity',kyc:'KYC Analyst — Customer Due Diligence',eddi:'EDD Analyst — Individual Reviews',edde:'EDD Analyst — Entity Reviews'};var cols={aml:'#ff4d6a',kyc:'#38bdf8',eddi:'#a78bfa',edde:'#ffb833'};badge.textContent=labels[role]||role;badge.style.color=cols[role]||'#00e68a';showScreen('shift');renderShift();document.querySelectorAll('.sb').forEach(function(b){b.classList.remove('act');});}
 
 function renderShift(){var cases=getCases(),el=document.getElementById('shift-cards'),done=state.shiftResults||[];el.innerHTML=cases.map(function(c,i){var resolved=done.find(function(r){return r.id===c.id;});var pc={critical:'pill-crit',high:'pill-high',med:'pill-med',low:'pill-low'}[c.riskLevel];return '<div class="gc p-4 cursor-pointer transition-transform active:scale-[.98]" onclick="'+(resolved?'':'openCase('+i+')')+'" style="'+(resolved?'opacity:.5;pointer-events:none':'')+'"><div class="flex justify-between items-start mb-2"><div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</div><span class="pill '+pc+'">'+c.riskLabel+'</span></div><h3 style="font-family:\'Anybody\',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.15rem">'+c.name+'</h3><p style="font-size:.72rem;color:#4a6a8a;margin-bottom:.5rem">'+c.teaser+'</p><div class="flex justify-between items-center"><div style="font-size:.62rem;color:#4a6a8a">'+(c.amount||c.entityType||'')+'</div>'+(resolved?'<span style="font-size:.62rem;font-weight:700;color:'+(resolved.correct?'#00e68a':'#ff4d6a')+'">'+(resolved.correct?'✓ Correct':'✗ Incorrect')+'</span>':'<span style="font-size:.62rem;color:#00e68a;font-weight:600">Tap to investigate →</span>')+'</div></div>';}).join('');}
 
 // ═══ OPEN CASE ═══
-function openCase(idx){state.currentCase=idx;var c=getCases()[idx];document.getElementById('mainNav').style.display='none';if(state.currentRole==='kyc')openKYC(c);else if(state.currentRole==='eddi')openEDDI(c);else if(state.currentRole==='edde')openEDDE(c);else openAML(c);}
+function openCase(idx){state.currentCase=idx;var c=getCases()[idx];hideSimBar();if(state.currentRole==='kyc')openKYC(c);else if(state.currentRole==='eddi')openEDDI(c);else if(state.currentRole==='edde')openEDDE(c);else openAML(c);}
 
 // ═══ AML INVESTIGATION ═══
 function openAML(c){
@@ -671,7 +691,6 @@ function renderNetworkAML(net){
   var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};
   var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
   svg.innerHTML='';
-  // Arrow markers
   var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
   defs.innerHTML='<marker id="ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(74,106,138,.5)"/></marker>'
     +'<marker id="ah-hot" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(255,77,106,.6)"/></marker>';
@@ -679,7 +698,6 @@ function renderNetworkAML(net){
   var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
   net.edges.forEach(function(e){
     var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];
-    // Shorten line so arrow doesn't overlap node
     var dx=nb.x-na.x,dy=nb.y-na.y,len=Math.sqrt(dx*dx+dy*dy);
     var ux=dx/len,uy=dy/len,pad=26;
     var x1=na.x+ux*pad,y1=na.y+uy*pad,x2=nb.x-ux*pad,y2=nb.y-uy*pad;
@@ -689,7 +707,6 @@ function renderNetworkAML(net){
     if(hot)line.setAttribute('stroke-dasharray','6 3');
     line.setAttribute('marker-end','url(#ah'+(hot?'-hot':'')+')');
     line.dataset.from=e[0];line.dataset.to=e[1];edgeG.appendChild(line);
-    // Edge label
     var label=e[2]||'';
     if(label){
       var mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
@@ -736,7 +753,6 @@ function openKYC(c){
   showScreen('kyc');
 }
 
-// ═══ OWNERSHIP GRAPH ═══
 function renderOwnershipGraph(h){
   var svg=document.getElementById('kyc-net'),tip=document.getElementById('kyc-tip');tip.classList.remove('show');
   var riskCol={critical:'#ff4d6a',high:'#ffb833',medium:'#38bdf8',low:'#00e68a'};
@@ -844,14 +860,12 @@ function openEDDE(c){
 }
 
 // ═══ SHARED EDD RENDERERS ═══
-// ═══ COLLAPSIBLE TOGGLE ═══
 function toggleColl(id){var el=document.getElementById(id);if(el)el.classList.toggle('open');}
 function setCollCount(id,total,flagged){
   var el=document.getElementById(id);if(!el)return;
   el.textContent=flagged>0?flagged+' flagged / '+total:total+' items';
 }
 
-// ═══ FLAG CATEGORIES ═══
 var FLAG_CATS=[
   {icon:'🌍',label:'Jurisdiction',keys:['jurisdiction','fatf','grey-list','grey list','high-risk','offshore','panama','uae','cyprus','lebanon','bvi','seychelles']},
   {icon:'💰',label:'Source of Funds',keys:['source of','income','salary','wealth','mismatch','declared','earnings','revenue','turnover']},
@@ -871,7 +885,6 @@ function flagCategory(f){
   return {icon:'🔴',label:'Other'};
 }
 
-// ═══ FLAG SUMMARY TABLE ═══
 function renderFlagSummary(elId,flags){
   var html='<div class="fsum"><div class="fsum-title">🚩 Flag Summary</div>';
   FLAG_CATS.forEach(function(cat){
@@ -887,7 +900,6 @@ function renderFlagSummary(elId,flags){
   var el=document.getElementById(elId);if(el){el.innerHTML=flags.length?html:'';}
 }
 
-// ═══ CATEGORIZED FLAG LIST ═══
 function renderCategorizedFlags(elId,flags){
   document.getElementById(elId).innerHTML=flags.map(function(f){
     var cat=flagCategory(f);
@@ -924,7 +936,6 @@ function renderEDDScreening(elId,scr){
   }).join('');
 }
 
-// ═══ EDD OWNERSHIP/RELATIONSHIP GRAPH ═══
 function renderOwnershipGraph_EDD(h,svgId,tipId,mode){
   var svg=document.getElementById(svgId),tip=document.getElementById(tipId);tip.classList.remove('show');
   var riskCol={critical:'#ff4d6a',high:'#ffb833',medium:'#38bdf8',low:'#00e68a'};
@@ -1023,7 +1034,6 @@ function showNodePanel(tipId,nodeId,mode){
   var tip=document.getElementById(tipId);
   var riskBadge=n.risk?'<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:.55rem;font-weight:700;text-transform:uppercase;margin-left:6px;background:rgba('+(n.risk==='critical'?'255,77,106':n.risk==='high'?'255,184,51':n.risk==='medium'?'56,189,248':'0,230,138')+',.15);color:'+(n.risk==='critical'?'#ff4d6a':n.risk==='high'?'#ffb833':n.risk==='medium'?'#38bdf8':'#00e68a')+'">'+n.risk+'</span>':'';
   var juris=n.jurisdiction?'<div style="font-size:.62rem;color:#4a6a8a;margin:3px 0">'+n.jurisdiction+'</div>':'';
-  // Find flags relevant to this node
   var flags=c.flags||[];var label=(n.label||'').toLowerCase();
   var relevantFlags=flags.filter(function(f){
     var fl=f.toLowerCase();
@@ -1033,7 +1043,6 @@ function showNodePanel(tipId,nodeId,mode){
     if(n.type==='unknown'&&(fl.indexOf('undisclosed')!==-1||fl.indexOf('settlor')!==-1||fl.indexOf('unknown')!==-1))return true;
     return false;
   });
-  // Build drag header + body
   var html='<div class="tip-drag" id="'+tipId+'-drag">'
     +'<div style="display:flex;align-items:center;gap:6px"><span style="color:#4a6a8a;font-size:.6rem;letter-spacing:1px">⠿</span><strong style="color:#fff;font-size:.78rem">'+n.label+'</strong>'+riskBadge+'</div>'
     +'<button onclick="closeTip(\''+tipId+'\')" style="background:0;border:0;color:#8ba4c0;font-size:1.1rem;cursor:pointer;padding:4px 6px;line-height:1;border-radius:4px" onmouseover="this.style.color=\'#ff4d6a\'" onmouseout="this.style.color=\'#8ba4c0\'">✕</button></div>';
@@ -1055,11 +1064,8 @@ function showNodePanel(tipId,nodeId,mode){
   html+='</div>';
   tip.innerHTML=html;tip.classList.add('show');
   clearTimeout(tip._t);
-  // Position: upper right of graph container
   var container=tip.parentElement;
-  var cw=container.offsetWidth;
   tip.style.right='8px';tip.style.left='auto';tip.style.top='8px';
-  // Init drag on header
   initTipDrag(tip,tipId+'-drag');
 }
 
@@ -1068,14 +1074,12 @@ function initTipDrag(tip,dragId){
   var drag=document.getElementById(dragId);if(!drag)return;
   var dragging=false,ox=0,oy=0,startL=0,startT=0;
   function onDown(e){
-    // Let close button clicks through
     var tgt=e.target;while(tgt&&tgt!==drag){if(tgt.tagName==='BUTTON')return;tgt=tgt.parentNode;}
     e.preventDefault();var ev=e.touches?e.touches[0]:e;
     var rect=tip.getBoundingClientRect();
     startL=rect.left-tip.parentElement.getBoundingClientRect().left;
     startT=rect.top-tip.parentElement.getBoundingClientRect().top;
     ox=ev.clientX;oy=ev.clientY;dragging=true;drag.style.cursor='grabbing';
-    // Switch from right to left positioning for drag
     tip.style.left=startL+'px';tip.style.right='auto';
   }
   function onMove(e){
@@ -1120,7 +1124,7 @@ function decide(action){
   if(fb.grade==='excellent')spawnConfetti();
 }
 
-function afterFeedback(){document.getElementById('ov-feedback').classList.remove('show');if(document.getElementById('fb-btn').dataset.allDone==='true'){showShiftSummary();}else{document.getElementById('mainNav').style.display='';showScreen('shift');renderShift();}}
+function afterFeedback(){document.getElementById('ov-feedback').classList.remove('show');if(document.getElementById('fb-btn').dataset.allDone==='true'){showShiftSummary();}else{showSimBar();showScreen('shift');renderShift();}}
 
 // ═══ SUMMARY ═══
 function showShiftSummary(){
@@ -1131,7 +1135,7 @@ function showShiftSummary(){
   document.getElementById('ov-feedback').classList.remove('show');document.getElementById('ov-summary').classList.add('show');
   if(acc===100)spawnConfetti();state.badges.forEach(function(b){delete b.shift;});saveState();
 }
-function closeSummary(){document.getElementById('ov-summary').classList.remove('show');state.shiftResults=[];nav('dashboard');}
+function closeSummary(){document.getElementById('ov-summary').classList.remove('show');state.shiftResults=[];simNav('dashboard');}
 
 // ═══ BADGES ═══
 function checkBadges(c,action){
