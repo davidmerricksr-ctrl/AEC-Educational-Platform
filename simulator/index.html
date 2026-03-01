@@ -96,6 +96,19 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .net-label{font-family:'DM Sans',sans-serif;font-size:11px;fill:#c8daf0;pointer-events:none;text-anchor:middle;font-weight:600}
 .net-edge{stroke:rgba(74,106,138,.3);stroke-width:2}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2.5}
 .net-elabel{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ffb833;pointer-events:none;text-anchor:middle;font-weight:600}
+
+/* ── Money flow animation ── */
+@keyframes flowDash{to{stroke-dashoffset:-20}}
+@keyframes flowDashHot{to{stroke-dashoffset:-16}}
+@keyframes amtPulse{0%,100%{opacity:.85}50%{opacity:1}}
+.net-edge.flow{stroke-dasharray:10 10;animation:flowDash .9s linear infinite}
+.net-edge.flow.hot{stroke-dasharray:8 8;animation:flowDashHot .6s linear infinite}
+.net-amt-bg{fill:rgba(0,230,138,.12);stroke:rgba(0,230,138,.25);stroke-width:1}
+.net-amt-bg.hot{fill:rgba(255,77,106,.12);stroke:rgba(255,77,106,.25)}
+.net-amt{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#00e68a;pointer-events:none;text-anchor:middle;font-weight:700;letter-spacing:.02em}
+.net-amt.hot{fill:#ff4d6a}
+.net-amt-g{animation:amtPulse 2.5s ease-in-out infinite}
+
 .net-tip{position:absolute;background:rgba(6,14,26,.97);border:1px solid rgba(74,106,138,.3);border-radius:12px;padding:0;font-size:.74rem;color:#c8daf0;pointer-events:auto;z-index:60;width:260px;max-height:360px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6);opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;line-height:1.45}
 .net-tip.show{opacity:1;transform:translateY(0)}
 .tip-drag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;cursor:grab;user-select:none;-webkit-user-select:none;border-bottom:1px solid rgba(74,106,138,.12);background:rgba(11,26,46,.6)}
@@ -184,13 +197,15 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 </div>
 </nav>
 
-<!-- ── MORE OVERLAY (matches main site modal) ── -->
+<!-- ── MORE OVERLAY (updated with Vault, Journey, About standalone) ── -->
 <div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
 <div class="site-msh">
   <h3>More Sections</h3>
+  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">&#x25C6;</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">&#x1F4D3;</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
   <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
   <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../index.html#about'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
 </div>
 </div>
 
@@ -338,7 +353,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   <div class="px-5 mb-3" id="aml-flagsum"></div>
   <div class="px-5 mb-3">
     <div class="sec-hdr">Relationship Network</div>
-    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
+    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange. Animated lines show money flow direction.</p>
     <div class="gc p-3 relative" style="min-height:380px">
       <svg id="aml-net" width="100%" height="380" viewBox="0 0 400 340"></svg>
       <div class="net-tip" id="aml-tip"></div>
@@ -593,7 +608,87 @@ function openAML(c){
   renderNetworkAML(c.network);renderCategorizedFlags('aml-flags',c.flags);document.getElementById('aml-notes').value=state.notes[c.id]||'';renderFlagSummary('aml-flagsum',c.flags);
   var txFlagged=c.transactions.filter(function(t){return t.flag;}).length;setCollCount('aml-txs-count',c.transactions.length,txFlagged);showScreen('aml');
 }
-function renderNetworkAML(net){var svg=document.getElementById('aml-net'),tip=document.getElementById('aml-tip');tip.classList.remove('show');var hotSet={};net.hotEdges.forEach(function(e){hotSet[e[0]+'-'+e[1]]=true;});var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};svg.innerHTML='';var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');defs.innerHTML='<marker id="ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(74,106,138,.5)"/></marker><marker id="ah-hot" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,4 L0,8 Z" fill="rgba(255,77,106,.6)"/></marker>';svg.appendChild(defs);var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');net.edges.forEach(function(e){var na=net.nodes[e[0]],nb=net.nodes[e[1]];var hot=hotSet[e[0]+'-'+e[1]];var dx=nb.x-na.x,dy=nb.y-na.y,len=Math.sqrt(dx*dx+dy*dy);var ux=dx/len,uy=dy/len,pad=26;var x1=na.x+ux*pad,y1=na.y+uy*pad,x2=nb.x-ux*pad,y2=nb.y-uy*pad;var line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);line.setAttribute('class','net-edge'+(hot?' hot':''));if(hot)line.setAttribute('stroke-dasharray','6 3');line.setAttribute('marker-end','url(#ah'+(hot?'-hot':'')+')');line.dataset.from=e[0];line.dataset.to=e[1];edgeG.appendChild(line);var label=e[2]||'';if(label){var mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;var lg=document.createElementNS('http://www.w3.org/2000/svg','g');lg.dataset.efrom=e[0];lg.dataset.eto=e[1];var tw=label.length*5.5+10;lg.innerHTML='<rect x="'+(mx-tw/2)+'" y="'+(my-8)+'" width="'+tw+'" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/><text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+label+'</text>';edgeG.appendChild(lg);}});svg.appendChild(edgeG);net.nodes.forEach(function(n){var col=colors[n.type]||'#a78bfa';var g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';g.innerHTML='<circle class="nd-bg" cx="'+n.x+'" cy="'+n.y+'" r="24" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/><circle class="nd-fg" cx="'+n.x+'" cy="'+n.y+'" r="16" fill="'+col+'" fill-opacity=".25"/><text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:16px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text><text x="'+n.x+'" y="'+(n.y+40)+'" class="net-label nd-lbl">'+n.label+'</text>';svg.appendChild(g);});initDrag(svg,'aml',net.nodes,net.edges,'aml-tip');}
+
+// ═══ ENHANCED AML NETWORK RENDERER — with directional flow arrows + amount overlays ═══
+function renderNetworkAML(net){
+  var svg=document.getElementById('aml-net'),tip=document.getElementById('aml-tip');
+  tip.classList.remove('show');
+  var hotSet={};
+  net.hotEdges.forEach(function(e){hotSet[e[0]+'-'+e[1]]=true;});
+  var colors={customer:'#00e68a',bank:'#38bdf8',company:'#ffb833',jurisdiction:'#ff4d6a'};
+  var icons={customer:'🧑',bank:'🏦',company:'🏢',jurisdiction:'🌍'};
+  svg.innerHTML='';
+
+  // ── SVG defs: arrow markers (larger, more visible) ──
+  var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML=
+    '<marker id="ah" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">'+
+      '<path d="M0,0 L12,5 L0,10 L3,5 Z" fill="rgba(0,230,138,.6)"/>'+
+    '</marker>'+
+    '<marker id="ah-hot" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">'+
+      '<path d="M0,0 L12,5 L0,10 L3,5 Z" fill="rgba(255,77,106,.75)"/>'+
+    '</marker>'+
+    '<filter id="amt-glow"><feGaussianBlur stdDeviation="2" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  svg.appendChild(defs);
+
+  // ── Edges with animated flow + amount overlays ──
+  var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
+  net.edges.forEach(function(e){
+    var na=net.nodes[e[0]],nb=net.nodes[e[1]];
+    var hot=hotSet[e[0]+'-'+e[1]];
+    var dx=nb.x-na.x,dy=nb.y-na.y,len=Math.sqrt(dx*dx+dy*dy)||1;
+    var ux=dx/len,uy=dy/len,pad=28;
+    var x1=na.x+ux*pad,y1=na.y+uy*pad,x2=nb.x-ux*pad,y2=nb.y-uy*pad;
+
+    // Edge line with directional flow animation
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+    line.setAttribute('class','net-edge flow'+(hot?' hot':''));
+    line.setAttribute('marker-end','url(#ah'+(hot?'-hot':'')+')');
+    line.dataset.from=e[0];line.dataset.to=e[1];
+    edgeG.appendChild(line);
+
+    // Amount / label overlay on edge midpoint
+    var label=e[2]||'';
+    if(label){
+      var mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
+      // Offset label perpendicular to edge to avoid overlap with line
+      var perpX=-uy*12,perpY=ux*12;
+      var lx=mx+perpX,ly=my+perpY;
+      var lg=document.createElementNS('http://www.w3.org/2000/svg','g');
+      lg.setAttribute('class','net-amt-g');
+      lg.dataset.efrom=e[0];lg.dataset.eto=e[1];
+
+      // Detect if label looks like a currency amount
+      var isAmt=/[\$£€¥]|[0-9].*[kKmM]/.test(label);
+      var tw=label.length*(isAmt?6.5:5.5)+(isAmt?16:10);
+      var bgCls=hot?'net-amt-bg hot':'net-amt-bg';
+      var txtCls=hot?'net-amt hot':'net-amt';
+
+      lg.innerHTML=
+        '<rect class="'+bgCls+'" x="'+(lx-tw/2)+'" y="'+(ly-9)+'" width="'+tw+'" height="18" rx="9" filter="'+(hot?'url(#amt-glow)':'')+'"/>'+
+        '<text x="'+lx+'" y="'+(ly+4)+'" class="'+(isAmt?txtCls:'net-elabel')+'"'+(isAmt?' style="font-size:10px;letter-spacing:.03em"':'')+'>'+label+'</text>';
+      edgeG.appendChild(lg);
+    }
+  });
+  svg.appendChild(edgeG);
+
+  // ── Nodes ──
+  net.nodes.forEach(function(n){
+    var col=colors[n.type]||'#a78bfa';
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';
+    g.innerHTML=
+      '<circle class="nd-bg" cx="'+n.x+'" cy="'+n.y+'" r="24" fill="'+col+'" fill-opacity=".12" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/>'+
+      '<circle class="nd-fg" cx="'+n.x+'" cy="'+n.y+'" r="16" fill="'+col+'" fill-opacity=".25"/>'+
+      '<text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:16px;fill:#fff;pointer-events:none">'+icons[n.type]+'</text>'+
+      '<text x="'+n.x+'" y="'+(n.y+40)+'" class="net-label nd-lbl">'+n.label+'</text>';
+    svg.appendChild(g);
+  });
+
+  initDrag(svg,'aml',net.nodes,net.edges,'aml-tip');
+}
 
 // ═══ KYC INVESTIGATION ═══
 function openKYC(c){document.getElementById('kyc-id').textContent=c.id;document.getElementById('kyc-name').textContent=c.name;document.getElementById('kyc-pill').innerHTML='<span class="pill pill-'+(c.riskLevel==='critical'?'crit':c.riskLevel)+'">'+c.riskLabel+'</span>';var a=c.application;var volTip='Expected monthly transaction volume. Compare against actual activity after onboarding.';var jurisTip='Assess jurisdiction risk against FATF high-risk and grey-list countries. Consider tax haven and secrecy indicators.';document.getElementById('kyc-app').innerHTML=[['Account Type',a.type],['Purpose',a.purpose],['Expected Volume','<span title="'+volTip+'" style="cursor:help;border-bottom:1px dotted #4a6a8a">'+a.expectedVolume+'</span>'],['Jurisdiction','<span title="'+jurisTip+'" style="cursor:help;border-bottom:1px dotted #4a6a8a">'+a.jurisdiction+'</span>'],['Entity Type / DOB',a.incorporationDate||a.dateOfBirth],['Nationality / Agent',a.registeredAgent||a.nationality]].map(function(r){return '<div style="color:#4a6a8a;font-weight:600">'+r[0]+'</div><div>'+r[1]+'</div>';}).join('');renderOwnershipGraph(c.hierarchy);document.getElementById('kyc-docs').innerHTML=c.documents.map(function(d){var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ Incomplete';return '<div class="doc-card'+(d.flag?' flagged':'')+'"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div class="flex-1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.64rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';}).join('');document.getElementById('kyc-scr').innerHTML=c.screening.map(function(s){return '<div class="scr-row'+(s.flag?' flagged':'')+'"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.68rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+'">'+s.result+'</div></div>';}).join('');var flagsEl=document.getElementById('kyc-flags');var flagsHeader=flagsEl.previousElementSibling;if(c.flags.length){flagsHeader.style.display='';renderCategorizedFlags('kyc-flags',c.flags);}else{flagsHeader.style.display='none';flagsEl.innerHTML='<div class="gc-s p-3 text-center" style="font-size:.74rem;color:#00e68a">✅ No red flags identified. Standard risk profile.</div>';}document.getElementById('kyc-notes').value=state.notes[c.id]||'';renderFlagSummary('kyc-flagsum',c.flags);showScreen('kyc');}
@@ -620,7 +715,7 @@ function renderEDDScreening(elId,scr){document.getElementById(elId).innerHTML=sc
 function renderOwnershipGraph_EDD(h,svgId,tipId,mode){var svg=document.getElementById(svgId),tip=document.getElementById(tipId);tip.classList.remove('show');var riskCol={critical:'#ff4d6a',high:'#ffb833',medium:'#38bdf8',low:'#00e68a'};var typeIco={company:'🏢',person:'🧑',trust:'🏛️',nominee:'👤',bank:'🏦',unknown:'❓'};svg.innerHTML='';var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');h.edges.forEach(function(e){var from=h.nodes.find(function(n){return n.id===e.from;}),to=h.nodes.find(function(n){return n.id===e.to;});if(!from||!to)return;var isHot=to.risk==='critical'||from.risk==='critical';var line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',from.x);line.setAttribute('y1',from.y);line.setAttribute('x2',to.x);line.setAttribute('y2',to.y);line.setAttribute('class','net-edge'+(isHot?' hot':''));if(isHot)line.setAttribute('stroke-dasharray','6 3');line.dataset.from=e.from;line.dataset.to=e.to;edgeG.appendChild(line);var mx=(from.x+to.x)/2,my=(from.y+to.y)/2;var lg=document.createElementNS('http://www.w3.org/2000/svg','g');lg.dataset.efrom=e.from;lg.dataset.eto=e.to;var tw=Math.max((e.label||'').length*5.5+10,52);lg.innerHTML='<rect x="'+(mx-tw/2)+'" y="'+(my-8)+'" width="'+tw+'" height="16" rx="4" fill="#0b1a2e" stroke="rgba(74,106,138,.2)" stroke-width="1"/><text x="'+mx+'" y="'+(my+4)+'" class="net-elabel">'+(e.label||'')+'</text>';edgeG.appendChild(lg);});svg.appendChild(edgeG);h.nodes.forEach(function(n){var col=riskCol[n.risk]||'#8ba4c0';var ico=typeIco[n.type]||'🔷';var g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','net-node');g.dataset.nid=n.id;g.style.cursor='grab';var alert=n.risk==='critical'?'<circle class="nd-alert" cx="'+(n.x+24)+'" cy="'+(n.y-16)+'" r="5" fill="#ff4d6a"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle>':'';g.innerHTML='<rect class="nd-bg" x="'+(n.x-28)+'" y="'+(n.y-20)+'" width="56" height="40" rx="10" fill="'+col+'" fill-opacity=".1" stroke="'+col+'" stroke-width="1.5" stroke-opacity=".4"/><text class="nd-ico" x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" style="font-size:18px;fill:#fff;pointer-events:none">'+ico+'</text><text x="'+n.x+'" y="'+(n.y+36)+'" class="net-label nd-lbl">'+n.label+'</text>'+alert;svg.appendChild(g);});initDrag(svg,mode,h.nodes,h.edges,tipId);}
 
 // ═══ DRAG SYSTEM ═══
-function initDrag(svg,mode,nodes,edges,tipId){if(svg._dc)svg._dc();var dragging=null,wasDrag=false;var nMap={};nodes.forEach(function(n){nMap[mode==='aml'?n.id:n.id]=n;});function pt(e){var p=svg.createSVGPoint();var t=e.touches?e.touches[0]:e;p.x=t.clientX;p.y=t.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}function findG(el){while(el&&el!==svg){if(el.dataset&&el.dataset.nid!==undefined)return el;el=el.parentNode;}return null;}function moveNode(g,n){g.querySelectorAll('circle.nd-bg,circle.nd-fg').forEach(function(c){c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);});var bg=g.querySelector('rect.nd-bg');if(bg){var w=+bg.getAttribute('width'),bh=+bg.getAttribute('height');bg.setAttribute('x',n.x-w/2);bg.setAttribute('y',n.y-bh/2);}var ico=g.querySelector('.nd-ico');if(ico){ico.setAttribute('x',n.x);ico.setAttribute('y',n.y+5);}var lbl=g.querySelector('.nd-lbl');if(lbl){lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+(mode==='aml'?40:36));}var dot=g.querySelector('.nd-alert');if(dot){dot.setAttribute('cx',n.x+24);dot.setAttribute('cy',n.y-16);}}function moveEdges(){svg.querySelectorAll('line[data-from]').forEach(function(ln){var fk=ln.dataset.from,tk=ln.dataset.to;var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];if(fn&&tn){if(mode==='aml'){var dx=tn.x-fn.x,dy=tn.y-fn.y,len=Math.sqrt(dx*dx+dy*dy)||1;var ux=dx/len,uy=dy/len,pad=26;ln.setAttribute('x1',fn.x+ux*pad);ln.setAttribute('y1',fn.y+uy*pad);ln.setAttribute('x2',tn.x-ux*pad);ln.setAttribute('y2',tn.y-uy*pad);}else{ln.setAttribute('x1',fn.x);ln.setAttribute('y1',fn.y);ln.setAttribute('x2',tn.x);ln.setAttribute('y2',tn.y);}}});svg.querySelectorAll('g[data-efrom]').forEach(function(lg){var fk=lg.dataset.efrom,tk=lg.dataset.eto;var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];if(fn&&tn){var mx=(fn.x+tn.x)/2,my=(fn.y+tn.y)/2;var r=lg.querySelector('rect'),t=lg.querySelector('text');if(r){var hw=+r.getAttribute('width')/2;r.setAttribute('x',mx-hw);r.setAttribute('y',my-8);}if(t){t.setAttribute('x',mx);t.setAttribute('y',my+4);}}});}function onDown(e){var g=findG(e.target);if(!g)return;e.preventDefault();var p=pt(e);var nid=mode==='aml'?+g.dataset.nid:g.dataset.nid;dragging={g:g,n:nMap[nid],ox:p.x,oy:p.y};wasDrag=false;g.style.cursor='grabbing';}function onMove(e){if(!dragging)return;e.preventDefault();var p=pt(e);var dx=p.x-dragging.ox,dy=p.y-dragging.oy;if(Math.abs(dx)>2||Math.abs(dy)>2)wasDrag=true;dragging.n.x+=dx;dragging.n.y+=dy;dragging.ox=p.x;dragging.oy=p.y;moveNode(dragging.g,dragging.n);moveEdges();}function onUp(){if(!dragging)return;dragging.g.style.cursor='grab';if(!wasDrag){var nid=mode==='aml'?+dragging.g.dataset.nid:dragging.g.dataset.nid;showNodePanel(tipId,nid,mode);}dragging=null;}svg.addEventListener('mousedown',onDown);svg.addEventListener('mousemove',onMove);svg.addEventListener('mouseup',onUp);svg.addEventListener('mouseleave',onUp);svg.addEventListener('touchstart',onDown,{passive:false});svg.addEventListener('touchmove',onMove,{passive:false});svg.addEventListener('touchend',onUp);svg._dc=function(){svg.removeEventListener('mousedown',onDown);svg.removeEventListener('mousemove',onMove);svg.removeEventListener('mouseup',onUp);svg.removeEventListener('mouseleave',onUp);svg.removeEventListener('touchstart',onDown);svg.removeEventListener('touchmove',onMove);svg.removeEventListener('touchend',onUp);};}
+function initDrag(svg,mode,nodes,edges,tipId){if(svg._dc)svg._dc();var dragging=null,wasDrag=false;var nMap={};nodes.forEach(function(n){nMap[mode==='aml'?n.id:n.id]=n;});function pt(e){var p=svg.createSVGPoint();var t=e.touches?e.touches[0]:e;p.x=t.clientX;p.y=t.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}function findG(el){while(el&&el!==svg){if(el.dataset&&el.dataset.nid!==undefined)return el;el=el.parentNode;}return null;}function moveNode(g,n){g.querySelectorAll('circle.nd-bg,circle.nd-fg').forEach(function(c){c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);});var bg=g.querySelector('rect.nd-bg');if(bg){var w=+bg.getAttribute('width'),bh=+bg.getAttribute('height');bg.setAttribute('x',n.x-w/2);bg.setAttribute('y',n.y-bh/2);}var ico=g.querySelector('.nd-ico');if(ico){ico.setAttribute('x',n.x);ico.setAttribute('y',n.y+5);}var lbl=g.querySelector('.nd-lbl');if(lbl){lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+(mode==='aml'?40:36));}var dot=g.querySelector('.nd-alert');if(dot){dot.setAttribute('cx',n.x+24);dot.setAttribute('cy',n.y-16);}}function moveEdges(){svg.querySelectorAll('line[data-from]').forEach(function(ln){var fk=ln.dataset.from,tk=ln.dataset.to;var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];if(fn&&tn){if(mode==='aml'){var dx=tn.x-fn.x,dy=tn.y-fn.y,len=Math.sqrt(dx*dx+dy*dy)||1;var ux=dx/len,uy=dy/len,pad=28;ln.setAttribute('x1',fn.x+ux*pad);ln.setAttribute('y1',fn.y+uy*pad);ln.setAttribute('x2',tn.x-ux*pad);ln.setAttribute('y2',tn.y-uy*pad);}else{ln.setAttribute('x1',fn.x);ln.setAttribute('y1',fn.y);ln.setAttribute('x2',tn.x);ln.setAttribute('y2',tn.y);}}});svg.querySelectorAll('g[data-efrom]').forEach(function(lg){var fk=lg.dataset.efrom,tk=lg.dataset.eto;var fn=nMap[mode==='aml'?+fk:fk],tn=nMap[mode==='aml'?+tk:tk];if(fn&&tn){var mx=(fn.x+tn.x)/2,my=(fn.y+tn.y)/2;if(mode==='aml'){var dx=tn.x-fn.x,dy=tn.y-fn.y,len=Math.sqrt(dx*dx+dy*dy)||1;var perpX=(-dy/len)*12,perpY=(dx/len)*12;mx+=perpX;my+=perpY;}var r=lg.querySelector('rect'),t=lg.querySelector('text');if(r){var hw=+r.getAttribute('width')/2;r.setAttribute('x',mx-hw);r.setAttribute('y',my-(mode==='aml'?9:8));}if(t){t.setAttribute('x',mx);t.setAttribute('y',my+(mode==='aml'?4:4));}}});}function onDown(e){var g=findG(e.target);if(!g)return;e.preventDefault();var p=pt(e);var nid=mode==='aml'?+g.dataset.nid:g.dataset.nid;dragging={g:g,n:nMap[nid],ox:p.x,oy:p.y};wasDrag=false;g.style.cursor='grabbing';}function onMove(e){if(!dragging)return;e.preventDefault();var p=pt(e);var dx=p.x-dragging.ox,dy=p.y-dragging.oy;if(Math.abs(dx)>2||Math.abs(dy)>2)wasDrag=true;dragging.n.x+=dx;dragging.n.y+=dy;dragging.ox=p.x;dragging.oy=p.y;moveNode(dragging.g,dragging.n);moveEdges();}function onUp(){if(!dragging)return;dragging.g.style.cursor='grab';if(!wasDrag){var nid=mode==='aml'?+dragging.g.dataset.nid:dragging.g.dataset.nid;showNodePanel(tipId,nid,mode);}dragging=null;}svg.addEventListener('mousedown',onDown);svg.addEventListener('mousemove',onMove);svg.addEventListener('mouseup',onUp);svg.addEventListener('mouseleave',onUp);svg.addEventListener('touchstart',onDown,{passive:false});svg.addEventListener('touchmove',onMove,{passive:false});svg.addEventListener('touchend',onUp);svg._dc=function(){svg.removeEventListener('mousedown',onDown);svg.removeEventListener('mousemove',onMove);svg.removeEventListener('mouseup',onUp);svg.removeEventListener('mouseleave',onUp);svg.removeEventListener('touchstart',onDown);svg.removeEventListener('touchmove',onMove);svg.removeEventListener('touchend',onUp);};}
 
 // ═══ NODE PANEL ═══
 function closeTip(tipId){var el=document.getElementById(tipId);if(el){el.classList.remove('show');}}
