@@ -263,7 +263,18 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
 </div>
 <div class="sbar" id="homeStats"></div>
-<div onclick="window.location.href='vault.html'" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;padding:.55rem 1rem;background:#111;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:.9rem">◆</span><span style="font-size:.74rem;font-weight:600;color:#fff;letter-spacing:.03em">The Vault — Economic Crime Media Archive</span><span style="font-size:.9rem">◆</span></div>
+<div onclick="window.location.href='vault.html'" style="position:relative;z-index:2;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;background:linear-gradient(135deg,#0d0d0d 0%,#1a0a0a 40%,#0d0d0d 100%);border-top:1px solid rgba(185,28,28,.15);border-bottom:1px solid rgba(185,28,28,.15)">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(185,28,28,.08) 0%,transparent 70%);animation:vaultPulse 3s ease-in-out infinite"></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:.85rem 1.2rem;position:relative;z-index:1">
+<span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);font-size:.85rem">◆</span>
+<div style="text-align:center">
+<div style="font-family:'DM Serif Display',Georgia,serif;font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2">The Vault <span style="color:rgba(185,28,28,.8)">—</span> Classified Media Archive</div>
+<div style="font-size:.58rem;color:rgba(200,149,42,.7);font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-top:2px">Books · Films · Podcasts · Reports · Intelligence Briefs</div>
+</div>
+<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(185,28,28,.12);border:1px solid rgba(185,28,28,.25);color:rgba(255,255,255,.5);font-size:.7rem;font-weight:700;transition:.2s">→</span>
+</div>
+</div>
+<style>@keyframes vaultPulse{0%,100%{opacity:.6}50%{opacity:1}}</style>
 <div class="habout">
 <h2>A Career That <em>Matters</em></h2>
 <p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world — from compliance and data science to cybersecurity and intelligence analysis.</p>
