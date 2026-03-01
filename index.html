@@ -239,7 +239,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">📋</span>Reference</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">📊</span>Impact</button>
 <button class="nb" data-pg="competencies" onclick="go('competencies')"><span class="bi">🔑</span>Competencies</button>
-<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">🎮</span>Ops Sim</button>
+<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">🕵️</span>Ops Sim</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">≡</span>More</button>
 </div></nav>
 
@@ -265,13 +265,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
 </div>
 <div class="sbar" id="homeStats"></div>
-<div class="pi" style="padding-top:.8rem;padding-bottom:1rem">
-<div class="se">Pop Culture</div>
-<div class="st" style="font-size:1.35rem">Economic Crime On Screen & Page</div>
-<div class="sd" style="margin-bottom:.6rem">Films, TV series, books, and podcasts that bring financial crime to life — great for building awareness and understanding.</div>
-<div id="homePcGrid"></div>
-<div style="text-align:center;margin-top:.3rem"><button class="btn bgh" onclick="go('popculture')" style="font-size:.72rem">See All Pop Culture →</button></div>
-</div>
+<div onclick="go('popculture')" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:.55rem 1rem;background:#111;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:.9rem">🎬</span><span style="font-size:.74rem;font-weight:600;color:#fff;letter-spacing:.03em">Economic Crime in Pop Culture — Films, TV, Books & Podcasts</span><span style="font-size:.9rem">🎬</span></div>
 <div class="habout">
 <h2>A Career That <em>Matters</em></h2>
 <p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world — from compliance and data science to cybersecurity and intelligence analysis.</p>
@@ -587,7 +581,6 @@ document.getElementById('futureGrid').innerHTML=futures.map(f=>`<div class="fcar
 /* ── Pop Culture ── */
 var pcHtml=popCulture.map(p=>`<div class="pcard"><div class="pbadge">${p.icon}</div><div><h3>${p.title}</h3><div class="pmeta">${p.meta}</div><p>${p.desc}</p><span class="ptag ${p.cls}">${p.tag}</span></div></div>`).join('');
 document.getElementById('pcGrid').innerHTML=pcHtml;
-document.getElementById('homePcGrid').innerHTML=pcHtml;
 
 /* ── Resources ── */
 document.getElementById('resGrid').innerHTML=resources.map(r=>`<div class="rcard"><h3>${r.icon} ${r.title}</h3><p>${r.desc}</p><a href="${r.url}" target="_blank">${r.url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'')} →</a></div>`).join('');
