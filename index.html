@@ -199,8 +199,22 @@ a{color:var(--navy);text-decoration:none}
 .id-card .idc-attr{font-size:.48rem;color:var(--mute);line-height:1.35;font-style:italic}
 .id-card .idc-arrow{position:absolute;top:.9rem;right:.9rem;font-size:.55rem;color:var(--mute)}
 .id-none{text-align:center;padding:2rem 1rem;color:var(--mute);font-size:.82rem}
-.id-cat-hdr{font-family:var(--fd);font-size:.82rem;font-weight:700;color:var(--crim);text-transform:uppercase;letter-spacing:.05em;padding:.7rem 0 .3rem;margin-top:.5rem;border-bottom:1.5px solid var(--line);margin-bottom:.55rem}
-.id-cat-hdr:first-child{margin-top:0}
+/* Directory shelves */
+.id-shelf{margin-bottom:1rem}
+.id-shelf-hdr{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap;padding:0 4px}
+.id-shelf-hdr h3{font-family:var(--fd);font-size:.88rem;font-weight:700;color:var(--crim);display:flex;align-items:center;gap:6px}
+.id-shelf-hdr .cnt{font-size:.55rem;color:var(--mute);letter-spacing:.08em;font-weight:500}
+.id-shelf-sep{border:0;border-top:1px solid var(--line);margin:0}
+.id-track-wrap{position:relative}
+.id-hscroll{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+.id-hscroll::-webkit-scrollbar{display:none}
+.id-hscroll-inner{display:flex;gap:10px;padding:0 4px 8px}
+.id-hscroll-inner .id-card{flex-shrink:0;width:300px;margin-bottom:0;scroll-snap-align:start}
+@media(min-width:600px){.id-hscroll-inner .id-card{width:380px}}
+.id-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.92);border:1px solid var(--line);color:var(--ink);font-size:1.2rem;cursor:pointer;display:grid;place-items:center;transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.08);backdrop-filter:blur(6px)}
+.id-arrow:hover{background:var(--crim);color:#fff;border-color:var(--crim)}
+.id-arrow.al{left:-4px}
+.id-arrow.ar{right:-4px}
 .id-cat-count{font-family:var(--fb);font-size:.6rem;font-weight:500;color:var(--mute);text-transform:none;letter-spacing:0}
 /* Directory modal */
 .idm-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.55rem;padding:0 .15rem}
@@ -435,13 +449,13 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 </footer>
 
 <!-- DATA -->
-<script src="/data/competencies.js"></script>
-<script src="/data/typologies.js"></script>
-<script src="/data/impact.js"></script>
-<script src="/data/future.js"></script>
+<script src="data/competencies.js"></script>
+<script src="data/typologies.js"></script>
+<script src="data/impact.js"></script>
+<script src="data/future.js"></script>
 
-<script src="/data/glossary.js"></script>
-<script src="/data/intel-directory.js"></script>
+<script src="data/glossary.js"></script>
+<script src="data/intel-directory.js"></script>
 
 <!-- APP LOGIC -->
 <script>
@@ -575,9 +589,15 @@ function filterIntelDir(){
         if(!grouped[c]){grouped[c]=[];cats.push(c);}
         grouped[c].push(o);
     });
+    idTrackN=0;
     var html='';
     cats.forEach(function(cat){
-        html+='<div class="id-cat-hdr">'+cat+' <span class="id-cat-count">('+grouped[cat].length+')</span></div>';
+        var tid='idt_'+(idTrackN++);
+        html+='<div class="id-shelf">'+
+            '<div class="id-shelf-hdr"><h3>'+cat+'</h3><span class="cnt">'+grouped[cat].length+' entr'+(grouped[cat].length!==1?'ies':'y')+'</span></div>'+
+            '<div class="id-track-wrap">'+
+                '<button class="id-arrow al" onclick="scrollIdTrack(\''+tid+'\',-1)">\u2039</button>'+
+                '<div class="id-hscroll" id="'+tid+'"><div class="id-hscroll-inner">';
         grouped[cat].forEach(function(o){
             var origIdx=intelligenceOrgs.indexOf(o);
             var topRes=o.keyResources.slice(0,2);
@@ -596,9 +616,14 @@ function filterIntelDir(){
                 '<div class="idc-attr">'+o.attributionText+'</div>'+
             '</div>';
         });
+        html+='</div></div>'+
+            '<button class="id-arrow ar" onclick="scrollIdTrack(\''+tid+'\',1)">\u203a</button>'+
+            '</div></div><hr class="id-shelf-sep">';
     });
     document.getElementById('idGrid').innerHTML=html;
 }
+var idTrackN=0;
+function scrollIdTrack(id,dir){var el=document.getElementById(id);if(el)el.scrollBy({left:dir*340,behavior:"smooth"})}
 
 function openIdModal(idx){
     var o=intelligenceOrgs[idx];
