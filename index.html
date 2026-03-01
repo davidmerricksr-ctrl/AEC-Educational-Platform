@@ -17,7 +17,7 @@
 --r:14px;--rs:10px;
 --fd:'DM Serif Display',Georgia,serif;
 --fb:'DM Sans',system-ui,sans-serif;
---nav:58px;--sab:env(safe-area-inset-bottom,0px);
+--nav:72px;--sab:env(safe-area-inset-bottom,0px);
 }
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.62;overflow-x:hidden;padding-bottom:calc(var(--nav)+var(--sab)+4px);-webkit-font-smoothing:antialiased}
@@ -31,9 +31,9 @@ a{color:var(--navy);text-decoration:none}
 
 /* ══ BOTTOM NAV — ALWAYS BOTTOM ON ALL VIEWPORTS ══ */
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);padding-bottom:var(--sab);height:calc(var(--nav)+var(--sab))}
-.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:520px;margin:0 auto;height:var(--nav)}
-.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.46rem;font-weight:500;color:var(--mute);cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
-.nb .bi{font-size:1.05rem;line-height:1;transition:.12s}
+.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
+.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:var(--mute);cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
+.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
 .nb.act{color:var(--crim);font-weight:700}
 .nb.act .bi{transform:scale(1.08)}
 .nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
@@ -239,6 +239,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">📋</span>Reference</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">📊</span>Impact</button>
 <button class="nb" data-pg="competencies" onclick="go('competencies')"><span class="bi">🔑</span>Competencies</button>
+<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">🎮</span>Ops Sim</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">≡</span>More</button>
 </div></nav>
 
@@ -249,7 +250,6 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="mi" onclick="go('glossary');closeMore()"><div class="ic">📖</div><div><div class="ml">Glossary</div><div class="ms">A–Z terminology</div></div></div>
 <div class="mi" onclick="go('orgs');closeMore()"><div class="ic">🏛️</div><div><div class="ml">Organisations</div><div class="ms">Key bodies in economic crime</div></div></div>
 <div class="mi" onclick="go('future');closeMore()"><div class="ic">🚀</div><div><div class="ml">Future</div><div class="ms">Emerging technologies</div></div></div>
-<div class="mi" onclick="go('popculture');closeMore()"><div class="ic">🎬</div><div><div class="ml">Pop Culture</div><div class="ms">On screen &amp; page</div></div></div>
 <div class="mi" onclick="go('resources');closeMore()"><div class="ic">📚</div><div><div class="ml">Resources</div><div class="ms">Further study</div></div></div>
 <div class="mi" onclick="go('about');closeMore()"><div class="ic">ℹ️</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>
 </div>
@@ -263,12 +263,15 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="hbadge"><span class="pulse"></span> Educational Platform</div>
 <h1>Understanding<br><em>Economic Crime</em></h1>
 <p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
-<div class="hbtns">
-<button class="btn bp" onclick="go('explorer')">Explore Typologies →</button>
-<button class="btn bgh" onclick="go('competencies')">Competencies</button>
-</div>
 </div>
 <div class="sbar" id="homeStats"></div>
+<div class="pi" style="padding-top:.8rem;padding-bottom:1rem">
+<div class="se">Pop Culture</div>
+<div class="st" style="font-size:1.35rem">Economic Crime On Screen & Page</div>
+<div class="sd" style="margin-bottom:.6rem">Films, TV series, books, and podcasts that bring financial crime to life — great for building awareness and understanding.</div>
+<div id="homePcGrid"></div>
+<div style="text-align:center;margin-top:.3rem"><button class="btn bgh" onclick="go('popculture')" style="font-size:.72rem">See All Pop Culture →</button></div>
+</div>
 <div class="habout">
 <h2>A Career That <em>Matters</em></h2>
 <p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world — from compliance and data science to cybersecurity and intelligence analysis.</p>
@@ -582,7 +585,9 @@ renderGlossary(sortedGlossary);
 document.getElementById('futureGrid').innerHTML=futures.map(f=>`<div class="fcard"><span class="fi">${f.icon}</span><h3>${f.title}</h3><p>${f.desc}</p></div>`).join('');
 
 /* ── Pop Culture ── */
-document.getElementById('pcGrid').innerHTML=popCulture.map(p=>`<div class="pcard"><div class="pbadge">${p.icon}</div><div><h3>${p.title}</h3><div class="pmeta">${p.meta}</div><p>${p.desc}</p><span class="ptag ${p.cls}">${p.tag}</span></div></div>`).join('');
+var pcHtml=popCulture.map(p=>`<div class="pcard"><div class="pbadge">${p.icon}</div><div><h3>${p.title}</h3><div class="pmeta">${p.meta}</div><p>${p.desc}</p><span class="ptag ${p.cls}">${p.tag}</span></div></div>`).join('');
+document.getElementById('pcGrid').innerHTML=pcHtml;
+document.getElementById('homePcGrid').innerHTML=pcHtml;
 
 /* ── Resources ── */
 document.getElementById('resGrid').innerHTML=resources.map(r=>`<div class="rcard"><h3>${r.icon} ${r.title}</h3><p>${r.desc}</p><a href="${r.url}" target="_blank">${r.url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'')} →</a></div>`).join('');
