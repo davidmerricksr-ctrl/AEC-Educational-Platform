@@ -22,66 +22,38 @@ tailwind.config={theme:{extend:{
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(185,28,28,.3);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(185,28,28,.5)}
-
-/* ── Scanline Overlay ── */
 .vault-scanlines::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
   mix-blend-mode:multiply;opacity:.5}
-
-/* ── Noise Texture ── */
 .vault-noise::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
   opacity:.4}
-
-/* ── CONFIDENTIAL Tape ── */
 .dossier-tape{position:absolute;top:14px;right:-26px;z-index:10;
   background:linear-gradient(90deg,#b91c1c,#991b1b);
   color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;
   letter-spacing:.22em;text-transform:uppercase;padding:3px 32px;
   transform:rotate(35deg);transform-origin:center;
-  box-shadow:0 1px 4px rgba(0,0,0,.5);
-  text-shadow:0 1px 1px rgba(0,0,0,.3)}
-
-/* ── Classification Stamp ── */
+  box-shadow:0 1px 4px rgba(0,0,0,.5);text-shadow:0 1px 1px rgba(0,0,0,.3)}
 .stamp{display:inline-flex;align-items:center;gap:4px;
   border:2px solid;padding:2px 8px;border-radius:3px;
   font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;
-  letter-spacing:.15em;text-transform:uppercase;opacity:.85;
-  transform:rotate(-2deg)}
+  letter-spacing:.15em;text-transform:uppercase;opacity:.85;transform:rotate(-2deg)}
 .stamp-red{border-color:#b91c1c;color:#b91c1c}
 .stamp-gold{border-color:#c8952a;color:#c8952a}
-
-/* ── Redacted Text ── */
-.redacted{background:#222;color:#222;border-radius:2px;padding:0 6px;
-  text-decoration:line-through;user-select:none;font-size:.7em}
-
-/* ── Card Shine ── */
 .card-shine{position:absolute;inset:0;
   background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.03) 45%,transparent 60%);
   pointer-events:none;z-index:3}
-
-/* ── Shelf scroll hide ── */
 .shelf-track{-ms-overflow-style:none;scrollbar-width:none}
 .shelf-track::-webkit-scrollbar{display:none}
-
-/* ── Hero glitch on transition ── */
 @keyframes heroFadeIn{from{opacity:0;filter:brightness(2) contrast(.5)}to{opacity:1;filter:brightness(1) contrast(1)}}
 .hero-fade{animation:heroFadeIn .8s ease}
-
-/* ── Modal ── */
 @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-animate{animation:modalIn .3s ease}
-
-/* ── Stamp wobble ── */
 .stamp-tilt-1{transform:rotate(-3deg)}
 .stamp-tilt-2{transform:rotate(2deg)}
 .stamp-tilt-3{transform:rotate(-1.5deg)}
-
-/* ── Dossier folder edge ── */
 .dossier-edge{position:absolute;top:0;left:0;width:100%;height:4px;
   background:linear-gradient(90deg,#b91c1c 0%,#b91c1c 30%,transparent 30%,transparent 70%,#b91c1c 70%,#b91c1c 100%)}
-
-/* ── Pulse ── */
 @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(185,28,28,.4)}70%{box-shadow:0 0 0 8px rgba(185,28,28,0)}}
 .pulse-dot{animation:pulse-red 2s infinite}
 </style>
@@ -89,20 +61,19 @@ tailwind.config={theme:{extend:{
 
 <body class="bg-vault-bg text-vault-text font-body vault-scanlines vault-noise">
 
-<!-- ═══════════════════════════════════════════
-     HERO BANNER
-     ═══════════════════════════════════════════ -->
-<section id="hero" class="relative h-[460px] md:h-[500px] overflow-hidden bg-black select-none">
+<!-- ══ DISCLAIMER ══ -->
+<div class="bg-vault-surface border-b border-white/[.06]">
+  <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-center gap-2">
+    <span class="text-vault-gold text-sm">⚠</span>
+    <p class="font-body text-[11px] text-vault-mute"><b class="text-vault-text/80">Educational purposes only</b> — not legal, financial, or regulatory advice.</p>
+  </div>
+</div>
+
+<!-- ══ HERO BANNER ══ -->
+<section id="hero" class="relative h-[420px] md:h-[480px] overflow-hidden bg-black select-none">
   <div id="heroBg" class="absolute inset-0 transition-all duration-700 hero-fade"></div>
   <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-vault-bg z-[1]"></div>
-
-  <!-- Scanline grid overlay -->
-  <div class="absolute inset-0 z-[2] opacity-10"
-       style="background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(185,28,28,.08) 1px,rgba(185,28,28,.08) 2px),
-                                repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(185,28,28,.04) 1px,rgba(185,28,28,.04) 2px);
-              background-size:3px 3px"></div>
-
-  <!-- Hero Content -->
+  <div class="absolute inset-0 z-[2] opacity-10" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(185,28,28,.08) 1px,rgba(185,28,28,.08) 2px),repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(185,28,28,.04) 1px,rgba(185,28,28,.04) 2px);background-size:3px 3px"></div>
   <div class="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-10 pb-10">
     <div class="max-w-3xl">
       <div class="flex items-center gap-3 mb-4">
@@ -119,28 +90,17 @@ tailwind.config={theme:{extend:{
       </button>
     </div>
   </div>
-
-  <!-- Hero Nav Arrows -->
   <button onclick="heroNav(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white text-xl grid place-items-center hover:bg-vault-red hover:border-vault-red transition backdrop-blur-sm">‹</button>
   <button onclick="heroNav(1)" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/10 text-white text-xl grid place-items-center hover:bg-vault-red hover:border-vault-red transition backdrop-blur-sm">›</button>
-
-  <!-- Hero Dots -->
   <div id="heroDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2"></div>
-
-  <!-- Back to Hub link -->
   <a href="index.html" class="absolute top-4 left-4 z-20 flex items-center gap-2 text-white/50 hover:text-white text-xs font-mono tracking-wider transition group">
     <span class="group-hover:-translate-x-0.5 transition">←</span> ECONOMICCRIMEHUB
   </a>
 </section>
 
-
-<!-- ═══════════════════════════════════════════
-     STICKY CONTROL BAR
-     ═══════════════════════════════════════════ -->
+<!-- ══ STICKY CONTROL BAR ══ -->
 <div id="controlBar" class="sticky top-0 z-50 bg-vault-bg/95 backdrop-blur-xl border-b border-white/[.06]">
   <div class="max-w-7xl mx-auto px-4 py-3 space-y-2.5">
-
-    <!-- Title + Search -->
     <div class="flex items-center gap-4 flex-wrap">
       <div class="flex items-center gap-2 shrink-0">
         <span class="text-vault-red text-lg">◆</span>
@@ -149,77 +109,52 @@ tailwind.config={theme:{extend:{
       </div>
       <div class="relative flex-1 min-w-[200px]">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-vault-mute pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="searchInput" placeholder="Search dossiers…"
-               class="w-full bg-vault-surface border border-white/[.08] rounded-lg pl-10 pr-4 py-2.5 text-sm text-vault-text placeholder-vault-mute font-body focus:outline-none focus:border-vault-red focus:ring-2 focus:ring-vault-red/20 transition">
+        <input type="text" id="searchInput" placeholder="Search dossiers…" class="w-full bg-vault-surface border border-white/[.08] rounded-lg pl-10 pr-4 py-2.5 text-sm text-vault-text placeholder-vault-mute font-body focus:outline-none focus:border-vault-red focus:ring-2 focus:ring-vault-red/20 transition">
       </div>
     </div>
-
-    <!-- Type Filters -->
     <div id="typeFilters" class="flex flex-wrap gap-1.5"></div>
-
-    <!-- Theme Chips -->
     <div id="themeChips" class="flex flex-wrap gap-1"></div>
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════
-     DISCLAIMER
-     ═══════════════════════════════════════════ -->
+<!-- ══ CONTENT DISCLAIMER ══ -->
 <div class="max-w-7xl mx-auto px-4 py-3 border-b border-white/[.04]">
   <p class="font-mono text-[10px] text-vault-mute leading-relaxed">
     <span class="text-vault-gold font-bold">⚠ EDUCATIONAL REFERENCE ONLY.</span>
     Inclusion does not imply endorsement of, or affiliation with, any content creator, publisher, broadcaster, or platform.
     All descriptions are original summaries. Copyright and trademarks remain with their respective owners.
-    This archive is maintained for compliance education purposes only — it does not constitute legal, financial, or regulatory advice.
   </p>
 </div>
 
-
-<!-- ═══════════════════════════════════════════
-     SHELVES CONTAINER
-     ═══════════════════════════════════════════ -->
+<!-- ══ SHELVES ══ -->
 <main id="shelvesContainer" class="pb-20"></main>
 
-
-<!-- ═══════════════════════════════════════════
-     GRID VIEW (filtered/search results)
-     ═══════════════════════════════════════════ -->
+<!-- ══ GRID (filtered) ══ -->
 <div id="gridContainer" class="hidden max-w-7xl mx-auto px-4 py-6">
   <div id="gridResults" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════
-     EMPTY STATE
-     ═══════════════════════════════════════════ -->
+<!-- ══ EMPTY STATE ══ -->
 <div id="emptyState" class="hidden text-center py-20 px-4">
   <div class="text-5xl opacity-30 mb-4">🔍</div>
   <div class="font-display text-xl text-vault-mute mb-2">No dossiers found</div>
   <div class="text-sm text-vault-dim">Try adjusting your search or declassification filters</div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════
-     DETAIL MODAL
-     ═══════════════════════════════════════════ -->
+<!-- ══ MODAL ══ -->
 <div id="modal" class="fixed inset-0 z-[9000] bg-black/85 backdrop-blur-xl hidden items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this)closeModal()">
   <div id="modalCard" class="modal-animate bg-vault-surface border border-white/[.08] rounded-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto relative"></div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════ -->
+<!-- ══ FOOTER ══ -->
 <footer class="border-t border-white/[.04] py-8 px-4 text-center">
   <div class="font-mono text-[10px] text-vault-dim tracking-[.15em] uppercase mb-1">The Vault — Classified Media Archive</div>
   <div class="font-body text-xs text-vault-mute">Part of <a href="index.html" class="text-vault-gold hover:text-vault-goldBright transition">EconomicCrimeHub.org</a> · Educational purposes only · © 2026</div>
 </footer>
 
-
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      DATA
-     ═══════════════════════════════════════════════════════ -->
+     ══════════════════════════════════════════ -->
 <script>
 var mediaItems=[
 {id:1,title:"The Big Short",type:"film",year:2015,creator:"Dir. Adam McKay",desc:"The true story of the traders who predicted and profited from the 2008 financial crisis, exposing systemic fraud in mortgage-backed securities. A visceral, fourth-wall-breaking masterpiece that makes CDOs and credit default swaps terrifyingly entertaining.",themes:["Wall Street","Corporate Fraud","Banking"],shelves:["hero","films","mustwatch"],featured:true,featuredTagline:"The film that taught a generation how the banks really work.",url:"https://www.imdb.com/title/tt1596363/",srcLabel:"IMDb",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
@@ -268,10 +203,8 @@ var mediaShelves=[
 ];
 
 var mediaThemes=["Money Laundering","Fraud","Crypto Crime","Wall Street","Sanctions","Corporate Fraud","Organised Crime","Cyber Crime","Regulation","Offshore","Kleptocracy","Investigation","Banking","Terrorism Financing","Whistleblowing"];
-
 var mediaTypeLabels={film:"Film",tv:"TV Series",documentary:"Documentary",book:"Book",podcast:"Podcast","podcast-series":"Podcast Series",report:"Report"};
-var mediaTypeIcons={film:"\ud83c\udfac",tv:"\ud83d\udcfa",documentary:"\ud83c\udfA5",book:"\ud83d\udcd6",podcast:"\ud83c\udfa7","podcast-series":"\ud83c\udf99\ufe0f",report:"\ud83d\udcca"};
-
+var mediaTypeIcons={film:"\ud83c\udfac",tv:"\ud83d\udcfa",documentary:"\ud83c\udfa5",book:"\ud83d\udcd6",podcast:"\ud83c\udfa7","podcast-series":"\ud83c\udf99\ufe0f",report:"\ud83d\udcca"};
 var typeGroups={
   all:{label:"All Dossiers",types:null},
   films:{label:"Films & TV",types:["film","tv","documentary"]},
@@ -281,23 +214,19 @@ var typeGroups={
 };
 </script>
 
-
-<!-- ═══════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      ENGINE
-     ═══════════════════════════════════════════════════════ -->
+     ══════════════════════════════════════════ -->
 <script>
-/* ── State ── */
 var heroItems=mediaItems.filter(function(m){return m.featured});
 var heroIdx=0;
 var heroTimer=null;
 var activeType="all";
 var activeTheme=null;
 var searchQuery="";
-
-/* ── Stamps rotation classes ── */
 var stampTilts=["stamp-tilt-1","stamp-tilt-2","stamp-tilt-3"];
 
-/* ══════════ HERO ══════════ */
+/* ── HERO ── */
 function renderHero(){
   var item=heroItems[heroIdx];
   var bg=document.getElementById("heroBg");
@@ -308,7 +237,6 @@ function renderHero(){
   document.getElementById("heroBadge").textContent=mediaTypeLabels[item.type].toUpperCase()+" \u00b7 "+item.year;
   var stamps=["CLASSIFIED","TOP SECRET","RESTRICTED","EYES ONLY"];
   document.getElementById("heroStamp").textContent=stamps[heroIdx%stamps.length];
-  /* dots */
   document.getElementById("heroDots").innerHTML=heroItems.map(function(_,i){
     return '<button onclick="heroGo('+i+')" class="w-2 h-2 rounded-full transition-all duration-300 '+(i===heroIdx?"bg-vault-red w-6 rounded shadow-[0_0_8px_rgba(185,28,28,.5)]":"bg-white/25 hover:bg-white/40")+'"></button>';
   }).join("");
@@ -317,7 +245,7 @@ function heroGo(idx){heroIdx=idx;renderHero();resetHeroTimer()}
 function heroNav(dir){heroGo((heroIdx+dir+heroItems.length)%heroItems.length)}
 function resetHeroTimer(){clearInterval(heroTimer);heroTimer=setInterval(function(){heroNav(1)},5500)}
 
-/* ══════════ FILTERS ══════════ */
+/* ── FILTERS ── */
 function buildFilters(){
   var counts={all:mediaItems.length};
   Object.keys(typeGroups).forEach(function(k){
@@ -325,29 +253,28 @@ function buildFilters(){
     counts[k]=mediaItems.filter(function(m){return typeGroups[k].types.indexOf(m.type)!==-1}).length;
   });
   document.getElementById("typeFilters").innerHTML=Object.keys(typeGroups).map(function(k){
-    var isActive=k===activeType;
-    return '<button data-filter="'+k+'" onclick="setType(\''+k+'\')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold font-mono tracking-wide uppercase border transition-all duration-200 '+
-      (isActive?"bg-vault-red border-vault-red text-white shadow-[0_2px_12px_rgba(185,28,28,.3)]":"bg-vault-surface border-white/[.08] text-vault-mute hover:border-white/20 hover:text-vault-text")+
-    '">'+typeGroups[k].label+' <span class="text-[9px] px-1.5 py-0.5 rounded-full '+(isActive?"bg-white/20":"bg-white/[.06]")+'">'+counts[k]+'</span></button>';
+    var isA=k===activeType;
+    return '<button onclick="setType(\''+k+'\')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold font-mono tracking-wide uppercase border transition-all duration-200 '+
+      (isA?"bg-vault-red border-vault-red text-white shadow-[0_2px_12px_rgba(185,28,28,.3)]":"bg-vault-surface border-white/[.08] text-vault-mute hover:border-white/20 hover:text-vault-text")+
+    '">'+typeGroups[k].label+' <span class="text-[9px] px-1.5 py-0.5 rounded-full '+(isA?"bg-white/20":"bg-white/[.06]")+'">'+counts[k]+'</span></button>';
   }).join("");
-
   document.getElementById("themeChips").innerHTML=mediaThemes.map(function(t){
-    var isActive=t===activeTheme;
-    return '<button data-theme="'+t+'" onclick="setTheme(\''+t+'\')" class="px-2.5 py-1 rounded-xl text-[10px] font-medium border transition-all duration-150 '+
-      (isActive?"bg-vault-goldDim border-vault-gold text-vault-gold":"bg-transparent border-vault-dim text-vault-mute hover:border-vault-gold/50 hover:text-vault-gold/70")+
+    var isA=t===activeTheme;
+    return '<button onclick="setTheme(\''+t+'\')" class="px-2.5 py-1 rounded-xl text-[10px] font-medium border transition-all duration-150 '+
+      (isA?"bg-vault-goldDim border-vault-gold text-vault-gold":"bg-transparent border-vault-dim text-vault-mute hover:border-vault-gold/50 hover:text-vault-gold/70")+
     '">'+t+'</button>';
   }).join("");
 }
 function setType(k){activeType=k;buildFilters();renderContent()}
 function setTheme(t){activeTheme=activeTheme===t?null:t;buildFilters();renderContent()}
 
-/* ══════════ SEARCH ══════════ */
+/* ── SEARCH ── */
 document.getElementById("searchInput").addEventListener("input",function(){
   searchQuery=this.value.trim().toLowerCase();
   renderContent();
 });
 
-/* ══════════ FILTER LOGIC ══════════ */
+/* ── FILTER LOGIC ── */
 function getFiltered(){
   var items=mediaItems;
   if(activeType!=="all"){
@@ -366,32 +293,27 @@ function getFiltered(){
   return items;
 }
 
-/* ══════════ CARD ══════════ */
+/* ── CARD (description always visible) ── */
 function buildCard(item,large){
   var w=large?"w-[280px] md:w-[300px]":"w-[230px] md:w-[250px]";
   var h=large?"h-[360px] md:h-[380px]":"h-[300px] md:h-[330px]";
   var tiltClass=stampTilts[item.id%3];
   var descLen=large?180:130;
-
-  return '<div onclick="openModal('+item.id+')" class="'+w+' '+h+' flex-shrink-0 rounded-xl overflow-hidden relative cursor-pointer group transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.6),0_0_0_1px_rgba(185,28,28,.25)] border border-white/[.06] hover:border-vault-red/40" style="'+item.gradient+'">'+
-    '<div class="absolute inset-0" style="'+item.gradient+'"></div>'+
+  return '<div onclick="openModal('+item.id+')" class="'+w+' '+h+' flex-shrink-0 rounded-xl overflow-hidden relative cursor-pointer group transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.6),0_0_0_1px_rgba(185,28,28,.25)] border border-white/[.06] hover:border-vault-red/40">'+
+    '<div class="absolute inset-0" style="background:'+item.gradient+'"></div>'+
     '<div class="card-shine"></div>'+
     '<div class="dossier-edge"></div>'+
     '<div class="dossier-tape">CONFIDENTIAL</div>'+
     '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-5xl opacity-[.05] pointer-events-none z-0 select-none">'+mediaTypeIcons[item.type]+'</div>'+
-    /* type badge */
     '<div class="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-vault-silver font-mono text-[9px] font-bold tracking-[.1em] uppercase px-2 py-1 rounded">'+
       '<span class="text-xs">'+mediaTypeIcons[item.type]+'</span> '+mediaTypeLabels[item.type]+
     '</div>'+
-    /* year stamp */
     '<div class="absolute top-3 right-3 z-10 stamp stamp-gold '+tiltClass+' text-[8px]">'+item.year+'</div>'+
-    /* full-card gradient overlay — heavier to ensure text readability */
     '<div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/20 z-[1]"></div>'+
-    /* bottom content — description always visible */
     '<div class="absolute bottom-0 left-0 right-0 z-10 p-3.5">'+
       '<h3 class="font-display text-[15px] md:text-base font-bold text-white leading-tight mb-1">'+item.title+'</h3>'+
       '<p class="font-mono text-[10px] text-vault-gold/80 mb-2">'+item.creator+'</p>'+
-      '<p class="text-[11px] text-white/55 leading-[1.5] line-clamp-3">'+item.desc.substring(0,descLen)+'\u2026</p>'+
+      '<p class="text-[11px] text-white/55 leading-[1.5]" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">'+item.desc.substring(0,descLen)+'\u2026</p>'+
       '<div class="flex items-center gap-1.5 mt-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">'+
         '<span class="font-mono text-[9px] text-vault-red font-bold tracking-wider uppercase">Open dossier \u2192</span>'+
       '</div>'+
@@ -399,13 +321,10 @@ function buildCard(item,large){
     '<div class="absolute bottom-0 left-0 right-0 h-[3px] bg-vault-red z-20 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></div>'+
   '</div>';
 }
-    '<div class="absolute bottom-0 left-0 right-0 h-[3px] bg-vault-red z-20 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></div>'+
-  '</div>';
-}
 
-/* ══════════ SHELF ══════════ */
+/* ── SHELF ── */
 function buildShelf(shelf,items){
-  if(!items.length)return"";
+  if(!items.length)return "";
   var uid="shelf_"+shelf.id;
   var isHero=shelf.id==="mustwatch";
   return '<section class="py-6 md:py-8">'+
@@ -430,14 +349,12 @@ function shelfScroll(id,dir){
   if(el)el.scrollBy({left:dir*380,behavior:"smooth"});
 }
 
-/* ══════════ RENDER ══════════ */
+/* ── RENDER ── */
 function renderContent(){
   var filtered=getFiltered();
   var isFiltered=activeType!=="all"||activeTheme||searchQuery;
-
   document.getElementById("hero").style.display=isFiltered?"none":"";
   document.getElementById("emptyState").style.display=filtered.length===0?"block":"none";
-
   if(isFiltered){
     document.getElementById("shelvesContainer").style.display="none";
     document.getElementById("gridContainer").classList.remove("hidden");
@@ -454,50 +371,35 @@ function renderContent(){
   }
 }
 
-/* ══════════ MODAL ══════════ */
+/* ── MODAL ── */
 function openModal(id){
   var item=mediaItems.find(function(m){return m.id===id});
   if(!item)return;
-  var stampClass=stampTilts[item.id%3];
-
+  var sc=stampTilts[item.id%3];
   document.getElementById("modalCard").innerHTML=
-    /* hero section */
     '<div class="relative h-48 md:h-56 overflow-hidden rounded-t-2xl">'+
-      '<div class="absolute inset-0" style="'+item.gradient+'"></div>'+
+      '<div class="absolute inset-0" style="background:'+item.gradient+'"></div>'+
       '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl opacity-[.1] pointer-events-none select-none">'+mediaTypeIcons[item.type]+'</div>'+
       '<div class="absolute inset-0 bg-gradient-to-b from-transparent via-vault-surface/30 to-vault-surface"></div>'+
-      /* CONFIDENTIAL stamp */
-      '<div class="absolute top-6 right-6 z-10 stamp stamp-red '+stampClass+' text-xs !opacity-60 !border-[3px]">CLASSIFIED</div>'+
-      /* close button */
+      '<div class="absolute top-6 right-6 z-10 stamp stamp-red '+sc+' text-xs !opacity-60 !border-[3px]">CLASSIFIED</div>'+
       '<button onclick="closeModal()" class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/15 text-white grid place-items-center backdrop-blur-md hover:bg-vault-red hover:border-vault-red transition text-sm">\u2715</button>'+
     '</div>'+
-    /* body */
     '<div class="relative z-10 px-5 md:px-6 pb-6 -mt-8">'+
-      /* badge */
       '<div class="flex items-center gap-2 mb-3">'+
         '<span class="inline-flex items-center gap-1.5 bg-vault-red text-white font-mono text-[10px] font-bold tracking-[.12em] uppercase px-2.5 py-1 rounded">'+mediaTypeIcons[item.type]+' '+mediaTypeLabels[item.type]+'</span>'+
-        '<span class="stamp stamp-gold '+stampClass+' text-[9px]">'+item.year+'</span>'+
+        '<span class="stamp stamp-gold '+sc+' text-[9px]">'+item.year+'</span>'+
       '</div>'+
-      /* title */
       '<h2 class="font-display text-2xl md:text-3xl font-black text-white leading-tight mb-1.5">'+item.title+'</h2>'+
       '<p class="font-mono text-xs text-vault-mute mb-5">'+item.creator+'</p>'+
-      /* description */
       '<div class="border-l-[3px] border-vault-red pl-4 mb-5">'+
         '<p class="text-sm text-vault-text/85 leading-relaxed">'+item.desc+'</p>'+
       '</div>'+
-      /* themes */
       '<div class="flex flex-wrap gap-1.5 mb-5">'+
         item.themes.map(function(t){return '<span class="font-mono text-[10px] text-vault-gold border border-vault-goldDim px-2.5 py-1 rounded-full">'+t+'</span>'}).join("")+
       '</div>'+
-      /* source link */
-      (item.url?
-        '<a href="'+item.url+'" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full bg-vault-red hover:bg-vault-redBright text-white font-bold text-sm py-3.5 rounded-xl transition-all duration-200 hover:shadow-[0_6px_24px_rgba(185,28,28,.4)] hover:-translate-y-0.5 mb-3 no-underline">'+
-          '\ud83d\udd17 Open Source \u2014 '+item.srcLabel+' \u2192'+
-        '</a>':"")+
-      /* disclaimer */
+      (item.url?'<a href="'+item.url+'" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 w-full bg-vault-red hover:bg-vault-redBright text-white font-bold text-sm py-3.5 rounded-xl transition-all duration-200 hover:shadow-[0_6px_24px_rgba(185,28,28,.4)] hover:-translate-y-0.5 mb-3 no-underline">\ud83d\udd17 Open Source \u2014 '+item.srcLabel+' \u2192</a>':"")+
       '<p class="font-mono text-[9px] text-vault-dim text-center mt-3">This listing is for educational reference only. Not an endorsement.</p>'+
     '</div>';
-
   var modal=document.getElementById("modal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
@@ -511,7 +413,7 @@ function closeModal(){
 }
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
 
-/* ══════════ INIT ══════════ */
+/* ── INIT ── */
 renderHero();
 resetHeroTimer();
 buildFilters();
