@@ -157,6 +157,9 @@ a{color:var(--navy);text-decoration:none}
 .pmeta{font-size:.6rem;color:var(--mute);margin-bottom:.25rem;font-weight:500}
 .pcard p{font-size:.73rem;color:var(--sub);line-height:1.45}
 .ptag{display:inline-block;font-size:.51rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.09rem .36rem;border-radius:3px;margin-top:.3rem}
+.pc-src{display:inline-flex;align-items:center;gap:.25rem;font-size:.6rem;font-weight:600;color:var(--navy);margin-top:.35rem;padding:.22rem .5rem;border:1px solid var(--line);border-radius:5px;transition:.15s;-webkit-tap-highlight-color:transparent}
+.pc-src:hover{background:var(--navy-bg);border-color:var(--navy)}
+.pc-src::before{content:"\1F517";font-size:.55rem}
 .rcard{border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.65rem;background:var(--sf)}
 .rcard h3{font-family:var(--fd);font-size:.85rem;margin-bottom:.18rem}
 .rcard p{font-size:.74rem;color:var(--sub);line-height:1.42;margin-bottom:.35rem}
@@ -269,7 +272,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <p>An educational resource exploring the typologies, competencies, and technologies shaping the fight against financial crime.</p>
 </div>
 <div class="sbar" id="homeStats"></div>
-<div onclick="go('popculture')" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;padding:.55rem 1rem;background:#111;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:.9rem">🎬</span><span style="font-size:.74rem;font-weight:600;color:#fff;letter-spacing:.03em">Economic Crime in Pop Culture — Podcasts, Films, TV, Books &amp; More</span><span style="font-size:.9rem">🎬</span></div>
+<div onclick="go('popculture')" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;padding:.55rem 1rem;background:#111;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:.9rem">🎬</span><span style="font-size:.74rem;font-weight:600;color:#fff;letter-spacing:.03em">Economic Crime in the Media — Books, Movies, Videos, Podcasts</span><span style="font-size:.9rem">🎬</span></div>
 <div class="habout">
 <h2>A Career That <em>Matters</em></h2>
 <p>Economic crime prevention is one of the fastest-growing and most impactful career fields in the world — from compliance and data science to cybersecurity and intelligence analysis.</p>
@@ -383,10 +386,11 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
 <div class="pi">
 <div class="sec-hdr">
-<div class="se">Pop Culture</div>
-<div class="st">Economic Crime on Screen, Page &amp; Air</div>
-<div class="sd">Recent podcasts, videos and reports discussing economic crime — plus essential films, TV and books.</div>
+<div class="se">Media</div>
+<div class="st">Economic Crime in the Media</div>
+<div class="sd">Books, movies, videos and podcasts covering economic crime — with links to source material.</div>
 </div>
+<div class="id-disclaimer">⚠ Links are provided for educational reference only. Inclusion does not imply endorsement of, or affiliation with, any podcast, publication, broadcaster, streaming platform, or content creator. All descriptions are original summaries. Copyright and trademarks remain with their respective owners.</div>
 <div id="pcGrid"></div>
 </div>
 </div>
@@ -523,7 +527,10 @@ renderGlossary(sortedGlossary);
 document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p></div>'}).join('');
 
 /* Pop Culture */
-document.getElementById('pcGrid').innerHTML=popCulture.map(function(p){return '<div class="pcard"><div class="pbadge">'+p.icon+'</div><div><h3>'+p.title+'</h3><div class="pmeta">'+p.meta+'</div><p>'+p.desc+'</p><span class="ptag '+p.cls+'">'+p.tag+'</span></div></div>'}).join('');
+document.getElementById('pcGrid').innerHTML=popCulture.map(function(p){
+    var linkHtml=p.url?'<div><a href="'+p.url+'" target="_blank" class="pc-src" onclick="event.stopPropagation()">'+p.srcLabel+'</a></div>':'';
+    return '<div class="pcard"><div class="pbadge">'+p.icon+'</div><div><h3>'+p.title+'</h3><div class="pmeta">'+p.meta+'</div><p>'+p.desc+'</p><span class="ptag '+p.cls+'">'+p.tag+'</span>'+linkHtml+'</div></div>';
+}).join('');
 
 
 
