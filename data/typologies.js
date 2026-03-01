@@ -67,20 +67,80 @@ var typologyCategories = [
        {title:"FinCEN \u2014 Advisory on informal value transfer systems",url:"https://www.fincen.gov/resources/advisories"}
      ]}
   ]},
-  /* ── Fraud ── */
+  /* ── Fraud (8 cards + real-world cases) ── */
   {name:"Fraud", cards:[
-    {icon:"\ud83d\udce7",bg:"rgba(192,57,43,.06)",title:"Business Email Compromise",
-     desc:"Criminals impersonate executives via compromised or spoofed emails to instruct urgent payments. FBI IC3 reports BEC caused over $2.9 billion in losses in 2023.",
-     flags:["Urgent payment requests from leadership","Slight email address variations","Requests to bypass approval processes"]},
-    {icon:"\ud83c\udfad",bg:"rgba(26,58,92,.08)",title:"Identity Fraud",
-     desc:"Using stolen, fabricated, or synthetic identities to open accounts or commit financial crimes. Increasingly sophisticated with deepfakes and AI-generated documents.",
-     flags:["Documents that don\u2019t match across databases","Rapid account opening across institutions","Synthetic identities mixing real and fake data"]},
-    {icon:"\ud83d\udcc8",bg:"rgba(26,107,90,.07)",title:"Investment & Ponzi Schemes",
-     desc:"Fraudulent schemes promising high returns with little risk. The SEC and DOJ have prosecuted numerous cases where new investor funds pay existing investors.",
-     flags:["Returns consistently above market rates","Difficulty withdrawing funds","Unregistered products or advisors"]},
-    {icon:"\ud83c\udfe5",bg:"rgba(200,144,46,.07)",title:"Insurance & Benefits Fraud",
-     desc:"Filing false or inflated claims. DOJ healthcare fraud enforcement alone recovers billions annually through the False Claims Act.",
-     flags:["Claims inconsistent with history","Multiple claims in short succession","Staged incidents or exaggerated injuries"]}
+    {icon:"\ud83c\udd94",bg:"#b82d24",title:"Identity & Synthetic Identity Fraud",
+     desc:"Using stolen personal data or fabricated \u2018Frankenstein\u2019 identities to open accounts, apply for credit, insurance, or services.",
+     flags:["Unusual application patterns","Mismatched personal details","High-volume applications from new identities","Synthetic data combinations bypassing KYC"],
+     examples:["Fraudster combines a real stolen SSN with a fabricated name and DOB to build a \u2018Frankenstein\u2019 credit profile over months","A ring opens 50+ bank accounts using synthetic IDs generated with AI-produced fake driver\u2019s licences","Stolen child\u2019s identity used to build credit history undetected for years"],
+     cases:[
+       {title:"DOJ \u2014 Synthetic identity bank fraud \u2014 300+ fake IDs discovered (DOJ WDNC)",url:"https://www.justice.gov/usao-wdnc/pr/south-carolina-man-sentenced-two-years-synthetic-id-bank-fraud"},
+       {title:"DOJ \u2014 700 synthetic identities used to steal $3M+ from banks & COVID relief (DOJ SDFL)",url:"https://www.justice.gov/usao-sdfl/pr/two-men-who-allegedly-used-synthetic-identities-existing-shell-companies-and-prior-0"},
+       {title:"FBI \u2014 IC3 2024 Annual Report \u2014 $16.6B total losses, identity fraud rising (FBI)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"}
+     ]},
+    {icon:"\ud83d\udd11",bg:"#1a3a5c",title:"Account Takeover Fraud",
+     desc:"Criminals hijack existing bank, mobile, retail, or insurance accounts using phishing, SIM swap, or credential stuffing.",
+     flags:["Sudden changes to contact details","Unrecognised logins or device changes","SIM swap attempts","Rapid password resets followed by large transfers"],
+     examples:["Victim\u2019s phone number ported to a new SIM; attacker resets banking passwords and drains the account in minutes","Credential-stuffing bot tries leaked email/password combos against 200+ banking sites overnight","Phishing email mimics a bank\u2019s MFA page, capturing the one-time code in real time to log in"],
+     cases:[
+       {title:"FBI \u2014 SIM swapping advisory \u2014 $262M+ in losses reported (FBI IC3)",url:"https://www.ic3.gov/PSA/2024/PSA240911"},
+       {title:"FBI \u2014 Generative AI used to facilitate financial fraud (FBI IC3 PSA)",url:"https://www.ic3.gov/PSA/2024/PSA241203"},
+       {title:"FBI \u2014 2024 Internet Crime Report \u2014 record $16.6B losses (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"}
+     ]},
+    {icon:"\ud83d\udcb8",bg:"#18725f",title:"Authorised Push Payment (APP) Scams",
+     desc:"Victims are tricked into voluntarily transferring money to fraudsters \u2014 the fastest-growing and highest-harm fraud type in the UK.",
+     flags:["Investment or romance scams","Fake invoice or purchase requests","Courier or police impersonation","Payment diversion via spoofed emails"],
+     examples:["Caller impersonates bank\u2019s fraud team, convinces victim to \u2018move money to a safe account\u2019 \u2014 which is the criminal\u2019s","Spoofed email from a solicitor changes completion payment details on a house purchase","Fake HMRC officer threatens arrest unless victim makes an immediate bank transfer"],
+     cases:[
+       {title:"UK PSR \u2014 Mandatory APP fraud reimbursement rules effective Oct 2024 (PSR)",url:"https://www.psr.org.uk/our-work/app-scams/"},
+       {title:"UK Finance \u2014 Annual Fraud Report \u2014 APP scam trends & data (UK Finance)",url:"https://www.ukfinance.org.uk/policy-and-guidance/reports-and-publications/annual-fraud-report"},
+       {title:"FCA \u2014 Warning list of unauthorised firms and scam activity (FCA)",url:"https://www.fca.org.uk/scamsmart/warning-list"}
+     ]},
+    {icon:"\ud83d\udce7",bg:"#b07d1e",title:"Business Email Compromise (BEC) / CEO Fraud",
+     desc:"Spoofed emails impersonating executives or suppliers to trick staff into authorising large payments or changing account details.",
+     flags:["Urgent payment requests from spoofed domains","Requests to change supplier bank details","Executive impersonation under pressure"],
+     examples:["CFO receives email from \u2018CEO\u2019 during overseas trip requesting urgent wire to new account; domain is one letter off","Supplier\u2019s email hacked; fake invoice with updated bank details sent to accounts payable","Threat actor monitors email thread for weeks, then inserts fraudulent payment instructions at the right moment"],
+     cases:[
+       {title:"FBI IC3 \u2014 BEC: The $55 Billion Scam \u2014 global BEC losses advisory (IC3)",url:"https://www.ic3.gov/PSA/2024/PSA240911"},
+       {title:"FBI \u2014 IC3 2024 Report: BEC caused $2.77B in losses in 2024 alone (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"},
+       {title:"Europol \u2014 BEC fraud: how it works and how to prevent it (Europol)",url:"https://www.europol.europa.eu/crime-areas-and-statistics/crime-areas/economic-crime/online-fraud"}
+     ]},
+    {icon:"\u2764\ufe0f",bg:"#b82d24",title:"Romance & Investment Scams",
+     desc:"Fraudsters build fake relationships or promote fake investment opportunities to extract money or turn victims into money mules.",
+     flags:["Rapid escalation to financial requests","Crypto or \u2018high-return\u2019 investment platforms","Pig butchering variants","Pressure to act quickly"],
+     examples:["\u2018Pig butchering\u2019: scammer cultivates an online relationship for weeks, then introduces a \u2018guaranteed\u2019 crypto trading platform that shows fake profits","Instagram ad promotes an FCA-clone investment firm; victims see fabricated returns on a dashboard before being asked for larger deposits","Romance scammer asks victim to receive and forward parcels containing fraudulently purchased goods"],
+     cases:[
+       {title:"FBI \u2014 Operation Level Up: 4,300+ crypto fraud victims identified, $286M saved (FBI)",url:"https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report"},
+       {title:"FBI IC3 \u2014 Investment fraud topped $6.57B in 2024 losses (IC3)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"},
+       {title:"DOJ \u2014 Pig butchering crypto fraud networks dismantled (DOJ)",url:"https://www.justice.gov/criminal/criminal-fraud/case/related-enforcement-actions/2024"}
+     ]},
+    {icon:"\ud83d\udcb3",bg:"#1a3a5c",title:"Card-Not-Present (CNP) Fraud",
+     desc:"Using stolen card details for online, phone, or mail-order purchases without the physical card present.",
+     flags:["Unusual online spending patterns","High-value purchases from new devices","Frequent small test transactions"],
+     examples:["Stolen card data from a breach used to buy gift cards online; gift cards immediately resold for cash","Fraudster places \u00a30.50 test charges on hundreds of cards to identify active ones, then makes bulk high-value orders","Phished card details loaded into a digital wallet and used for contactless tap-to-pay at retailers"],
+     cases:[
+       {title:"FBI IC3 \u2014 Credit card & check fraud: $200M+ losses in 2024 (IC3)",url:"https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"},
+       {title:"Europol \u2014 E-commerce fraud and card-not-present threats (Europol)",url:"https://www.europol.europa.eu/crime-areas-and-statistics/crime-areas/economic-crime/online-fraud"},
+       {title:"UK Finance \u2014 Card fraud data and prevention measures (UK Finance)",url:"https://www.ukfinance.org.uk/policy-and-guidance/reports-and-publications/annual-fraud-report"}
+     ]},
+    {icon:"\ud83e\uddd1\u200d\ud83d\udcbc",bg:"#18725f",title:"Insider & Employee Fraud",
+     desc:"Staff abusing their position to commit fraud, steal data, or facilitate external crime.",
+     flags:["Unexplained expenses or payroll changes","Access to sensitive systems outside normal hours","Sudden lifestyle changes by employees"],
+     examples:["Payroll clerk adds ghost employees and diverts salaries to personal accounts over several years","Branch manager overrides transaction limits to process fraudulent loans for associates, earning kickbacks","IT administrator exports client database and sells records to a competitor via an encrypted channel"],
+     cases:[
+       {title:"ACFE \u2014 Report to the Nations: occupational fraud costs 5% of revenue annually (ACFE)",url:"https://www.acfe.com/fraud-resources/reports-to-the-nations"},
+       {title:"DOJ \u2014 2024 Fraud Section Year in Review \u2014 record $2.3B in corporate resolutions (DOJ)",url:"https://www.justice.gov/criminal/criminal-fraud/case/related-enforcement-actions/2024"},
+       {title:"NCA \u2014 Fraud threats including insider risk overview (NCA)",url:"https://www.nationalcrimeagency.gov.uk/what-we-do/crime-threats/fraud"}
+     ]},
+    {icon:"\ud83e\udd16",bg:"#b07d1e",title:"AI-Powered & Emerging Fraud",
+     desc:"Deepfakes, voice cloning, automated phishing, and AI-generated documents accelerating almost all other fraud types.",
+     flags:["Realistic deepfake video calls","AI-generated documents or voice clones","Automated large-scale phishing campaigns"],
+     examples:["Deepfake video call impersonates a CFO instructing finance staff to wire $25M to a new account","AI voice clone replicates a CEO\u2019s voice to authorise an urgent payment over the phone","GPT-generated phishing emails with perfect grammar and personalisation sent to 50,000 targets in minutes"],
+     cases:[
+       {title:"FBI IC3 \u2014 Criminals use generative AI to facilitate financial fraud (IC3 PSA)",url:"https://www.ic3.gov/PSA/2024/PSA241203"},
+       {title:"Europol \u2014 Facing reality: law enforcement and the challenge of deepfakes (Europol)",url:"https://www.europol.europa.eu/publications-events/publications/facing-reality-law-enforcement-and-challenge-of-deepfakes"},
+       {title:"FATF \u2014 Opportunities & challenges of new technologies for AML/CFT (FATF)",url:"https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Opportunities-challenges-new-technologies-for-aml-cft.html"}
+     ]}
   ]},
   /* ── Bribery & Corruption ── */
   {name:"Bribery & Corruption", cards:[
