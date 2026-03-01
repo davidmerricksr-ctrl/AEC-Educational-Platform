@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Launch Reflections: Impact, Awareness &amp; First Steps — Building Journey — EconomicCrimeHub.org</title>
+<meta name="description" content="The first AI interview: why economic crime's invisible harm matters, who the site is for, the Ops Simulator, and the one thing every visitor should understand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf9f6;--card:#fff;--border:#e5e3dc;
+  --crim:#b82d24;--crimL:rgba(184,45,36,.08);--crimB:rgba(184,45,36,.15);
+  --gold:#8b6914;--goldL:rgba(139,105,20,.07);--goldB:rgba(139,105,20,.12);
+  --txt:#1a1a1a;--mute:#555;--dim:#888;--light:#b0ada5;
+  --fd:'DM Serif Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+  --nav:72px
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.7;-webkit-font-smoothing:antialiased;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 24px)}
+a{color:var(--crim);text-decoration:none}
+a:hover{text-decoration:underline}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Back link ── */
+.back{max-width:720px;margin:0 auto;padding:1rem 1.25rem 0}
+.back a{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:600;color:var(--dim);transition:.15s}
+.back a:hover{color:var(--crim);text-decoration:none}
+
+/* ── Article header ── */
+.art-hdr{max-width:720px;margin:0 auto;padding:1.5rem 1.25rem 0;animation:fadeUp .5s ease both}
+.art-meta{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.75rem}
+.art-num{font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.08em;color:var(--crim);background:var(--crimL);border:1px solid var(--crimB);padding:3px 10px;border-radius:4px}
+.art-date{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.04em}
+.art-hdr h1{font-family:var(--fd);font-size:1.6rem;color:var(--txt);line-height:1.25;margin-bottom:.5rem}
+@media(min-width:600px){.art-hdr h1{font-size:1.85rem}}
+.art-summary{font-size:.88rem;color:var(--mute);line-height:1.7;max-width:620px}
+.art-tags{display:flex;gap:.35rem;margin-top:.75rem;flex-wrap:wrap}
+.art-tag{font-family:var(--fm);font-size:.5rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:var(--goldL);border:1px solid var(--goldB);padding:2px 8px;border-radius:3px}
+
+/* ── Divider ── */
+.divider{max-width:720px;margin:1.5rem auto;padding:0 1.25rem}
+.divider hr{border:0;border-top:1px solid var(--border)}
+
+/* ── Dialogue ── */
+.dialogue{max-width:720px;margin:0 auto;padding:0 1.25rem}
+
+/* AI question */
+.q-block{margin-bottom:1.5rem;animation:fadeUp .4s ease both}
+.q-label{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.q-ico{width:30px;height:30px;border-radius:8px;background:var(--crimL);border:1px solid var(--crimB);display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.q-who{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim)}
+.q-text{font-size:.9rem;font-weight:600;color:var(--txt);line-height:1.65;padding-left:calc(30px + .5rem)}
+
+/* David answer */
+.a-block{margin-bottom:2rem;animation:fadeUp .4s ease both}
+.a-label{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.a-ico{width:30px;height:30px;border-radius:8px;background:var(--goldL);border:1px solid var(--goldB);display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.a-who{font-family:var(--fm);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.a-text{font-size:.88rem;color:#333;line-height:1.8;padding-left:calc(30px + .5rem)}
+
+/* ── Pull quotes ── */
+.pull-quote{margin:2rem 0;padding:1.5rem 1.75rem;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--crim);border-radius:0 14px 14px 0;position:relative}
+.pull-quote::before{content:'"';position:absolute;top:-.15rem;left:.75rem;font-family:var(--fd);font-size:3rem;color:var(--crimL);line-height:1}
+.pull-quote p{font-family:var(--fd);font-size:1.15rem;color:var(--txt);line-height:1.55;padding-left:.25rem}
+@media(min-width:600px){.pull-quote p{font-size:1.25rem}}
+.pull-quote cite{display:block;margin-top:.5rem;font-family:var(--fm);font-size:.6rem;color:var(--dim);font-style:normal;letter-spacing:.06em;padding-left:.25rem}
+
+/* Alternate pull quotes float on wider screens */
+@media(min-width:700px){
+  .pull-quote.left{float:left;width:45%;margin:1rem 1.5rem 1rem -1rem;clear:left}
+  .pull-quote.right{float:right;width:45%;margin:1rem -1rem 1rem 1.5rem;clear:right}
+}
+
+/* ── Wrap-up card ── */
+.wrapup{max-width:720px;margin:2rem auto;padding:0 1.25rem;clear:both}
+.wrapup-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.75rem;position:relative;overflow:hidden}
+.wrapup-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--crim),#d4713b,var(--gold))}
+.wrapup-card h3{font-family:var(--fd);font-size:1rem;color:var(--txt);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.wrapup-card p{font-size:.82rem;color:#444;line-height:1.7;margin-bottom:.5rem}
+.wrapup-card p:last-child{margin-bottom:0}
+
+/* ── Interview nav ── */
+.art-nav{max-width:720px;margin:2rem auto;padding:0 1.25rem}
+.art-nav-inner{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--border)}
+.art-nav a{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:600;color:var(--dim);transition:.15s}
+.art-nav a:hover{color:var(--crim);text-decoration:none}
+.art-nav .disabled{color:var(--light);pointer-events:none}
+
+/* ═══ SITE NAV ═══ */
+.site-bnav{position:fixed;bottom:0;left:0;right:0;z-index:901;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid #e5e3dc;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(72px + env(safe-area-inset-bottom,0px))}
+.site-bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:72px}
+.snb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
+.snb .sbi{font-size:1.31rem;line-height:1;transition:.12s}
+.snb.act{color:var(--crim);font-weight:700}
+.snb.act .sbi{transform:scale(1.08)}
+.snb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
+.site-mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.site-mo.open{display:flex}
+.site-msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(72px + env(safe-area-inset-bottom,0px) + .8rem);animation:sitesu .22s ease}
+@keyframes sitesu{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.site-msh h3{font-family:var(--fd);font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;color:#111}
+.site-mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
+.site-mi:active{background:#f6f5f0}
+.site-mic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f6f5f0;flex-shrink:0}
+.site-ml{font-weight:600;font-size:.8rem;color:#111}
+.site-ms{font-size:.63rem;color:#888}
+</style>
+</head>
+<body>
+
+<!-- ── Back ── -->
+<div class="back"><a href="index.html">← Back to Journal</a></div>
+
+<!-- ═══ ARTICLE HEADER ═══ -->
+<header class="art-hdr">
+  <div class="art-meta">
+    <span class="art-num">#001</span>
+    <span class="art-date">1 March 2026</span>
+  </div>
+  <h1>Launch Reflections: Impact, Awareness &amp; First Steps</h1>
+  <p class="art-summary">The first interview — why economic crime's invisible harm matters most, who this site is really for, and the one thing every visitor should walk away understanding.</p>
+  <div class="art-tags">
+    <span class="art-tag">Launch</span>
+    <span class="art-tag">Impact</span>
+    <span class="art-tag">Ops Simulator</span>
+    <span class="art-tag">The Vault</span>
+  </div>
+</header>
+
+<div class="divider"><hr></div>
+
+<!-- ═══ DIALOGUE ═══ -->
+<div class="dialogue">
+
+  <!-- Q1 -->
+  <div class="q-block" style="animation-delay:.1s">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">Alright, let's dive in. First question: what's the one thing you wish people understood about economic crime — like, really got — before they even click on your site?</div>
+  </div>
+  <div class="a-block" style="animation-delay:.15s">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">I think the most important thing is just the impact on society, on real people. Economic crime is sometimes not thought of as being as harmful as other types of crime because it's not right there that you can see the effects of it directly, physically on someone. But it definitely does have a major impact on society, and that's something that we need to raise awareness around.</div>
+  </div>
+
+  <!-- PULL QUOTE 1 -->
+  <aside class="pull-quote left" aria-label="Key quote">
+    <p>Economic crime is sometimes not thought of as being as harmful as other types of crime because you can't see the effects directly. But it definitely does have a major impact on society.</p>
+    <cite>— David Merrick</cite>
+  </aside>
+
+  <!-- Q2 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">That invisible damage is sneaky. How do you actually show that impact on the site? Are you using stories, stats, or something else to make it hit home?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">At the moment we do have a section which talks about the human impacts of economic crime. I want to build that out. It sometimes is difficult to source good information about actual instances. But what do you think? How do you think I could best bring that out?</div>
+  </div>
+
+  <!-- Q3 (AI's extended response + question) -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">Film's a killer way — nothing sticks like seeing someone's face when their life gets wrecked by fraud. I'd say: start small. Grab public-domain stuff — like anonymised whistleblower stories from FinCEN or Interpol reports. Turn them into short, punchy scripts. Or even just voice-over with stock footage. And hey — why not crowdsource? Add a "Tell Your Story" button on the site. You wanna keep it educational or go full emotional?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">That's a good question. Before I answer that, your response just reminded me that we actually have a section on the site called The Vault. And that contains pop culture type things, like books, films, podcasts that talk about economic crime and all its different forms. So that's one of the ways to kind of connect emotionally, but I really like your idea of providing an interface for people to tell their own story. I'm definitely going to implement that. Thank you. In terms of what I want to get out of the site, I haven't really thought about making it something that we want to engender an emotional reaction, but rather it's intended to be of use to people who are in the profession like myself, so that they can learn about it and, frankly, one of the main focuses is to encourage people who are interested in joining the fight against economic crime to find out what it's all about and what skills are required and how they can get involved.</div>
+  </div>
+
+  <!-- PULL QUOTE 2 -->
+  <aside class="pull-quote right" aria-label="Key quote">
+    <p>One of the main focuses is to encourage people who are interested in joining the fight against economic crime to find out what it's all about and how they can get involved.</p>
+    <cite>— David Merrick</cite>
+  </aside>
+
+  <!-- Q4 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">So you're not trying to guilt-trip anyone, you're building a bridge. Who's your dream visitor? The one person — or type of person — who lands on the site and goes, "Oh, I need this in my life"?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">I would say people who potentially could be passionate about the subject and want to make a difference. So yeah, it could be a student, it could be somebody who is maybe in retirement and wants to come back out and contribute in some way. You find quite often actually there are folks who are ex-investigators or police, things of that nature, who do get into this space.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">If someone clicks in — say, a thirty-year-old accountant who's bored out of their mind — what's the first thing you want them to do? What's the hook?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">The coolest thing is to actually go into the typologies section of the site. And if you go into that area, you can see what are the different types of economic crime that exist, how are they perpetrated, and what can you do to disrupt those patterns that are referred to as typologies. And it also shows red flags, which are typical indicators of that particular type of economic crime. So I think that's a great starting point for someone who's not all that familiar with the subject matter.</div>
+  </div>
+
+  <!-- PULL QUOTE 3 -->
+  <aside class="pull-quote left" aria-label="Key quote">
+    <p>You can see what are the different types of economic crime, how they're perpetrated, and what you can do to disrupt them. That's a great starting point.</p>
+    <cite>— David Merrick</cite>
+  </aside>
+
+  <!-- Q6 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">Once they've read that, what do you hope they do next? Email you? Apply to a course? Or just quietly think, "Huh, I could actually do this"?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">I think I just want them to navigate the site and experience the different content that's there. And if they're interested in a career in the space, that's great. But if they just want to experience what we've got on there and maybe provide feedback on what else we can put up that would be useful — the Ops Simulator is a simulating tool that provides a look into what the day in the life of an investigator or an analyst is at a large financial services firm fighting economic crime. So you can actually see what a system might look like and what you would actually be examining on a day-to-day basis. And just to note, it's not based on any system that I've used or any vendor package. It was something that I just worked with an LLM and some AI to actually build.</div>
+  </div>
+
+  <!-- PULL QUOTE 4 -->
+  <aside class="pull-quote right" aria-label="Key quote">
+    <p>The Ops Simulator provides a look into what the day in the life of an investigator or an analyst is — you can see what you'd actually be examining on a day-to-day basis fighting economic crime.</p>
+    <cite>— David Merrick</cite>
+  </aside>
+
+  <!-- Q7 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">How do you know if it's working? Are you tracking clicks? Asking for feedback? Or just watching if someone sticks around for twenty minutes instead of bouncing?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">Yeah, so I definitely would like to monitor the traffic. I expect that people will reach out to me and contact me. And yeah, I'd like to put a facility in to provide feedback. So I think the traffic coming to the site and the feedback that I get will be the primary indicator if it's successful.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">If you had one sentence — literally one — to slap on the homepage that'd make someone stop scrolling and stay... what would it be?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">Jeez, I don't know. And you know what? I think perhaps I'll ask you. What do you think is the one punchy phrase that we should have on there to get people's attention?</div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">How about: "See the crime you can't see — then stop it." Short. Sharp. Makes them think, "Wait, what?" — and keeps them reading.</div>
+  </div>
+
+  <!-- Q9 (final) -->
+  <div class="q-block">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">Last one: if someone walks away from your site and thinks, "I wanna fight this," what's the single thing you hope they remember?</div>
+  </div>
+  <div class="a-block">
+    <div class="a-label"><div class="a-ico">💬</div><span class="a-who">David</span></div>
+    <div class="a-text">I think the one thing that people should take away that'll be really impactful is just the scale, magnitude, the reach, the impact of economic crime on so many different facets of all of our lives. And we've got key metrics on there, various examples, and I think that's the one thing that I'd like to really hit home so people recognise this is such an important issue.</div>
+  </div>
+
+  <!-- PULL QUOTE 5 -->
+  <aside class="pull-quote left" aria-label="Key quote">
+    <p>The scale, magnitude, the reach, the impact of economic crime on so many different facets of all of our lives — that's the one thing I'd like to really hit home.</p>
+    <cite>— David Merrick</cite>
+  </aside>
+
+  <div class="q-block" style="clear:both">
+    <div class="q-label"><div class="q-ico">🎙️</div><span class="q-who">AI Interviewer</span></div>
+    <div class="q-text">Got it — scale and reach. "This isn't some niche scam; it's everywhere, touching everything." That's a wrap. Thanks for letting me poke around your head — really cool to hear how you're building this.</div>
+  </div>
+</div>
+
+<!-- ═══ WRAP-UP ═══ -->
+<div class="wrapup">
+  <div class="wrapup-card">
+    <h3>📝 Key Takeaways</h3>
+    <p><strong>The invisible impact problem.</strong> Economic crime doesn't leave visible scars, which makes raising awareness harder — but no less critical. The site leads with impact metrics to bridge that gap.</p>
+    <p><strong>Bridge, not guilt trip.</strong> The goal isn't emotional manipulation — it's practical: show people what economic crime looks like, how it works, and how they can join the fight.</p>
+    <p><strong>Typologies as the entry point.</strong> For newcomers, the typologies section is the best first click — a structured overview of how different crimes are perpetrated and disrupted.</p>
+    <p><strong>The Ops Simulator.</strong> A hands-on tool letting visitors experience what an analyst's workday actually looks like — entirely AI-built, not based on any real vendor system.</p>
+    <p><strong>"Tell Your Story" feature.</strong> A new idea born in this interview — providing an anonymous interface for victims and witnesses to share their experiences. Coming soon.</p>
+  </div>
+</div>
+
+<!-- ═══ INTERVIEW NAV ═══ -->
+<div class="art-nav">
+  <div class="art-nav-inner">
+    <span class="disabled">← Previous</span>
+    <a href="index.html">All Interviews</a>
+    <span class="disabled">Next →</span>
+  </div>
+</div>
+
+<!-- ═══ SITE NAV ═══ -->
+<nav class="site-bnav">
+<div class="site-bni">
+  <button class="snb" onclick="window.location.href='../index.html'"><span class="sbi">&#x1F3E0;</span>Home</button>
+  <button class="snb" onclick="window.location.href='../index.html#impact'"><span class="sbi">&#x1F4CA;</span>Impact</button>
+  <button class="snb" onclick="window.location.href='../index.html#reference'"><span class="sbi">&#x1F4CB;</span>Typologies</button>
+  <button class="snb" onclick="window.location.href='../simulator/index.html'"><span class="sbi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+  <button class="snb" onclick="window.location.href='../index.html#future'"><span class="sbi">&#x1F680;</span>Evolution</button>
+  <button class="snb" onclick="window.location.href='../index.html#intelligence'"><span class="sbi">&#x1F50E;</span>Directory</button>
+  <button class="snb" onclick="toggleSiteMore()"><span class="sbi">&#x2261;</span>More</button>
+</div>
+</nav>
+
+<div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
+<div class="site-msh">
+  <h3>More Sections</h3>
+  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">🎬</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">📓</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
+</div>
+</div>
+
+<script>
+function toggleSiteMore(){document.getElementById('siteMoreOverlay').classList.add('open');}
+function closeSiteMore(){document.getElementById('siteMoreOverlay').classList.remove('open');}
+</script>
+</body>
+</html>
