@@ -3,7 +3,7 @@
 // 5 Cases — All names are entirely fictional constructions.
 // No real person, company, bank, or trust bears these names.
 // To add a case: push a new object following the same structure.
-// ═══════════════════════════════════════════════════════════════ 
+// ═══════════════════════════════════════════════════════════════
 
 const KYC_CASES = [
 
@@ -45,21 +45,21 @@ const KYC_CASES = [
     ],
     hierarchy: {
       nodes: [
-        { id: "threnvale", label: "Threnvale Capital LLP", type: "company", jurisdiction: "UK 🇬🇧", risk: "medium", x: 200, y: 30,
+        { id: "threnvale", label: "Threnvale Capital LLP", type: "company", jurisdiction: "UK 🇬🇧", risk: "medium", x: 230, y: 39,
           info: "The applicant entity. LLP registered in UK. Virtual office. Expected $3–5M/month turnover. Only nominee partners listed." },
-        { id: "orvashk", label: "Orvashk Group Ltd", type: "company", jurisdiction: "BVI 🇻🇬", risk: "high", ownership: "60%", parent: "threnvale", x: 100, y: 115,
+        { id: "orvashk", label: "Orvashk Group Ltd", type: "company", jurisdiction: "BVI 🇻🇬", risk: "high", ownership: "60%", parent: "threnvale", x: 115, y: 151,
           info: "BVI registered company holding 60% of Threnvale. No public beneficial ownership disclosure. Linked to offshore tax investigation (2023)." },
-        { id: "klendara", label: "Klendara Advisory AG", type: "company", jurisdiction: "Switzerland 🇨🇭", risk: "medium", ownership: "40%", parent: "threnvale", x: 300, y: 115,
+        { id: "klendara", label: "Klendara Advisory AG", type: "company", jurisdiction: "Switzerland 🇨🇭", risk: "medium", ownership: "40%", parent: "threnvale", x: 345, y: 151,
           info: "Swiss advisory firm in Zug. Holds 40% of Threnvale. Director: Sennara Vikström. Legitimate corporate registration." },
-        { id: "yeranthos", label: "Yeranthos Trust", type: "trust", jurisdiction: "Cayman 🇰🇾", risk: "high", ownership: "100%", parent: "orvashk", x: 55, y: 200,
+        { id: "yeranthos", label: "Yeranthos Trust", type: "trust", jurisdiction: "Cayman 🇰🇾", risk: "high", ownership: "100%", parent: "orvashk", x: 63, y: 262,
           info: "Cayman Islands discretionary trust. Owns 100% of Orvashk Group. Trust deed NOT provided. Beneficiaries and settlor undisclosed." },
-        { id: "vikstrom", label: "Sennara Vikström", type: "person", jurisdiction: "Sweden 🇸🇪", risk: "low", ownership: "70%", parent: "klendara", x: 260, y: 200,
+        { id: "vikstrom", label: "Sennara Vikström", type: "person", jurisdiction: "Sweden 🇸🇪", risk: "low", ownership: "70%", parent: "klendara", x: 299, y: 262,
           info: "Swedish national. Director and 70% shareholder of Klendara Advisory. Clean screening. Tax resident in Switzerland. Cooperating with requests." },
-        { id: "nominee_f", label: "Pellmarch Nominees Ltd", type: "nominee", jurisdiction: "UK 🇬🇧", risk: "medium", ownership: "30%", parent: "klendara", x: 345, y: 200,
+        { id: "nominee_f", label: "Pellmarch Nominees Ltd", type: "nominee", jurisdiction: "UK 🇬🇧", risk: "medium", ownership: "30%", parent: "klendara", x: 397, y: 262,
           info: "Nominee shareholder holding 30% of Klendara on behalf of undisclosed client(s). Same registered agent as Threnvale." },
-        { id: "drenkh", label: "Borislav Drenkh", type: "person", jurisdiction: "Latvia 🇱🇻", risk: "critical", ownership: "Beneficiary", parent: "yeranthos", x: 55, y: 280,
+        { id: "drenkh", label: "Borislav Drenkh", type: "person", jurisdiction: "Latvia 🇱🇻", risk: "critical", ownership: "Beneficiary", parent: "yeranthos", x: 63, y: 368,
           info: "⚠️ PEP MATCH: Former Deputy Minister of Economy, Latvia (2018–2022). Subject of parliamentary inquiry into procurement irregularities. Identified as discretionary beneficiary of Yeranthos Trust via leaked correspondence." },
-        { id: "unknown", label: "[Undisclosed]", type: "unknown", jurisdiction: "Unknown", risk: "critical", ownership: "Settlor", parent: "yeranthos", x: 150, y: 280,
+        { id: "unknown", label: "[Undisclosed]", type: "unknown", jurisdiction: "Unknown", risk: "critical", ownership: "Settlor", parent: "yeranthos", x: 172, y: 368,
           info: "⚠️ The settlor of Yeranthos Trust has not been disclosed. Trust deed has not been provided despite repeated requests. This is a critical CDD gap." },
       ],
       edges: [
@@ -141,17 +141,17 @@ const KYC_CASES = [
     ],
     hierarchy: {
       nodes: [
-        { id: "goleli", label: "Marzek Goleli-Fynn", type: "person", jurisdiction: "Ireland 🇮🇪 / Cyprus 🇨🇾", risk: "critical", x: 200, y: 30,
+        { id: "goleli", label: "Marzek Goleli-Fynn", type: "person", jurisdiction: "Ireland 🇮🇪 / Cyprus 🇨🇾", risk: "critical", x: 230, y: 39,
           info: "Applicant. Dual Irish-Cypriot national. Claims US residency but provides Cyprus address. Self-declared 'independent investor' — no verifiable employment history." },
-        { id: "novaquo", label: "Novaquo Ventures Ltd", type: "company", jurisdiction: "Cyprus 🇨🇾", risk: "high", ownership: "100% Owner", parent: "goleli", x: 80, y: 130,
+        { id: "novaquo", label: "Novaquo Ventures Ltd", type: "company", jurisdiction: "Cyprus 🇨🇾", risk: "high", ownership: "100% Owner", parent: "goleli", x: 92, y: 171,
           info: "Cyprus-registered investment company. Goleli-Fynn is sole director and shareholder. Registered 2019 — same year as golden visa passport. No audited accounts filed." },
-        { id: "brevmark", label: "Uxillar Holdings Ltd", type: "company", jurisdiction: "BVI 🇻🇬", risk: "high", ownership: "100% Owner", parent: "goleli", x: 320, y: 130,
+        { id: "brevmark", label: "Uxillar Holdings Ltd", type: "company", jurisdiction: "BVI 🇻🇬", risk: "high", ownership: "100% Owner", parent: "goleli", x: 368, y: 171,
           info: "BVI entity. Goleli-Fynn listed as sole director. No public filings available. Registered agent: offshore service provider with no physical office." },
-        { id: "tzemekh", label: "Radovan Tzemekh", type: "person", jurisdiction: "Cyprus 🇨🇾", risk: "critical", ownership: "Associate", parent: "goleli", x: 80, y: 230,
+        { id: "tzemekh", label: "Radovan Tzemekh", type: "person", jurisdiction: "Cyprus 🇨🇾", risk: "critical", ownership: "Associate", parent: "goleli", x: 92, y: 302,
           info: "⚠️ SANCTIONED by OFAC (2025) for facilitating sanctions evasion through Cypriot shell companies. Known close associate of Goleli-Fynn — co-director of Novaquo until 2024." },
-        { id: "delvaris", label: "Delvaris Mutual Bank", type: "bank", jurisdiction: "Cyprus 🇨🇾", risk: "high", ownership: "Banking Rel.", parent: "goleli", x: 320, y: 230,
+        { id: "delvaris", label: "Delvaris Mutual Bank", type: "bank", jurisdiction: "Cyprus 🇨🇾", risk: "high", ownership: "Banking Rel.", parent: "goleli", x: 368, y: 302,
           info: "Small Cypriot bank that provided reference letter. No major correspondent relationships. Subject of ECB supervisory concerns regarding AML controls (2023)." },
-        { id: "property", label: "[Property Fraud Ring]", type: "unknown", jurisdiction: "Cyprus 🇨🇾", risk: "critical", x: 200, y: 310,
+        { id: "property", label: "[Property Fraud Ring]", type: "unknown", jurisdiction: "Cyprus 🇨🇾", risk: "critical", x: 230, y: 407,
           info: "⚠️ Cypriot regulatory investigation (2024) into property fraud scheme involving inflated valuations and money laundering. Goleli-Fynn named as a person of interest." },
       ],
       edges: [
@@ -233,17 +233,17 @@ const KYC_CASES = [
     ],
     hierarchy: {
       nodes: [
-        { id: "lumivara", label: "Lumivara Foundation", type: "company", jurisdiction: "Netherlands 🇳🇱", risk: "high", x: 200, y: 30,
+        { id: "lumivara", label: "Lumivara Foundation", type: "company", jurisdiction: "Netherlands 🇳🇱", risk: "high", x: 230, y: 39,
           info: "Dutch registered NPO (Stichting). Revenue €6.2M but only €1.8M documented as aid. €4.4M spending gap. No independent audit." },
-        { id: "zilnova", label: "Kasparek Zilnova", type: "person", jurisdiction: "Czech Republic 🇨🇿", risk: "medium", ownership: "Board Chair", parent: "lumivara", x: 80, y: 120,
+        { id: "zilnova", label: "Kasparek Zilnova", type: "person", jurisdiction: "Czech Republic 🇨🇿", risk: "medium", ownership: "Board Chair", parent: "lumivara", x: 92, y: 158,
           info: "Board chair and UBO. Czech national. No prior NPO experience. Previously ran Zilnova Import-Export s.r.o. (customs investigation 2020, resolved). Single signatory for transactions up to €500K." },
-        { id: "board2", label: "Priti Nandeshwar", type: "person", jurisdiction: "India 🇮🇳", risk: "low", ownership: "Board Member", parent: "lumivara", x: 320, y: 120,
+        { id: "board2", label: "Priti Nandeshwar", type: "person", jurisdiction: "India 🇮🇳", risk: "low", ownership: "Board Member", parent: "lumivara", x: 368, y: 158,
           info: "Board member. Indian national resident in Netherlands. Clean screening. Works part-time as project coordinator. Limited financial oversight role." },
-        { id: "donor1", label: "Grellith Industries CSR", type: "company", jurisdiction: "Germany 🇩🇪", risk: "low", ownership: "Donor", parent: "lumivara", x: 100, y: 210,
+        { id: "donor1", label: "Grellith Industries CSR", type: "company", jurisdiction: "Germany 🇩🇪", risk: "low", ownership: "Donor", parent: "lumivara", x: 115, y: 276,
           info: "German corporate donor. CSR programme donates €200K annually. Legitimate corporation with public filings." },
-        { id: "donor2", label: "Unnamed Private Donor", type: "unknown", jurisdiction: "UAE 🇦🇪", risk: "high", ownership: "Donor (~80%)", parent: "lumivara", x: 300, y: 210,
+        { id: "donor2", label: "Unnamed Private Donor", type: "unknown", jurisdiction: "UAE 🇦🇪", risk: "high", ownership: "Donor (~80%)", parent: "lumivara", x: 345, y: 276,
           info: "⚠️ A single private individual provides approximately 80% of all funding (~€5M). Name given as 'H. Al-Qenthuri' — no independent verification performed. UAE-based. Donor due diligence not completed." },
-        { id: "conflict", label: "Conflict Zones", type: "unknown", jurisdiction: "Syria/Yemen/Somalia", risk: "critical", x: 200, y: 295,
+        { id: "conflict", label: "Conflict Zones", type: "unknown", jurisdiction: "Syria/Yemen/Somalia", risk: "critical", x: 230, y: 387,
           info: "⚠️ Aid disbursed to Syria (sanctioned), Yemen, Somalia, South Sudan. All FATF high-risk. Specific beneficiary organisations and end-use not documented." },
       ],
       edges: [
@@ -321,11 +321,11 @@ const KYC_CASES = [
     ],
     hierarchy: {
       nodes: [
-        { id: "mostyn", label: "Eleri Mostyn-Hale", type: "person", jurisdiction: "UK 🇬🇧", risk: "low", x: 200, y: 50,
+        { id: "mostyn", label: "Eleri Mostyn-Hale", type: "person", jurisdiction: "UK 🇬🇧", risk: "low", x: 230, y: 66,
           info: "Applicant. British national, age 34. Senior Data Analyst. Employed, stable income. No adverse information. Clean screening results across all databases." },
-        { id: "employer", label: "Crosfield Pharma Ltd", type: "company", jurisdiction: "UK 🇬🇧", risk: "low", ownership: "Employer", parent: "mostyn", x: 100, y: 160,
+        { id: "employer", label: "Crosfield Pharma Ltd", type: "company", jurisdiction: "UK 🇬🇧", risk: "low", ownership: "Employer", parent: "mostyn", x: 115, y: 210,
           info: "UK-based pharmaceutical company. Established 2008. 450+ employees. Publicly available accounts. Legitimate employer — salary payments verified." },
-        { id: "prevbank", label: "Previous Bank Account", type: "bank", jurisdiction: "UK 🇬🇧", risk: "low", ownership: "Prior Banking", parent: "mostyn", x: 300, y: 160,
+        { id: "prevbank", label: "Previous Bank Account", type: "bank", jurisdiction: "UK 🇬🇧", risk: "low", ownership: "Prior Banking", parent: "mostyn", x: 345, y: 210,
           info: "3 months of statements provided. Regular salary credits, normal spending. No suspicious transactions. Account in good standing." },
       ],
       edges: [
@@ -396,17 +396,17 @@ const KYC_CASES = [
     ],
     hierarchy: {
       nodes: [
-        { id: "vextrion", label: "Vextrion Digital OÜ", type: "company", jurisdiction: "Estonia 🇪🇪", risk: "high", x: 200, y: 30,
+        { id: "vextrion", label: "Vextrion Digital OÜ", type: "company", jurisdiction: "Estonia 🇪🇪", risk: "high", x: 230, y: 39,
           info: "Estonian-registered VASP. Crypto exchange seeking fiat banking. $15–25M/month expected volume. VASP licence from old regime — not re-assessed. No employees in Estonia." },
-        { id: "nexvault", label: "Nexvault Holding Ltd", type: "company", jurisdiction: "Seychelles 🇸🇨", risk: "high", ownership: "100%", parent: "vextrion", x: 80, y: 130,
+        { id: "nexvault", label: "Nexvault Holding Ltd", type: "company", jurisdiction: "Seychelles 🇸🇨", risk: "high", ownership: "100%", parent: "vextrion", x: 92, y: 171,
           info: "Seychelles holding company. 100% parent of Vextrion. Seychelles has limited corporate transparency — ownership information not publicly verifiable." },
-        { id: "gharzadze", label: "Petronikh Gharzadze", type: "person", jurisdiction: "Georgia 🇬🇪 / Dubai 🇦🇪", risk: "medium", ownership: "100% UBO", parent: "nexvault", x: 80, y: 230,
+        { id: "gharzadze", label: "Petronikh Gharzadze", type: "person", jurisdiction: "Georgia 🇬🇪 / Dubai 🇦🇪", risk: "medium", ownership: "100% UBO", parent: "nexvault", x: 92, y: 302,
           info: "Georgian national, Dubai resident. Claims to be sole UBO via Nexvault. No prior crypto industry track record found. Previous career unclear — LinkedIn shows 'entrepreneur' with no specifics." },
-        { id: "operations", label: "Dubai Operations", type: "unknown", jurisdiction: "UAE 🇦🇪", risk: "medium", ownership: "Operational HQ", parent: "vextrion", x: 320, y: 130,
+        { id: "operations", label: "Dubai Operations", type: "unknown", jurisdiction: "UAE 🇦🇪", risk: "medium", ownership: "Operational HQ", parent: "vextrion", x: 368, y: 171,
           info: "Actual operations run from Dubai despite Estonian registration. Dubai VARA (Virtual Assets Regulatory Authority) licence not obtained. Operating in regulatory gap." },
-        { id: "users", label: "Exchange Users (Global)", type: "unknown", jurisdiction: "Multiple", risk: "high", x: 320, y: 230,
+        { id: "users", label: "Exchange Users (Global)", type: "unknown", jurisdiction: "Multiple", risk: "high", x: 368, y: 302,
           info: "⚠️ Exchange serves global users including high-risk jurisdictions. KYC policy is a generic template — no evidence of robust sanctions screening, travel rule compliance, or chain analytics on customer wallets." },
-        { id: "mixer", label: "[Mixer Allegations]", type: "unknown", jurisdiction: "Unknown", risk: "critical", x: 200, y: 300,
+        { id: "mixer", label: "[Mixer Allegations]", type: "unknown", jurisdiction: "Unknown", risk: "critical", x: 230, y: 394,
           info: "⚠️ Unverified industry blog post (2024) alleges Vextrion facilitated mixer/tumbler transactions. Not confirmed by regulators — but indicates potential typology for obfuscating crypto origins." },
       ],
       edges: [
