@@ -49,27 +49,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-theme:hover{border-color:rgba(212,168,67,.5);color:rgba(212,168,67,.8)}
 .v-theme.on{background:var(--vgoldD);border-color:var(--vgold);color:var(--vgold)}
 
-/* ── Hero ── */
-.v-hero{position:relative;overflow:hidden;padding:2.5rem 1.2rem 2rem}
-.v-hero-bg{position:absolute;inset:0;opacity:.55;transition:background .7s}
-.v-hero-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,14,17,.25) 0%,rgba(14,14,17,.7) 55%,var(--vbg) 100%)}
-.v-hero-grid{position:absolute;inset:0;opacity:.06;background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(185,28,28,.1) 1px,rgba(185,28,28,.1) 2px),repeating-linear-gradient(90deg,transparent,transparent 1px,rgba(185,28,28,.06) 1px,rgba(185,28,28,.06) 2px);background-size:3px 3px}
-.v-hero-inner{position:relative;z-index:2;max-width:720px}
-.v-hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--vred);color:#fff;font-family:var(--fm);font-size:.56rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:10px}
-.v-hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}70%{box-shadow:0 0 0 6px rgba(255,255,255,0)}}
-.v-hero h1{font-family:var(--fd);font-size:2rem;font-weight:900;color:#fff;line-height:1.1;margin-bottom:8px}
-.v-hero-tag{font-size:.88rem;color:rgba(255,255,255,.65);font-style:italic;margin-bottom:16px;line-height:1.4}
-.v-hero-cta{display:inline-flex;align-items:center;gap:8px;background:var(--vred);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-family:var(--fb);font-size:.8rem;font-weight:700;cursor:pointer;transition:.2s}
-.v-hero-cta:hover{background:var(--vredB);transform:translateY(-1px);box-shadow:0 6px 20px var(--vredG)}
-.v-hero-nav{position:absolute;top:50%;z-index:5;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:1px solid rgba(255,255,255,.15);width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:grid;place-items:center;transition:.2s;backdrop-filter:blur(6px)}
-.v-hero-nav:hover{background:var(--vred);border-color:var(--vred)}
-.v-hero-nav.l{left:10px}.v-hero-nav.r{right:10px}
-.v-hero-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:6px}
-.v-hero-dots button{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);border:none;cursor:pointer;padding:0;transition:.2s}
-.v-hero-dots button.on{background:var(--vred);width:20px;border-radius:4px;box-shadow:0 0 8px var(--vredG)}
-.v-hero-back{position:absolute;top:14px;left:14px;z-index:5;color:rgba(255,255,255,.5);font-family:var(--fm);font-size:.65rem;letter-spacing:.08em;text-decoration:none;transition:.15s}
-.v-hero-back:hover{color:#fff}
 
 /* ── Shelf Section ── */
 .v-shelf{max-width:960px;margin:0 auto;padding:1.5rem 0 .5rem}
@@ -164,8 +143,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-footer a:hover{color:#e0b94f}
 
 @media(max-width:600px){
-  .v-hero h1{font-size:1.5rem}
-  .v-hero{padding:2rem 1rem 1.5rem}
   .v-card-icon{width:42px}.v-card-icon .emoji{font-size:1.2rem}
   .v-card-desc{font-size:.66rem}
   .v-card-title{font-size:.8rem}
@@ -174,23 +151,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 </style>
 </head>
 <body>
-
-<!-- ══ HERO (scrolls away) ══ -->
-<section class="v-hero" id="hero">
-  <div class="v-hero-bg" id="heroBg"></div>
-  <div class="v-hero-fade"></div>
-  <div class="v-hero-grid"></div>
-  <a href="index.html" class="v-hero-back">← ECONOMICCRIMEHUB</a>
-  <div class="v-hero-inner">
-    <span class="v-hero-badge"><span class="dot"></span> <span id="heroBadge">FEATURED</span></span>
-    <h1 id="heroTitle"></h1>
-    <p class="v-hero-tag" id="heroTag"></p>
-    <button class="v-hero-cta" onclick="openModal(heroItems[heroIdx].id)">Open Dossier →</button>
-  </div>
-  <button class="v-hero-nav l" onclick="heroNav(-1)">‹</button>
-  <button class="v-hero-nav r" onclick="heroNav(1)">›</button>
-  <div class="v-hero-dots" id="heroDots"></div>
-</section>
 
 <!-- ══ STICKY HEADER (disclaimer + controls — frozen at top) ══ -->
 <div class="v-sticky-hdr">
@@ -261,23 +221,7 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 
 <!-- ══ ENGINE ══ -->
 <script>
-var heroItems=mediaItems.filter(function(m){return m.featured});
-var heroIdx=0,heroTimer=null;
 var activeType="all",activeTheme=null,searchQuery="";
-
-/* ── Hero ── */
-function renderHero(){
-  var it=heroItems[heroIdx];
-  document.getElementById("heroBg").style.background=it.gradient;
-  document.getElementById("heroTitle").textContent=it.title;
-  document.getElementById("heroTag").textContent=it.featuredTagline||it.desc.substring(0,100)+"\u2026";
-  document.getElementById("heroBadge").textContent=mediaTypeLabels[it.type].toUpperCase()+" \u00b7 "+it.year;
-  document.getElementById("heroDots").innerHTML=heroItems.map(function(_,i){
-    return '<button onclick="heroGo('+i+')" class="'+(i===heroIdx?"on":"")+'"></button>';
-  }).join("");
-}
-function heroGo(i){heroIdx=i;renderHero();clearInterval(heroTimer);heroTimer=setInterval(function(){heroNav(1)},5500)}
-function heroNav(d){heroGo((heroIdx+d+heroItems.length)%heroItems.length)}
 
 /* ── Filters ── */
 function buildFilters(){
@@ -355,7 +299,6 @@ function scrollTrack(id,dir){
 function renderContent(){
   var filtered=getFiltered();
   var isFiltered=activeType!=="all"||activeTheme||searchQuery;
-  document.getElementById("hero").style.display=isFiltered?"none":"";
   document.getElementById("emptyState").style.display=filtered.length?"none":"block";
   if(isFiltered){
     document.getElementById("shelvesContainer").style.display="none";
@@ -415,8 +358,6 @@ function closeModal(){document.getElementById("modal").classList.remove("open");
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal()});
 
 /* ── Init ── */
-renderHero();
-heroTimer=setInterval(function(){heroNav(1)},5500);
 buildFilters();
 renderContent();
 </script>
