@@ -108,12 +108,25 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-empty p{font-size:.72rem;color:var(--vdim)}
 
 
-/* ── Bottom Nav — home page white style, single Home button ── */
-.v-bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.08);padding-bottom:var(--sab);height:calc(var(--nav) + var(--sab))}
-.v-bnav-inner{display:flex;justify-content:center;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
-.v-nb{display:flex;align-items:center;justify-content:center;gap:6px;background:0;border:0;font-family:var(--fb);font-size:.75rem;font-weight:600;color:#444;cursor:pointer;transition:.15s;padding:8px 24px;text-decoration:none;border-radius:8px}
-.v-nb:hover{color:var(--vred)}
-.v-nb .bi{font-size:1.15rem;line-height:1}
+/* ── Bottom Nav — matches home page ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.08);padding-bottom:var(--sab);height:calc(var(--nav) + var(--sab))}
+.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
+.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0;text-decoration:none}
+.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
+.nb.act{color:#b91c1c;font-weight:700}
+.nb.act .bi{transform:scale(1.08)}
+.nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#b91c1c;border-radius:50%}
+/* ── More overlay ── */
+.mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.mo.open{display:flex}
+.msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(var(--nav) + var(--sab) + .8rem);animation:su .22s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.msh h3{font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;font-weight:700}
+.mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit}
+.mi:active{background:#f5f5f5}
+.mi .ic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f5f5f5;flex-shrink:0}
+.mi .ml{font-weight:600;font-size:.8rem}
+.mi .ms{font-size:.63rem;color:#888}
 
 /* ── Footer ── */
 .v-footer{border-top:1px solid rgba(255,255,255,.05);padding:2rem 16px;text-align:center}
@@ -186,9 +199,24 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 </footer>
 
 <!-- ══ BOTTOM NAV — white, single Home button ══ -->
-<nav class="v-bnav"><div class="v-bnav-inner">
-  <a href="index.html" class="v-nb"><span class="bi">🏠</span> Home</a>
+<nav class="bnav"><div class="bni">
+<a class="nb" href="index.html"><span class="bi">&#x1F3E0;</span>Home</a>
+<a class="nb" href="index.html#impact"><span class="bi">&#x1F4CA;</span>Impact</a>
+<a class="nb" href="index.html#reference"><span class="bi">&#x1F4CB;</span>Typologies</a>
+<a class="nb" href="simulator.html"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</a>
+<a class="nb" href="index.html#future"><span class="bi">&#x1F680;</span>Evolution</a>
+<a class="nb" href="index.html#intelligence"><span class="bi">&#x1F50E;</span>Directory</a>
+<button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
 </div></nav>
+
+<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
+<div class="msh">
+<h3>More Sections</h3>
+<a class="mi" href="index.html#competencies"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></a>
+<a class="mi" href="index.html#glossary"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></a>
+<a class="mi" href="index.html#about"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></a>
+</div>
+</div>
 
 <!-- ══ DATA ══ -->
 <script src="data/vault-config.js"></script>
@@ -310,6 +338,10 @@ function renderContent(){
   }
 }
 
+
+/* ── More overlay ── */
+function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
+function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
 
 /* ── Init ── */
 buildFilters();
