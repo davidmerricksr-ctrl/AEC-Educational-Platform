@@ -84,27 +84,6 @@ a{color:var(--navy);text-decoration:none}
 .pill{padding:.4rem .75rem;border:1px solid var(--line);border-radius:100px;font-size:.68rem;font-weight:600;color:var(--mute);cursor:pointer;transition:.2s;background:var(--sf);white-space:nowrap;flex-shrink:0;font-family:var(--fb);-webkit-tap-highlight-color:transparent}
 .pill:active{transform:scale(.96)}
 .pill.act{background:var(--crim);border-color:var(--crim);color:#fff}
-.pill.dark.act{background:var(--ink);border-color:var(--ink);color:#fff}
-.farea{border:1px solid var(--line);border-radius:var(--r);padding:1.1rem .9rem;margin-bottom:.8rem;position:relative;overflow:hidden;background:var(--sf)}
-.farea::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(184,45,36,.03),transparent)}
-.fstages{position:relative;z-index:1}
-.fstage{margin-bottom:1rem}.fstage:last-child{margin-bottom:0}
-.fslabel{font-size:.48rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:.2rem .5rem;border-radius:5px;margin-bottom:.45rem;display:inline-block;margin-left:50%;transform:translateX(-50%)}
-.fsteps{display:flex;flex-direction:column;gap:.3rem}
-.fnode{padding:.6rem .75rem;border-radius:8px;cursor:pointer;transition:.2s;border:1.5px solid var(--line);-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:.55rem}
-.fnode:active{transform:scale(.98)}
-.fnode.sel{border-color:rgba(184,45,36,.5)!important;box-shadow:0 0 14px rgba(184,45,36,.1)}
-.fni{font-size:1.05rem;flex-shrink:0}
-.fnt{font-size:.72rem;font-weight:600;color:var(--ink)}
-.fns{font-size:.58rem;color:var(--mute);margin-top:.02rem}
-.farrow{text-align:center;color:var(--line);font-size:.6rem;padding:.08rem 0;letter-spacing:2px}
-.fdetail{position:relative;z-index:2;background:var(--bg);border-top:1px solid var(--line);padding:.95rem;border-radius:0 0 var(--r) var(--r);min-height:80px}
-.fdbadge{font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.13rem .45rem;border-radius:4px;display:inline-block;margin-bottom:.25rem}
-.fdetail h4{font-family:var(--fd);color:var(--ink);font-size:.9rem;margin-bottom:.22rem}
-.fdetail p{font-size:.74rem;color:var(--sub);line-height:1.5}
-.fdflags{margin-top:.35rem;display:flex;flex-wrap:wrap;gap:.2rem}
-.fdflags span{display:inline-block;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);padding:.07rem .35rem;border-radius:4px;font-size:.56rem}
-.fsrc{text-align:center;padding:.3rem;font-size:.52rem;color:var(--mute);position:relative;z-index:1}
 .tcard{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:1.05rem;margin-bottom:.65rem}
 .tcard .th{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.45rem}
 .tcard .ti{width:32px;height:32px;border-radius:7px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
@@ -258,20 +237,17 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
   .hero h1{font-size:2.5rem}
   .pi{padding:1.6rem 2rem 4rem}
   .st{font-size:1.85rem}
-  .fsteps{flex-direction:row;gap:.3rem}
-  .fnode{flex:1;flex-direction:column;text-align:center;padding:.6rem .4rem}
-  .farrow{display:none}
 }
 </style>
 </head>
 <body>
 <nav class="bnav"><div class="bni">
 <button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">&#x1F3E0;</span>Home</button>
-<button class="nb" data-pg="explorer" onclick="go('explorer')"><span class="bi">&#x1F5FA;&#xFE0F;</span>Explorer</button>
-<button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Typologies</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
+<button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Typologies</button>
 <button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
 <button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+<button class="nb" data-pg="future" onclick="go('future')"><span class="bi">&#x1F680;</span>Evolution</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
 </div></nav>
 <div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
@@ -279,9 +255,6 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <h3>More Sections</h3>
 <div class="mi" onclick="go('competencies');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>
 <div class="mi" onclick="go('glossary');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>
-
-<div class="mi" onclick="go('future');closeMore()"><div class="ic">&#x1F680;</div><div><div class="ml">Future</div><div class="ms">Emerging technologies</div></div></div>
-
 <div class="mi" onclick="go('about');closeMore()"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>
 </div>
 </div>
@@ -308,29 +281,6 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 </div>
 <div class="hdisc">⚠ Strictly for educational purposes. Does not constitute professional advice of any kind.</div>
 <div class="hsrc"><p>Sources: <a href="https://www.slavefreealliance.org/" target="_blank">Slave Free Alliance</a> · <a href="https://www.getsafeonline.org/" target="_blank">Get Safe Online</a> · <a href="https://www.fincen.gov/" target="_blank">FinCEN</a> · <a href="https://www.ic3.gov/" target="_blank">FBI IC3</a> · <a href="https://www.justice.gov/" target="_blank">DOJ</a> · <a href="https://home.treasury.gov/" target="_blank">US Treasury</a> · <a href="https://www.interpol.int/" target="_blank">INTERPOL</a></p></div>
-</div>
-
-<!-- EXPLORER -->
-<div class="page" id="explorer">
-<div class="disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
-<div class="pi">
-<div class="sec-hdr">
-<div class="se">Typology Explorer</div>
-<div class="st">How Economic Crime Works</div>
-<div class="sd">Select a crime type to trace its stages step by step. Tap any step to see how it works and the red flags that expose it.</div>
-</div>
-<div class="pills" id="flowPick"></div>
-<div class="farea" id="flowArea">
-<div class="fstages" id="flowStages"></div>
-<div class="fdetail" id="flowDetail">
-<div class="fdbadge" id="fdBadge" style="background:rgba(232,169,58,.15);color:#e8a93a">OVERVIEW</div>
-<h4 id="fdTitle">Select a step above</h4>
-<p id="fdDesc">Tap any step in the flow to see how it works and the red flags that can expose it.</p>
-<div class="fdflags" id="fdFlags"></div>
-</div>
-<div class="fsrc" id="flowSrc"></div>
-</div>
-</div>
 </div>
 
 <!-- REFERENCE -->
@@ -484,7 +434,6 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 
 <!-- DATA -->
 <script src="data/competencies.js"></script>
-<script src="data/flows.js"></script>
 <script src="data/typologies.js"></script>
 <script src="data/impact.js"></script>
 <script src="data/future.js"></script>
@@ -522,51 +471,6 @@ document.getElementById('compGrid').innerHTML=competencies.map(function(c){
     }
     return '<div class="acc" onclick="accordion(this)"><span class="a-c">\u25bc</span><span class="a-i">'+c.icon+'</span><h3>'+c.title+'</h3><div class="a-b">'+c.brief+'</div><div class="a-d">'+c.detail+certsHtml+'</div></div>';
 }).join('');
-
-/* Flow Explorer */
-var curFlow=0;
-document.getElementById('flowPick').innerHTML=crimeFlows.map(function(f,i){
-    return '<button class="pill dark'+(i===0?' act':'')+'" onclick="showFlow('+i+')">'+f.icon+' '+f.name+'</button>';
-}).join('');
-
-function showFlow(idx){
-    curFlow=idx;
-    document.querySelectorAll('#flowPick .pill').forEach(function(b,i){b.classList.toggle('act',i===idx)});
-    var f=crimeFlows[idx];
-    var h='';
-    f.stages.forEach(function(stage,si){
-        var c=stage.color;
-        h+='<div class="fstage"><div class="fslabel" style="background:rgba('+c+',.15);color:rgba('+c+',1)">'+stage.name+'</div><div class="fsteps">';
-        stage.steps.forEach(function(step,sti){
-            h+='<div class="fnode" id="fn-'+si+'-'+sti+'" style="background:rgba('+c+',.06)" onclick="showStep('+si+','+sti+')"><span class="fni">'+step.icon+'</span><div><div class="fnt">'+step.label+'</div><div class="fns">'+step.sub+'</div></div></div>';
-            if(sti<stage.steps.length-1) h+='<div class="farrow">\u25bc</div>';
-        });
-        h+='</div></div>';
-        if(si<f.stages.length-1) h+='<div class="farrow" style="text-align:center;padding:.2rem 0">\u2b07\ufe0e</div>';
-    });
-    document.getElementById('flowStages').innerHTML=h;
-    document.getElementById('flowSrc').textContent=f.source;
-    document.getElementById('fdBadge').style.cssText='background:rgba(232,169,58,.15);color:#e8a93a';
-    document.getElementById('fdBadge').textContent='OVERVIEW';
-    document.getElementById('fdTitle').textContent=f.name+' \u2014 Step-by-Step';
-    document.getElementById('fdDesc').textContent='Tap any step in the flow above to see how it works and the red flags that can expose it.';
-    document.getElementById('fdFlags').innerHTML='';
-}
-
-function showStep(si,sti){
-    var f=crimeFlows[curFlow],stage=f.stages[si],step=stage.steps[sti],c=stage.color;
-    document.querySelectorAll('.fnode').forEach(function(n){n.classList.remove('sel')});
-    document.getElementById('fn-'+si+'-'+sti).classList.add('sel');
-    var b=document.getElementById('fdBadge');
-    b.style.cssText='background:rgba('+c+',.18);color:rgba('+c+',1)';
-    b.textContent=stage.name;
-    document.getElementById('fdTitle').textContent=step.title;
-    document.getElementById('fdDesc').textContent=step.desc;
-    document.getElementById('fdFlags').innerHTML=step.flags.map(function(fl){return '<span>\ud83d\udea9 '+fl+'</span>'}).join('');
-    var d=document.getElementById('flowDetail');d.style.animation='none';d.offsetHeight;d.style.animation='fu .2s ease';
-    d.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-showFlow(0);
 
 /* Typology Reference */
 document.getElementById('typoTabs').innerHTML=typologyCategories.map(function(c,i){
