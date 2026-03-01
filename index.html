@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- === RICH LINK PREVIEW (Open Graph) === -->
-<meta property="og:title" content="Economic Crime Hub | A fun and useful learning facility all about economic crime prevention">
-<meta property="og:description" content="Independent resource for economic crime: typologies & red flags, operations simulator, organisation directory, and The Vault — a curated archive of books, films, podcasts, reports and intelligence. Personal project by David Merrick.">
-<meta property="og:image" content="https://economiccrimehub.org/og-image.jpg"> <!-- ← change to your actual image URL -->
-<meta property="og:url" content="https://economiccrimehub.org">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Economic Crime Hub">
-
-<!-- Twitter / X Cards (makes previews even nicer) -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Economic Crime Hub | The Vault">
-<meta name="twitter:description" content="Typologies • Simulator • Directory • Curated Media Archive">
-<meta name="twitter:image" content="https://economiccrimehub.org/og-image.jpg">
 <meta charset="UTF-8">
-  
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EconCrime Edu</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -267,7 +253,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">&#x1F3E0;</span>Home</button>
 <button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
 <button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Typologies</button>
-<button class="nb" onclick="window.location.href='simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+<button class="nb" onclick="window.location.href='simulator/simulator.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
 <button class="nb" data-pg="future" onclick="go('future')"><span class="bi">&#x1F680;</span>Evolution</button>
 <button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
 <button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
@@ -296,7 +282,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:.85rem 1.2rem;position:relative;z-index:1">
 <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);font-size:.85rem">◆</span>
 <div style="text-align:center">
-<div style="font-family:'DM Serif Display',Georgia,serif;font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2">The Vault <span style="color:rgba(185,28,28,.8)">—</span> Fun and Useful Media Archive</div>
+<div style="font-family:'DM Serif Display',Georgia,serif;font-size:.88rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2">The Vault <span style="color:rgba(185,28,28,.8)">—</span> Classified Media Archive</div>
 <div style="font-size:.58rem;color:rgba(200,149,42,.7);font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-top:2px">Books · Films · Podcasts · Reports · Intelligence Briefs</div>
 </div>
 <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(185,28,28,.12);border:1px solid rgba(185,28,28,.25);color:rgba(255,255,255,.5);font-size:.7rem;font-weight:700;transition:.2s">→</span>
@@ -356,8 +342,6 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <div class="id-disclaimer">⚠ This is an independent educational resource. All descriptions are original neutral paraphrases. This directory is not endorsed by, affiliated with, or sponsored by any listed organisation.</div>
 <div class="id-sbar"><input type="text" id="idSearch" placeholder="Search organisations, resources, frameworks…" oninput="filterIntelDir()"></div>
 <div class="id-fgroup"><div class="id-flabel">Category</div><div class="id-filters" id="idFiltCat"></div></div>
-<div class="id-fgroup"><div class="id-flabel">Geography</div><div class="id-filters" id="idFiltGeo"></div></div>
-<div class="id-fgroup"><div class="id-flabel">Type</div><div class="id-filters" id="idFiltType"></div></div>
 <div class="id-fgroup"><div class="id-flabel">Focus Area</div><div class="id-filters" id="idFiltTheme"></div></div>
 <div class="id-count" id="idCount"></div>
 <div id="idGrid"></div>
@@ -556,16 +540,12 @@ document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '
 
 
 /* ===== INTELLIGENCE DIRECTORY ===== */
-var idFilters={cat:[],geo:[],type:[],theme:[]};
+var idFilters={cat:[],theme:[]};
 var idCats=["Intelligence & Law Enforcement","Industry Body & Standards","Key Resource & Framework"];
-var idGeos=["UK National","UK Regional","European","Global/International"];
-var idTypes=["Law Enforcement & Intelligence","Financial Intelligence Unit (FIU)","Regulator","Public-Private Partnership","NGO & Think Tank","Standards Body","Professional Association"];
 var idThemes=["Money Laundering","Fraud & Organised Crime","Bribery & Corruption","Sanctions Evasion","Asset Recovery","Emerging Threats (Crypto/AI)"];
 
 function renderIdFilters(){
     document.getElementById('idFiltCat').innerHTML=idCats.map(function(c){return '<button class="id-fbtn'+(idFilters.cat.indexOf(c)>-1?' act':'')+'" onclick="toggleIdFilter(\'cat\',this.textContent)">'+c+'</button>'}).join('')+'<button class="id-clearall" onclick="clearIdFilters()">Clear All</button>';
-    document.getElementById('idFiltGeo').innerHTML=idGeos.map(function(g){return '<button class="id-fbtn'+(idFilters.geo.indexOf(g)>-1?' act':'')+'" onclick="toggleIdFilter(\'geo\',\''+g+'\')">'+g+'</button>'}).join('');
-    document.getElementById('idFiltType').innerHTML=idTypes.map(function(t){return '<button class="id-fbtn'+(idFilters.type.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'type\',this.textContent)">'+t+'</button>'}).join('');
     document.getElementById('idFiltTheme').innerHTML=idThemes.map(function(t){return '<button class="id-fbtn'+(idFilters.theme.indexOf(t)>-1?' act':'')+'" onclick="toggleIdFilter(\'theme\',this.textContent)">'+t+'</button>'}).join('');
 }
 
@@ -578,7 +558,7 @@ function toggleIdFilter(cat,val){
 }
 
 function clearIdFilters(){
-    idFilters={cat:[],geo:[],type:[],theme:[]};
+    idFilters={cat:[],theme:[]};
     document.getElementById('idSearch').value='';
     renderIdFilters();
     filterIntelDir();
@@ -589,8 +569,6 @@ function filterIntelDir(){
     var results=intelligenceOrgs.filter(function(o){
         if(q&&o.name.toLowerCase().indexOf(q)===-1&&o.acronym.toLowerCase().indexOf(q)===-1&&o.shortDesc.toLowerCase().indexOf(q)===-1&&o.themes.join(' ').toLowerCase().indexOf(q)===-1&&(o.category||'').toLowerCase().indexOf(q)===-1) return false;
         if(idFilters.cat.length&&idFilters.cat.indexOf(o.category)===-1) return false;
-        if(idFilters.geo.length&&idFilters.geo.indexOf(o.geography)===-1) return false;
-        if(idFilters.type.length&&idFilters.type.indexOf(o.type)===-1) return false;
         if(idFilters.theme.length){var match=false;idFilters.theme.forEach(function(t){if(o.themes.indexOf(t)>-1) match=true});if(!match) return false;}
         return true;
     });
