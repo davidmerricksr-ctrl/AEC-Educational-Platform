@@ -39,7 +39,7 @@ const EDD_INDIVIDUAL_CASES = [
     transactions: [
       { amount: "$48,000", date: "2026-02-10", to: "Harrods — Luxury Goods", country: "UK", flag: true },
       { amount: "$125,000", date: "2026-01-28", to: "Wire → Voltrex Consulting Ltd", country: "UK", flag: true },
-      { amount: "$92,000", date: "2026-01-15", to: "Incoming — Kazvin Ministry Salary (annual)", country: "Kazvin", flag: false },
+      { amount: "$92,000", date: "2026-01-15", from: "Incoming — Kazvin Ministry Salary (annual)", country: "Kazvin", flag: false },
       { amount: "$67,000", date: "2026-01-15", to: "Private Jet Charter — Meridian Aviation", country: "UAE", flag: true },
       { amount: "$34,500", date: "2025-11-15", to: "School Fees — Elite Academy London", country: "UK", flag: false },
       { amount: "$210,000", date: "2025-10-01", to: "Wire → Solveris Holdings SA", country: "Panama", flag: true },
@@ -111,11 +111,11 @@ const EDD_INDIVIDUAL_CASES = [
     }
   },
 
-  // ── CASE 2: Close Associate of Sanctioned Oligarch ──
+  // ── CASE 2: RCA of SDN-listed oligarch — sanctions adjacency ──
   {
     id: "EDD-I-2026-0218",
     name: "Viktoriy Palenko",
-    teaser: "High-net-worth client — long-term business partner of recently sanctioned individual",
+    teaser: "Long-term business partner of newly SDN-listed individual",
     riskLevel: "critical",
     riskLabel: "Critical",
     correct: "exit",
@@ -129,55 +129,55 @@ const EDD_INDIVIDUAL_CASES = [
       accountType: "Private Banking Portfolio + Multi-currency Accounts",
       declaredIncome: "Investment returns & consulting fees (~$420,000/year)",
       declaredWealth: "$8.7M (mostly offshore trusts & real estate)",
-      riskRating: "Critical — triggered by SDN designation of long-term associate",
+      riskRating: "Critical — triggered by associate's SDN designation",
     },
-    reviewTrigger: "Adverse media + sanctions alert: long-term business partner (since 2015) added to OFAC SDN list February 2026.",
+    reviewTrigger: "Sanctions alert: long-term associate (since 2015) added to OFAC SDN list in February 2026.",
     sourceOfWealth: {
-      declared: "Returns from commodity trading joint ventures (2010–2022) and real estate investments in London & Dubai.",
-      findings: "Multiple wires ($1.9M total 2023–2025) received from companies previously linked to now-sanctioned associate. No updated source of funds declaration since designation. Cyprus company registry shows ongoing directorships in entities that received funds from SDN companies post-designation.",
-      assessment: "High risk of secondary sanctions exposure and potential sanctions evasion facilitation."
+      declared: "Commodity trading joint ventures (2010–2022) and London/Dubai real estate.",
+      findings: "$1.9M received 2023–2025 from companies previously linked to now-sanctioned associate. No updated SoF declaration post-designation. Still holds directorships in Cyprus entities that transacted with SDN-linked firms after designation.",
+      assessment: "Unacceptable secondary sanctions risk and potential sanctions circumvention exposure."
     },
     adverseMedia: [
-      { date: "2026-02-14", source: "OFAC Press Release", summary: "Associate Ivan Hrytsenko designated SDN for Russia-related procurement evasion.", flag: true },
-      { date: "2025-11-03", source: "Organised Crime & Corruption Reporting Project", summary: "Palenko named as Cyprus-based facilitator in network moving funds for Hrytsenko group.", flag: true },
+      { date: "2026-02-14", source: "OFAC", summary: "Associate Ivan Hrytsenko designated for Russia-related procurement evasion.", flag: true },
+      { date: "2025-11-03", source: "OCCRP", summary: "Palenko identified as Cyprus facilitator moving funds for Hrytsenko network.", flag: true },
     ],
     transactions: [
-      { amount: "$840,000", date: "2025-12-05", from: "Metallix Trading Ltd (Cyprus)", country: "Cyprus", flag: true },
-      { amount: "$275,000", date: "2026-01-19", to: "Dubai Property Developer", country: "UAE", flag: false },
+      { amount: "$840,000", date: "2025-12-05", from: "Metallix Trading Ltd", country: "Cyprus", flag: true },
       { amount: "$1,200,000", date: "2024-08-12", from: "Black Sea Commodities SA", country: "Switzerland", flag: true },
+      { amount: "$275,000", date: "2026-01-19", to: "Dubai Property Developer", country: "UAE", flag: false },
     ],
     documents: [
       { name: "Cypriot Passport", status: "provided", flag: false },
-      { name: "Source of Funds Declaration", status: "outdated", flag: true, note: "Last update 2023 — pre-dates associate's SDN designation." },
-      { name: "Trust Deeds (2 structures)", status: "provided", flag: true, note: "Cayman & BVI trusts — protectors & beneficiaries not fully disclosed." },
+      { name: "Source of Funds Declaration", status: "outdated", flag: true, note: "Last update 2023 — pre-dates SDN designation." },
+      { name: "Trust Deeds (Cayman & BVI)", status: "provided", flag: true, note: "Protectors and beneficiaries partially redacted." },
     ],
     screening: [
       { type: "Sanctions", result: "No direct match — but multiple RCAs", flag: true },
       { type: "PEP Check", result: "RCA of 3 PEPs (Ukraine/Cyprus)", flag: true },
-      { type: "Adverse Media", result: "2 major hits — sanctions & money laundering facilitation", flag: true },
+      { type: "Adverse Media", result: "Sanctions facilitation & money laundering concerns", flag: true },
     ],
     flags: [
-      "Close, long-term business associate of newly SDN-listed individual.",
-      "Significant funds received from entities linked to sanctioned person post-designation.",
-      "No updated source of funds / wealth since designation.",
-      "Ongoing Cyprus company directorships with opaque funding sources.",
-      "High secondary sanctions risk — especially with US/UK exposure.",
+      "Long-term business partner of newly SDN-listed individual.",
+      "Significant receipts from SDN-linked entities post-designation.",
+      "No updated source of funds since sanctions hit.",
+      "Ongoing Cyprus directorships with opaque funding.",
+      "High secondary sanctions exposure (US/UK nexus).",
     ],
     feedback: {
       exit: { grade: "excellent", title: "Correct & Necessary", points: 160,
-        explain: "Exit is the appropriate and prudent decision. Continuing banking services for a close associate of an SDN-listed individual — especially with recent large receipts from linked entities — creates unacceptable secondary sanctions risk and potential facilitation exposure." },
-      maintain: { grade: "bad", title: "High Sanctions Risk Accepted", points: -60,
-        explain: "Maintaining the relationship post-designation without full exit or severe restrictions would be highly risky and likely indefensible." },
-      escalate: { grade: "partial", title: "Required", points: 90,
-        explain: "Mandatory escalation to sanctions & legal team — with strong recommendation to exit." },
+        explain: "Exit is required. Relationship with close associate of SDN person — especially with post-designation flows — creates unacceptable secondary sanctions and facilitation risk." },
+      maintain: { grade: "bad", title: "Severe Risk Accepted", points: -60,
+        explain: "Maintaining without exit or draconian restrictions is indefensible post-designation." },
+      escalate: { grade: "partial", title: "Mandatory", points: 90,
+        explain: "Escalate to sanctions/legal with strong exit recommendation." },
     }
   },
 
-  // ── CASE 3: PEP Family Member — Unexplained Wealth Growth ──
+  // ── CASE 3: PEP spouse — opaque consulting revenue ──
   {
     id: "EDD-I-2026-0325",
     name: "Layla al-Qasimi",
-    teaser: "Spouse of senior UAE PEP — rapid wealth increase via consulting firm",
+    teaser: "Spouse of senior UAE PEP — rapid wealth via consulting firm",
     riskLevel: "high",
     riskLabel: "High",
     correct: "edd",
@@ -186,57 +186,253 @@ const EDD_INDIVIDUAL_CASES = [
       dateOfBirth: "18 June 1985",
       nationality: "United Arab Emirates",
       occupation: "Director — Al-Qasimi Strategic Consulting LLC",
-      pepStatus: "No — but RCA (spouse of Ruler's Court senior official — Tier 1 PEP)",
+      pepStatus: "No — RCA (spouse of Ruler's Court Tier 1 PEP)",
       customerSince: "October 2021",
       accountType: "Private Banking + Investment Portfolio",
       declaredIncome: "$1.4M/year (consulting fees)",
       declaredWealth: "$14.2M (2025 declaration)",
-      riskRating: "High — annual RCA review + transaction monitoring alert",
+      riskRating: "High — annual RCA + transaction alert",
     },
-    reviewTrigger: "Annual RCA review + large incoming wires from high-risk jurisdiction companies.",
+    reviewTrigger: "Annual RCA review + large incoming wires from high-risk jurisdictions.",
     sourceOfWealth: {
-      declared: "Consulting contracts with Middle East government entities and private sector.",
-      findings: "Consulting firm (Dubai free zone) generated $4.8M revenue in 2025 — no public tender evidence for 70% of contracts. Large wires from Lebanon, Iraq and Syria-based entities (2025–2026). No detailed contract documentation provided.",
-      assessment: "Unclear legitimacy of consulting revenue — concentration risk and possible intermediary role."
+      declared: "Consulting contracts with ME government & private entities.",
+      findings: "Dubai free-zone firm generated $4.8M in 2025 — 70% from non-tendered contracts. Significant inflows from Lebanon, Iraq, Syria-based entities. Limited contract evidence provided.",
+      assessment: "Possible intermediary / conduit risk. Concentration and jurisdictional opacity concerns."
     },
     adverseMedia: [
-      { date: "2025-10-30", source: "Middle East Eye", summary: "Al-Qasimi family members linked to opaque consulting awards in public sector projects.", flag: true },
+      { date: "2025-10-30", source: "Middle East Eye", summary: "Al-Qasimi family members linked to non-transparent public-sector consulting awards.", flag: true },
     ],
     transactions: [
       { amount: "$920,000", date: "2026-02-03", from: "Beirut Trade Partners SAL", country: "Lebanon", flag: true },
       { amount: "$1,050,000", date: "2025-11-18", from: "Baghdad Reconstruction Fund LLC", country: "Iraq", flag: true },
+      { amount: "$680,000", date: "2025-09-10", from: "Damascus Investment Group", country: "Syria", flag: true },
     ],
     documents: [
       { name: "UAE Passport", status: "provided", flag: false },
-      { name: "Company Financial Statements", status: "provided", flag: true, note: "Management accounts only — no independent audit." },
-      { name: "Consulting Contracts Sample", status: "incomplete", flag: true, note: "Redacted versions — no end-client verification." },
+      { name: "Company Accounts", status: "provided", flag: true, note: "Management accounts — no external audit." },
+      { name: "Consulting Contracts", status: "incomplete", flag: true, note: "Heavily redacted; no client verification." },
     ],
     screening: [
       { type: "PEP Check", result: "RCA — spouse of Tier 1 PEP", flag: true },
-      { type: "Adverse Media", result: "Family-linked opacity concerns", flag: true },
+      { type: "Adverse Media", result: "Family-linked opacity in public contracts", flag: true },
     ],
     flags: [
-      "Spouse of very senior UAE PEP (Ruler's Court level).",
-      "Rapid wealth growth through consulting firm with limited transparency.",
-      "Incoming funds from high-risk / conflict jurisdictions.",
-      "No audited financials for consulting company.",
+      "Spouse of very senior UAE PEP (Ruler's Court).",
+      "Rapid wealth growth via non-transparent consulting firm.",
+      "Funds from high-risk / conflict jurisdictions.",
+      "No audited financials; limited contract documentation.",
     ],
     feedback: {
       edd: { grade: "excellent", title: "Correct", points: 140,
-        explain: "Continue with enhanced monitoring and request full contract documentation, audited accounts, and enhanced source of funds evidence for large incoming wires." },
-      exit: { grade: "partial", title: "Defensible but Premature", points: 70,
-        explain: "Exit possible if non-cooperation persists, but proportionate response is deeper EDD first." },
+        explain: "Continue EDD: obtain full contracts, audited accounts, enhanced SoF for high-risk inflows." },
+      exit: { grade: "partial", title: "Defensible if Non-Cooperation", points: 80,
+        explain: "Exit reasonable if client refuses deeper disclosure." },
     }
   },
 
-  // Additional cases 4–7 follow the same structure...
-  // CASE 4: Politically Exposed Banker from High-Risk Jurisdiction
-  // CASE 5: Individual with Direct Sanctions Match (recently added)
-  // CASE 6: High-Risk Crypto / Digital Asset Investor
-  // CASE 7: Elderly HNW with Suspected Exploitation / Undue Influence
+  // ── CASE 4: Former PEP — now in high-risk jurisdiction banking ──
+  {
+    id: "EDD-I-2026-0412",
+    name: "Amara Nkosi",
+    teaser: "Former Zambian Finance Minister — now resident in high-risk jurisdiction",
+    riskLevel: "critical",
+    riskLabel: "Critical",
+    correct: "exit",
+    profile: {
+      fullName: "Amara Chileshe Nkosi",
+      dateOfBirth: "22 April 1962",
+      nationality: "Zambia",
+      occupation: "Retired politician / Consultant",
+      pepStatus: "Yes — Former Senior PEP (within 5 years)",
+      customerSince: "June 2020",
+      accountType: "Private Banking + Offshore Trust Accounts",
+      declaredIncome: "$180,000/year (consulting + pension)",
+      declaredWealth: "$4.9M (property & investments)",
+      riskRating: "Critical — triggered by relocation + adverse media",
+    },
+    reviewTrigger: "Relocation to high-risk jurisdiction (2025) + new adverse media on post-office enrichment.",
+    sourceOfWealth: {
+      declared: "Government pension, consulting since 2021, property sales.",
+      findings: "Acquired $2.7M villa in Dubai (2025) shortly after moving. Multiple wires from Zambian state-linked companies post-resignation. No detailed SoW update since relocation.",
+      assessment: "Classic post-PEP enrichment pattern — high corruption risk."
+    },
+    adverseMedia: [
+      { date: "2026-01-08", source: "Lusaka Times / Africa Confidential", summary: "Nkosi allegedly received kickbacks during 2018–2021 mining licence awards.", flag: true },
+    ],
+    transactions: [
+      { amount: "$1,450,000", date: "2025-10-22", from: "Zambia Mining Dev Corp", country: "Zambia", flag: true },
+      { amount: "$2,700,000", date: "2025-12-15", to: "Dubai Real Estate — Villa Purchase", country: "UAE", flag: true },
+    ],
+    documents: [
+      { name: "Zambian Passport", status: "provided", flag: false },
+      { name: "Source of Wealth Update", status: "missing", flag: true, note: "Requested post-relocation — not provided." },
+      { name: "Property Purchase Docs", status: "provided", flag: true, note: "Dubai title deed — source of funds unclear." },
+    ],
+    screening: [
+      { type: "PEP Check", result: "Former Senior PEP — still within 5-year window", flag: true },
+      { type: "Adverse Media", result: "Kickback allegations during tenure", flag: true },
+    ],
+    flags: [
+      "Former senior PEP (Finance Minister) within 5-year cooling-off.",
+      "Significant state-linked inflows post-resignation.",
+      "Large Dubai property purchase shortly after relocation to high-risk jurisdiction.",
+      "No updated SoW documentation despite requests.",
+    ],
+    feedback: {
+      exit: { grade: "excellent", title: "Correct", points: 160,
+        explain: "Exit strongly recommended. Post-PEP enrichment pattern + state-linked funds + non-cooperation = unmanageable corruption risk." },
+      maintain: { grade: "bad", title: "Indefensible", points: -50,
+        explain: "Maintaining relationship without full resolution exposes bank to serious AML risk." },
+    }
+  },
 
-  // For space reasons in this message, only the first three are fully shown above.
-  // In a real implementation you would continue adding cases 4–7 using the same detailed format:
-  // id: "EDD-I-2026-04xx" etc.
-  // Include at least 3–4 more PEPs or RCAs, unexplained wealth, sanctions adjacency, etc.
+  // ── CASE 5: Direct Sanctions Match — recent designation ──
+  {
+    id: "EDD-I-2026-0509",
+    name: "Sergei Volodin",
+    teaser: "Recently designated under EU autonomous Russia sanctions",
+    riskLevel: "critical",
+    riskLabel: "Critical",
+    correct: "exit",
+    profile: {
+      fullName: "Sergei Anatolyevich Volodin",
+      dateOfBirth: "03 July 1974",
+      nationality: "Russian Federation",
+      occupation: "Businessman — Energy Sector",
+      pepStatus: "No",
+      customerSince: "November 2018",
+      accountType: "Investment Portfolio + Corporate Accounts (linked)",
+      declaredIncome: "Energy trading profits",
+      declaredWealth: "$12.4M",
+      riskRating: "Critical — immediate sanctions hit",
+    },
+    reviewTrigger: "Added to EU sanctions list March 2026 (energy sector influence / evasion support).",
+    sourceOfWealth: {
+      declared: "Ownership in multiple Russian & Cypriot energy trading entities.",
+      findings: "Portfolio includes frozen assets. Recent attempts to move funds to third-party accounts before full freeze.",
+      assessment: "Direct sanctions violation risk — immediate exit required."
+    },
+    adverseMedia: [
+      { date: "2026-03-05", source: "EU Official Journal", summary: "Volodin designated for material support to Russian energy sector evasion.", flag: true },
+    ],
+    transactions: [
+      { amount: "$980,000", date: "2026-02-20", to: "Third-party Cyprus account", country: "Cyprus", flag: true },
+    ],
+    documents: [
+      { name: "Russian Passport", status: "provided", flag: false },
+      { name: "Sanctions Self-Declaration", status: "provided 2025", flag: true, note: "Pre-designation — now invalid." },
+    ],
+    screening: [
+      { type: "Sanctions", result: "DIRECT MATCH — EU list March 2026", flag: true },
+    ],
+    flags: [
+      "Direct sanctions designation — asset freeze required.",
+      "Pre-designation fund movement attempts detected.",
+    ],
+    feedback: {
+      exit: { grade: "excellent", title: "Mandatory", points: 200,
+        explain: "Immediate exit and asset freeze required under sanctions law. No discretion." },
+    }
+  },
+
+  // ── CASE 6: High-risk crypto investor — mixer usage ──
+  {
+    id: "EDD-I-2026-0617",
+    name: "Tariq bin Faisal",
+    teaser: "HNW crypto trader — on-chain links to mixers & high-risk wallets",
+    riskLevel: "very high",
+    riskLabel: "Very High",
+    correct: "edd",
+    profile: {
+      fullName: "Tariq bin Faisal Al-Mansoori",
+      dateOfBirth: "12 September 1992",
+      nationality: "Qatar",
+      occupation: "Crypto Asset Trader / Fund Manager",
+      pepStatus: "No",
+      customerSince: "April 2023",
+      accountType: "High-Volume Fiat On/Off Ramp Account",
+      declaredIncome: "Crypto trading profits ($2.1M 2025)",
+      declaredWealth: "$9.8M",
+      riskRating: "Very High — chain analysis alert",
+    },
+    reviewTrigger: "Blockchain analytics flag: multiple deposits linked to Tornado Cash-style mixers.",
+    sourceOfWealth: {
+      declared: "Profits from DeFi & spot trading.",
+      findings: "Chainalysis report shows $1.4M inflows from wallets previously tagged as high-risk / mixer outputs (2025–2026).",
+      assessment: "High risk of laundering proceeds of crime via obfuscation techniques."
+    },
+    adverseMedia: [],
+    transactions: [
+      { amount: "$620,000", date: "2026-01-14", from: "Binance — tagged wallet", country: "Global", flag: true },
+      { amount: "$450,000", date: "2025-12-08", from: "Mixer-linked deposit", country: "N/A", flag: true },
+    ],
+    documents: [
+      { name: "Qatar ID", status: "provided", flag: false },
+      { name: "Trading Statements", status: "provided", flag: true, note: "Exchange exports — incomplete wallet history." },
+    ],
+    screening: [
+      { type: "Adverse Media", result: "No name match — but on-chain red flags", flag: true },
+    ],
+    flags: [
+      "Confirmed on-chain links to mixers / high-risk wallets.",
+      "High-volume fiat-crypto flows without full wallet transparency.",
+    ],
+    feedback: {
+      edd: { grade: "excellent", title: "Required", points: 150,
+        explain: "Deep EDD mandatory: full wallet history, chain-of-funds analysis, enhanced SoF evidence." },
+      exit: { grade: "partial", title: "Defensible", points: 90,
+        explain: "Exit justified if client cannot explain mixer usage." },
+    }
+  },
+
+  // ── CASE 7: Elderly HNW — suspected exploitation / family pressure ──
+  {
+    id: "EDD-I-2026-0722",
+    name: "Margaret Harrington-Wright",
+    teaser: "92-year-old HNW — large unexplained transfers to family members",
+    riskLevel: "high",
+    riskLabel: "High",
+    correct: "edd",
+    profile: {
+      fullName: "Margaret Eleanor Harrington-Wright",
+      dateOfBirth: "17 May 1934",
+      nationality: "United Kingdom",
+      occupation: "Retired (widow)",
+      pepStatus: "No",
+      customerSince: "August 2005",
+      accountType: "Private Banking + Trust Accounts",
+      declaredIncome: "Pension + dividends (~£180,000/year)",
+      declaredWealth: "£11.4M (trusts & property)",
+      riskRating: "High — elder abuse / exploitation alert",
+    },
+    reviewTrigger: "Transaction monitoring: £2.8M transferred to three adult children in 18 months + recent change of attorney.",
+    sourceOfWealth: {
+      declared: "Inheritance, investments, property portfolio.",
+      findings: "Large gifts/transfers lack documented intent or capacity assessment. New power of attorney granted to son (2025) who receives majority of funds.",
+      assessment: "Potential financial abuse / undue influence — vulnerable adult risk."
+    },
+    adverseMedia: [],
+    transactions: [
+      { amount: "£1,200,000", date: "2025-09-10", to: "Son — Property Purchase", country: "UK", flag: true },
+      { amount: "£980,000", date: "2026-01-05", to: "Daughter — Trust Settlement", country: "UK", flag: true },
+    ],
+    documents: [
+      { name: "Last Will & Testament", status: "provided", flag: true, note: "Updated 2024 — significant changes." },
+      { name: "Power of Attorney", status: "provided", flag: true, note: "New LPA 2025 — son as attorney." },
+    ],
+    screening: [
+      { type: "Adverse Media", result: "No hits", flag: false },
+    ],
+    flags: [
+      "Elderly vulnerable client — large unexplained transfers to family.",
+      "Recent change of attorney + pattern suggests possible undue influence.",
+      "No independent capacity / intent documentation for major gifts.",
+    ],
+    feedback: {
+      edd: { grade: "excellent", title: "Correct", points: 150,
+        explain: "Immediate EDD required: independent capacity assessment, third-party verification of intent, possible safeguarding referral." },
+      escalate: { grade: "partial", title: "Mandatory", points: 100,
+        explain: "Escalate to vulnerable customer / safeguarding team urgently." },
+    }
+  },
 ];
