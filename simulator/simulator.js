@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
 // ECONOMIC CRIME HUB — OPERATIONS SIMULATOR
-// simulator.js — Core application logic
+// simulator.js v2.1 — Core application logic
 // Depends on: config.js (loaded first), case data files
+// BUILD 20260302v2
 // ═══════════════════════════════════════════════════════════════
 
 // ═══ STATE ═══
