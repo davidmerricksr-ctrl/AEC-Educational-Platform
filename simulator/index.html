@@ -24,7 +24,7 @@ tailwind.config={theme:{extend:{colors:{
 }}}}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,400..900&family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/simulator/simulator.css?v=2.3">
+<link rel="stylesheet" href="/simulator/simulator.css?v=2.4">
 </head>
 <body>
 
@@ -165,6 +165,18 @@ tailwind.config={theme:{extend:{colors:{
         <div class="rt-name">EDD Entity</div>
         <div class="rt-sub" style="color:#ffb833">Enhanced Due Diligence</div>
         <div class="rt-meta">1 case</div>
+      </div>
+      <div class="role-tile ct-neon-tile" onclick="openCryptoTracer()">
+        <div class="rt-ico ct-neon-ico">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/>
+            <line x1="8" y1="7.5" x2="10.5" y2="16"/><line x1="16" y1="7.5" x2="13.5" y2="16"/><line x1="8.5" y1="6" x2="15.5" y2="6"/>
+            <circle cx="17" cy="17" r="4" stroke="#bf5af2" stroke-width="1.5"/><line x1="19.8" y1="19.8" x2="22" y2="22" stroke="#bf5af2" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="rt-name" style="color:#00e5ff">Crypto Tracer</div>
+        <div class="rt-sub" style="color:#bf5af2">Blockchain Fund Flow</div>
+        <div class="rt-meta" style="color:#00e5ff">4 preset traces</div>
       </div>
       <div class="role-tile gc" style="opacity:.3;pointer-events:none">
         <div class="rt-ico" style="background:rgba(74,106,138,.08)">🛡️</div>
@@ -521,6 +533,86 @@ tailwind.config={theme:{extend:{colors:{
   </div>
 </div>
 
+<!-- ═══ CRYPTO TRACER ═══ -->
+<div class="screen" id="scr-crypto">
+  <!-- Title bar -->
+  <div class="ct-titlebar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="ct-btn" onclick="ctBackToDesks()" style="padding:4px 10px;font-size:10px">← Desks</button>
+      <div class="ct-title-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+          <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/>
+          <line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/><line x1="9" y1="6" x2="15" y2="6"/>
+        </svg>
+      </div>
+      <span class="ct-title-text">CRYPTO TRACER</span>
+      <div class="ct-pulse-dot"></div>
+      <span class="ct-title-sub">v1.0 — Intelligence Mode</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="ct-chain-lbl" class="ct-title-sub">Ethereum Network</span>
+      <div id="ct-chain-dot" style="width:8px;height:8px;border-radius:50%;background:#627eea;box-shadow:0 0 8px #627eea"></div>
+    </div>
+  </div>
+  <!-- Input bar -->
+  <div class="ct-input-bar">
+    <select id="ct-chain-sel" class="ct-select" onchange="ct.chain=this.value;ctUpdateChainIndicator()">
+      <option value="eth">Ethereum (ETH)</option>
+      <option value="btc">Bitcoin (BTC)</option>
+      <option value="sol">Solana (SOL)</option>
+      <option value="bsc">BSC (BNB)</option>
+      <option value="matic">Polygon (MATIC)</option>
+      <option value="tron">Tron (TRX)</option>
+    </select>
+    <input id="ct-addr" class="ct-input" placeholder="Wallet address or transaction hash…" onkeydown="if(event.key==='Enter')ctHandleTrace()">
+    <button class="ct-btn ct-btn-primary" onclick="ctHandleTrace()">⬡ TRACE</button>
+    <button class="ct-btn" onclick="ctClearTrace()">Clear</button>
+  </div>
+  <!-- Main area -->
+  <div class="ct-main">
+    <!-- Left sidebar -->
+    <div id="ct-left" class="ct-sidebar ct-sidebar-left">
+      <div id="ct-left-inner" class="ct-sidebar-scroll"></div>
+    </div>
+    <!-- Graph canvas -->
+    <div class="ct-graph-area">
+      <div style="position:absolute;top:8px;left:8px;z-index:10;display:flex;gap:4px">
+        <button class="ct-btn" onclick="ctTogglePanel('ct-left')" style="padding:4px 8px;font-size:10px">☰</button>
+        <button id="ct-focus-btn" class="ct-btn" onclick="ctExitFocus()" style="padding:4px 8px;font-size:10px;display:none">✕ Exit Focus</button>
+      </div>
+      <div style="position:absolute;top:8px;right:8px;z-index:10">
+        <button class="ct-btn" onclick="ctTogglePanel('ct-right')" style="padding:4px 8px;font-size:10px">📋</button>
+      </div>
+      <canvas id="ct-canvas" style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+      <!-- Context menu -->
+      <div id="ct-ctx-menu" class="ct-ctx-menu" style="display:none">
+        <div class="ct-ctx-item" onclick="ctCtxAction('focus')">🔍 Focus on node</div>
+        <div class="ct-ctx-item" onclick="ctCtxAction('detail')">📋 View details</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">🏷️ Label as…</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">🌐 View on explorer</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">📝 Add note</div>
+        <div class="ct-ctx-item" style="border-top:1px solid rgba(255,255,255,.06)" onclick="ctHideContextMenu()">✕ Close</div>
+      </div>
+    </div>
+    <!-- Right sidebar -->
+    <div id="ct-right" class="ct-sidebar ct-sidebar-right">
+      <div id="ct-right-inner" class="ct-sidebar-scroll"></div>
+    </div>
+  </div>
+  <!-- Timeline -->
+  <div class="ct-timeline">
+    <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:monospace;min-width:56px">Timeline</span>
+    <input type="range" min="0" max="1" step="0.01" value="1" oninput="ctSetTimeline(this.value)" style="flex:1;accent-color:#00e5ff;height:3px">
+    <span id="ct-tl-pct" style="font-size:9px;color:#00e5ff;font-family:monospace;min-width:36px;text-align:right">100%</span>
+  </div>
+  <!-- Status bar -->
+  <div class="ct-status-bar">
+    <span id="ct-status-l">Ready</span>
+    <span id="ct-status-c">Select a trace to begin</span>
+    <span id="ct-status-r">Zoom: 100%</span>
+  </div>
+</div>
+
 <!-- ═══ DETAIL POPUP (flags, transactions, media, documents) ═══ -->
 <div class="overlay" id="ov-detail" onclick="if(event.target===this)closeDetail()">
   <div class="overlay-inner gc p-0" style="max-width:520px;display:flex;flex-direction:column;max-height:80vh">
@@ -571,6 +663,7 @@ tailwind.config={theme:{extend:{colors:{
 
 <!-- ── APP (config first, then logic) ── -->
 <script src="/simulator/config.js"></script>
-<script src="/simulator/simulator.js?v=2.3"></script>
+<script src="/simulator/simulator.js?v=2.4"></script>
+<script src="/simulator/crypto-tracer.js?v=1.0"></script>
 </body>
 </html>
