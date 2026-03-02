@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,10 +45,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-chip.on{background:var(--vred);border-color:var(--vred);color:#fff;box-shadow:0 2px 10px var(--vredG)}
 .v-chip .ct{font-size:.5rem;background:rgba(255,255,255,.1);padding:1px 5px;border-radius:8px}
 .v-chip.on .ct{background:rgba(255,255,255,.2)}
-.v-theme{padding:3px 10px;border-radius:14px;border:1px solid var(--vdim);font-family:var(--fm);font-size:.55rem;font-weight:500;color:var(--vmute);cursor:pointer;transition:.15s;background:transparent}
-.v-theme:hover{border-color:rgba(212,168,67,.5);color:rgba(212,168,67,.8)}
-.v-theme.on{background:var(--vgoldD);border-color:var(--vgold);color:var(--vgold)}
-
 
 /* ── Shelf Section ── */
 .v-shelf{max-width:960px;margin:0 auto;padding:1.5rem 0 .5rem}
@@ -163,7 +158,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
         </div>
       </div>
       <div class="v-chips" id="typeFilters"></div>
-      <div class="v-chips" id="themeChips" style="margin-top:4px"></div>
     </div>
   </div>
 </div>
@@ -188,9 +182,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
   <div class="icon">🔍</div>
   <h4>No dossiers found</h4>
   <p>Try adjusting your search or filters</p>
-</div>
-
-<!-- ══ MODAL ══ -->
 </div>
 
 <!-- ══ FOOTER ══ -->
@@ -225,17 +216,10 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 var mediaItems = [];
 
 var mediaShelves = [
-  { id: "recent",    title: "Fresh Intelligence \u2014 Feb/Mar 2026",        icon: "\u26a1",       subtitle: "Just declassified" },
   { id: "films",     title: "Films & Television",                           icon: "\ud83c\udfac", subtitle: "On screen" },
   { id: "books",     title: "Landmark Books on Economic Crime",             icon: "\ud83d\udcda", subtitle: "Required reading" },
   { id: "podcasts",  title: "Podcast Deep Dives",                           icon: "\ud83c\udfa7", subtitle: "Listen in" },
   { id: "reports",   title: "Reports & Analysis",                           icon: "\ud83d\udcca", subtitle: "Intelligence briefs" }
-];
-
-var mediaThemes = [
-  "Money Laundering", "Fraud", "Crypto Crime", "Wall Street", "Sanctions",
-  "Corporate Fraud", "Organised Crime", "Cyber Crime", "Regulation", "Offshore",
-  "Kleptocracy", "Investigation", "Banking", "Terrorism Financing", "Whistleblowing"
 ];
 
 var mediaTypeLabels = {
@@ -256,7 +240,7 @@ var typeGroups = {
   reports:  { label: "Reports",      types: ["report"] }
 };
 
-/* ═══ Films & Television ═══ */
+/* ═══ Media Items (all original data kept — "recent" shelf tag removed where present) ═══ */
 mediaItems.push(
 {id:108, title:"Inside Job", type:"documentary", year:2010, creator:"Dir. Charles Ferguson", desc:"Takes a closer look at what brought about the 2008 financial meltdown, exposing systemic corruption in the financial services industry.", themes:["Financial Fraud","Corporate Fraud","Economic Crime"], shelves:["films"], url:"https://www.imdb.com/title/tt1645089/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Inside_Job_(2010_film)", gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
 {id:109, title:"Margin Call", type:"film", year:2011, creator:"Dir. J.C. Chandor", desc:"Follows the key people at an investment bank over a 24-hour period during the early stages of the 2008 financial crisis.", themes:["Financial Fraud","Wall Street","Economic Crime"], shelves:["films"], url:"https://www.imdb.com/title/tt1615147/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Margin_Call", gradient:"linear-gradient(135deg,#1a1a2e,#0a0a1a,#16213e)"},
@@ -279,7 +263,7 @@ mediaItems.push(
 {id:127, title:"Stopping Traffic", type:"documentary", year:2017, creator:"Dir. Sadhvi Siddhali Shree", desc:"With 27 million victims worldwide, Stopping Traffic starts the conversation on a taboo topic through the eyes of survivors, activists, and front-line rescue teams to launch a movement to end modern-day slavery in the U.S. and abroad.", themes:["Human Trafficking","Slavery"], shelves:["films"], url:"https://www.imdb.com/title/tt6017364/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Stopping_Traffic", gradient:"linear-gradient(135deg,#0a0a0a,#1a1a0a,#2d2d0a)"}
 );
 
-/* ═══ Books ═══ */
+/* Books */
 mediaItems.push(
 {id:207, title:"Criminal Capital", type:"book", year:2015, creator:"Stephen Platt", desc:"Explores how the global financial system inadvertently facilitates crime, including money laundering, terrorism financing, and corruption.", themes:["Money Laundering","Corporate Fraud","Regulation"], shelves:["books"], url:"https://www.amazon.co.uk/Criminal-Capital-Finance-Industry-Facilitates/dp/113733729X", srcLabel:"Amazon", wikipediaUrl:"https://en.wikipedia.org/wiki/Money_laundering", gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
 {id:208, title:"The Infiltrator", type:"book", year:2009, creator:"Robert Mazur", desc:"A DEA agent's undercover journey into Pablo Escobar's money-laundering empire, revealing the inner workings of international drug cartels and financial crime.", themes:["Money Laundering","Organised Crime","Investigation"], shelves:["books"], url:"https://www.amazon.co.uk/Infiltrator-Undercover-Drug-Cartels-Laundering/dp/0316077526", srcLabel:"Amazon", wikipediaUrl:"https://en.wikipedia.org/wiki/The_Infiltrator_(2016_film)", gradient:"linear-gradient(135deg,#1a0000,#2d0a0a,#0d1117)"},
@@ -309,35 +293,36 @@ mediaItems.push(
 {id:232, title:"The Fear Index", type:"book", year:2011, creator:"Robert Harris", desc:"A thriller about an AI-driven hedge fund that spirals into financial manipulation and chaos.", themes:["Financial Fraud","Wall Street","Fiction"], shelves:["books"], url:"https://www.amazon.co.uk/Fear-Index-Robert-Harris/dp/0307957934", srcLabel:"Amazon", wikipediaUrl:"https://en.wikipedia.org/wiki/The_Fear_Index", gradient:"linear-gradient(135deg,#1a0000,#2d0a0a,#0d1117)"},
 {id:233, title:"The Darlings", type:"book", year:2011, creator:"Cristina Alger", desc:"A family-owned firm's collapse during the 2008 crisis exposes fraud and corruption in finance.", themes:["Corporate Fraud","Wall Street","Fiction"], shelves:["books"], url:"https://www.amazon.co.uk/Darlings-Novel-Cristina-Alger/dp/0143122754", srcLabel:"Amazon", wikipediaUrl:"https://en.wikipedia.org/wiki/The_Darlings_(novel)", gradient:"linear-gradient(135deg,#0d1117,#161b22,#21262d)"}
 );
-/* ═══ Podcasts ═══ */
+
+/* Podcasts */
 mediaItems.push(
-{id:301,title:"Financial Crime Weekly Ep 228 \u2013 Global Sanctions & Iran Shadow Fleet",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Global sanctions roundup, US Iran shadow fleet penalties, UK TI report on Russia trade, SFO UWO use and Harlequin confiscation.",themes:["Sanctions","Money Laundering","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-episode-228/id1526719222?i=1000752296226",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
-{id:302,title:"Financial Crime Weekly Ep 227 \u2013 2025 Corruption Perceptions Index",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International\u2019s 2025 Corruption Perceptions Index and the global decline in corruption controls.",themes:["Regulation","Kleptocracy"],shelves:["recent","podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast/ep/502f7fb3-f19a-47de-8829-5852ff8611e6",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
-{id:303,title:"Financial Crime Weekly Ep 226 \u2013 INTERPOL, CJNG Timeshare Fraud & RSF Sanctions",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"INTERPOL enforcement push, US Treasury targeting CJNG timeshare fraud network, and Sudanese RSF sanctions.",themes:["Sanctions","Fraud","Organised Crime"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/pt/podcast/financial-crime-weekly-episode-226/id1526719222?i=1000750861262",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#0d1117,#16213e)"},
-{id:304,title:"Financial Crime Weekly Ep 225 \u2013 Insider Trading & OECD Bribery Reform",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Recent insider trading convictions and OECD recommendations for foreign bribery reform.",themes:["Wall Street","Corporate Fraud","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-podcast/id1526719222",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#16213e,#1a1a2e,#0f3460)"},
-{id:305,title:"Financial Crime Weekly Ep 223 \u2013 CPI Warnings on Democracy Decay",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International\u2019s 2025 CPI warnings on democracy decay and weakening anti-corruption frameworks.",themes:["Regulation","Kleptocracy"],shelves:["recent","podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a1a2e)"},
-{id:306,title:"Financial Crime Weekly \u2013 2026 Horizon Scan Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Localization and divergence in global FinCrime regulation, AMLA rollout, US CTA compliance, and UK Failure to Prevent Fraud Act.",themes:["Regulation","Fraud","Money Laundering"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-special-episode-2026-horizon-scan/id1526719222?i=1000743401918",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
-{id:307,title:"Financial Crime Weekly \u2013 Crypto Regulation & Financial Crime Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"MiCA EU Fortress, UK promotions regime, US stablecoin clarity, chain-hopping and DeFi laundering risks.",themes:["Crypto Crime","Regulation"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/dz/podcast/financial-crime-weekly-special-edition-crypto-regulation/id1526719222?i=1000743678466&l=ar",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a0a2e,#161b22)"},
-{id:308,title:"Financial Crime Matters \u2013 Countering Canada\u2019s Drug Trade",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Inspector Nick Souccar (RCMP) on border security, fentanyl precursors, and fentanyl czar efforts.",themes:["Money Laundering","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/countering-canadas-deadly-drug-trade-with-nick-souccar/id1456666158?i=1000741393205",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d1117,#0f3460)"},
-{id:309,title:"Financial Crime Matters \u2013 Big Banks, Stablecoins & Digital Assets",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Ned Conway on how major banks view stablecoins, digital asset due diligence, and modernization.",themes:["Crypto Crime","Banking","Regulation"],shelves:["podcasts"],url:"https://open.spotify.com/episode/11Xvq39WXtqvL6ODRJyoNm",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#16213e,#0d1117,#1a0a2e)"},
-{id:310,title:"The Dark Money Files \u2013 Crime on the High Street Part 2",type:"podcast",year:2026,creator:"Graham Barrow",desc:"BBC investigation into illicit cigarettes and vapes, modern slavery, tax evasion, corruption and laundering on the high street.",themes:["Money Laundering","Investigation","Organised Crime"],shelves:["recent","podcasts"],url:"https://podcasts.apple.com/in/podcast/crime-on-the-high-street-part-two/id1448635132?i=1000744446308",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a2e,#16213e)"},
-{id:311,title:"The Dark Money Files \u2013 Crime on the High Street Part 1",type:"podcast",year:2025,creator:"Graham Barrow",desc:"BBC high-street crime and money laundering probe \u2014 part one of the investigative series.",themes:["Money Laundering","Investigation"],shelves:["podcasts"],url:"https://open.spotify.com/show/3KBjasejvrGSKriVFmCigx",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#0f3460)"},
+{id:301,title:"Financial Crime Weekly Ep 228 — Global Sanctions & Iran Shadow Fleet",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Global sanctions roundup, US Iran shadow fleet penalties, UK TI report on Russia trade, SFO UWO use and Harlequin confiscation.",themes:["Sanctions","Money Laundering","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-episode-228/id1526719222?i=1000752296226",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
+{id:302,title:"Financial Crime Weekly Ep 227 — 2025 Corruption Perceptions Index",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International’s 2025 Corruption Perceptions Index and the global decline in corruption controls.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast/ep/502f7fb3-f19a-47de-8829-5852ff8611e6",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
+{id:303,title:"Financial Crime Weekly Ep 226 — INTERPOL, CJNG Timeshare Fraud & RSF Sanctions",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"INTERPOL enforcement push, US Treasury targeting CJNG timeshare fraud network, and Sudanese RSF sanctions.",themes:["Sanctions","Fraud","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/pt/podcast/financial-crime-weekly-episode-226/id1526719222?i=1000750861262",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#0d1117,#16213e)"},
+{id:304,title:"Financial Crime Weekly Ep 225 — Insider Trading & OECD Bribery Reform",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Recent insider trading convictions and OECD recommendations for foreign bribery reform.",themes:["Wall Street","Corporate Fraud","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-podcast/id1526719222",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#16213e,#1a1a2e,#0f3460)"},
+{id:305,title:"Financial Crime Weekly Ep 223 — CPI Warnings on Democracy Decay",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International’s 2025 CPI warnings on democracy decay and weakening anti-corruption frameworks.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a1a2e)"},
+{id:306,title:"Financial Crime Weekly — 2026 Horizon Scan Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Localization and divergence in global FinCrime regulation, AMLA rollout, US CTA compliance, and UK Failure to Prevent Fraud Act.",themes:["Regulation","Fraud","Money Laundering"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-special-episode-2026-horizon-scan/id1526719222?i=1000743401918",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
+{id:307,title:"Financial Crime Weekly — Crypto Regulation & Financial Crime Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"MiCA EU Fortress, UK promotions regime, US stablecoin clarity, chain-hopping and DeFi laundering risks.",themes:["Crypto Crime","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/dz/podcast/financial-crime-weekly-special-edition-crypto-regulation/id1526719222?i=1000743678466&l=ar",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a0a2e,#161b22)"},
+{id:308,title:"Financial Crime Matters — Countering Canada’s Drug Trade",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Inspector Nick Souccar (RCMP) on border security, fentanyl precursors, and fentanyl czar efforts.",themes:["Money Laundering","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/countering-canadas-deadly-drug-trade-with-nick-souccar/id1456666158?i=1000741393205",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d1117,#0f3460)"},
+{id:309,title:"Financial Crime Matters — Big Banks, Stablecoins & Digital Assets",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Ned Conway on how major banks view stablecoins, digital asset due diligence, and modernization.",themes:["Crypto Crime","Banking","Regulation"],shelves:["podcasts"],url:"https://open.spotify.com/episode/11Xvq39WXtqvL6ODRJyoNm",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#16213e,#0d1117,#1a0a2e)"},
+{id:310,title:"The Dark Money Files — Crime on the High Street Part 2",type:"podcast",year:2026,creator:"Graham Barrow",desc:"BBC investigation into illicit cigarettes and vapes, modern slavery, tax evasion, corruption and laundering on the high street.",themes:["Money Laundering","Investigation","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/in/podcast/crime-on-the-high-street-part-two/id1448635132?i=1000744446308",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a2e,#16213e)"},
+{id:311,title:"The Dark Money Files — Crime on the High Street Part 1",type:"podcast",year:2025,creator:"Graham Barrow",desc:"BBC high-street crime and money laundering probe — part one of the investigative series.",themes:["Money Laundering","Investigation"],shelves:["podcasts"],url:"https://open.spotify.com/show/3KBjasejvrGSKriVFmCigx",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#0f3460)"},
 {id:312,title:"The Hidden Third",type:"podcast-series",year:2025,creator:"Mariana van Zeller",desc:"Ongoing episodes exploring underground markets, scams and kleptocracy from National Geographic journalist Mariana van Zeller.",themes:["Organised Crime","Kleptocracy","Fraud"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/the-hidden-third/id1845989117",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#161b22,#1a1a2e,#0d1117)"},
 {id:313,title:"Bribe, Swindle or Steal",type:"podcast-series",year:2025,creator:"TRACE International",desc:"Weekly episodes on bribery, fraud and sanctions evasion from the global anti-bribery organisation TRACE.",themes:["Corporate Fraud","Sanctions","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/bribe-swindle-or-steal/id1240837890",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0f3460,#16213e,#1a1a2e)"},
 {id:314,title:"Dirty Money Moves: Women in White Collar Crime",type:"podcast-series",year:2025,creator:"Dirty Money Moves",desc:"Episodes profiling female financial criminals, fraud schemes and the stories behind them.",themes:["Fraud","Corporate Fraud","Investigation"],shelves:["podcasts"],url:"https://podcasts.apple.com/ca/podcast/dirty-money-moves-women-in-white-collar-crime/id1619521092",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#1a1a2e,#0d1117)"},
 {id:315,title:"The Ponzi Playbook",type:"podcast-series",year:2025,creator:"The Ponzi Playbook",desc:"Ongoing episodes dissecting Ponzi schemes, investment fraud and victim recovery efforts.",themes:["Fraud","Wall Street","Investigation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/the-ponzi-playbook/id1684528129",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#0f3460,#1a1a2e)"}
 );
 
-/* ═══ Reports & Analysis ═══ */
+/* Reports */
 mediaItems.push(
-{id:402,title:"The State of Financial Crime 2026",type:"report",year:2026,creator:"ComplyAdvantage",desc:"Global survey of 600 senior fincrime leaders covering industrialised threat networks, agentic AI, real-time payments risk, regulatory divergence, and the shift of crime earlier in the customer lifecycle.",themes:["Fraud","Regulation","Money Laundering"],shelves:["recent","reports"],url:"https://get.complyadvantage.com/insights/the-state-of-financial-crime-2026",srcLabel:"ComplyAdvantage",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
-{id:403,title:"Top Financial Crime Trends 2026",type:"report",year:2026,creator:"LexisNexis Risk Solutions",desc:"Five key trends: geopolitics and sanctions fragmentation, cyber-financial crime convergence, AI as weapon and defence, effectiveness over box-ticking, and shifting payment rails.",themes:["Sanctions","Cyber Crime","Regulation"],shelves:["recent","reports"],url:"https://risk.lexisnexis.com/insights-resources/infographic/financial-crime-compliance-trends",srcLabel:"LexisNexis",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
-{id:404,title:"Autonomous AI Agents and Financial Crime",type:"report",year:2026,creator:"TRM Labs",desc:"Forward-looking analysis on how agentic AI changes money laundering, sanctions evasion, and fraud \u2014 examining speed, scalability, risk, responsibility, and accountability.",themes:["Cyber Crime","Money Laundering","Sanctions"],shelves:["recent","reports"],url:"https://www.trmlabs.com/resources/blog/autonomous-ai-agents-and-financial-crime-risk-responsibility-and-accountability",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
-{id:405,title:"2026 Global AFC Threats Report",type:"report",year:2026,creator:"ACAMS",desc:"Survey of 1,400 AFC professionals across 200+ jurisdictions. Generative AI ranked #1 risk for third year running, plus fraud, sanctions, and crypto convergence analysis.",themes:["Fraud","Regulation","Money Laundering"],shelves:["recent","reports"],url:"https://www.acams.org/en/opinion/how-ai-and-fraud-are-reshaping-afc-inside-acams-global-threats-report-2026",srcLabel:"ACAMS",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
-{id:406,title:"2026 Crypto Crime Report",type:"report",year:2026,creator:"TRM Labs",desc:"Record $158 billion in illicit crypto flows in 2025 (up 145% YoY). Deep analysis of sanctions evasion, nation-state actors, hacks, scams, ransomware, and law-enforcement wins.",themes:["Crypto Crime","Fraud","Money Laundering"],shelves:["recent","reports"],url:"https://www.trmlabs.com/reports-and-whitepapers/2026-crypto-crime-report",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
-{id:407,title:"Financial Crime in 2026: Identity, Trafficking & Payments",type:"report",year:2026,creator:"GARP",desc:"Analysis of identity verification overhauls, human trafficking\u2013linked financial crime, and the risks emerging from next-generation real-time payment rails.",themes:["Fraud","Money Laundering","Regulation"],shelves:["recent","reports"],url:"https://www.garp.org/risk-intelligence/operational/financial-crime-2026-260109",srcLabel:"GARP",gradient:"linear-gradient(135deg,#0b1622,#162447,#1f4068)"},
-{id:408,title:"Financial Crime Compliance in 2026: Five Trends",type:"report",year:2026,creator:"Napier AI / FinTech Global",desc:"Agentic AI, regulatory divergence, upstream risk detection, explainability requirements, and technology resilience in financial crime compliance.",themes:["Regulation","Cyber Crime"],shelves:["recent","reports"],url:"https://fintech.global/2026/01/07/financial-crime-compliance-in-2026-five-trends-to-watch/",srcLabel:"FinTech Global",gradient:"linear-gradient(135deg,#1a0a2e,#16213e,#0f3460)"},
-{id:409,title:"Top Trends in Fraud & AML 2026",type:"report",year:2026,creator:"Datos Insights",desc:"Building agile defences against AI-driven financial crime. Analysis of how fraud and AML teams must adapt to increasingly sophisticated and automated threats.",themes:["Fraud","Money Laundering","Cyber Crime"],shelves:["recent","reports"],url:"https://datos-insights.com/reports/top-trends-in-fraud-aml-2026-building-agile-defenses-against-ai-driven-financial-crime/",srcLabel:"Datos Insights",gradient:"linear-gradient(135deg,#0d0d0d,#1a0a0a,#2d1010)"},
+{id:402,title:"The State of Financial Crime 2026",type:"report",year:2026,creator:"ComplyAdvantage",desc:"Global survey of 600 senior fincrime leaders covering industrialised threat networks, agentic AI, real-time payments risk, regulatory divergence, and the shift of crime earlier in the customer lifecycle.",themes:["Fraud","Regulation","Money Laundering"],shelves:["reports"],url:"https://get.complyadvantage.com/insights/the-state-of-financial-crime-2026",srcLabel:"ComplyAdvantage",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
+{id:403,title:"Top Financial Crime Trends 2026",type:"report",year:2026,creator:"LexisNexis Risk Solutions",desc:"Five key trends: geopolitics and sanctions fragmentation, cyber-financial crime convergence, AI as weapon and defence, effectiveness over box-ticking, and shifting payment rails.",themes:["Sanctions","Cyber Crime","Regulation"],shelves:["reports"],url:"https://risk.lexisnexis.com/insights-resources/infographic/financial-crime-compliance-trends",srcLabel:"LexisNexis",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
+{id:404,title:"Autonomous AI Agents and Financial Crime",type:"report",year:2026,creator:"TRM Labs",desc:"Forward-looking analysis on how agentic AI changes money laundering, sanctions evasion, and fraud — examining speed, scalability, risk, responsibility, and accountability.",themes:["Cyber Crime","Money Laundering","Sanctions"],shelves:["reports"],url:"https://www.trmlabs.com/resources/blog/autonomous-ai-agents-and-financial-crime-risk-responsibility-and-accountability",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
+{id:405,title:"2026 Global AFC Threats Report",type:"report",year:2026,creator:"ACAMS",desc:"Survey of 1,400 AFC professionals across 200+ jurisdictions. Generative AI ranked #1 risk for third year running, plus fraud, sanctions, and crypto convergence analysis.",themes:["Fraud","Regulation","Money Laundering"],shelves:["reports"],url:"https://www.acams.org/en/opinion/how-ai-and-fraud-are-reshaping-afc-inside-acams-global-threats-report-2026",srcLabel:"ACAMS",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
+{id:406,title:"2026 Crypto Crime Report",type:"report",year:2026,creator:"TRM Labs",desc:"Record $158 billion in illicit crypto flows in 2025 (up 145% YoY). Deep analysis of sanctions evasion, nation-state actors, hacks, scams, ransomware, and law-enforcement wins.",themes:["Crypto Crime","Fraud","Money Laundering"],shelves:["reports"],url:"https://www.trmlabs.com/reports-and-whitepapers/2026-crypto-crime-report",srcLabel:"TRM Labs",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a0a2e)"},
+{id:407,title:"Financial Crime in 2026: Identity, Trafficking & Payments",type:"report",year:2026,creator:"GARP",desc:"Analysis of identity verification overhauls, human trafficking–linked financial crime, and the risks emerging from next-generation real-time payment rails.",themes:["Fraud","Money Laundering","Regulation"],shelves:["reports"],url:"https://www.garp.org/risk-intelligence/operational/financial-crime-2026-260109",srcLabel:"GARP",gradient:"linear-gradient(135deg,#0b1622,#162447,#1f4068)"},
+{id:408,title:"Financial Crime Compliance in 2026: Five Trends",type:"report",year:2026,creator:"Napier AI / FinTech Global",desc:"Agentic AI, regulatory divergence, upstream risk detection, explainability requirements, and technology resilience in financial crime compliance.",themes:["Regulation","Cyber Crime"],shelves:["reports"],url:"https://fintech.global/2026/01/07/financial-crime-compliance-in-2026-five-trends-to-watch/",srcLabel:"FinTech Global",gradient:"linear-gradient(135deg,#1a0a2e,#16213e,#0f3460)"},
+{id:409,title:"Top Trends in Fraud & AML 2026",type:"report",year:2026,creator:"Datos Insights",desc:"Building agile defences against AI-driven financial crime. Analysis of how fraud and AML teams must adapt to increasingly sophisticated and automated threats.",themes:["Fraud","Money Laundering","Cyber Crime"],shelves:["reports"],url:"https://datos-insights.com/reports/top-trends-in-fraud-aml-2026-building-agile-defenses-against-ai-driven-financial-crime/",srcLabel:"Datos Insights",gradient:"linear-gradient(135deg,#0d0d0d,#1a0a0a,#2d1010)"},
 {id:410,title:"AML and Cybersecurity in 2026",type:"report",year:2026,creator:"Abrigo",desc:"How data and AI are driving the convergence of cyber and AML controls, creating integrated defence frameworks against financial crime.",themes:["Cyber Crime","Money Laundering"],shelves:["reports"],url:"https://www.abrigo.com/blog/aml-and-cybersecurity-in-2026-driven-by-data-and-ai/",srcLabel:"Abrigo",gradient:"linear-gradient(135deg,#0a0a1a,#1a0a2e,#2d0a3e)"},
 {id:411,title:"State of Financial Crime Compliance: 2025 Review",type:"report",year:2025,creator:"IMTF",desc:"Comprehensive review of 2025 regulatory shifts and enforcement actions, with forward-looking analysis on what to expect in 2026.",themes:["Regulation","Money Laundering"],shelves:["reports"],url:"https://imtf.com/blog/the-state-of-financial-crime-compliance-2025-review-what-to-expect-in-2026/",srcLabel:"IMTF",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
 {id:412,title:"2026 Regulatory Horizon Scanning",type:"report",year:2026,creator:"Fenergo",desc:"AML and financial crime regulatory outlook for 2026. Clarifying the complexity of diverging global regulatory frameworks and compliance requirements.",themes:["Regulation","Money Laundering"],shelves:["reports"],url:"https://resources.fenergo.com/reports/2026-regulatory-horizon-scanning-clarifying-the-complexity",srcLabel:"Fenergo",gradient:"linear-gradient(135deg,#0d1117,#161b22,#21262d)"},
@@ -347,36 +332,35 @@ mediaItems.push(
 {id:416,title:"Divergence and Demonstration: AML/KYC in 2025",type:"report",year:2026,creator:"Encompass",desc:"Retrospective on how 2025 changed the rules for financial institutions, with forward look at regulatory divergence and effectiveness-based compliance.",themes:["Regulation","Money Laundering"],shelves:["reports"],url:"https://www.encompasscorporation.com/blog/divergence-and-demonstration-why-aml-2025-changed-the-rules-for-financial-institutions/",srcLabel:"Encompass",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#2d1515)"},
 {id:417,title:"Basel AML Index 2025",type:"report",year:2025,creator:"Basel Institute on Governance",desc:"Global money laundering and financial crime risk ranking. Country-by-country analysis of ML/TF vulnerabilities, regulatory quality, and enforcement effectiveness.",themes:["Money Laundering","Regulation"],shelves:["reports"],url:"https://index.baselgovernance.org/api/assets/1cdb5e5f-f4c2-4738-918b-f2c4271c6313.pdf",srcLabel:"Basel Institute",gradient:"linear-gradient(135deg,#0a0a0a,#1a1a0a,#2d2d0a)"}
 );
-var activeType="all",activeTheme=null,searchQuery="";
 
-/* ── Filters ── */
+var activeType="all", searchQuery="";
+
+/* ── Filters — ONLY TYPES ── */
 function buildFilters(){
   var counts={all:mediaItems.length};
-  Object.keys(typeGroups).forEach(function(k){if(k!=="all")counts[k]=mediaItems.filter(function(m){return typeGroups[k].types.indexOf(m.type)!==-1}).length});
+  Object.keys(typeGroups).forEach(function(k){
+    if(k!=="all")counts[k]=mediaItems.filter(function(m){return typeGroups[k].types.indexOf(m.type)!==-1}).length;
+  });
   document.getElementById("typeFilters").innerHTML=Object.keys(typeGroups).map(function(k){
     return '<button class="v-chip'+(k===activeType?" on":"")+'" onclick="setType(\''+k+'\')">'+typeGroups[k].label+' <span class="ct">'+counts[k]+'</span></button>';
   }).join("");
-  document.getElementById("themeChips").innerHTML=mediaThemes.map(function(t){
-    return '<button class="v-theme'+(t===activeTheme?" on":"")+'" onclick="setTheme(\''+t+'\')">'+t+'</button>';
-  }).join("");
 }
+
 function setType(k){activeType=k;buildFilters();renderContent()}
-function setTheme(t){activeTheme=activeTheme===t?null:t;buildFilters();renderContent()}
 
 document.getElementById("searchInput").addEventListener("input",function(){searchQuery=this.value.trim().toLowerCase();renderContent()});
 
-/* ── Filter logic ── */
+/* ── Filter logic — no themes ── */
 function getFiltered(){
   var items=mediaItems;
   if(activeType!=="all"){var t=typeGroups[activeType].types;items=items.filter(function(m){return t.indexOf(m.type)!==-1})}
-  if(activeTheme)items=items.filter(function(m){return m.themes.indexOf(activeTheme)!==-1});
   if(searchQuery)items=items.filter(function(m){
     return m.title.toLowerCase().indexOf(searchQuery)!==-1||m.creator.toLowerCase().indexOf(searchQuery)!==-1||m.desc.toLowerCase().indexOf(searchQuery)!==-1||m.themes.join(" ").toLowerCase().indexOf(searchQuery)!==-1;
   });
   return items;
 }
 
-/* ── Card ── */
+/* Card */
 function buildCard(item){
   return '<a class="v-card" href="'+item.url+'" target="_blank" rel="noopener">'+
     '<div class="v-card-accent" style="background:'+item.gradient+'"></div>'+
@@ -395,7 +379,7 @@ function buildCard(item){
   '</a>';
 }
 
-/* ── Shelf (horizontal scroll + arrows) ── */
+/* Shelf */
 var trackId=0;
 function buildShelf(shelf,items){
   if(!items.length)return "";
@@ -421,16 +405,15 @@ function scrollTrack(id,dir){
   if(el)el.scrollBy({left:dir*380,behavior:"smooth"});
 }
 
-/* ── Render ── */
+/* Render */
 function renderContent(){
   var filtered=getFiltered();
-  var isFiltered=activeType!=="all"||activeTheme||searchQuery;
+  var isFiltered=activeType!=="all"||searchQuery;
   document.getElementById("emptyState").style.display=filtered.length?"none":"block";
   if(isFiltered){
     document.getElementById("shelvesContainer").style.display="none";
     document.getElementById("filteredContainer").style.display="";
     var label=activeType!=="all"?typeGroups[activeType].label:"Results";
-    if(activeTheme)label=activeTheme;
     if(searchQuery)label='"'+searchQuery+'"';
     var ftid="trk_filtered";
     document.getElementById("filteredContainer").innerHTML=
@@ -458,12 +441,11 @@ function renderContent(){
   }
 }
 
-
-/* ── More overlay ── */
+/* More overlay */
 function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
 function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
 
-/* ── Init ── */
+/* Init */
 buildFilters();
 renderContent();
 </script>
