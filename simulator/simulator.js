@@ -15,7 +15,7 @@ function getCases(){return state.currentRole==='amld'?AML_DIRECT_CASES:state.cur
 
 // ═══ NAV ═══
 function nav(id){showScreen(id);document.querySelectorAll('.sim-b').forEach(function(b){b.classList.toggle('act',b.dataset.s===id);});document.getElementById('simNav').style.display='';}
-function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('scr-'+id);if(el){el.classList.add('active');el.scrollTop=0;}if(id==='dashboard')renderDashboard();if(id==='cases')renderCaseLog();if(id==='profile')renderProfile();}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('scr-'+id);if(el){el.classList.add('active');el.scrollTop=0;}if(id==='dashboard')renderDashboard();if(id==='cases')renderCaseLog();if(id==='profile')renderProfile();var isInv=id==='aml'||id==='kyc'||id==='eddi'||id==='edde';var sn=document.querySelector('.sim-nav');var bn=document.querySelector('.site-bnav');if(sn)sn.style.display=isInv?'none':'';if(bn)bn.style.display=isInv?'none':'';}
 function backToShift(){document.getElementById('simNav').style.display='';showScreen('shift');renderShift();}
 
 // ═══ DASHBOARD ═══
