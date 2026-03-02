@@ -171,6 +171,25 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .role-card:active{transform:scale(.97)}
 .role-card:hover{border-color:rgba(0,230,138,.3)}
 .role-card.sel{border-color:#00e68a;box-shadow:0 0 20px rgba(0,230,138,.15)}
+
+/* ── Case Table (spreadsheet layout) ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(74,106,138,.15);background:rgba(22,42,74,.35)}
+.case-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.72rem}
+.case-table thead th{position:sticky;top:0;z-index:2;background:rgba(11,26,46,.97);backdrop-filter:blur(8px);padding:9px 12px;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;text-align:left;border-bottom:1px solid rgba(74,106,138,.2);white-space:nowrap}
+.case-table thead th:first-child{border-radius:12px 0 0 0}
+.case-table thead th:last-child{border-radius:0 12px 0 0}
+.case-table tbody tr{cursor:pointer;transition:background .15s,box-shadow .15s}
+.case-table tbody tr:hover{background:rgba(0,230,138,.04)}
+.case-table tbody tr:active{background:rgba(30,58,95,.5)}
+.case-table tbody tr.resolved{opacity:.45;pointer-events:none;cursor:default}
+.case-table tbody tr:not(:last-child) td{border-bottom:1px solid rgba(74,106,138,.07)}
+.case-table td{padding:11px 12px;vertical-align:middle}
+.case-table .col-id{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a6a8a;font-weight:600;white-space:nowrap}
+.case-table .col-name{font-weight:700;color:#fff;min-width:120px}
+.case-table .col-desc{color:#8ba4c0;max-width:260px;font-size:.68rem;line-height:1.45}
+.case-table .col-risk{white-space:nowrap}
+.case-table .col-amt{font-size:.66rem;color:#8ba4c0;white-space:nowrap}
+.case-table .col-status{white-space:nowrap;text-align:right}
 </style>
 </head>
 <body>
@@ -331,8 +350,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
     <button onclick="showScreen('roleselect')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:1rem">← Change Role</button>
     <div id="shift-role-badge" style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.15rem"></div>
     <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Incoming Cases</h2>
-    <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Tap a case to begin your investigation.</p>
-    <div id="shift-cards" class="space-y-3"></div>
+    <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Select a row to begin your investigation.</p>
+    <div id="shift-cards"></div>
   </div>
 </div>
 
@@ -595,7 +614,30 @@ function renderDashboard(){var li=getLevelInfo(),acc=getAccuracy();document.getE
 // ═══ SHIFT ═══
 function startShift(role){state.currentRole=role;state.shiftResults=[];var today=new Date().toISOString().slice(0,10);if(state.lastPlayDate!==today)state.streak=(state.streak||0)+1;state.lastPlayDate=today;saveState();var badge=document.getElementById('shift-role-badge');var labels={amld:'AML Analyst — Customer Transactions',amlc:'AML Analyst — Correspondent Banking',kycp:'KYC Analyst — Personal Accounts',kyce:'KYC Analyst — Entity Accounts',eddi:'EDD Analyst — Individual Reviews',edde:'EDD Analyst — Entity Reviews'};var cols={amld:'#ff4d6a',amlc:'#fb923c',kycp:'#38bdf8',kyce:'#06b6d4',eddi:'#a78bfa',edde:'#ffb833'};badge.textContent=labels[role]||role;badge.style.color=cols[role]||'#00e68a';showScreen('shift');renderShift();document.querySelectorAll('.sim-b').forEach(function(b){b.classList.remove('act');});}
 
-function renderShift(){var cases=getCases(),el=document.getElementById('shift-cards'),done=state.shiftResults||[];el.innerHTML=cases.map(function(c,i){var resolved=done.find(function(r){return r.id===c.id;});var pc={critical:'pill-crit',high:'pill-high',med:'pill-med',low:'pill-low'}[c.riskLevel];return '<div class="gc p-4 cursor-pointer transition-transform active:scale-[.98]" onclick="'+(resolved?'':'openCase('+i+')')+'" style="'+(resolved?'opacity:.5;pointer-events:none':'')+'"><div class="flex justify-between items-start mb-2"><div style="font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+c.id+'</div><span class="pill '+pc+'">'+c.riskLabel+'</span></div><h3 style="font-family:\'Anybody\',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.15rem">'+c.name+'</h3><p style="font-size:.72rem;color:#4a6a8a;margin-bottom:.5rem">'+c.teaser+'</p><div class="flex justify-between items-center"><div style="font-size:.62rem;color:#4a6a8a">'+(c.amount||c.entityType||'')+'</div>'+(resolved?'<span style="font-size:.62rem;font-weight:700;color:'+(resolved.correct?'#00e68a':'#ff4d6a')+'">'+(resolved.correct?'✓ Correct':'✗ Incorrect')+'</span>':'<span style="font-size:.62rem;color:#00e68a;font-weight:600">Tap to investigate →</span>')+'</div></div>';}).join('');}
+function renderShift(){
+  var cases=getCases(),el=document.getElementById('shift-cards'),done=state.shiftResults||[];
+  var html='<div class="tbl-wrap"><table class="case-table"><thead><tr>';
+  html+='<th>Case ID</th><th>Subject</th><th>Description</th><th>Risk</th><th>Amount / Type</th><th>Status</th>';
+  html+='</tr></thead><tbody>';
+  cases.forEach(function(c,i){
+    var resolved=done.find(function(r){return r.id===c.id;});
+    var pc={critical:'pill-crit',high:'pill-high',med:'pill-med',low:'pill-low'}[c.riskLevel];
+    html+='<tr class="'+(resolved?'resolved':'')+'" onclick="'+(resolved?'':'openCase('+i+')')+'">';
+    html+='<td class="col-id">'+c.id+'</td>';
+    html+='<td class="col-name">'+c.name+'</td>';
+    html+='<td class="col-desc">'+c.teaser+'</td>';
+    html+='<td class="col-risk"><span class="pill '+pc+'">'+c.riskLabel+'</span></td>';
+    html+='<td class="col-amt">'+(c.amount||c.entityType||'—')+'</td>';
+    if(resolved){
+      html+='<td class="col-status"><span style="font-size:.62rem;font-weight:700;color:'+(resolved.correct?'#00e68a':'#ff4d6a')+'">'+(resolved.correct?'✓ Correct':'✗ Incorrect')+'</span></td>';
+    }else{
+      html+='<td class="col-status"><span style="font-size:.6rem;color:#00e68a;font-weight:600">Open →</span></td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  el.innerHTML=html;
+}
 
 // ═══ OPEN CASE ═══
 function openCase(idx){state.currentCase=idx;var c=getCases()[idx];document.getElementById('simNav').style.display='none';if(state.currentRole==='kycp'||state.currentRole==='kyce')openKYC(c);else if(state.currentRole==='eddi')openEDDI(c);else if(state.currentRole==='edde')openEDDE(c);else openAML(c);}
@@ -643,16 +685,13 @@ function renderNetworkAML(net,txs){
   // ── Auto-derive edge amounts from transactions ──
   var edgeAmts={};
   if(txs&&txs.length){
-    // Build simplified keyword sets per node (skip subject/bank at id 0)
     var nodeWords=[];
     net.nodes.forEach(function(n){
-      // Strip non-letter chars, emojis, brackets
       var clean=(n.label||'').replace(/[^a-zA-Z0-9\s\-]/g,'').trim().toLowerCase();
       var parts=clean.split(/[\s\-]+/).filter(function(w){return w.length>2;});
       nodeWords.push({id:n.id, words:parts, full:clean});
     });
 
-    // Match each transaction to best target node
     var nodeTotals={};
     txs.forEach(function(tx){
       var dest=(tx.to||'').replace(/[^a-zA-Z0-9\s\-]/g,'').toLowerCase().trim();
@@ -662,11 +701,9 @@ function renderNetworkAML(net,txs){
 
       var bestId=-1,bestScore=0;
       nodeWords.forEach(function(nw){
-        if(nw.id===0)return; // skip primary subject
+        if(nw.id===0)return;
         var score=0;
-        // Full label substring match
         if(nw.full.length>3 && dest.indexOf(nw.full)!==-1) score+=20;
-        // Individual word matches
         nw.words.forEach(function(w){
           if(w.length>3 && dest.indexOf(w)!==-1) score+=4;
           else if(w.length>2 && dest.indexOf(w)!==-1) score+=2;
@@ -679,9 +716,8 @@ function renderNetworkAML(net,txs){
       }
     });
 
-    // Assign totals to edges
     net.edges.forEach(function(e){
-      if(e[2]){edgeAmts[e[0]+'-'+e[1]]=e[2];return;} // explicit label
+      if(e[2]){edgeAmts[e[0]+'-'+e[1]]=e[2];return;}
       var tgtAmt=nodeTotals[e[1]];
       if(tgtAmt && tgtAmt>0){
         edgeAmts[e[0]+'-'+e[1]]=fmtCurrency(tgtAmt);
@@ -695,7 +731,6 @@ function renderNetworkAML(net,txs){
     return '$'+Math.round(v).toLocaleString();
   }
 
-  // ── SVG defs: arrow markers ──
   var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
   defs.innerHTML=
     '<marker id="ah" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">'+
@@ -707,7 +742,6 @@ function renderNetworkAML(net,txs){
     '<filter id="amt-glow"><feGaussianBlur stdDeviation="2" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
   svg.appendChild(defs);
 
-  // ── Edges with animated flow + amount overlays ──
   var edgeG=document.createElementNS('http://www.w3.org/2000/svg','g');
   net.edges.forEach(function(e){
     var na=net.nodes[e[0]],nb=net.nodes[e[1]];
@@ -726,7 +760,6 @@ function renderNetworkAML(net,txs){
     line.dataset.from=e[0];line.dataset.to=e[1];
     edgeG.appendChild(line);
 
-    // Amount pill overlay
     var label=edgeAmts[e[0]+'-'+e[1]]||'';
     if(label){
       var mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
@@ -746,7 +779,6 @@ function renderNetworkAML(net,txs){
   });
   svg.appendChild(edgeG);
 
-  // ── Nodes ──
   net.nodes.forEach(function(n){
     var col=colors[n.type]||'#a78bfa';
     var g=document.createElementNS('http://www.w3.org/2000/svg','g');
