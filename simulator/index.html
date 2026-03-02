@@ -203,182 +203,281 @@ tailwind.config={theme:{extend:{colors:{
 
 <!-- ═══ AML INVESTIGATION ═══ -->
 <div class="screen" id="scr-aml">
-  <div class="p-5 pb-2">
-    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back to Cases</button>
-    <div style="margin-bottom:.75rem">
-      <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
-      <div style="font-family:'Anybody',sans-serif;font-size:.88rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</div>
-      <div style="margin-top:5px;padding:4px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:5px">
-        <span style="font-size:.6rem">⚠️</span>
-        <span style="font-size:.44rem;font-weight:600;color:#ffb833;letter-spacing:.03em">FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY</span>
+  <!-- Top bar -->
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="aml-id"></span><strong id="aml-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="aml-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <!-- 3-panel grid -->
+  <div class="inv-grid">
+    <!-- LEFT: Profile + Flags -->
+    <div class="inv-left">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">👤</span> Core Metadata</div>
+        <div id="aml-profile" class="inv-profile-grid"></div>
+        <div id="aml-keystats" class="inv-keystats"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="aml-flagsum"></div>
+        <div id="aml-flags" class="space-y-2" style="margin-top:8px"></div>
       </div>
     </div>
-    <div class="flex items-center justify-between mb-3">
-      <div><div id="aml-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
-      <h2 id="aml-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
-      <div id="aml-pill"></div>
+
+    <!-- CENTER: Network Graph -->
+    <div class="inv-center">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🔗</span> Money Flow &amp; Related Parties Network</div>
+        <div style="position:relative;flex:1;min-height:350px;touch-action:none" id="aml-net-wrap">
+          <svg id="aml-net" width="100%" height="420" viewBox="0 0 400 380"></svg>
+          <div class="net-tip" id="aml-tip"></div>
+          <div style="position:absolute;bottom:6px;right:8px;display:flex;gap:4px;z-index:30">
+            <button onclick="graphZoom('aml',-1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom out">−</button>
+            <button onclick="graphFit('aml')" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:.65rem;cursor:pointer;display:grid;place-items:center" title="Fit to view">⊞</button>
+            <button onclick="graphZoom('aml',1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom in">+</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="px-5 mb-3"><div class="gc p-4">
-    <div class="sec-hdr">Customer Profile</div>
-    <div id="aml-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
-  </div></div>
-  <div class="px-5 mb-3" id="aml-flagsum"></div>
-  <div class="px-5 mb-3">
-    <div class="sec-hdr">Relationship Network</div>
-    <p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange. Drag background to pan. Animated lines show money flow direction.</p>
-    <div class="gc p-3 relative" id="aml-net-wrap" style="min-height:380px;overflow:hidden;touch-action:none">
-      <svg id="aml-net" width="100%" height="420" viewBox="0 0 400 380"></svg>
-      <div class="net-tip" id="aml-tip"></div>
-      <div style="position:absolute;bottom:6px;right:8px;display:flex;gap:4px;z-index:30">
-        <button onclick="graphZoom('aml',-1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom out">−</button>
-        <button onclick="graphFit('aml')" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:.65rem;cursor:pointer;display:grid;place-items:center" title="Fit to view">⊞</button>
-        <button onclick="graphZoom('aml',1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom in">+</button>
+
+    <!-- RIGHT: Risk Gauge + Transactions + Notes -->
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📊</span> Risk Assessment</div>
+        <div id="aml-gauge" class="risk-gauge"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transaction History <span class="coll-count" id="aml-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="aml-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="aml-notes" rows="3" placeholder="Add investigation notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
       </div>
     </div>
   </div>
-  <div class="px-5 mb-3">
-    <div class="coll" id="aml-txs-coll">
-      <div class="coll-hdr" onclick="toggleColl('aml-txs-coll')">
-        <div class="coll-title">Transaction History <span class="coll-chev">▸</span></div>
-        <div class="coll-right"><span class="coll-count" id="aml-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0"></span></div>
-      </div>
-      <div class="coll-body"><div class="coll-body-inner"><div id="aml-txs" class="space-y-2"></div></div></div>
-    </div>
-  </div>
-  <div class="px-5 mb-3">
-    <div class="sec-hdr" style="color:#ff4d6a">🚩 Red Flags</div>
-    <div id="aml-flags" class="space-y-2"></div>
-  </div>
-  <div class="px-5 mb-4">
-    <div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div>
-    <textarea id="aml-notes" rows="3" placeholder="Add investigation notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
-  </div>
-  <div class="act-grid" style="padding-bottom:1.5rem">
-    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('clear')"><span class="act-ico">✅</span>Clear Alert</button>
-    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('sar')"><span class="act-ico">🚨</span>File SAR</button>
-    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate</button>
-    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('info')"><span class="act-ico">🔍</span>More Info</button>
+
+  <!-- Action bar -->
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('clear')"><span class="ia-ico">✅</span>Clear Alert</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('sar')"><span class="ia-ico">🚨</span>File SAR</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('info')"><span class="ia-ico">🔍</span>More Info</button>
   </div>
 </div>
 
 <!-- ═══ KYC INVESTIGATION ═══ -->
 <div class="screen" id="scr-kyc">
-  <div class="p-5 pb-2">
-    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back to Cases</button>
-    <div style="margin-bottom:.75rem">
-      <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
-      <div style="font-family:'Anybody',sans-serif;font-size:.88rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</div>
-      <div style="margin-top:5px;padding:4px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:5px">
-        <span style="font-size:.6rem">⚠️</span>
-        <span style="font-size:.44rem;font-weight:600;color:#ffb833;letter-spacing:.03em">FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY</span>
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="kyc-id"></span><strong id="kyc-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="kyc-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title" style="color:#38bdf8"><span class="pt-ico">📋</span> Application Summary</div>
+        <div id="kyc-app" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="kyc-flagsum"></div>
+        <div id="kyc-flags" class="space-y-2" style="margin-top:8px"></div>
       </div>
     </div>
-    <div class="flex items-center justify-between mb-3">
-      <div><div id="kyc-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
-      <h2 id="kyc-name" style="font-family:'Anybody',sans-serif;font-size:1.1rem;font-weight:800;color:#fff"></h2></div>
-      <div id="kyc-pill"></div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Beneficial Ownership Structure</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="kyc-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="kyc-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Document Review</div>
+        <div id="kyc-docs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening Results</div>
+        <div id="kyc-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="kyc-notes" rows="3" placeholder="Add CDD notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
     </div>
   </div>
-  <div class="px-5 mb-3"><div class="gc p-4">
-    <div class="sec-hdr" style="color:#38bdf8">Application Summary</div>
-    <div id="kyc-app" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div>
-  </div></div>
-  <div class="px-5 mb-3" id="kyc-flagsum"></div>
-  <div class="px-5 mb-3">
-    <div class="sec-hdr" style="color:#ffb833">🏛️ Beneficial Ownership Structure</div>
-    <p style="font-size:.66rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p>
-    <div class="gc p-3 relative" style="min-height:460px">
-      <svg id="kyc-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
-      <div class="net-tip" id="kyc-tip"></div>
-    </div>
-  </div>
-  <div class="px-5 mb-3"><div class="sec-hdr">📄 Document Review</div><div id="kyc-docs" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr">🛡️ Screening Results</div><div id="kyc-scr" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr" style="color:#ff4d6a">🚩 CDD Red Flags</div><div id="kyc-flags" class="space-y-2"></div></div>
-  <div class="px-5 mb-4">
-    <div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div>
-    <textarea id="kyc-notes" rows="3" placeholder="Add CDD notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea>
-  </div>
-  <div class="act-grid" style="padding-bottom:1.5rem">
-    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('approve')"><span class="act-ico">✅</span>Approve</button>
-    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('reject')"><span class="act-ico">🚫</span>Reject</button>
-    <button class="act-btn" style="background:rgba(255,184,51,.08);color:#ffb833;border:1px solid rgba(255,184,51,.15)" onclick="decide('edd')"><span class="act-ico">🔬</span>Request EDD</button>
-    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate</button>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('approve')"><span class="ia-ico">✅</span>Approve</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('reject')"><span class="ia-ico">🚫</span>Reject</button>
+    <button class="inv-act" style="background:rgba(255,184,51,.08);color:#ffb833;border:1px solid rgba(255,184,51,.15)" onclick="decide('edd')"><span class="ia-ico">🔬</span>Request EDD</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate</button>
   </div>
 </div>
 
 <!-- ═══ EDD INDIVIDUAL INVESTIGATION ═══ -->
 <div class="screen" id="scr-eddi">
-  <div class="p-5 pb-2">
-    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back to Cases</button>
-    <div style="margin-bottom:.75rem">
-      <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
-      <div style="font-family:'Anybody',sans-serif;font-size:.88rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</div>
-      <div style="margin-top:5px;padding:4px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:5px">
-        <span style="font-size:.6rem">⚠️</span>
-        <span style="font-size:.44rem;font-weight:600;color:#ffb833;letter-spacing:.03em">FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY</span>
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="eddi-id"></span><strong id="eddi-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="eddi-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-purple">
+        <div class="inv-panel-title" style="color:#a78bfa"><span class="pt-ico">👤</span> Customer Profile</div>
+        <div id="eddi-profile" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">💰</span> Source of Wealth</div>
+        <div id="eddi-sow" style="font-size:.72rem"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="eddi-flagsum"></div>
+        <div id="eddi-flags" class="space-y-2" style="margin-top:8px"></div>
       </div>
     </div>
-    <div class="flex items-center justify-between mb-3">
-      <div><div id="eddi-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
-      <h2 id="eddi-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
-      <div id="eddi-pill"></div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-purple">
+        <div class="inv-panel-title" style="color:#a78bfa"><span class="pt-ico">🔗</span> Relationship Map</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="eddi-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="eddi-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
+        <p id="eddi-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">📰</span> Adverse Media <span class="coll-count" id="eddi-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a;margin-left:auto"></span></div>
+        <div id="eddi-media" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transactions <span class="coll-count" id="eddi-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="eddi-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Documents</div>
+        <div id="eddi-docs" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening</div>
+        <div id="eddi-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="eddi-notes" rows="3" placeholder="Add EDD review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
     </div>
   </div>
-  <div class="px-5 mb-3"><div class="gc p-4"><div class="sec-hdr" style="color:#a78bfa">👤 Customer Profile</div><div id="eddi-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div></div></div>
-  <div class="px-5 mb-3" id="eddi-flagsum"></div>
-  <div class="px-5 mb-3"><div class="sec-hdr" style="color:#a78bfa">🔗 Relationship Map</div><p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p><div class="gc p-3 relative" style="min-height:460px"><svg id="eddi-net" width="100%" height="460" viewBox="0 0 460 420"></svg><div class="net-tip" id="eddi-tip"></div></div></div>
-  <div class="px-5 mb-3"><div class="gc-s p-3"><div class="sec-hdr" style="color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div><p id="eddi-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p></div></div>
-  <div class="px-5 mb-3"><div class="gc p-4"><div class="sec-hdr" style="color:#ffb833">💰 Source of Wealth Assessment</div><div id="eddi-sow" style="font-size:.72rem"></div></div></div>
-  <div class="px-5 mb-3"><div class="coll" id="eddi-media-coll"><div class="coll-hdr" onclick="toggleColl('eddi-media-coll')"><div class="coll-title" style="color:#ff4d6a">📰 Adverse Media <span class="coll-chev">▸</span></div><div class="coll-right"><span class="coll-count" id="eddi-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a"></span></div></div><div class="coll-body"><div class="coll-body-inner"><div id="eddi-media" class="space-y-2"></div></div></div></div></div>
-  <div class="px-5 mb-3"><div class="coll" id="eddi-txs-coll"><div class="coll-hdr" onclick="toggleColl('eddi-txs-coll')"><div class="coll-title">Recent Transaction Activity <span class="coll-chev">▸</span></div><div class="coll-right"><span class="coll-count" id="eddi-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0"></span></div></div><div class="coll-body"><div class="coll-body-inner"><div id="eddi-txs" class="space-y-2"></div></div></div></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr">📄 Document Review</div><div id="eddi-docs" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr">🛡️ Screening Results</div><div id="eddi-scr" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr" style="color:#ff4d6a">🚩 EDD Red Flags</div><div id="eddi-flags" class="space-y-2"></div></div>
-  <div class="px-5 mb-4"><div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div><textarea id="eddi-notes" rows="3" placeholder="Add EDD review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea></div>
-  <div class="act-grid" style="padding-bottom:1.5rem">
-    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
-    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
-    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate to MLRO</button>
-    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="act-ico">📉</span>Downgrade Risk</button>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate to MLRO</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="ia-ico">📉</span>Downgrade Risk</button>
   </div>
 </div>
 
 <!-- ═══ EDD ENTITY INVESTIGATION ═══ -->
 <div class="screen" id="scr-edde">
-  <div class="p-5 pb-2">
-    <button onclick="backToShift()" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back to Cases</button>
-    <div style="margin-bottom:.75rem">
-      <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
-      <div style="font-family:'Anybody',sans-serif;font-size:.88rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</div>
-      <div style="margin-top:5px;padding:4px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:5px">
-        <span style="font-size:.6rem">⚠️</span>
-        <span style="font-size:.44rem;font-weight:600;color:#ffb833;letter-spacing:.03em">FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY</span>
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="edde-id"></span><strong id="edde-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="edde-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏢</span> Entity Profile</div>
+        <div id="edde-profile" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">💰</span> Source of Wealth / Funds</div>
+        <div id="edde-sow" style="font-size:.72rem"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="edde-flagsum"></div>
+        <div id="edde-flags" class="space-y-2" style="margin-top:8px"></div>
       </div>
     </div>
-    <div class="flex items-center justify-between mb-3">
-      <div><div id="edde-id" style="font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a"></div>
-      <h2 id="edde-name" style="font-family:'Anybody',sans-serif;font-size:1.15rem;font-weight:800;color:#fff"></h2></div>
-      <div id="edde-pill"></div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Ownership &amp; Relationship Structure</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="edde-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="edde-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
+        <p id="edde-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">📰</span> Adverse Media <span class="coll-count" id="edde-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a;margin-left:auto"></span></div>
+        <div id="edde-media" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transactions <span class="coll-count" id="edde-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="edde-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Documents</div>
+        <div id="edde-docs" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening</div>
+        <div id="edde-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="edde-notes" rows="3" placeholder="Add EDD entity review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
     </div>
   </div>
-  <div class="px-5 mb-3"><div class="gc p-4"><div class="sec-hdr" style="color:#ffb833">🏢 Entity Profile</div><div id="edde-profile" class="grid grid-cols-2 gap-x-4 gap-y-2" style="font-size:.72rem"></div></div></div>
-  <div class="px-5 mb-3" id="edde-flagsum"></div>
-  <div class="px-5 mb-3"><div class="sec-hdr" style="color:#ffb833">🏛️ Ownership & Relationship Structure</div><p style="font-size:.6rem;color:#4a6a8a;margin-bottom:.4rem">Tap a node for details + flags. Drag to rearrange.</p><div class="gc p-3 relative" style="min-height:460px"><svg id="edde-net" width="100%" height="460" viewBox="0 0 460 420"></svg><div class="net-tip" id="edde-tip"></div></div></div>
-  <div class="px-5 mb-3"><div class="gc-s p-3"><div class="sec-hdr" style="color:#ff4d6a;margin-bottom:.35rem">⚡ Review Trigger</div><p id="edde-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p></div></div>
-  <div class="px-5 mb-3"><div class="gc p-4"><div class="sec-hdr" style="color:#ffb833">💰 Source of Wealth / Funds Assessment</div><div id="edde-sow" style="font-size:.72rem"></div></div></div>
-  <div class="px-5 mb-3"><div class="coll" id="edde-media-coll"><div class="coll-hdr" onclick="toggleColl('edde-media-coll')"><div class="coll-title" style="color:#ff4d6a">📰 Adverse Media <span class="coll-chev">▸</span></div><div class="coll-right"><span class="coll-count" id="edde-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a"></span></div></div><div class="coll-body"><div class="coll-body-inner"><div id="edde-media" class="space-y-2"></div></div></div></div></div>
-  <div class="px-5 mb-3"><div class="coll" id="edde-txs-coll"><div class="coll-hdr" onclick="toggleColl('edde-txs-coll')"><div class="coll-title">Recent Transaction Activity <span class="coll-chev">▸</span></div><div class="coll-right"><span class="coll-count" id="edde-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0"></span></div></div><div class="coll-body"><div class="coll-body-inner"><div id="edde-txs" class="space-y-2"></div></div></div></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr">📄 Document Review</div><div id="edde-docs" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr">🛡️ Screening Results</div><div id="edde-scr" class="space-y-2"></div></div>
-  <div class="px-5 mb-3"><div class="sec-hdr" style="color:#ff4d6a">🚩 EDD Red Flags</div><div id="edde-flags" class="space-y-2"></div></div>
-  <div class="px-5 mb-4"><div class="sec-hdr" style="margin-bottom:.35rem">Your Notes</div><textarea id="edde-notes" rows="3" placeholder="Add EDD entity review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#c8daf0;resize:vertical;outline:none" oninput="saveNotes()"></textarea></div>
-  <div class="act-grid" style="padding-bottom:1.5rem">
-    <button class="act-btn" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="act-ico">✅</span>Maintain</button>
-    <button class="act-btn" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="act-ico">🚪</span>Exit Relationship</button>
-    <button class="act-btn" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="act-ico">👆</span>Escalate to MLRO</button>
-    <button class="act-btn" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="act-ico">📉</span>Downgrade Risk</button>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate to MLRO</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="ia-ico">📉</span>Downgrade Risk</button>
   </div>
 </div>
 
