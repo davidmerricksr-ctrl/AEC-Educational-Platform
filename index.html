@@ -169,7 +169,7 @@ a{color:var(--navy);text-decoration:none}
 .fcard .fi{font-size:1.1rem;margin-bottom:.35rem;display:block}
 .fcard h3{font-family:var(--fd);font-size:.88rem;margin-bottom:.2rem}
 .fcard p{font-size:.76rem;color:var(--sub);line-height:1.48}
-/* ══ FUTURE STATE CARDS — add after .fcard p rule ══ */
+/* ══ FUTURE STATE CARDS + SKILLS — add after .fcard p rule ══ */
 .fcard .f-states{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--line)}
 .f-state{padding:.7rem .8rem;border-radius:var(--rs);font-size:.72rem;color:var(--sub);line-height:1.5}
 .f-state.now{background:var(--navy-bg);border:1px solid rgba(26,58,92,.12)}
@@ -178,6 +178,19 @@ a{color:var(--navy);text-decoration:none}
 .f-state.now h4{color:var(--navy)}
 .f-state.next h4{color:var(--teal)}
 @media(max-width:520px){.fcard .f-states{grid-template-columns:1fr}}
+.f-skills{margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--line)}
+.f-skills h4{font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--crim);margin-bottom:.45rem}
+.f-skill{display:flex;align-items:flex-start;gap:.5rem;padding:.55rem .65rem;border-radius:var(--rs);background:var(--crim-bg);border:1px solid var(--crim-bdr);margin-bottom:.4rem;cursor:pointer;transition:.12s;-webkit-tap-highlight-color:transparent}
+.f-skill:active{transform:scale(.985)}
+.f-skill .f-sk-dot{width:6px;height:6px;border-radius:50%;background:var(--crim);flex-shrink:0;margin-top:5px}
+.f-skill .f-sk-name{font-size:.74rem;font-weight:600;color:var(--ink);line-height:1.3}
+.f-skill .f-sk-why{display:none;font-size:.7rem;color:var(--sub);line-height:1.48;margin-top:.25rem}
+.f-skill.exp .f-sk-why{display:block;animation:fu .2s ease}
+.f-skill .f-sk-chev{font-size:.42rem;color:var(--mute);margin-left:auto;flex-shrink:0;transition:.2s;margin-top:4px}
+.f-skill.exp .f-sk-chev{transform:rotate(180deg);color:var(--crim)}
+  
+  
+
 
   
   
@@ -541,12 +554,29 @@ function filterGlossary(){
 }
 renderGlossary(sortedGlossary);
 
-
-
 /* Future */
 /* ══ REPLACE the existing futureGrid rendering with this ══ */
-document.getElementById('futureGrid').innerHTML=futures.map(function(f){var states='';if(f.currentState||f.futureState){states='<div class="f-states">';if(f.currentState) states+='<div class="f-state now"><h4>\ud83d\udccd Today (~2026)</h4>'+f.currentState+'</div>';if(f.futureState) states+='<div class="f-state next"><h4>\ud83d\ude80 By ~2029</h4>'+f.futureState+'</div>';states+='</div>';}return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p>'+states+'</div>';}).join('');
-  
+function toggleFSkill(el){var was=el.classList.contains('exp');el.parentNode.querySelectorAll('.f-skill.exp').forEach(function(s){s.classList.remove('exp')});if(!was)el.classList.add('exp');}
+
+document.getElementById('futureGrid').innerHTML=futures.map(function(f){
+  var states='';
+  if(f.currentState||f.futureState){
+    states='<div class="f-states">';
+    if(f.currentState) states+='<div class="f-state now"><h4>\ud83d\udccd Today (~2026)</h4>'+f.currentState+'</div>';
+    if(f.futureState) states+='<div class="f-state next"><h4>\ud83d\ude80 By ~2029</h4>'+f.futureState+'</div>';
+    states+='</div>';
+  }
+  var skillsHtml='';
+  if(f.skills&&f.skills.length){
+    skillsHtml='<div class="f-skills"><h4>\ud83c\udfaf Skills to Develop Now</h4>';
+    f.skills.forEach(function(s){
+      skillsHtml+='<div class="f-skill" onclick="toggleFSkill(this)"><span class="f-sk-dot"></span><div><div class="f-sk-name">'+s.skill+'</div><div class="f-sk-why">'+s.why+'</div></div><span class="f-sk-chev">\u25bc</span></div>';
+    });
+    skillsHtml+='</div>';
+  }
+  return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p>'+states+skillsHtml+'</div>';
+}).join('');
+
 
 
 /* ===== INTELLIGENCE DIRECTORY ===== */
