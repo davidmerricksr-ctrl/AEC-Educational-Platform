@@ -169,6 +169,18 @@ a{color:var(--navy);text-decoration:none}
 .fcard .fi{font-size:1.1rem;margin-bottom:.35rem;display:block}
 .fcard h3{font-family:var(--fd);font-size:.88rem;margin-bottom:.2rem}
 .fcard p{font-size:.76rem;color:var(--sub);line-height:1.48}
+/* ══ FUTURE STATE CARDS — add after .fcard p rule ══ */
+.fcard .f-states{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--line)}
+.f-state{padding:.7rem .8rem;border-radius:var(--rs);font-size:.72rem;color:var(--sub);line-height:1.5}
+.f-state.now{background:var(--navy-bg);border:1px solid rgba(26,58,92,.12)}
+.f-state.next{background:var(--teal-bg);border:1px solid rgba(24,114,95,.12)}
+.f-state h4{font-size:.5rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem}
+.f-state.now h4{color:var(--navy)}
+.f-state.next h4{color:var(--teal)}
+@media(max-width:520px){.fcard .f-states{grid-template-columns:1fr}}
+
+  
+  
 .rcard{border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.65rem;background:var(--sf)}
 .rcard h3{font-family:var(--fd);font-size:.85rem;margin-bottom:.18rem}
 .rcard p{font-size:.74rem;color:var(--sub);line-height:1.42;margin-bottom:.35rem}
@@ -532,8 +544,9 @@ renderGlossary(sortedGlossary);
 
 
 /* Future */
-document.getElementById('futureGrid').innerHTML=futures.map(function(f){return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p></div>'}).join('');
-
+/* ══ REPLACE the existing futureGrid rendering with this ══ */
+document.getElementById('futureGrid').innerHTML=futures.map(function(f){var states='';if(f.currentState||f.futureState){states='<div class="f-states">';if(f.currentState) states+='<div class="f-state now"><h4>\ud83d\udccd Today (~2026)</h4>'+f.currentState+'</div>';if(f.futureState) states+='<div class="f-state next"><h4>\ud83d\ude80 By ~2029</h4>'+f.futureState+'</div>';states+='</div>';}return '<div class="fcard"><span class="fi">'+f.icon+'</span><h3>'+f.title+'</h3><p>'+f.desc+'</p>'+states+'</div>';}).join('');
+  
 
 
 /* ===== INTELLIGENCE DIRECTORY ===== */
