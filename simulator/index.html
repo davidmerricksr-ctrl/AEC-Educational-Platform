@@ -64,13 +64,6 @@ tailwind.config={theme:{extend:{colors:{
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="screen active" id="scr-dashboard">
-  <div style="padding:10px 16px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(167,139,250,.08));border-bottom:1px solid rgba(56,189,248,.15);display:flex;align-items:center;gap:10px">
-    <span style="font-size:1.2rem">🖥️</span>
-    <div>
-      <div style="font-size:.7rem;font-weight:700;color:#38bdf8">Designed for iPad &amp; Desktop</div>
-      <div style="font-size:.56rem;color:#8ba4c0;line-height:1.4">This simulator is optimised for tablet and desktop screens. For the best experience, use an iPad or larger display.</div>
-    </div>
-  </div>
   <div style="background:linear-gradient(180deg,rgba(0,230,138,.04) 0%,transparent 60%);padding:2rem 1.2rem 1rem">
     <div class="flex items-center justify-between mb-1">
       <div>
@@ -111,9 +104,14 @@ tailwind.config={theme:{extend:{colors:{
     <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.35rem">💡 Daily Tip</div>
     <p id="d-tip" style="font-size:.76rem;color:#8ba4c0;line-height:1.5"></p>
   </div></div>
+  <div style="margin:1.5rem 1.2rem;padding:16px 20px;border-radius:14px;background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(167,139,250,.1));border:1px solid rgba(56,189,248,.18);display:flex;align-items:center;gap:14px">
+    <div style="font-size:2rem;flex-shrink:0">🖥️</div>
+    <div>
+      <div style="font-size:.82rem;font-weight:800;color:#38bdf8;margin-bottom:4px">Designed for iPad &amp; Desktop</div>
+      <div style="font-size:.68rem;color:#8ba4c0;line-height:1.5">This simulator is optimised for tablet and desktop screens. Case investigation dashboards use a 3-panel layout that requires a wider viewport. For the best experience, please use an iPad, laptop, or desktop display.</div>
+    </div>
+  </div>
 </div>
-
-<!-- ═══ ROLE SELECT ═══ -->
 <div class="screen" id="scr-roleselect">
   <div class="p-5">
     <button onclick="nav('dashboard')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back</button>
