@@ -231,9 +231,20 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .inv-left::-webkit-scrollbar-thumb{background:rgba(74,106,138,.3);border-radius:3px}
 
 /* ── Profile card ── */
-.inv-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:.68rem}
-.inv-profile-grid .pf-label{color:#4a6a8a;font-weight:600;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em}
-.inv-profile-grid .pf-value{color:#c8daf0;margin-bottom:4px}
+.inv-profile-grid{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;font-size:.68rem;line-height:1.3}
+.inv-profile-grid .pf-label{color:#4a6a8a;font-weight:600;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;padding:2px 0}
+.inv-profile-grid .pf-value{color:#c8daf0;padding:2px 0}
+
+/* ── Clickable panel trigger ── */
+.inv-panel-click{cursor:pointer;transition:border-color .15s,background .15s}
+.inv-panel-click:hover{border-color:rgba(200,218,240,.2);background:rgba(22,42,74,.9)}
+.inv-panel-click:active{transform:scale(.99)}
+.inv-panel-click .click-hint{font-size:.44rem;color:#4a6a8a;font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+.inv-panel-click .click-preview{font-size:.62rem;color:#8ba4c0;margin-top:4px;line-height:1.4;max-height:2.8em;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Flag summary clickable rows ── */
+.fsum-row.clickable{cursor:pointer;border-radius:4px;padding:3px 4px;margin:0 -4px;transition:background .12s}
+.fsum-row.clickable:hover{background:rgba(255,77,106,.08)}
 
 /* ── Key stats row ── */
 .inv-keystats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
