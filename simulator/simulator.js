@@ -321,96 +321,91 @@ function renderRiskGauge(elId,score,level){
 
 // ═══ DETAIL POPUP ═══
 var _caseData=null;
+var _popups={};
 function openDetail(title,html){document.getElementById('detail-title').innerHTML=title;document.getElementById('detail-body').innerHTML=html;document.getElementById('ov-detail').classList.add('show');}
 function closeDetail(){document.getElementById('ov-detail').classList.remove('show');}
-
-// ═══ MAKE PANEL CLICKABLE ═══
-function makePanelClickable(panelEl,title,contentFn){
-  panelEl.classList.add('inv-panel-click');
-  panelEl.onclick=function(){openDetail(title,contentFn());};
-}
+function showPopup(key){if(_popups[key])openDetail(_popups[key].title,_popups[key].fn());}
 
 // ═══ FLAG SUMMARY (clickable counts) ═══
 function renderFlagSummary(elId,flags){
-  var html='<div class="fsum"><div class="fsum-title">🚩 Flag Summary — click a category</div>';
+  var html='<div class="fsum"><div class="fsum-title">🚩 Flag Summary</div>';
   FLAG_CATS.forEach(function(cat,ci){
     var matched=[];flags.forEach(function(f){var fl=f.toLowerCase();for(var i=0;i<cat.keys.length;i++){if(fl.indexOf(cat.keys[i])!==-1){matched.push(f);break;}}});
     var count=matched.length;
-    html+='<div class="fsum-row'+(count>0?' clickable':'')+'" '+(count>0?'onclick="showFlagCategory('+ci+')" style="cursor:pointer"':'')+'>'+
+    html+='<div class="fsum-row'+(count>0?' clickable':'')+'"'+(count>0?' onclick="showFlagCat('+ci+')"':'')+'>'+
       '<span class="fsum-label">'+cat.icon+' '+cat.label+'</span>'+
       '<span class="fsum-val '+(count>0?'hit':'ok')+'">'+count+(count>0?' ▸':'')+'</span></div>';
   });
   html+='<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,77,106,.08)">'+
-    '<div class="fsum-row clickable" onclick="showAllFlags()" style="cursor:pointer">'+
+    '<div class="fsum-row clickable" onclick="showAllFlags()">'+
     '<span class="fsum-label" style="font-weight:700;color:#fff">Total Flags</span>'+
     '<span class="fsum-val hit" style="font-size:.62rem">'+flags.length+' ▸</span></div></div></div>';
   var el=document.getElementById(elId);if(el){el.innerHTML=flags.length?html:'';}
 }
-function showFlagCategory(ci){
+function showFlagCat(ci){
   if(!_caseData)return;var cat=FLAG_CATS[ci];var matched=[];
   _caseData.flags.forEach(function(f){var fl=f.toLowerCase();for(var i=0;i<cat.keys.length;i++){if(fl.indexOf(cat.keys[i])!==-1){matched.push(f);break;}}});
-  var html=matched.map(function(f){return '<div class="flag-chip"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join('');
-  openDetail(cat.icon+' '+cat.label+' <span style="color:#ff4d6a;font-size:.7rem">('+matched.length+')</span>',html||'<div style="color:#4a6a8a;font-size:.74rem">No flags in this category.</div>');
+  openDetail(cat.icon+' '+cat.label+' ('+matched.length+')',
+    matched.length?matched.map(function(f){return '<div class="flag-chip" style="margin-bottom:6px"><div class="flag-dot"></div><div>'+f+'</div></div>';}).join(''):'<div style="color:#4a6a8a;font-size:.76rem;padding:8px 0">No flags in this category.</div>');
 }
 function showAllFlags(){
   if(!_caseData)return;
-  var html=_caseData.flags.map(function(f){var cat=flagCategory(f);return '<div class="flag-chip"><div class="flag-dot"></div><div><span style="display:inline-block;font-size:.52rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:rgba(255,77,106,.1);color:#ff4d6a;margin-right:6px;vertical-align:middle">'+cat.icon+' '+cat.label+'</span>'+f+'</div></div>';}).join('');
-  openDetail('🚩 All Red Flags <span style="color:#ff4d6a;font-size:.7rem">('+_caseData.flags.length+')</span>',html);
+  openDetail('🚩 All Red Flags ('+_caseData.flags.length+')',
+    _caseData.flags.map(function(f){var cat=flagCategory(f);return '<div class="flag-chip" style="margin-bottom:6px"><div class="flag-dot"></div><div><span style="display:inline-block;font-size:.5rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:rgba(255,77,106,.1);color:#ff4d6a;margin-right:6px;vertical-align:middle">'+cat.icon+' '+cat.label+'</span>'+f+'</div></div>';}).join(''));
 }
 
-// ═══ RENDER COMPACT SUMMARIES + MAKE CLICKABLE ═══
-function renderTxSummary(elId,txs,panelSel){
-  var el=document.getElementById(elId);
+// ═══ CLICKABLE SUMMARY PANELS ═══
+function renderTxSummary(elId,txs){
   var flagged=txs.filter(function(t){return t.flag;}).length;
-  el.innerHTML='<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
+  _popups.txs={title:'💳 Transaction History ('+txs.length+')',fn:function(){
+    return txs.map(function(tx){return '<div class="gc-s p-3" style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px;'+(tx.flag?'border-left:3px solid #ff4d6a':'')+'"><div style="min-width:0;flex:1"><div style="font-family:Anybody;font-size:.88rem;font-weight:700;color:'+(tx.flag?'#ff4d6a':'#fff')+'">'+tx.amount+'</div><div style="font-size:.62rem;color:#4a6a8a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+tx.to+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:.56rem;color:#4a6a8a;font-family:JetBrains Mono,monospace">'+tx.date+'</div><div style="font-size:.54rem;color:#8ba4c0">'+tx.country+'</div></div></div>';}).join('');
+  }};
+  document.getElementById(elId).innerHTML=
+    '<div onclick="showPopup(\'txs\')" style="cursor:pointer">'+
+    '<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
     '<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#38bdf8">'+txs.length+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Total</div></div>'+
     (flagged?'<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#ff4d6a">'+flagged+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Flagged</div></div>':'')+
-    '</div><div class="click-hint">Click to view all transactions ▸</div>';
-  var panel=el.closest('.inv-panel');
-  if(panel)makePanelClickable(panel,'💳 Transaction History ('+txs.length+')',function(){
-    return txs.map(function(tx){return '<div class="gc-s p-3 tx-card flex justify-between items-center gap-3" style="margin-bottom:6px;'+(tx.flag?'border-left:3px solid #ff4d6a':'')+'"><div class="flex-1 min-w-0"><div style="font-family:Anybody;font-size:.88rem;font-weight:700;color:'+(tx.flag?'#ff4d6a':'#fff')+'">'+tx.amount+'</div><div style="font-size:.62rem;color:#4a6a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tx.to+'</div></div><div class="text-right flex-shrink-0"><div style="font-size:.58rem;color:#4a6a8a;font-family:JetBrains Mono,monospace">'+tx.date+'</div><div style="font-size:.56rem;color:#8ba4c0">'+tx.country+'</div></div></div>';}).join('');
-  });
+    '</div><div class="click-hint">Click to view all transactions ▸</div></div>';
 }
 function renderMediaSummary(elId,media,countId){
-  var el=document.getElementById(elId);
   var flagged=media.filter(function(m){return m.flag;}).length;
-  el.innerHTML='<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
+  if(countId){var ce=document.getElementById(countId);if(ce)ce.textContent=media.length+(flagged?' ('+flagged+' ⚠)':'');}
+  _popups.media={title:'📰 Adverse Media ('+media.length+')',fn:function(){
+    return media.map(function(m){return '<div class="gc-s p-3" style="margin-bottom:6px;'+(m.flag?'border-left:3px solid #ff4d6a':'')+'"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.66rem;font-weight:700;color:#fff">'+m.source+'</span><span style="font-size:.56rem;color:#4a6a8a;font-family:JetBrains Mono,monospace">'+m.date+'</span></div><div style="font-size:.74rem;color:#8ba4c0;line-height:1.5">'+m.summary+'</div></div>';}).join('');
+  }};
+  document.getElementById(elId).innerHTML=
+    '<div onclick="showPopup(\'media\')" style="cursor:pointer">'+
+    '<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
     '<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#ff4d6a">'+media.length+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Articles</div></div>'+
     (flagged?'<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#ff4d6a">'+flagged+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Flagged</div></div>':'')+
-    '</div><div class="click-hint">Click to view all media ▸</div>';
-  if(countId){var ce=document.getElementById(countId);if(ce)ce.textContent=media.length+(flagged?' ('+flagged+' ⚠)':'');}
-  var panel=el.closest('.inv-panel');
-  if(panel)makePanelClickable(panel,'📰 Adverse Media ('+media.length+')',function(){
-    return media.map(function(m){return '<div class="gc-s p-3" style="margin-bottom:6px;'+(m.flag?'border-left:3px solid #ff4d6a':'')+'"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.64rem;font-weight:700;color:#fff">'+m.source+'</span><span style="font-size:.56rem;color:#4a6a8a;font-family:JetBrains Mono,monospace">'+m.date+'</span></div><div style="font-size:.74rem;color:#8ba4c0;line-height:1.5">'+m.summary+'</div></div>';}).join('');
-  });
+    '</div><div class="click-hint">Click to view all media ▸</div></div>';
 }
 function renderDocsSummary(elId,docs){
-  var el=document.getElementById(elId);
   var ok=docs.filter(function(d){return d.status==='provided'&&!d.flag;}).length;
   var issues=docs.length-ok;
-  el.innerHTML='<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
+  _popups.docs={title:'📄 Document Review ('+docs.length+')',fn:function(){
+    return docs.map(function(d){var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ '+d.status.charAt(0).toUpperCase()+d.status.slice(1);return '<div class="doc-card'+(d.flag?' flagged':'')+'" style="margin-bottom:6px"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div style="flex:1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.66rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';}).join('');
+  }};
+  document.getElementById(elId).innerHTML=
+    '<div onclick="showPopup(\'docs\')" style="cursor:pointer">'+
+    '<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
     '<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#00e68a">'+ok+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">OK</div></div>'+
     (issues?'<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#ff4d6a">'+issues+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Issues</div></div>':'')+
-    '</div><div class="click-hint">Click to view all documents ▸</div>';
-  var panel=el.closest('.inv-panel');
-  if(panel)makePanelClickable(panel,'📄 Document Review ('+docs.length+')',function(){
-    return docs.map(function(d){var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ '+d.status.charAt(0).toUpperCase()+d.status.slice(1);return '<div class="doc-card'+(d.flag?' flagged':'')+'" style="margin-bottom:6px"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div class="flex-1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.66rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';}).join('');
-  });
+    '</div><div class="click-hint">Click to view all documents ▸</div></div>';
 }
 function renderScreeningSummary(elId,scr){
-  var el=document.getElementById(elId);
   var hits=scr.filter(function(s){return s.flag;}).length;
-  el.innerHTML='<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
+  _popups.scr={title:'🛡️ Screening Results ('+scr.length+')',fn:function(){
+    return scr.map(function(s){return '<div class="scr-row'+(s.flag?' flagged':'')+'" style="margin-bottom:6px"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.7rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+'">'+s.result+'</div></div>';}).join('');
+  }};
+  document.getElementById(elId).innerHTML=
+    '<div onclick="showPopup(\'scr\')" style="cursor:pointer">'+
+    '<div style="display:flex;gap:12px;align-items:center;margin-top:4px">'+
     '<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:'+(hits?'#ff4d6a':'#00e68a')+'">'+scr.length+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Checks</div></div>'+
     (hits?'<div style="text-align:center"><div style="font-family:Anybody;font-size:1.1rem;font-weight:800;color:#ff4d6a">'+hits+'</div><div style="font-size:.42rem;color:#4a6a8a;text-transform:uppercase;font-weight:700">Hits</div></div>':'')+
-    '</div><div class="click-hint">Click to view screening results ▸</div>';
-  var panel=el.closest('.inv-panel');
-  if(panel)makePanelClickable(panel,'🛡️ Screening Results ('+scr.length+')',function(){
-    return scr.map(function(s){return '<div class="scr-row'+(s.flag?' flagged':'')+'" style="margin-bottom:6px"><div><span style="font-weight:600;color:#fff">'+s.type+'</span></div><div style="text-align:right;font-size:.7rem;color:'+(s.flag?'#ff4d6a':'#00e68a')+'">'+s.result+'</div></div>';}).join('');
-  });
+    '</div><div class="click-hint">Click to view screening results ▸</div></div>';
 }
-function renderCategorizedFlags(elId,flags){document.getElementById(elId).innerHTML=flags.map(function(f){var cat=flagCategory(f);return '<div class="flag-chip"><div class="flag-dot"></div><div><span style="display:inline-block;font-size:.52rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:3px;background:rgba(255,77,106,.1);color:#ff4d6a;margin-right:6px;vertical-align:middle">'+cat.icon+' '+cat.label+'</span>'+f+'</div></div>';}).join('');}
-function renderSOW(elId,sow){document.getElementById(elId).innerHTML='<div style="margin-bottom:8px"><div style="font-size:.55rem;font-weight:700;color:#4a6a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Declared</div><div style="color:#8ba4c0;line-height:1.5">'+sow.declared+'</div></div><div style="margin-bottom:8px"><div style="font-size:.55rem;font-weight:700;color:#ff4d6a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Findings</div><div style="color:#c8daf0;line-height:1.5">'+sow.findings+'</div></div><div style="padding:8px 10px;border-radius:8px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12)"><div style="font-size:.55rem;font-weight:700;color:#ffb833;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Assessment</div><div style="color:#ffb833;line-height:1.5;font-size:.72rem">'+sow.assessment+'</div></div>';}
+
 function renderMedia(elId,media){document.getElementById(elId).innerHTML=media.map(function(m){return '<div class="gc-s p-3'+(m.flag?' flagged':'')+'" style="'+(m.flag?'border-left:3px solid #ff4d6a':'')+'"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.6rem;font-weight:700;color:#fff">'+m.source+'</span><span style="font-size:.56rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+m.date+'</span></div><div style="font-size:.72rem;color:#8ba4c0;line-height:1.45">'+m.summary+'</div></div>';}).join('');}
 function renderEDDTxs(elId,txs){document.getElementById(elId).innerHTML=txs.map(function(tx){return '<div class="gc-s p-3 tx-card flex justify-between items-center gap-3" style="'+(tx.flag?'border-left:3px solid #ff4d6a':'')+'"><div class="flex-1 min-w-0"><div style="font-family:\'Anybody\',sans-serif;font-size:.88rem;font-weight:700;color:'+(tx.flag?'#ff4d6a':'#fff')+'">'+tx.amount+'</div><div style="font-size:.62rem;color:#4a6a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tx.to+'</div></div><div class="text-right flex-shrink-0"><div style="font-size:.58rem;color:#4a6a8a;font-family:\'JetBrains Mono\',monospace">'+tx.date+'</div><div style="font-size:.56rem;color:#8ba4c0">'+tx.country+'</div></div></div>';}).join('');}
 function renderEDDDocs(elId,docs){document.getElementById(elId).innerHTML=docs.map(function(d){var sCls=d.status==='provided'?(d.flag?'doc-inc':'doc-ok'):d.status==='missing'?'doc-miss':'doc-inc';var sLabel=d.status==='provided'?(d.flag?'⚠ Review':'✓ OK'):d.status==='missing'?'✗ Missing':'⚠ '+d.status.charAt(0).toUpperCase()+d.status.slice(1);return '<div class="doc-card'+(d.flag?' flagged':'')+'"><div class="doc-ico">'+(d.flag?'⚠️':'📄')+'</div><div class="flex-1"><div style="font-weight:600;color:#fff;font-size:.74rem;margin-bottom:2px">'+d.name+'</div><div style="font-size:.64rem;color:#8ba4c0;line-height:1.4">'+d.note+'</div><span class="doc-status '+sCls+'">'+sLabel+'</span></div></div>';}).join('');}
