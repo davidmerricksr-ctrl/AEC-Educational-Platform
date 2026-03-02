@@ -1,8 +1,8 @@
 <!--
   ═══════════════════════════════════════════════════════════════
-  ECONOMIC CRIME HUNTER SIMULATOR
+  ECONOMIC CRIME HUB — OPERATIONS SIMULATOR
+  For educational & training purposes only.
   Save the folder and open simulator.html in any browser.
-  Requires: cases/aml-cases.js and cases/kyc-cases.js
   ═══════════════════════════════════════════════════════════════
 -->
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1">
-<title>Crime Hunter — Economic Crime Simulator</title>
+<title>Economic Crime Hub — Operations Simulator</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config={theme:{extend:{colors:{
@@ -173,23 +173,42 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 .role-card.sel{border-color:#00e68a;box-shadow:0 0 20px rgba(0,230,138,.15)}
 
 /* ── Case Table (spreadsheet layout) ── */
-.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(74,106,138,.15);background:rgba(22,42,74,.35)}
+.tbl-wrap{overflow-x:auto;overflow-y:auto;max-height:60vh;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(74,106,138,.15);background:rgba(22,42,74,.35);position:relative}
 .case-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.72rem}
-.case-table thead th{position:sticky;top:0;z-index:2;background:rgba(11,26,46,.97);backdrop-filter:blur(8px);padding:9px 12px;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;text-align:left;border-bottom:1px solid rgba(74,106,138,.2);white-space:nowrap}
+.case-table thead th{position:sticky;top:0;z-index:3;background:#0b1a2e;padding:10px 12px;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;text-align:left;border-bottom:2px solid rgba(74,106,138,.25);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .case-table thead th:first-child{border-radius:12px 0 0 0}
 .case-table thead th:last-child{border-radius:0 12px 0 0}
-.case-table tbody tr{cursor:pointer;transition:background .15s,box-shadow .15s}
-.case-table tbody tr:hover{background:rgba(0,230,138,.04)}
-.case-table tbody tr:active{background:rgba(30,58,95,.5)}
-.case-table tbody tr.resolved{opacity:.45;pointer-events:none;cursor:default}
-.case-table tbody tr:not(:last-child) td{border-bottom:1px solid rgba(74,106,138,.07)}
-.case-table td{padding:11px 12px;vertical-align:middle}
-.case-table .col-id{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a6a8a;font-weight:600;white-space:nowrap}
-.case-table .col-name{font-weight:700;color:#fff;min-width:120px}
-.case-table .col-desc{color:#8ba4c0;max-width:260px;font-size:.68rem;line-height:1.45}
+.case-table tbody tr{cursor:pointer;transition:background .15s,box-shadow .15s;background:rgba(255,255,240,.06)}
+.case-table tbody tr:nth-child(even){background:rgba(255,255,240,.03)}
+.case-table tbody tr:hover{background:rgba(255,255,240,.12)}
+.case-table tbody tr:active{background:rgba(255,255,240,.18)}
+.case-table tbody tr.resolved{opacity:.4;pointer-events:none;cursor:default}
+.case-table tbody tr:not(:last-child) td{border-bottom:1px solid rgba(255,255,240,.05)}
+.case-table td{padding:11px 12px;vertical-align:middle;color:#f5f5eb}
+.case-table .col-id{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#8ba4c0;font-weight:600;white-space:nowrap}
+.case-table .col-name{font-weight:700;color:#fffff0;min-width:120px}
+.case-table .col-desc{color:#c8d0bc;max-width:260px;font-size:.68rem;line-height:1.45}
 .case-table .col-risk{white-space:nowrap}
-.case-table .col-amt{font-size:.66rem;color:#8ba4c0;white-space:nowrap}
+.case-table .col-amt{font-size:.66rem;color:#c8d0bc;white-space:nowrap}
 .case-table .col-status{white-space:nowrap;text-align:right}
+
+/* ── Role Tile Grid ── */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.role-grid{grid-template-columns:repeat(2,1fr)}}
+.role-tile{border-radius:14px;padding:1rem .8rem;cursor:pointer;transition:.2s;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-height:140px;justify-content:center}
+.role-tile:active{transform:scale(.96)}
+.role-tile:hover{border-color:rgba(0,230,138,.3);transform:translateY(-2px)}
+.role-tile .rt-ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem;flex-shrink:0;margin-bottom:2px}
+.role-tile .rt-name{font-family:'Anybody',sans-serif;font-size:.82rem;font-weight:800;color:#fff;line-height:1.2}
+.role-tile .rt-sub{font-size:.54rem;font-weight:600;line-height:1.3}
+.role-tile .rt-meta{font-size:.5rem;color:#4a6a8a;font-weight:600;margin-top:auto;line-height:1.3}
+
+/* ── Operator Bar ── */
+.op-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.12);margin-bottom:1rem}
+.op-bar .op-name{font-size:.72rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.op-bar .op-name .op-dot{width:7px;height:7px;border-radius:50%;background:#00e68a;flex-shrink:0;animation:opPulse 2s ease-in-out infinite}
+@keyframes opPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.op-bar .op-clock{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:#8ba4c0;letter-spacing:.03em}
 </style>
 </head>
 <body>
@@ -233,13 +252,17 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
   <div style="background:linear-gradient(180deg,rgba(0,230,138,.04) 0%,transparent 60%);padding:2rem 1.2rem 1rem">
     <div class="flex items-center justify-between mb-1">
       <div>
-        <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime</div>
-        <h1 style="font-family:'Anybody',sans-serif;font-size:1.45rem;font-weight:800;color:#fff;line-height:1.1">Crime Hunter</h1>
+        <div style="font-size:.46rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
+        <h1 style="font-family:'Anybody',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</h1>
       </div>
       <div class="text-right">
         <div id="d-streak" class="text-sm font-bold" style="color:#ffb833"></div>
         <div id="d-level" style="font-size:.62rem;color:#8ba4c0;font-weight:600"></div>
       </div>
+    </div>
+    <div style="margin-top:6px;padding:5px 10px;border-radius:6px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:flex;align-items:center;gap:6px">
+      <span style="font-size:.7rem">⚠️</span>
+      <span style="font-size:.5rem;font-weight:600;color:#ffb833;letter-spacing:.03em">FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span>
     </div>
     <div class="mt-3 mb-1 flex justify-between" style="font-size:.56rem;color:#4a6a8a;font-weight:600">
       <span>Level <span id="d-lvl-num">1</span></span>
@@ -273,72 +296,60 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
     <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a;margin-bottom:.15rem">Select Your Role</div>
     <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Choose Your Desk</h2>
     <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Each role has different cases and investigation tools.</p>
-    <div class="space-y-3">
-      <div class="role-card gc" onclick="startShift('amld')" id="role-amld">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,77,106,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🚨</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">AML — Direct</h3>
-            <div style="font-size:.6rem;color:#ff4d6a;font-weight:600">Customer Transaction Monitoring</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Investigate flagged customer transaction alerts. Analyse cash deposits, wire patterns, and network links. Decide: file a SAR, clear the alert, escalate, or request more information.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">2 cases • Transaction analysis • Network graph</div>
+    <div class="role-grid">
+      <div class="role-tile gc" onclick="startShift('amld')" id="role-amld">
+        <div class="rt-ico" style="background:rgba(255,77,106,.1)">🚨</div>
+        <div class="rt-name">AML Direct</div>
+        <div class="rt-sub" style="color:#ff4d6a">Customer Txn Monitoring</div>
+        <div class="rt-meta">2 cases</div>
       </div>
-      <div class="role-card gc" onclick="startShift('amlc')" id="role-amlc">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(251,146,60,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🏦</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">AML — Correspondent</h3>
-            <div style="font-size:.6rem;color:#fb923c;font-weight:600">Correspondent Banking Monitoring</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Monitor wire traffic flowing through respondent bank correspondent accounts. Detect wire stripping, sanctions evasion, nested banking, and shell bank access to the financial system.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">2 cases • Wire analysis • Respondent risk</div>
+      <div class="role-tile gc" onclick="startShift('amlc')" id="role-amlc">
+        <div class="rt-ico" style="background:rgba(251,146,60,.1)">🏦</div>
+        <div class="rt-name">AML Corresp.</div>
+        <div class="rt-sub" style="color:#fb923c">Correspondent Banking</div>
+        <div class="rt-meta">2 cases</div>
       </div>
-      <div class="role-card gc" onclick="startShift('kycp')" id="role-kycp">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(56,189,248,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🔎</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">KYC — Personal</h3>
-            <div style="font-size:.6rem;color:#38bdf8;font-weight:600">Individual Customer Due Diligence</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review personal account applications from individual customers. Verify identity documents, assess source of wealth, screen for sanctions and adverse media, and decide whether to approve, reject, or require EDD.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">2 cases • Identity verification • Sanctions screening</div>
+      <div class="role-tile gc" onclick="startShift('kycp')" id="role-kycp">
+        <div class="rt-ico" style="background:rgba(56,189,248,.1)">🔎</div>
+        <div class="rt-name">KYC Personal</div>
+        <div class="rt-sub" style="color:#38bdf8">Individual CDD</div>
+        <div class="rt-meta">2 cases</div>
       </div>
-      <div class="role-card gc" onclick="startShift('kyce')" id="role-kyce">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(6,182,212,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🏢</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">KYC — Entity</h3>
-            <div style="font-size:.6rem;color:#06b6d4;font-weight:600">Corporate & Entity Due Diligence</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review corporate, NPO, and VASP account applications. Trace beneficial ownership hierarchies across multiple jurisdictions, verify entity documentation, and assess structural risk. Decide whether to approve, reject, or require EDD.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">3 cases • Ownership graph explorer • Document review</div>
+      <div class="role-tile gc" onclick="startShift('kyce')" id="role-kyce">
+        <div class="rt-ico" style="background:rgba(6,182,212,.1)">🏢</div>
+        <div class="rt-name">KYC Entity</div>
+        <div class="rt-sub" style="color:#06b6d4">Corporate &amp; Entity CDD</div>
+        <div class="rt-meta">3 cases</div>
       </div>
-      <div class="role-card gc" onclick="startShift('eddi')" id="role-eddi">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🔬</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">EDD — Individuals</h3>
-            <div style="font-size:.6rem;color:#a78bfa;font-weight:600">Enhanced Due Diligence Reviews</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Conduct periodic deep-dive reviews of high-risk individual customers. Assess source of wealth, adverse media, and ongoing risk. Decide whether to maintain, exit, or escalate.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">1 case • Source of wealth • Adverse media • PEP review</div>
+      <div class="role-tile gc" onclick="startShift('eddi')" id="role-eddi">
+        <div class="rt-ico" style="background:rgba(167,139,250,.1)">🔬</div>
+        <div class="rt-name">EDD Individual</div>
+        <div class="rt-sub" style="color:#a78bfa">Enhanced Due Diligence</div>
+        <div class="rt-meta">1 case</div>
       </div>
-      <div class="role-card gc" onclick="startShift('edde')" id="role-edde">
-        <div class="flex items-center gap-3 mb-2">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,184,51,.1);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0">🏗️</div>
-          <div>
-            <h3 style="font-family:'Anybody',sans-serif;font-size:1rem;font-weight:800;color:#fff">EDD — Entities</h3>
-            <div style="font-size:.6rem;color:#ffb833;font-weight:600">Enhanced Due Diligence Reviews</div>
-          </div>
-        </div>
-        <p style="font-size:.74rem;color:#8ba4c0;line-height:1.45">Review high-risk corporate customers. Investigate ownership changes, sanctions proximity, regulatory status, and transaction patterns. Decide whether to maintain, exit, or escalate.</p>
-        <div style="font-size:.6rem;color:#4a6a8a;margin-top:.5rem;font-weight:600">1 case • Ownership analysis • Sanctions proximity • Entity review</div>
+      <div class="role-tile gc" onclick="startShift('edde')" id="role-edde">
+        <div class="rt-ico" style="background:rgba(255,184,51,.1)">🏗️</div>
+        <div class="rt-name">EDD Entity</div>
+        <div class="rt-sub" style="color:#ffb833">Enhanced Due Diligence</div>
+        <div class="rt-meta">1 case</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">🛡️</div>
+        <div class="rt-name">Sanctions</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">🕵️</div>
+        <div class="rt-name">Fraud</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">📊</div>
+        <div class="rt-name">Reporting</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
       </div>
     </div>
   </div>
@@ -347,7 +358,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0
 <!-- ═══ SHIFT ═══ -->
 <div class="screen" id="scr-shift">
   <div class="p-5">
-    <button onclick="showScreen('roleselect')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:1rem">← Change Role</button>
+    <button onclick="showScreen('roleselect')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.8rem">← Change Role</button>
+    <div class="op-bar">
+      <div class="op-name"><span class="op-dot"></span> Analyst: <span id="op-analyst-name">—</span></div>
+      <div class="op-clock" id="op-clock">—</div>
+    </div>
     <div id="shift-role-badge" style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.15rem"></div>
     <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Incoming Cases</h2>
     <p style="font-size:.74rem;color:#4a6a8a;margin-bottom:1.2rem">Select a row to begin your investigation.</p>
@@ -921,6 +936,14 @@ function spawnConfetti(){var cs=['#00e68a','#38bdf8','#ffb833','#a78bfa','#ff4d6
 // ═══ SITE MORE MODAL ═══
 function toggleSiteMore(){document.getElementById('siteMoreOverlay').classList.add('open');}
 function closeSiteMore(){document.getElementById('siteMoreOverlay').classList.remove('open');}
+
+// ═══ OPERATOR NAME & LIVE CLOCK ═══
+var OP_FIRST=['A.','J.','M.','S.','R.','K.','D.','L.','E.','N.','T.','C.','P.','H.','B.'];
+var OP_LAST=['Reeves','Okafor','Chen','Patel','Novak','Andersen','Moreau','Duarte','Kim','Petrova','Yılmaz','Rossi','Mbeki','Tanaka','Abbas'];
+var opName='';
+function getOperatorName(){if(!opName){var fi=OP_FIRST[Math.floor(Math.random()*OP_FIRST.length)];var la=OP_LAST[Math.floor(Math.random()*OP_LAST.length)];opName=fi+' '+la;}return opName;}
+function updateClock(){var el=document.getElementById('op-clock');if(!el)return;var now=new Date();var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var d=days[now.getDay()]+' '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();var h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();var t=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;el.textContent=d+' · '+t;var nameEl=document.getElementById('op-analyst-name');if(nameEl)nameEl.textContent=getOperatorName();}
+setInterval(updateClock,1000);updateClock();
 
 // ═══ INIT ═══
 loadState();renderDashboard();
