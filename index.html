@@ -23,6 +23,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EconCrime Edu</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -43,23 +44,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--ink);line-height:1.6
 a{color:var(--navy);text-decoration:none}
 .disc{position:sticky;top:0;z-index:9990;background:var(--ink);color:rgba(255,255,255,.65);text-align:center;font-size:.57rem;font-weight:600;letter-spacing:.03em;padding:.42rem 1rem;line-height:1.3}
 .disc b{color:var(--gold)}
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);padding-bottom:var(--sab);height:calc(var(--nav)+var(--sab))}
-.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
-.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:var(--mute);cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
-.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
-.nb.act{color:var(--crim);font-weight:700}
-.nb.act .bi{transform:scale(1.08)}
-.nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--crim);border-radius:50%}
-.mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
-.mo.open{display:flex}
-.msh{background:var(--sf);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(var(--nav)+var(--sab)+.8rem);animation:su .22s ease}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.msh h3{font-family:var(--fd);font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem}
-.mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:var(--rs);cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
-.mi:active{background:var(--bg)}
-.mi .ic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:var(--bg);flex-shrink:0}
-.mi .ml{font-weight:600;font-size:.8rem}
-.mi .ms{font-size:.63rem;color:var(--mute)}
 .page{display:none;min-height:100vh}.page.active{display:block;animation:fu .25s ease}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .pi{padding:1.2rem 1.1rem 3rem;max-width:680px;margin:0 auto}
@@ -287,23 +271,7 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 </style>
 </head>
 <body>
-<nav class="bnav"><div class="bni">
-<button class="nb act" data-pg="home" onclick="go('home')"><span class="bi">&#x1F3E0;</span>Home</button>
-<button class="nb" data-pg="impact" onclick="go('impact')"><span class="bi">&#x1F4CA;</span>Impact</button>
-<button class="nb" data-pg="reference" onclick="go('reference')"><span class="bi">&#x1F4CB;</span>Typologies</button>
-<button class="nb" onclick="window.location.href='simulator/index.html'"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
-<button class="nb" data-pg="future" onclick="go('future')"><span class="bi">&#x1F680;</span>Evolution</button>
-<button class="nb" data-pg="intelligence" onclick="go('intelligence')"><span class="bi">&#x1F50E;</span>Directory</button>
-<button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
-</div></nav>
-<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
-<div class="msh">
-<h3>More Sections</h3>
-<div class="mi" onclick="go('competencies');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>
-<div class="mi" onclick="go('glossary');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>
-<div class="mi" onclick="window.location.href='journey/index.html'"><div class="ic">📓</div><div><div class="ml">Building Journey</div><div class="ms">AI interview journal</div></div></div>
-<div class="mi" onclick="window.location.href='about/index.html'"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div></div>
-</div>
+<!-- Nav injected by nav.js -->
 
 <!-- HOME -->
 <div class="page active" id="home">
@@ -470,18 +438,12 @@ footer .fd{margin-top:.4rem;font-size:.58rem;opacity:.42}
 <script src="data/glossary.js"></script>
 <script src="data/intel-directory.js"></script>
 
+<!-- NAV -->
+<script>window.NAV_BASE='';</script>
+<script src="nav.js"></script>
+
 <!-- APP LOGIC -->
 <script>
-function go(id){
-  if(id==='popculture'){window.location.assign('vault.html');return;}
-    if(id==='about'){window.location.assign('about/index.html');return;}
-    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nb[data-pg]').forEach(function(b){b.classList.toggle('act',b.dataset.pg===id)});
-    window.scrollTo(0,0);
-}
-function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
-function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
 function accordion(el){
     var parent=el.parentNode;
     var wasOpen=el.classList.contains('exp');
