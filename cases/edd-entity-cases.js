@@ -150,10 +150,10 @@ const EDD_ENTITY_CASES = [
     transactions: [
       { amount: "$9,200,000", date: "2025-12-18", to: "Redemption — BVI Feeder Fund", country: "BVI", flag: true },
       { amount: "$8,700,000", date: "2025-11-05", to: "Redemption — Mauritius Feeder", country: "Mauritius", flag: true },
-      { amount: "$12,400,000", date: "2025-10-22", from: "Subscription — Labuan Feeder", country: "Malaysia", flag: false },
+      { amount: "$12,400,000", date: "2025-10-22", to: "Subscription — Labuan Feeder", country: "Malaysia", flag: false },
     ],
     documents: [
-      { name: "CIMA Registration Certificate", status: "provided", flag: false },
+      { name: "CIMA Registration Certificate", status: "provided", flag: false, note: "Valid registered fund." },
       { name: "Offering Memorandum", status: "provided", flag: true, note: "Describes feeder structure but no investor disclosure." },
       { name: "Feeder Fund Investor Lists", status: "missing", flag: true, note: "Administrators refuse to provide — critical gap." },
       { name: "AML Policies (Fund)", status: "provided", flag: true, note: "Delegated to administrator — generic document." },
@@ -163,6 +163,27 @@ const EDD_ENTITY_CASES = [
       { type: "PEP Check (Indirect)", result: "Multiple indirect PEP hits via feeders", flag: true },
       { type: "Adverse Media", result: "Offshore leaks connection to politically exposed families", flag: true },
     ],
+    network: {
+      nodes: [
+        { id: "aetherion", label: "Aetherion Fund SPC", type: "company", x: 230, y: 50, risk: "critical", info: "Cayman SPC. $45M AUM. 68% sourced from opaque feeder funds. $18M unexplained redemptions Q4 2025.", jurisdiction: "Cayman Islands" },
+        { id: "bvi-feeder", label: "BVI Feeder Fund", type: "company", x: 80, y: 180, risk: "critical", info: "BVI-domiciled feeder. $9.2M redemption. Investor list refused. Linked to Azerbaijani elite (ICIJ).", jurisdiction: "British Virgin Islands" },
+        { id: "mauritius-feeder", label: "Mauritius Feeder", type: "company", x: 230, y: 180, risk: "high", info: "Mauritius feeder fund. $8.7M redemption. Indirect PEP exposure — Malaysian politically-connected family.", jurisdiction: "Mauritius" },
+        { id: "labuan-feeder", label: "Labuan Feeder", type: "company", x: 380, y: 180, risk: "high", info: "Labuan-domiciled feeder. $12.4M subscription. Opacity jurisdiction — full look-through refused.", jurisdiction: "Malaysia (Labuan)" },
+        { id: "azeri-pep", label: "[Azerbaijani PEP]", type: "unknown", x: 80, y: 310, risk: "critical", info: "Indirect PEP exposure identified via screening. Linked to Azerbaijani elite — asset concealment allegations (ICIJ).", jurisdiction: "Azerbaijan" },
+        { id: "malay-pep", label: "[Malaysian PEP]", type: "unknown", x: 230, y: 310, risk: "high", info: "Indirect PEP exposure. Politically-connected Malaysian family identified in feeder screening.", jurisdiction: "Malaysia" },
+        { id: "maples", label: "Maples Fund Svcs", type: "company", x: 380, y: 310, risk: "low", info: "Registered agent and fund administrator. Refuses to provide feeder investor lists citing privacy obligations.", jurisdiction: "Cayman Islands" },
+      ],
+      edges: [
+        { from: "bvi-feeder", to: "aetherion", label: "Feeder" },
+        { from: "mauritius-feeder", to: "aetherion", label: "Feeder" },
+        { from: "labuan-feeder", to: "aetherion", label: "Feeder" },
+        { from: "azeri-pep", to: "bvi-feeder", label: "Indirect" },
+        { from: "malay-pep", to: "mauritius-feeder", label: "Indirect" },
+        { from: "maples", to: "aetherion", label: "Admin" },
+        { from: "aetherion", to: "bvi-feeder", label: "$9.2M" },
+        { from: "aetherion", to: "mauritius-feeder", label: "$8.7M" },
+      ],
+    },
     flags: [
       "Layered feeder structure across opacity jurisdictions — no look-through provided.",
       "Indirect PEP exposure confirmed in at least two feeders.",
@@ -172,11 +193,14 @@ const EDD_ENTITY_CASES = [
     ],
     feedback: {
       exit: { grade: "excellent", title: "Correct Decision", points: 160,
-        explain: "Exit is appropriate. Inability to obtain look-through on feeders + confirmed indirect PEP exposure + large unexplained redemptions = unacceptable money laundering / sanctions risk." },
+        explain: "Exit is appropriate. Inability to obtain look-through on feeders + confirmed indirect PEP exposure + large unexplained redemptions = unacceptable money laundering / sanctions risk.",
+        coach: "🎓 <strong>AI Coach:</strong> Offshore fund structures require full look-through to underlying investors. When administrators refuse disclosure and indirect PEP exposure is confirmed, the bank cannot fulfil its CDD obligations — exit is the only defensible option." },
       escalate: { grade: "partial", title: "Good, but Exit Likely", points: 100,
-        explain: "Escalation to senior compliance is sensible, but the recommendation should be exit unless full transparency is immediately provided (unlikely)." },
+        explain: "Escalation to senior compliance is sensible, but the recommendation should be exit unless full transparency is immediately provided (unlikely).",
+        coach: "🎓 <strong>AI Coach:</strong> Escalation buys time, but the fundamental problem — inability to see through the feeders — won't resolve without the administrator's cooperation." },
       maintain: { grade: "bad", title: "Unacceptable", points: -60,
-        explain: "Maintaining without investor transparency would make the bank a potential conduit for illicit funds." },
+        explain: "Maintaining without investor transparency would make the bank a potential conduit for illicit funds.",
+        coach: "🎓 <strong>AI Coach:</strong> A fund where you can't identify the investors is a fund where you can't assess ML/TF risk. Period." },
     }
   },
 
@@ -211,10 +235,10 @@ const EDD_ENTITY_CASES = [
     ],
     transactions: [
       { amount: "$4,200,000", date: "2026-02-10", to: "Kivu Minerals SARL", country: "DRC", flag: true },
-      { amount: "$3,800,000", date: "2025-12-14", from: "Incoming — End-buyer payment", country: "China", flag: false },
+      { amount: "$3,800,000", date: "2025-12-14", to: "Incoming — End-buyer payment", country: "China", flag: false },
     ],
     documents: [
-      { name: "Swiss Commercial Register Extract", status: "provided", flag: false },
+      { name: "Swiss Commercial Register Extract", status: "provided", flag: false, note: "Valid registration in Canton of Geneva." },
       { name: "Supply Chain Due Diligence Policy", status: "provided", flag: true, note: "Basic policy — no independent audit." },
       { name: "Supplier List & Chain of Custody", status: "incomplete", flag: true, note: "Partial list; no third-party verification." },
     ],
@@ -222,6 +246,22 @@ const EDD_ENTITY_CASES = [
       { type: "Sanctions", result: "No direct match", flag: false },
       { type: "Adverse Media", result: "Conflict minerals sourcing allegations", flag: true },
     ],
+    network: {
+      nodes: [
+        { id: "vantablack", label: "Vantablack Minerals", type: "company", x: 230, y: 50, risk: "critical", info: "Swiss commodity trader. Cobalt, tantalum, gold. No RMAP audit. Named in Global Witness report.", jurisdiction: "Switzerland" },
+        { id: "kivu", label: "Kivu Minerals SARL", type: "company", x: 80, y: 180, risk: "critical", info: "DRC entity. $4.2M payment. Same address as known conflict-linked entity in Ituri province.", jurisdiction: "DRC" },
+        { id: "artisanal", label: "[Artisanal Mines]", type: "unknown", x: 80, y: 310, risk: "critical", info: "Non-certified artisanal mines in eastern DRC and Zimbabwe. No independent audit or chain of custody verification.", jurisdiction: "DRC / Zimbabwe" },
+        { id: "china-buyer", label: "End-Buyer (China)", type: "company", x: 380, y: 180, risk: "medium", info: "Chinese end-buyer. $3.8M payment for refined minerals. Legitimate demand-side entity.", jurisdiction: "China" },
+        { id: "geneva-ops", label: "Geneva Operations", type: "company", x: 380, y: 50, risk: "low", info: "Self-registered trading operation. No regulatory oversight. Non-regulated commodity trader.", jurisdiction: "Switzerland" },
+      ],
+      edges: [
+        { from: "artisanal", to: "kivu", label: "Supply" },
+        { from: "kivu", to: "vantablack", label: "Minerals" },
+        { from: "vantablack", to: "china-buyer", label: "Sales" },
+        { from: "vantablack", to: "kivu", label: "$4.2M" },
+        { from: "geneva-ops", to: "vantablack", label: "Operations" },
+      ],
+    },
     flags: [
       "Supply chain includes conflict-affected/high-risk areas (eastern DRC, Zimbabwe).",
       "No independent RMAP / OECD-aligned audit despite sector requirements.",
@@ -230,11 +270,14 @@ const EDD_ENTITY_CASES = [
     ],
     feedback: {
       exit: { grade: "excellent", title: "Strongly Justified", points: 150,
-        explain: "Exit is defensible and often prudent in this sector. Lack of supply-chain transparency + adverse reporting = unmanageable human rights / conflict financing risk." },
+        explain: "Exit is defensible and often prudent in this sector. Lack of supply-chain transparency + adverse reporting = unmanageable human rights / conflict financing risk.",
+        coach: "🎓 <strong>AI Coach:</strong> Conflict minerals carry enormous reputational and legal exposure. The EU Conflict Minerals Regulation and OECD Due Diligence Guidance require verifiable supply chain audit. Without it, the bank risks facilitating serious abuses." },
       escalate: { grade: "partial", title: "Appropriate", points: 90,
-        explain: "Escalate to compliance/sustainability team — exit likely outcome." },
+        explain: "Escalate to compliance/sustainability team — exit likely outcome.",
+        coach: "🎓 <strong>AI Coach:</strong> Escalation to ESG/sustainability is reasonable if the bank has a remediation framework, but the absence of any audit makes remediation unlikely." },
       maintain: { grade: "bad", title: "High Risk", points: -50,
-        explain: "Continuing without full audit and chain of custody risks facilitating serious abuses." },
+        explain: "Continuing without full audit and chain of custody risks facilitating serious abuses.",
+        coach: "🎓 <strong>AI Coach:</strong> Without OECD-aligned audit, you cannot verify the minerals aren't financing armed groups. That's an unacceptable risk." },
     }
   },
 
@@ -268,17 +311,36 @@ const EDD_ENTITY_CASES = [
       { date: "2025-12-07", source: "Insurance Journal", summary: "Cayman captive managed by Sylvaris entity implicated in $47M workers' comp fraud scheme (US).", flag: true },
     ],
     transactions: [
-      { amount: "$6,800,000", date: "2026-01-28", from: "Incoming — Premiums (Cayman captive)", country: "Cayman", flag: true },
+      { amount: "$6,800,000", date: "2026-01-28", to: "Incoming — Premiums (Cayman captive)", country: "Cayman", flag: true },
       { amount: "$5,200,000", date: "2025-11-15", to: "Reinsurance placement — opaque front", country: "Labuan", flag: true },
     ],
     documents: [
-      { name: "BMA Licence", status: "provided", flag: false },
+      { name: "BMA Licence", status: "provided", flag: false, note: "Valid Class M captive management licence." },
       { name: "Captive Client List", status: "missing", flag: true, note: "Refused — confidentiality cited." },
       { name: "AML Program", status: "provided", flag: true, note: "Generic — no captive-specific controls." },
     ],
     screening: [
       { type: "Adverse Media", result: "Fraud scheme connection", flag: true },
     ],
+    network: {
+      nodes: [
+        { id: "sylvaris", label: "Sylvaris Captive Mgmt", type: "company", x: 230, y: 50, risk: "critical", info: "Bermuda captive manager. 14 managed captives. Refuses client list. One captive linked to $47M fraud.", jurisdiction: "Bermuda" },
+        { id: "cayman-captive", label: "Cayman Captive", type: "company", x: 80, y: 180, risk: "critical", info: "Cayman-domiciled captive. Directly implicated in US workers' comp fraud investigation ($47M). $6.8M premiums.", jurisdiction: "Cayman Islands" },
+        { id: "labuan-captive", label: "Labuan Reinsurer", type: "company", x: 380, y: 180, risk: "high", info: "Labuan reinsurance front. $5.2M placement. Minimal underlying activity. Opacity jurisdiction.", jurisdiction: "Malaysia (Labuan)" },
+        { id: "us-fraud", label: "[US Fraud Scheme]", type: "unknown", x: 80, y: 310, risk: "critical", info: "$47M workers' compensation fraud under FBI/DOJ investigation. Linked to Cayman captive managed by Sylvaris.", jurisdiction: "United States" },
+        { id: "other-captives", label: "12 Other Captives", type: "company", x: 380, y: 310, risk: "medium", info: "12 additional captives across Cayman/Labuan. Client identities undisclosed. Minimal activity observed.", jurisdiction: "Multiple" },
+        { id: "conyers", label: "Conyers (Agent)", type: "company", x: 230, y: 310, risk: "low", info: "Registered agent in Bermuda. Reputable firm — but agent role does not imply due diligence responsibility.", jurisdiction: "Bermuda" },
+      ],
+      edges: [
+        { from: "sylvaris", to: "cayman-captive", label: "Manages" },
+        { from: "sylvaris", to: "labuan-captive", label: "Manages" },
+        { from: "sylvaris", to: "other-captives", label: "Manages" },
+        { from: "cayman-captive", to: "us-fraud", label: "Linked" },
+        { from: "cayman-captive", to: "sylvaris", label: "$6.8M" },
+        { from: "sylvaris", to: "labuan-captive", label: "$5.2M" },
+        { from: "conyers", to: "sylvaris", label: "Agent" },
+      ],
+    },
     flags: [
       "Managed captive directly linked to active insurance fraud investigation.",
       "Refusal to provide client list — critical transparency gap.",
@@ -287,9 +349,11 @@ const EDD_ENTITY_CASES = [
     ],
     feedback: {
       exit: { grade: "excellent", title: "Correct", points: 160,
-        explain: "Exit is the right call. Active fraud link + refusal of transparency = unacceptable money laundering / fraud facilitation risk." },
+        explain: "Exit is the right call. Active fraud link + refusal of transparency = unacceptable money laundering / fraud facilitation risk.",
+        coach: "🎓 <strong>AI Coach:</strong> When a managed entity is directly implicated in fraud and the manager refuses to provide its client list, the bank has no way to assess its overall exposure. Exit protects the institution from becoming part of the fraud chain." },
       maintain: { grade: "bad", title: "Severe Risk", points: -60,
-        explain: "Maintaining relationship would expose bank to serious liability." },
+        explain: "Maintaining relationship would expose bank to serious liability.",
+        coach: "🎓 <strong>AI Coach:</strong> The fraud link alone demands action. Combined with the refusal to disclose clients, maintaining this relationship would be indefensible to regulators." },
     }
   },
 
@@ -324,10 +388,10 @@ const EDD_ENTITY_CASES = [
     ],
     transactions: [
       { amount: "$4,900,000", date: "2026-03-02", to: "LC settlement — UAE intermediary", country: "UAE", flag: true },
-      { amount: "$3,200,000", date: "2026-02-18", from: "Incoming — Russian buyer", country: "Russia", flag: true },
+      { amount: "$3,200,000", date: "2026-02-18", to: "Incoming — Russian buyer", country: "Russia", flag: true },
     ],
     documents: [
-      { name: "ACRA Business Profile", status: "provided", flag: false },
+      { name: "ACRA Business Profile", status: "provided", flag: false, note: "Valid Singapore registration." },
       { name: "End-User Certificates", status: "provided", flag: true, note: "Civilian end-users stated — goods match dual-use categories." },
       { name: "Transaction Records", status: "incomplete", flag: true, note: "Missing full chain of end-use verification." },
     ],
@@ -335,6 +399,22 @@ const EDD_ENTITY_CASES = [
       { type: "Sanctions", result: "No direct match", flag: false },
       { type: "Adverse Media", result: "Sanctions evasion patterns", flag: true },
     ],
+    network: {
+      nodes: [
+        { id: "nexvora", label: "Nexvora Trade", type: "company", x: 230, y: 50, risk: "critical", info: "Singapore trade finance intermediary. $65M turnover. LC settlements for dual-use electronics. Sanctions evasion indicators.", jurisdiction: "Singapore" },
+        { id: "uae-intermediary", label: "UAE Intermediary", type: "company", x: 80, y: 180, risk: "critical", info: "UAE-based entity. $4.9M LC settlement. Acts as transshipment point for goods destined for Russia.", jurisdiction: "UAE" },
+        { id: "russian-buyer", label: "Russian Buyer", type: "company", x: 80, y: 310, risk: "critical", info: "Russian entity. $3.2M incoming. End-user certificates claim civilian purpose but goods match dual-use ECCN categories.", jurisdiction: "Russia" },
+        { id: "electronics-mfr", label: "Electronics Mfr", type: "company", x: 380, y: 180, risk: "medium", info: "Manufacturer of 'test equipment'. Goods classified under dual-use ECCN categories. May not be aware of end destination.", jurisdiction: "East Asia" },
+        { id: "rikvin", label: "Rikvin (Agent)", type: "company", x: 380, y: 310, risk: "low", info: "Registered agent in Singapore. Corporate services provider. No adverse findings on agent.", jurisdiction: "Singapore" },
+      ],
+      edges: [
+        { from: "nexvora", to: "uae-intermediary", label: "$4.9M LC" },
+        { from: "uae-intermediary", to: "russian-buyer", label: "Goods" },
+        { from: "russian-buyer", to: "nexvora", label: "$3.2M" },
+        { from: "electronics-mfr", to: "nexvora", label: "Supply" },
+        { from: "rikvin", to: "nexvora", label: "Agent" },
+      ],
+    },
     flags: [
       "Goods routed via UAE to Russia — high risk of sanctions circumvention.",
       "Transaction patterns match dual-use / export control evasion typologies.",
@@ -343,9 +423,11 @@ const EDD_ENTITY_CASES = [
     ],
     feedback: {
       exit: { grade: "excellent", title: "Mandatory", points: 160,
-        explain: "Exit required. Clear indicators of export control / sanctions evasion facilitation — continuing relationship creates severe legal and reputational risk." },
+        explain: "Exit required. Clear indicators of export control / sanctions evasion facilitation — continuing relationship creates severe legal and reputational risk.",
+        coach: "🎓 <strong>AI Coach:</strong> The pattern — dual-use goods, routed through UAE to Russia post-2022 sanctions — is a textbook sanctions circumvention typology. When goods match ECCN dual-use categories and end-user certificates don't verify, exit is the only safe course." },
       maintain: { grade: "bad", title: "Unacceptable", points: -70,
-        explain: "Maintaining would likely constitute facilitation of sanctions breach." },
+        explain: "Maintaining would likely constitute facilitation of sanctions breach.",
+        coach: "🎓 <strong>AI Coach:</strong> Facilitating sanctions evasion — even indirectly — carries criminal liability and devastating regulatory consequences." },
     }
   },
 
@@ -379,7 +461,7 @@ const EDD_ENTITY_CASES = [
       { date: "2026-05-22", source: "CoinDesk", summary: "Cryonex among VASPs flagged for weak mixer screening.", flag: true },
     ],
     transactions: [
-      { amount: "$5,400,000", date: "2026-04-10", from: "Incoming — tagged high-risk wallet", country: "Global", flag: true },
+      { amount: "$5,400,000", date: "2026-04-10", to: "Incoming — tagged high-risk wallet", country: "Global", flag: true },
       { amount: "$8,100,000", date: "2026-03-15", to: "Outgoing — user withdrawals", country: "Multiple", flag: true },
     ],
     documents: [
@@ -390,6 +472,23 @@ const EDD_ENTITY_CASES = [
     screening: [
       { type: "Adverse Media", result: "Mixer screening deficiencies", flag: true },
     ],
+    network: {
+      nodes: [
+        { id: "cryonex", label: "Cryonex Digital", type: "company", x: 230, y: 50, risk: "critical", info: "Estonian VASP. $38M monthly volume. Outdated AML. No employees in Estonia — operations in Dubai without VARA licence.", jurisdiction: "Estonia (registered) / Dubai (operations)" },
+        { id: "mixers", label: "[Mixers/Tumblers]", type: "unknown", x: 80, y: 180, risk: "critical", info: "$7.2M inflows linked to mixing services (2025–2026). Designed to obscure transaction origins. Key ML/TF indicator.", jurisdiction: "Decentralised" },
+        { id: "high-risk-wallet", label: "High-Risk Wallet", type: "unknown", x: 80, y: 310, risk: "critical", info: "Tagged wallet. $5.4M incoming. Chainalysis flagged as connected to illicit activity.", jurisdiction: "Global" },
+        { id: "dubai-ops", label: "Dubai Operations", type: "company", x: 380, y: 180, risk: "high", info: "Actual operational hub. No VARA licence. No employees in Estonia. Regulatory arbitrage structure.", jurisdiction: "UAE (Dubai)" },
+        { id: "users", label: "User Withdrawals", type: "bank", x: 380, y: 310, risk: "medium", info: "$8.1M outgoing user withdrawals. Multiple jurisdictions. Unclear whether KYC applied to all users.", jurisdiction: "Multiple" },
+        { id: "baltvern", label: "Baltvern Legal", type: "company", x: 230, y: 310, risk: "low", info: "Estonian registered agent. Provides legal address only — no operational oversight.", jurisdiction: "Estonia" },
+      ],
+      edges: [
+        { from: "mixers", to: "cryonex", label: "$7.2M" },
+        { from: "high-risk-wallet", to: "cryonex", label: "$5.4M" },
+        { from: "cryonex", to: "users", label: "$8.1M" },
+        { from: "dubai-ops", to: "cryonex", label: "Operations" },
+        { from: "baltvern", to: "cryonex", label: "Agent" },
+      ],
+    },
     flags: [
       "Confirmed on-chain mixer/tumbler exposure.",
       "AML program outdated — lacks FATF travel rule and chain analytics.",
@@ -398,9 +497,11 @@ const EDD_ENTITY_CASES = [
     ],
     feedback: {
       exit: { grade: "excellent", title: "Correct", points: 150,
-        explain: "Exit is appropriate. Weak AML controls + confirmed mixer exposure + regulatory gap = unacceptable ML/TF risk for fiat-crypto on-ramp." },
+        explain: "Exit is appropriate. Weak AML controls + confirmed mixer exposure + regulatory gap = unacceptable ML/TF risk for fiat-crypto on-ramp.",
+        coach: "🎓 <strong>AI Coach:</strong> VASPs with mixer exposure, outdated AML, and regulatory arbitrage (registered in Estonia, operating from Dubai) present the highest risk category for fiat on-ramp relationships. The bank's own AML obligations cannot be met when the VASP's controls are this deficient." },
       maintain: { grade: "bad", title: "High Risk", points: -60,
-        explain: "Continuing would import significant laundering risk into the bank." },
+        explain: "Continuing would import significant laundering risk into the bank.",
+        coach: "🎓 <strong>AI Coach:</strong> Every fiat settlement you process for this VASP potentially converts laundered crypto into clean money. Without adequate chain analytics and travel rule compliance, you're flying blind." },
     }
   },
 ];
