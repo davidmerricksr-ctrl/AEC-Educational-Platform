@@ -120,7 +120,7 @@ const EDD_ENTITY_CASES = [
 
   // ── CASE 2: Offshore fund with layered feeders and PEP exposure ──
   {
-    id: "EDD-E-2026-0314",
+    id: "EDD-E-2026-0202",
     name: "Aetherion Alternative Fund SPC",
     teaser: "Cayman SPC fund — layered feeders, multiple indirect PEPs, unexplained redemptions",
     riskLevel: "very high",
@@ -182,7 +182,7 @@ const EDD_ENTITY_CASES = [
 
   // ── CASE 3: Commodity trader — conflict minerals supply chain concerns ──
   {
-    id: "EDD-E-2026-0422",
+    id: "EDD-E-2026-0203",
     name: "Vantablack Minerals Trading Ltd",
     teaser: "Swiss-based commodities trader — DRC / Zimbabwe supply chain, no audit",
     riskLevel: "very high",
@@ -240,7 +240,7 @@ const EDD_ENTITY_CASES = [
 
   // ── CASE 4: Insurance captive manager — tax haven network & fraud concerns ──
   {
-    id: "EDD-E-2026-0519",
+    id: "EDD-E-2026-0204",
     name: "Sylvaris Captive Management Ltd",
     teaser: "Bermuda captive manager — opaque client captives, fraud investigation link",
     riskLevel: "critical",
@@ -295,7 +295,7 @@ const EDD_ENTITY_CASES = [
 
   // ── CASE 5: Trade finance entity — dual-use goods red flags ──
   {
-    id: "EDD-E-2026-0627",
+    id: "EDD-E-2026-0205",
     name: "Nexvora Trade Solutions Pte Ltd",
     teaser: "Singapore trade finance firm — dual-use goods shipments, Russia/UAE routing",
     riskLevel: "critical",
@@ -351,7 +351,7 @@ const EDD_ENTITY_CASES = [
 
   // ── CASE 6: Crypto exchange — AML program deficiencies & mixer links ──
   {
-    id: "EDD-E-2026-0708",
+    id: "EDD-E-2026-0206",
     name: "Cryonex Digital Assets OÜ",
     teaser: "Estonian VASP — outdated AML, mixer exposure, Dubai ops",
     riskLevel: "very high",
