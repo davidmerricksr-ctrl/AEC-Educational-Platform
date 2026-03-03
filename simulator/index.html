@@ -24,7 +24,16 @@ tailwind.config={theme:{extend:{colors:{
 }}}}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,400..900&family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../nav.css">
 <link rel="stylesheet" href="/simulator/simulator.css?v=2.4">
+<style>
+:root{
+  --line:rgba(0,0,0,.08);--crim:#b91c1c;--mute:#888;
+  --bg:#f5f5f5;--sf:#fff;--rs:10px;
+  --fd:'Anybody',system-ui,sans-serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+}
+</style>
 </head>
 <body>
 
@@ -37,30 +46,7 @@ tailwind.config={theme:{extend:{colors:{
 </div>
 </nav>
 
-<!-- ── MAIN SITE NAV (bottom bar — matches main site exactly) ── -->
-<nav class="site-bnav">
-<div class="site-bni">
-  <button class="snb" onclick="window.location.href='../index.html'"><span class="sbi">&#x1F3E0;</span>Home</button>
-  <button class="snb" onclick="window.location.href='../index.html#impact'"><span class="sbi">&#x1F4CA;</span>Impact</button>
-  <button class="snb" onclick="window.location.href='../index.html#reference'"><span class="sbi">&#x1F4CB;</span>Typologies</button>
-  <button class="snb act"><span class="sbi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
-  <button class="snb" onclick="window.location.href='../index.html#future'"><span class="sbi">&#x1F680;</span>Evolution</button>
-  <button class="snb" onclick="window.location.href='../index.html#intelligence'"><span class="sbi">&#x1F50E;</span>Directory</button>
-  <button class="snb" onclick="toggleSiteMore()"><span class="sbi">&#x2261;</span>More</button>
-</div>
-</nav>
-
-<!-- ── MORE OVERLAY (updated with Vault, Journey, About standalone) ── -->
-<div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
-<div class="site-msh">
-  <h3>More Sections</h3>
-  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">&#x25C6;</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">&#x1F4D3;</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
-  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
-</div>
-</div>
+<!-- ── MAIN SITE NAV (injected by nav.js) ── -->
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="screen active" id="scr-dashboard">
@@ -228,7 +214,6 @@ tailwind.config={theme:{extend:{colors:{
 
 <!-- ═══ AML INVESTIGATION ═══ -->
 <div class="screen" id="scr-aml">
-  <!-- Top bar -->
   <div class="inv-topbar">
     <div style="display:flex;align-items:center;gap:10px">
       <button class="inv-back" onclick="backToShift()">← Cases</button>
@@ -238,10 +223,7 @@ tailwind.config={theme:{extend:{colors:{
     <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="aml-pill" style="margin-left:4px"></span></div>
   </div>
   <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
-
-  <!-- 3-panel grid -->
   <div class="inv-grid">
-    <!-- LEFT: Profile + Flags -->
     <div class="inv-left">
       <div class="inv-panel">
         <div class="inv-panel-title"><span class="pt-ico">👤</span> Core Metadata</div>
@@ -253,8 +235,6 @@ tailwind.config={theme:{extend:{colors:{
         <div id="aml-flagsum"></div>
       </div>
     </div>
-
-    <!-- CENTER: Network Graph -->
     <div class="inv-center">
       <div class="inv-panel">
         <div class="inv-panel-title"><span class="pt-ico">🔗</span> Money Flow &amp; Related Parties Network</div>
@@ -269,8 +249,6 @@ tailwind.config={theme:{extend:{colors:{
         </div>
       </div>
     </div>
-
-    <!-- RIGHT: Risk Gauge + Transactions + Notes -->
     <div class="inv-right">
       <div class="inv-panel">
         <div class="inv-panel-title"><span class="pt-ico">📊</span> Risk Assessment</div>
@@ -286,8 +264,6 @@ tailwind.config={theme:{extend:{colors:{
       </div>
     </div>
   </div>
-
-  <!-- Action bar -->
   <div class="inv-actions">
     <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('clear')"><span class="ia-ico">✅</span>Clear Alert</button>
     <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('sar')"><span class="ia-ico">🚨</span>File SAR</button>
@@ -307,7 +283,6 @@ tailwind.config={theme:{extend:{colors:{
     <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="kyc-pill" style="margin-left:4px"></span></div>
   </div>
   <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
-
   <div class="inv-grid">
     <div class="inv-left">
       <div class="inv-panel glow-blue">
@@ -319,7 +294,6 @@ tailwind.config={theme:{extend:{colors:{
         <div id="kyc-flagsum"></div>
       </div>
     </div>
-
     <div class="inv-center">
       <div class="inv-panel glow-amber">
         <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Beneficial Ownership Structure</div>
@@ -329,7 +303,6 @@ tailwind.config={theme:{extend:{colors:{
         </div>
       </div>
     </div>
-
     <div class="inv-right">
       <div class="inv-panel">
         <div class="inv-panel-title"><span class="pt-ico">📄</span> Document Review</div>
@@ -345,7 +318,6 @@ tailwind.config={theme:{extend:{colors:{
       </div>
     </div>
   </div>
-
   <div class="inv-actions">
     <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('approve')"><span class="ia-ico">✅</span>Approve</button>
     <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('reject')"><span class="ia-ico">🚫</span>Reject</button>
@@ -365,7 +337,6 @@ tailwind.config={theme:{extend:{colors:{
     <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="eddi-pill" style="margin-left:4px"></span></div>
   </div>
   <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
-
   <div class="inv-grid">
     <div class="inv-left">
       <div class="inv-panel glow-purple">
@@ -381,7 +352,6 @@ tailwind.config={theme:{extend:{colors:{
         <div id="eddi-flagsum"></div>
       </div>
     </div>
-
     <div class="inv-center">
       <div class="inv-panel glow-purple">
         <div class="inv-panel-title" style="color:#a78bfa"><span class="pt-ico">🔗</span> Relationship Map</div>
@@ -391,7 +361,6 @@ tailwind.config={theme:{extend:{colors:{
         </div>
       </div>
     </div>
-
     <div class="inv-right">
       <div class="inv-panel">
         <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
@@ -419,7 +388,6 @@ tailwind.config={theme:{extend:{colors:{
       </div>
     </div>
   </div>
-
   <div class="inv-actions">
     <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
     <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
@@ -439,7 +407,6 @@ tailwind.config={theme:{extend:{colors:{
     <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="edde-pill" style="margin-left:4px"></span></div>
   </div>
   <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
-
   <div class="inv-grid">
     <div class="inv-left">
       <div class="inv-panel glow-amber">
@@ -455,7 +422,6 @@ tailwind.config={theme:{extend:{colors:{
         <div id="edde-flagsum"></div>
       </div>
     </div>
-
     <div class="inv-center">
       <div class="inv-panel glow-amber">
         <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Ownership &amp; Relationship Structure</div>
@@ -465,7 +431,6 @@ tailwind.config={theme:{extend:{colors:{
         </div>
       </div>
     </div>
-
     <div class="inv-right">
       <div class="inv-panel">
         <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
@@ -493,7 +458,6 @@ tailwind.config={theme:{extend:{colors:{
       </div>
     </div>
   </div>
-
   <div class="inv-actions">
     <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
     <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
@@ -535,7 +499,6 @@ tailwind.config={theme:{extend:{colors:{
 
 <!-- ═══ CRYPTO TRACER ═══ -->
 <div class="screen" id="scr-crypto">
-  <!-- Title bar -->
   <div class="ct-titlebar">
     <div style="display:flex;align-items:center;gap:10px">
       <button class="ct-btn" onclick="ctBackToDesks()" style="padding:4px 10px;font-size:10px">← Desks</button>
@@ -554,7 +517,6 @@ tailwind.config={theme:{extend:{colors:{
       <div id="ct-chain-dot" style="width:8px;height:8px;border-radius:50%;background:#627eea;box-shadow:0 0 8px #627eea"></div>
     </div>
   </div>
-  <!-- Input bar -->
   <div class="ct-input-bar">
     <select id="ct-chain-sel" class="ct-select" onchange="ct.chain=this.value;ctUpdateChainIndicator()">
       <option value="eth">Ethereum (ETH)</option>
@@ -568,13 +530,10 @@ tailwind.config={theme:{extend:{colors:{
     <button class="ct-btn ct-btn-primary" onclick="ctHandleTrace()">⬡ TRACE</button>
     <button class="ct-btn" onclick="ctClearTrace()">Clear</button>
   </div>
-  <!-- Main area -->
   <div class="ct-main">
-    <!-- Left sidebar -->
     <div id="ct-left" class="ct-sidebar ct-sidebar-left">
       <div id="ct-left-inner" class="ct-sidebar-scroll"></div>
     </div>
-    <!-- Graph canvas -->
     <div class="ct-graph-area">
       <div style="position:absolute;top:8px;left:8px;z-index:10;display:flex;gap:4px">
         <button class="ct-btn" onclick="ctTogglePanel('ct-left')" style="padding:4px 8px;font-size:10px">☰</button>
@@ -584,7 +543,6 @@ tailwind.config={theme:{extend:{colors:{
         <button class="ct-btn" onclick="ctTogglePanel('ct-right')" style="padding:4px 8px;font-size:10px">📋</button>
       </div>
       <canvas id="ct-canvas" style="width:100%;height:100%;display:block;cursor:grab"></canvas>
-      <!-- Context menu -->
       <div id="ct-ctx-menu" class="ct-ctx-menu" style="display:none">
         <div class="ct-ctx-item" onclick="ctCtxAction('focus')">🔍 Focus on node</div>
         <div class="ct-ctx-item" onclick="ctCtxAction('detail')">📋 View details</div>
@@ -594,18 +552,15 @@ tailwind.config={theme:{extend:{colors:{
         <div class="ct-ctx-item" style="border-top:1px solid rgba(255,255,255,.06)" onclick="ctHideContextMenu()">✕ Close</div>
       </div>
     </div>
-    <!-- Right sidebar -->
     <div id="ct-right" class="ct-sidebar ct-sidebar-right">
       <div id="ct-right-inner" class="ct-sidebar-scroll"></div>
     </div>
   </div>
-  <!-- Timeline -->
   <div class="ct-timeline">
     <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:monospace;min-width:56px">Timeline</span>
     <input type="range" min="0" max="1" step="0.01" value="1" oninput="ctSetTimeline(this.value)" style="flex:1;accent-color:#00e5ff;height:3px">
     <span id="ct-tl-pct" style="font-size:9px;color:#00e5ff;font-family:monospace;min-width:36px;text-align:right">100%</span>
   </div>
-  <!-- Status bar -->
   <div class="ct-status-bar">
     <span id="ct-status-l">Ready</span>
     <span id="ct-status-c">Select a trace to begin</span>
@@ -652,6 +607,10 @@ tailwind.config={theme:{extend:{colors:{
     <button class="w-full py-3 rounded-xl font-bold text-sm" style="background:#00e68a;color:#060e1a;border:none;cursor:pointer" onclick="closeSummary()">Return to Dashboard</button>
   </div>
 </div>
+
+<!-- ── SHARED NAV ── -->
+<script>window.NAV_BASE='../';</script>
+<script src="../nav.js"></script>
 
 <!-- ── DATA (case files) ── -->
 <script src="/cases/aml-direct-cases.js"></script>
