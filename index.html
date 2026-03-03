@@ -179,6 +179,20 @@ a{color:var(--navy);text-decoration:none}
 .f-skill.exp .f-sk-why{display:block;animation:fu .2s ease}
 .f-skill .f-sk-chev{font-size:.42rem;color:var(--mute);margin-left:auto;flex-shrink:0;transition:.2s;margin-top:4px}
 .f-skill.exp .f-sk-chev{transform:rotate(180deg);color:var(--crim)}
+.f-sk-prompts{margin-top:.45rem;padding-top:.4rem;border-top:1px dashed var(--crim-bdr)}
+.f-sk-prompts-lbl{font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crim);margin-bottom:.3rem;display:flex;align-items:center;gap:4px}
+.f-sk-prompt{position:relative;background:var(--sf);border:1px solid var(--line);border-radius:8px;padding:.5rem .65rem .5rem .65rem;margin-bottom:.3rem;cursor:pointer;transition:.12s;-webkit-tap-highlight-color:transparent}
+.f-sk-prompt:active{transform:scale(.985)}
+.f-sk-prompt:hover{border-color:var(--crim-bdr);box-shadow:0 1px 6px rgba(184,45,36,.06)}
+.f-sk-prompt-type{font-size:.5rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.15rem;display:flex;align-items:center;gap:4px}
+.f-sk-prompt-type.primer{color:var(--teal)}
+.f-sk-prompt-type.plan{color:var(--navy)}
+.f-sk-prompt-text{font-size:.64rem;color:var(--sub);line-height:1.45;font-family:var(--fb);white-space:pre-wrap;word-break:break-word}
+.f-sk-copy{position:absolute;top:.45rem;right:.5rem;font-size:.48rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:.15rem .4rem;border-radius:4px;border:1px solid var(--line);background:var(--bg);transition:.15s;cursor:pointer}
+.f-sk-copy:hover{color:var(--crim);border-color:var(--crim-bdr)}
+.f-sk-copy.copied{color:var(--teal);border-color:rgba(24,114,95,.3);background:var(--teal-bg)}
+@media(min-width:700px){.f-sk-prompt-text{font-size:.68rem}.f-sk-prompt{padding:.55rem .75rem}}
+@media(min-width:1024px){.f-sk-prompt-text{font-size:.72rem}.f-sk-prompts-lbl{font-size:.5rem}}
   
   
 .rcard{border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.65rem;background:var(--sf)}
@@ -608,6 +622,17 @@ renderGlossary(sortedGlossary);
 /* Future */
 /* ══ REPLACE the existing futureGrid rendering with this ══ */
 function toggleFSkill(el){var was=el.classList.contains('exp');el.parentNode.querySelectorAll('.f-skill.exp').forEach(function(s){s.classList.remove('exp')});if(!was)el.classList.add('exp');}
+function copyPrompt(btn,ev){
+  ev.stopPropagation();
+  var box=btn.parentNode.querySelector('.f-sk-prompt-text');
+  if(!box)return;
+  var text=box.textContent;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){showCopied(btn)}).catch(function(){fallbackCopy(text,btn)});
+  }else{fallbackCopy(text,btn);}
+}
+function fallbackCopy(text,btn){var t=document.createElement('textarea');t.value=text;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);showCopied(btn);}
+function showCopied(btn){btn.classList.add('copied');btn.textContent='Copied ✓';setTimeout(function(){btn.classList.remove('copied');btn.textContent='Copy'},1800);}
 
 document.getElementById('futureGrid').innerHTML=futures.map(function(f){
   var states='';
@@ -621,7 +646,14 @@ document.getElementById('futureGrid').innerHTML=futures.map(function(f){
   if(f.skills&&f.skills.length){
     skillsHtml='<div class="f-skills"><h4>\ud83c\udfaf Skills to Develop Now</h4>';
     f.skills.forEach(function(s){
-      skillsHtml+='<div class="f-skill" onclick="toggleFSkill(this)"><span class="f-sk-dot"></span><div><div class="f-sk-name">'+s.skill+'</div><div class="f-sk-why">'+s.why+'</div></div><span class="f-sk-chev">\u25bc</span></div>';
+      var primerPrompt='I want to understand "'+s.skill+'" as it relates to economic crime and financial crime prevention. Give me a clear, concise primer covering: what it is and why it matters, the key concepts a beginner must know, how it connects to AML/KYC/compliance work, and 3-5 recommended resources (books, courses, or articles) to go deeper. Keep it practical and jargon-free where possible.';
+      var planPrompt='Create a structured 20-day learning plan to build a solid foundation in "'+s.skill+'" for someone pursuing a career in economic crime prevention / financial crime compliance. For each day include: a specific topic or concept to study (1-2 hours), one practical exercise or activity, and a short checkpoint question to confirm understanding. The plan should progress from fundamentals to applied knowledge. Include free or accessible resources where possible. Format each day clearly as Day 1, Day 2, etc.';
+      skillsHtml+='<div class="f-skill" onclick="toggleFSkill(this)"><span class="f-sk-dot"></span><div><div class="f-sk-name">'+s.skill+'</div><div class="f-sk-why">'+s.why+
+        '<div class="f-sk-prompts"><div class="f-sk-prompts-lbl">\ud83e\udd16 LLM Learning Prompts — click to copy</div>'+
+        '<div class="f-sk-prompt" onclick="event.stopPropagation()"><div class="f-sk-prompt-type primer">\ud83d\udcda Quick Primer</div><div class="f-sk-prompt-text">'+primerPrompt+'</div><button class="f-sk-copy" onclick="copyPrompt(this,event)">Copy</button></div>'+
+        '<div class="f-sk-prompt" onclick="event.stopPropagation()"><div class="f-sk-prompt-type plan">\ud83d\udcc5 20-Day Learning Plan</div><div class="f-sk-prompt-text">'+planPrompt+'</div><button class="f-sk-copy" onclick="copyPrompt(this,event)">Copy</button></div>'+
+        '</div>'+
+      '</div></div><span class="f-sk-chev">\u25bc</span></div>';
     });
     skillsHtml+='</div>';
   }
