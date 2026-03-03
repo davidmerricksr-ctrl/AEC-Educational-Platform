@@ -1,406 +1,669 @@
-// ═══════════════════════════════════════════════════════════════
-// EDD — ENTITY ENHANCED DUE DILIGENCE REVIEWS
-// Periodic deep-dive reviews of high-risk corporate customers.
-// 6 Cases — All names are fictional and designed to be clearly non-real.
-// No real person, company, or entity bears these names or matches these profiles.
-// ═══════════════════════════════════════════════════════════════
-const EDD_ENTITY_CASES = [
-  // ── CASE 1: NBFI with sanctions proximity and ownership changes — should ESCALATE ──
-  {
-    id: "EDD-E-2026-0201",
-    name: "Krastovek Financial Group Ltd",
-    teaser: "Annual entity review — ownership change, sanctions proximity, jurisdiction risk",
-    riskLevel: "critical",
-    riskLabel: "Critical",
-    correct: "escalate",
-    profile: {
-      entityName: "Krastovek Financial Group Ltd",
-      entityType: "Non-Bank Financial Institution (NBFI) — Payment Services",
-      jurisdiction: "Cyprus (EU)",
-      incorporationDate: "September 2018",
-      registeredAgent: "Levantis Corporate Services, Limassol",
-      customerSince: "March 2020",
-      accountType: "Corporate Operating + FX Settlement Account",
-      declaredTurnover: "$12M/year (payment processing fees)",
-      currentRiskRating: "High — triggered for annual review",
-      regulatedBy: "Central Bank of Cyprus — Payment Institution Licence #PI-2019-084",
-    },
-    reviewTrigger: "Mandatory annual EDD review for high-risk NBFI. Additionally triggered by: (1) material change in beneficial ownership reported by Companies House Cyprus, (2) negative screening hit on new shareholder, and (3) 40% increase in transaction volume with no corresponding business explanation.",
-    sourceOfWealth: {
-      declared: "Payment processing fees from merchant network across Eastern Europe and Central Asia. Founded by Gregor Krastovek (original 100% owner) using proceeds from sale of prior fintech company ($2.4M, 2018).",
-      findings: "Gregor Krastovek sold 60% shareholding in November 2025 to Veltrani Capital Partners LLP (UK). Veltrani's UBO is Yusof Peshkani, an Iranian-born businessman with UK residency. Peshkani is not sanctioned but is a known close associate of Arman Tehrazadeh, who IS designated under OFAC SDN List and EU sanctions for links to Iranian Revolutionary Guard procurement networks. Peshkani's name appears in 2024 FinCEN leaked files as a 'person of interest' in IRGC-linked procurement.",
-      assessment: "Original source of wealth (Krastovek's company sale) was verified. New majority ownership through Veltrani raises critical sanctions proximity concerns. Peshkani's connection to a designated person creates unacceptable exposure."
-    },
-    adverseMedia: [
-      { date: "2026-01-28", source: "Compliance Intelligence Weekly", summary: "Veltrani Capital Partners linked to investigation into sanctions evasion network. UK NCA reportedly examining Peshkani's business relationships.", flag: true },
-      { date: "2025-11-05", source: "Cyprus Business Monitor", summary: "Krastovek Financial Group ownership change filed. 60% acquired by Veltrani Capital Partners. No public explanation for ownership transfer.", flag: true },
-      { date: "2025-06-14", source: "OFAC Press Release", summary: "Arman Tehrazadeh designated under E.O. 13846 for supporting IRGC procurement. Multiple associated entities sanctioned.", flag: true },
-    ],
-    transactions: [
-      { amount: "$2,100,000", date: "2026-02-15", to: "Incoming — Merchant settlements (batch)", country: "Multiple", flag: false },
-      { amount: "$890,000", date: "2026-02-12", to: "Wire Out → Veltrani Capital Partners LLP", country: "UK", flag: true },
-      { amount: "$1,450,000", date: "2026-02-08", to: "Incoming — Merchant settlements (batch)", country: "Multiple", flag: false },
-      { amount: "$340,000", date: "2026-02-05", to: "Wire Out → Peshkara Trade FZE", country: "UAE", flag: true },
-      { amount: "$1,800,000", date: "2026-01-30", to: "Incoming — Merchant settlements (batch)", country: "Multiple", flag: false },
-      { amount: "$520,000", date: "2026-01-22", to: "Wire Out → Zentrova Payments SARL", country: "Lebanon", flag: true },
-      { amount: "$275,000", date: "2026-01-15", to: "Wire Out → Veltrani Capital Partners LLP", country: "UK", flag: true },
-      { amount: "$1,600,000", date: "2026-01-10", to: "Incoming — Merchant settlements (batch)", country: "Multiple", flag: false },
-    ],
-    documents: [
-      { name: "Certificate of Incorporation", status: "provided", flag: false, note: "Cyprus registered. Valid. Updated to reflect ownership change." },
-      { name: "Payment Institution Licence", status: "provided", flag: true, note: "Valid licence — but regulator not yet notified of material ownership change. Potential licence condition breach." },
-      { name: "Shareholder Register (updated)", status: "provided", flag: true, note: "Shows Veltrani Capital Partners 60%, Gregor Krastovek 40%. Change effective November 2025." },
-      { name: "Veltrani UBO Declaration", status: "provided", flag: true, note: "Declares Yusof Peshkani as UBO (82% of Veltrani). Peshkani is close associate of sanctioned individual." },
-      { name: "Audited Financial Statements (2024)", status: "provided", flag: true, note: "Revenue $12.1M. But Q4 2025 unaudited figures show 40% volume increase with no new merchant contracts filed." },
-      { name: "AML/CFT Policies", status: "outdated", flag: true, note: "Last updated 2023. Does not reflect new ownership, updated risk assessment, or sanctions screening procedures." },
-      { name: "Sanctions Screening Procedures", status: "missing", flag: true, note: "Requested December 2025. Not provided. Critical gap given sanctions proximity." },
-    ],
-    screening: [
-      { type: "Sanctions (Entity)", result: "No direct match", flag: false },
-      { type: "Sanctions (UBO — Peshkani)", result: "NO DIRECT MATCH — but close associate of OFAC-designated Arman Tehrazadeh", flag: true },
-      { type: "PEP Check (Directors)", result: "No PEP matches", flag: false },
-      { type: "Adverse Media (Entity)", result: "2 HITS — sanctions evasion investigation links", flag: true },
-      { type: "Adverse Media (UBO)", result: "3 HITS — IRGC procurement, NCA investigation", flag: true },
-      { type: "Regulatory Status", result: "Licensed — but ownership change may require regulator notification", flag: true },
-    ],
-    network: {
-      nodes: [
-        { id: "kfg", label: "Krastovek Financial", type: "company", x: 230, y: 50, risk: "critical", info: "Cyprus NBFI. Payment services. Majority ownership changed Nov 2025. 40% unexplained volume increase.", jurisdiction: "Cyprus" },
-        { id: "veltrani", label: "Veltrani Capital", type: "company", x: 80, y: 165, risk: "critical", info: "UK LLP. Acquired 60% of Krastovek. UBO is Yusof Peshkani. Under NCA examination.", jurisdiction: "United Kingdom" },
-        { id: "peshkani", label: "Y. Peshkani", type: "person", x: 80, y: 290, risk: "critical", info: "Iranian-born, UK resident. 82% owner of Veltrani. Close associate of OFAC-designated Arman Tehrazadeh. FinCEN person of interest.", jurisdiction: "UK / Iran" },
-        { id: "tehrazadeh", label: "A. Tehrazadeh", type: "unknown", x: 80, y: 390, risk: "critical", info: "OFAC SDN List + EU Sanctions. Designated under E.O. 13846 for IRGC procurement support. DO NOT TRANSACT.", jurisdiction: "⚠️ SANCTIONED" },
-        { id: "gregor", label: "G. Krastovek", type: "person", x: 380, y: 165, risk: "medium", info: "Original founder. Sold 60% to Veltrani. Retains 40% and operational role. No adverse findings on individual.", jurisdiction: "Cyprus" },
-        { id: "peshkara", label: "Peshkara Trade", type: "company", x: 230, y: 290, risk: "high", info: "UAE Free Zone entity. $340K wire. Name similarity to 'Peshkani' — potential related party. Not disclosed.", jurisdiction: "UAE" },
-        { id: "zentrova", label: "Zentrova Payments", type: "company", x: 380, y: 290, risk: "high", info: "Lebanese SARL. $520K wire for 'payment corridor partnership'. Lebanon is FATF grey-listed.", jurisdiction: "Lebanon" },
-      ],
-      edges: [
-        { from: "veltrani", to: "kfg", label: "60%" },
-        { from: "gregor", to: "kfg", label: "40%" },
-        { from: "peshkani", to: "veltrani", label: "82% UBO" },
-        { from: "peshkani", to: "tehrazadeh", label: "Associate" },
-        { from: "kfg", to: "peshkara", label: "$340K" },
-        { from: "kfg", to: "zentrova", label: "$520K" },
-        { from: "kfg", to: "veltrani", label: "$1.16M" },
-      ],
-    },
-    flags: [
-      "Material ownership change: 60% acquired by Veltrani Capital (UBO: Yusof Peshkani) — not flagged proactively by customer.",
-      "SANCTIONS PROXIMITY: Peshkani is a known close associate of Arman Tehrazadeh (OFAC SDN / EU designated — IRGC procurement).",
-      "UK NCA reportedly examining Peshkani's business relationships — active law enforcement interest.",
-      "Peshkara Trade FZE ($340K wire) — name similarity to Peshkani suggests potential undisclosed related party.",
-      "40% transaction volume increase (Q4 2025) with no new merchant contracts — unexplained business growth.",
-      "$520K wire to Zentrova Payments SARL (Lebanon, FATF grey-listed) — high-risk payment corridor.",
-      "$1.16M wired to Veltrani Capital Partners — potential extraction of funds to parent/UBO entity.",
-      "Payment institution licence may require regulator notification of ownership change — not yet done.",
-      "AML/CFT policies outdated (2023). Sanctions screening procedures not provided despite request.",
-    ],
-    feedback: {
-      escalate: {
-        grade: "excellent", title: "Excellent Decision!", points: 160,
-        explain: "Escalation to the MLRO / senior compliance is exactly right. This case involves <strong>sanctions proximity</strong> to an OFAC-designated individual linked to IRGC procurement — this is too significant for a single analyst to resolve. The MLRO needs to: (1) assess whether the relationship breaches sanctions obligations, (2) consider a voluntary disclosure to the NCA/OFSI, (3) coordinate with legal counsel, and (4) make the exit decision with full institutional backing. You should include a recommendation to exit in your escalation report.",
-        coach: "🎓 <strong>AI Coach:</strong> Sanctions proximity cases require senior decision-making and often legal advice. The key distinction: an analyst can recommend exit, but sanctions-related exits need MLRO sign-off and may require regulatory notification. Always escalate sanctions proximity — never try to handle it alone.",
-      },
-      exit: {
-        grade: "partial", title: "Right Instinct, But Escalate First", points: 90,
-        explain: "Exit is very likely the correct outcome, but <strong>sanctions proximity cases must go through the MLRO</strong>. A unilateral exit could trigger tipping-off concerns, and the institution may need to file a suspicious activity report or make a voluntary disclosure before taking action. The NCA investigation adds further complexity.",
-        coach: "🎓 <strong>AI Coach:</strong> When sanctions are involved, process matters as much as outcome. Exiting without MLRO coordination could inadvertently tip off the customer or breach reporting obligations.",
-      },
-      maintain: {
-        grade: "bad", title: "Critical Risk Unaddressed", points: -50,
-        explain: "Maintaining a relationship with an entity whose majority UBO is a <strong>close associate of an OFAC-designated person</strong> linked to IRGC procurement would expose the institution to sanctions breach risk, regulatory enforcement, and severe reputational damage. This is not a manageable risk.",
-        coach: "🎓 <strong>AI Coach:</strong> Sanctions proximity is binary — either you can manage the exposure or you can't. When the UBO is one degree from a designated person, you can't.",
-      },
-      downgrade: {
-        grade: "bad", title: "Risk Has Increased — Not Decreased", points: -40,
-        explain: "The risk profile has <strong>dramatically worsened</strong> since the last review: new sanctions-proximate ownership, active law enforcement interest, unexplained volume increases, and missing compliance documentation. Downgrading would be indefensible.",
-        coach: "🎓 <strong>AI Coach:</strong> Downgrade requires evidence that risk factors have diminished. Here, every indicator has moved in the wrong direction.",
-      }
-    }
-  },
+<!--
+  ═══════════════════════════════════════════════════════════════
+  ECONOMIC CRIME HUB — OPERATIONS SIMULATOR
+  For educational & training purposes only.
+  Save the folder and open simulator.html in any browser.
+  ═══════════════════════════════════════════════════════════════
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1">
+<title>Economic Crime Hub — Operations Simulator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{
+  abyss:'#060e1a',deep:'#0b1a2e',card:'#162a4a',edge:'#1e3a5f',
+  mute:'#4a6a8a',soft:'#8ba4c0',light:'#c8daf0',
+  ngreen:'#00e68a',nred:'#ff4d6a',namber:'#ffb833',nblue:'#38bdf8',npurp:'#a78bfa',
+},fontFamily:{
+  head:['"Anybody"','system-ui','sans-serif'],
+  body:['"DM Sans"','system-ui','sans-serif'],
+  mono:['"JetBrains Mono"','monospace'],
+}}}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,400..900&family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/simulator/simulator.css?v=2.4">
+</head>
+<body>
 
-  // ── CASE 2: Offshore fund with layered feeders and PEP exposure ──
-  {
-    id: "EDD-E-2026-0314",
-    name: "Aetherion Alternative Fund SPC",
-    teaser: "Cayman SPC fund — layered feeders, multiple indirect PEPs, unexplained redemptions",
-    riskLevel: "very high",
-    riskLabel: "Very High",
-    correct: "exit",
-    profile: {
-      entityName: "Aetherion Alternative Fund SPC",
-      entityType: "Segregated Portfolio Company (SPC) — Alternative Investment Fund",
-      jurisdiction: "Cayman Islands",
-      incorporationDate: "July 2021",
-      registeredAgent: "Maples Fund Services",
-      customerSince: "October 2022",
-      accountType: "Fund Custody + Subscription/Redemption Account",
-      declaredTurnover: "$45M AUM inflows/outflows annually",
-      currentRiskRating: "Very High — annual high-risk fund review",
-      regulatedBy: "CIMA — Registered Private Fund",
-    },
-    reviewTrigger: "Annual EDD for high-risk offshore fund. Triggered by: (1) chain analysis showing indirect PEP exposure in feeders, (2) $18M unexplained redemptions in Q4 2025, (3) feeder funds in opacity jurisdictions refusing full look-through.",
-    sourceOfWealth: {
-      declared: "Subscriptions from high-net-worth individuals and family offices via feeders.",
-      findings: "Three feeder funds (BVI, Mauritius, Labuan) account for 68% of AUM. Administrators refuse to provide investor lists citing privacy. Screening identifies indirect PEP exposure in two feeders (one linked to Azerbaijani elite, one to Malaysian politically-connected family). Large redemptions ($18M) paid to BVI feeder with no corresponding investment activity explanation.",
-      assessment: "Critical CDD gap — inability to look through feeders creates conduit risk for illicit funds / PEPs."
-    },
-    adverseMedia: [
-      { date: "2026-02-03", source: "ICIJ Offshore Leaks", summary: "Aetherion feeder structure mentioned in connection with Azerbaijani elite asset concealment.", flag: true },
-    ],
-    transactions: [
-      { amount: "$9,200,000", date: "2025-12-18", to: "Redemption — BVI Feeder Fund", country: "BVI", flag: true },
-      { amount: "$8,700,000", date: "2025-11-05", to: "Redemption — Mauritius Feeder", country: "Mauritius", flag: true },
-      { amount: "$12,400,000", date: "2025-10-22", from: "Subscription — Labuan Feeder", country: "Malaysia", flag: false },
-    ],
-    documents: [
-      { name: "CIMA Registration Certificate", status: "provided", flag: false },
-      { name: "Offering Memorandum", status: "provided", flag: true, note: "Describes feeder structure but no investor disclosure." },
-      { name: "Feeder Fund Investor Lists", status: "missing", flag: true, note: "Administrators refuse to provide — critical gap." },
-      { name: "AML Policies (Fund)", status: "provided", flag: true, note: "Delegated to administrator — generic document." },
-    ],
-    screening: [
-      { type: "Sanctions", result: "No direct match", flag: false },
-      { type: "PEP Check (Indirect)", result: "Multiple indirect PEP hits via feeders", flag: true },
-      { type: "Adverse Media", result: "Offshore leaks connection to politically exposed families", flag: true },
-    ],
-    flags: [
-      "Layered feeder structure across opacity jurisdictions — no look-through provided.",
-      "Indirect PEP exposure confirmed in at least two feeders.",
-      "$18M unexplained redemptions in short period — no corresponding investment rationale.",
-      "Administrators refuse to disclose underlying investors — critical CDD failure.",
-      "High-volume flows through FATF high-risk / grey-listed jurisdictions.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Correct Decision", points: 160,
-        explain: "Exit is appropriate. Inability to obtain look-through on feeders + confirmed indirect PEP exposure + large unexplained redemptions = unacceptable money laundering / sanctions risk." },
-      escalate: { grade: "partial", title: "Good, but Exit Likely", points: 100,
-        explain: "Escalation to senior compliance is sensible, but the recommendation should be exit unless full transparency is immediately provided (unlikely)." },
-      maintain: { grade: "bad", title: "Unacceptable", points: -60,
-        explain: "Maintaining without investor transparency would make the bank a potential conduit for illicit funds." },
-    }
-  },
+<!-- ── SIMULATOR NAV (upper bar — simulator-specific functions) ── -->
+<nav class="sim-nav" id="simNav">
+<div class="sim-nav-inner">
+  <button class="sim-b act" data-s="dashboard" onclick="nav('dashboard')"><span class="sim-ico">🕵️</span>Dashboard</button>
+  <button class="sim-b" data-s="cases" onclick="nav('cases')"><span class="sim-ico">📋</span>My Cases</button>
+  <button class="sim-b" data-s="profile" onclick="nav('profile')"><span class="sim-ico">👤</span>Profile</button>
+</div>
+</nav>
 
-  // ── CASE 3: Commodity trader — conflict minerals supply chain concerns ──
-  {
-    id: "EDD-E-2026-0422",
-    name: "Vantablack Minerals Trading Ltd",
-    teaser: "Swiss-based commodities trader — DRC / Zimbabwe supply chain, no audit",
-    riskLevel: "very high",
-    riskLabel: "Very High",
-    correct: "exit",
-    profile: {
-      entityName: "Vantablack Minerals Trading Ltd",
-      entityType: "Commodity Trading Company",
-      jurisdiction: "Switzerland",
-      incorporationDate: "March 2019",
-      registeredAgent: "Self-registered Geneva",
-      customerSince: "August 2021",
-      accountType: "Trade Finance + Derivatives Clearing",
-      declaredTurnover: "$28M/year (cobalt, tantalum, gold trading)",
-      currentRiskRating: "Very High — conflict minerals sector",
-      regulatedBy: "None (non-regulated trader)",
-    },
-    reviewTrigger: "Triggered by (1) NGO report naming supplier network, (2) missing OECD due diligence audit, (3) $4.2M payment to high-risk DRC entity.",
-    sourceOfWealth: {
-      declared: "Trading margins on 3T minerals and precious metals.",
-      findings: "Supply chain includes multiple artisanal mines in eastern DRC and Zimbabwe. No third-party Responsible Minerals Assurance Process (RMAP) audit. Large payment to unnamed DRC SARL with same address as known conflict-linked entity.",
-      assessment: "High risk of facilitating conflict financing and human rights abuses."
-    },
-    adverseMedia: [
-      { date: "2026-03-19", source: "Global Witness", summary: "Vantablack named in report on sourcing from non-certified mines in Ituri province, DRC.", flag: true },
-    ],
-    transactions: [
-      { amount: "$4,200,000", date: "2026-02-10", to: "Kivu Minerals SARL", country: "DRC", flag: true },
-      { amount: "$3,800,000", date: "2025-12-14", from: "Incoming — End-buyer payment", country: "China", flag: false },
-    ],
-    documents: [
-      { name: "Swiss Commercial Register Extract", status: "provided", flag: false },
-      { name: "Supply Chain Due Diligence Policy", status: "provided", flag: true, note: "Basic policy — no independent audit." },
-      { name: "Supplier List & Chain of Custody", status: "incomplete", flag: true, note: "Partial list; no third-party verification." },
-    ],
-    screening: [
-      { type: "Sanctions", result: "No direct match", flag: false },
-      { type: "Adverse Media", result: "Conflict minerals sourcing allegations", flag: true },
-    ],
-    flags: [
-      "Supply chain includes conflict-affected/high-risk areas (eastern DRC, Zimbabwe).",
-      "No independent RMAP / OECD-aligned audit despite sector requirements.",
-      "Large payment to DRC entity with conflict-area address.",
-      "Adverse NGO reporting on sourcing practices.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Strongly Justified", points: 150,
-        explain: "Exit is defensible and often prudent in this sector. Lack of supply-chain transparency + adverse reporting = unmanageable human rights / conflict financing risk." },
-      escalate: { grade: "partial", title: "Appropriate", points: 90,
-        explain: "Escalate to compliance/sustainability team — exit likely outcome." },
-      maintain: { grade: "bad", title: "High Risk", points: -50,
-        explain: "Continuing without full audit and chain of custody risks facilitating serious abuses." },
-    }
-  },
+<!-- ── MAIN SITE NAV (bottom bar — matches main site exactly) ── -->
+<nav class="site-bnav">
+<div class="site-bni">
+  <button class="snb" onclick="window.location.href='../index.html'"><span class="sbi">&#x1F3E0;</span>Home</button>
+  <button class="snb" onclick="window.location.href='../index.html#impact'"><span class="sbi">&#x1F4CA;</span>Impact</button>
+  <button class="snb" onclick="window.location.href='../index.html#reference'"><span class="sbi">&#x1F4CB;</span>Typologies</button>
+  <button class="snb act"><span class="sbi">&#x1F575;&#xFE0F;</span>Ops Sim</button>
+  <button class="snb" onclick="window.location.href='../index.html#future'"><span class="sbi">&#x1F680;</span>Evolution</button>
+  <button class="snb" onclick="window.location.href='../index.html#intelligence'"><span class="sbi">&#x1F50E;</span>Directory</button>
+  <button class="snb" onclick="toggleSiteMore()"><span class="sbi">&#x2261;</span>More</button>
+</div>
+</nav>
 
-  // ── CASE 4: Insurance captive manager — tax haven network & fraud concerns ──
-  {
-    id: "EDD-E-2026-0519",
-    name: "Sylvaris Captive Management Ltd",
-    teaser: "Bermuda captive manager — opaque client captives, fraud investigation link",
-    riskLevel: "critical",
-    riskLabel: "Critical",
-    correct: "exit",
-    profile: {
-      entityName: "Sylvaris Captive Management Ltd",
-      entityType: "Captive Insurance Manager",
-      jurisdiction: "Bermuda",
-      incorporationDate: "January 2020",
-      registeredAgent: "Conyers",
-      customerSince: "September 2022",
-      accountType: "Correspondent Reinsurance + Premium Trust Account",
-      declaredTurnover: "$32M annual premiums managed",
-      currentRiskRating: "Critical — triggered by adverse media",
-      regulatedBy: "Bermuda Monetary Authority — Class M Licence",
-    },
-    reviewTrigger: "Adverse media linking one managed captive to fraud scheme + refusal to provide client list.",
-    sourceOfWealth: {
-      declared: "Management fees + profit commissions from 14 captives.",
-      findings: "One captive (Cayman-domiciled) implicated in 2025 US insurance fraud investigation. Client list refused — cites confidentiality. Multiple captives domiciled in Cayman/Labuan with minimal underlying activity.",
-      assessment: "High risk of facilitating premium diversion / reinsurance fraud."
-    },
-    adverseMedia: [
-      { date: "2025-12-07", source: "Insurance Journal", summary: "Cayman captive managed by Sylvaris entity implicated in $47M workers' comp fraud scheme (US).", flag: true },
-    ],
-    transactions: [
-      { amount: "$6,800,000", date: "2026-01-28", from: "Incoming — Premiums (Cayman captive)", country: "Cayman", flag: true },
-      { amount: "$5,200,000", date: "2025-11-15", to: "Reinsurance placement — opaque front", country: "Labuan", flag: true },
-    ],
-    documents: [
-      { name: "BMA Licence", status: "provided", flag: false },
-      { name: "Captive Client List", status: "missing", flag: true, note: "Refused — confidentiality cited." },
-      { name: "AML Program", status: "provided", flag: true, note: "Generic — no captive-specific controls." },
-    ],
-    screening: [
-      { type: "Adverse Media", result: "Fraud scheme connection", flag: true },
-    ],
-    flags: [
-      "Managed captive directly linked to active insurance fraud investigation.",
-      "Refusal to provide client list — critical transparency gap.",
-      "High volume of premiums through opacity jurisdictions.",
-      "Generic AML controls not tailored to captive risk.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Correct", points: 160,
-        explain: "Exit is the right call. Active fraud link + refusal of transparency = unacceptable money laundering / fraud facilitation risk." },
-      maintain: { grade: "bad", title: "Severe Risk", points: -60,
-        explain: "Maintaining relationship would expose bank to serious liability." },
-    }
-  },
+<!-- ── MORE OVERLAY (updated with Vault, Journey, About standalone) ── -->
+<div class="site-mo" id="siteMoreOverlay" onclick="if(event.target===this)closeSiteMore()">
+<div class="site-msh">
+  <h3>More Sections</h3>
+  <div class="site-mi" onclick="window.location.href='../vault/index.html'"><div class="site-mic">&#x25C6;</div><div><div class="site-ml">The Vault</div><div class="site-ms">Books, films, podcasts &amp; reports</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../journey/index.html'"><div class="site-mic">&#x1F4D3;</div><div><div class="site-ml">Building Journey</div><div class="site-ms">AI interview journal</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#competencies'"><div class="site-mic">&#x1F511;</div><div><div class="site-ml">Competencies</div><div class="site-ms">Essential skills &amp; certifications</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../index.html#glossary'"><div class="site-mic">&#x1F4D6;</div><div><div class="site-ml">Glossary</div><div class="site-ms">A–Z terminology</div></div></div>
+  <div class="site-mi" onclick="window.location.href='../about/index.html'"><div class="site-mic">&#x2139;&#xFE0F;</div><div><div class="site-ml">About</div><div class="site-ms">Educational purpose &amp; sources</div></div></div>
+</div>
+</div>
 
-  // ── CASE 5: Trade finance entity — dual-use goods red flags ──
-  {
-    id: "EDD-E-2026-0627",
-    name: "Nexvora Trade Solutions Pte Ltd",
-    teaser: "Singapore trade finance firm — dual-use goods shipments, Russia/UAE routing",
-    riskLevel: "critical",
-    riskLabel: "Critical",
-    correct: "exit",
-    profile: {
-      entityName: "Nexvora Trade Solutions Pte Ltd",
-      entityType: "Trade Finance Intermediary",
-      jurisdiction: "Singapore",
-      incorporationDate: "April 2022",
-      registeredAgent: "Rikvin Pte Ltd",
-      customerSince: "January 2023",
-      accountType: "Trade Finance + LC Settlement Account",
-      declaredTurnover: "$65M/year (structured trade finance)",
-      currentRiskRating: "Critical — sanctions evasion indicators",
-      regulatedBy: "None (non-regulated intermediary)",
-    },
-    reviewTrigger: "Triggered by (1) end-user certificates showing electronics routed via UAE to Russia, (2) adverse media on similar structures, (3) $9M in LCs with high-risk counterparties.",
-    sourceOfWealth: {
-      declared: "Fees from structuring trade transactions (electronics, industrial equipment).",
-      findings: "Multiple LCs for 'test equipment' routed UAE → Russia post-2022 sanctions. End-user certificates list civilian entities but goods match dual-use ECCN categories. Adverse media links similar Singapore intermediaries to Russia sanctions evasion.",
-      assessment: "High probability of facilitating export control violations."
-    },
-    adverseMedia: [
-      { date: "2026-04-11", source: "Reuters", summary: "Singapore intermediaries implicated in Russia sanctions evasion networks for dual-use tech.", flag: true },
-    ],
-    transactions: [
-      { amount: "$4,900,000", date: "2026-03-02", to: "LC settlement — UAE intermediary", country: "UAE", flag: true },
-      { amount: "$3,200,000", date: "2026-02-18", from: "Incoming — Russian buyer", country: "Russia", flag: true },
-    ],
-    documents: [
-      { name: "ACRA Business Profile", status: "provided", flag: false },
-      { name: "End-User Certificates", status: "provided", flag: true, note: "Civilian end-users stated — goods match dual-use categories." },
-      { name: "Transaction Records", status: "incomplete", flag: true, note: "Missing full chain of end-use verification." },
-    ],
-    screening: [
-      { type: "Sanctions", result: "No direct match", flag: false },
-      { type: "Adverse Media", result: "Sanctions evasion patterns", flag: true },
-    ],
-    flags: [
-      "Goods routed via UAE to Russia — high risk of sanctions circumvention.",
-      "Transaction patterns match dual-use / export control evasion typologies.",
-      "Adverse media on Singapore intermediaries in similar schemes.",
-      "Incomplete end-use verification documentation.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Mandatory", points: 160,
-        explain: "Exit required. Clear indicators of export control / sanctions evasion facilitation — continuing relationship creates severe legal and reputational risk." },
-      maintain: { grade: "bad", title: "Unacceptable", points: -70,
-        explain: "Maintaining would likely constitute facilitation of sanctions breach." },
-    }
-  },
+<!-- ═══ DASHBOARD ═══ -->
+<div class="screen active" id="scr-dashboard">
+  <div style="background:linear-gradient(180deg,rgba(0,230,138,.04) 0%,transparent 60%);padding:2rem 1.2rem 1rem">
+    <div class="flex items-center justify-between mb-1">
+      <div>
+        <div class="text-right">
+          <div id="d-streak" class="text-sm font-bold" style="color:#ffb833"></div>
+          <div id="d-level" style="font-size:.62rem;color:#8ba4c0;font-weight:600"></div>
+        </div>
+        <h1 style="font-family:'Anybody',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;line-height:1.15">Operations Simulator</h1>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
+        <div style="margin-top:3px;padding:3px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:4px">
+          <span style="font-size:.55rem">⚠️</span>
+          <span style="font-size:.42rem;font-weight:600;color:#ffb833;letter-spacing:.03em">EDUCATIONAL PURPOSES ONLY</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 mb-1 flex justify-between" style="font-size:.56rem;color:#4a6a8a;font-weight:600">
+      <span>Level <span id="d-lvl-num">1</span></span>
+      <span><span id="d-xp-cur">0</span> / <span id="d-xp-max">200</span> XP</span>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="d-xp-bar" style="width:0%"></div></div>
+  </div>
+  <div class="px-5 mb-4">
+    <div class="gc p-4">
+      <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;margin-bottom:.5rem">Your Stats</div>
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div><div id="d-score" style="font-family:'Anybody';font-size:1.5rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.56rem;color:#4a6a8a">Total XP</div></div>
+        <div><div id="d-cases" style="font-family:'Anybody';font-size:1.5rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.56rem;color:#4a6a8a">Cases Solved</div></div>
+        <div><div id="d-acc" style="font-family:'Anybody';font-size:1.5rem;font-weight:800;color:#ffb833">—</div><div style="font-size:.56rem;color:#4a6a8a">Accuracy</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="px-5 mb-5">
+    <button class="glow-btn w-full py-4 rounded-2xl font-bold text-base" style="background:linear-gradient(135deg,#00c775,#00a86b);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(0,230,138,.25)" onclick="showScreen('roleselect')">🕵️ Start Today's Shift</button>
+  </div>
+  <div class="px-5"><div class="gc-s p-4">
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.35rem">💡 Daily Tip</div>
+    <p id="d-tip" style="font-size:.76rem;color:#8ba4c0;line-height:1.5"></p>
+  </div></div>
+  <div style="margin:1.5rem 1.2rem;padding:16px 20px;border-radius:14px;background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(167,139,250,.1));border:1px solid rgba(56,189,248,.18);display:flex;align-items:center;gap:14px">
+    <div style="font-size:2rem;flex-shrink:0">🖥️</div>
+    <div>
+      <div style="font-size:.82rem;font-weight:800;color:#38bdf8;margin-bottom:4px">Designed for iPad &amp; Desktop</div>
+      <div style="font-size:.68rem;color:#8ba4c0;line-height:1.5">This simulator is optimised for tablet and desktop screens. Case investigation dashboards use a 3-panel layout that requires a wider viewport. For the best experience, please use an iPad, laptop, or desktop display.</div>
+    </div>
+  </div>
+</div>
+<div class="screen" id="scr-roleselect">
+  <div class="p-5">
+    <button onclick="nav('dashboard')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Back</button>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem">
+      <div>
+        <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a;margin-bottom:.15rem">Select Your Role</div>
+        <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Choose Your Desk</h2>
+        <p style="font-size:.74rem;color:#4a6a8a">Each role has different cases and investigation tools.</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:12px">
+        <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
+        <div style="margin-top:3px;padding:3px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:4px">
+          <span style="font-size:.55rem">⚠️</span>
+          <span style="font-size:.42rem;font-weight:600;color:#ffb833;letter-spacing:.03em">EDUCATIONAL PURPOSES ONLY</span>
+        </div>
+      </div>
+    </div>
+    <div class="role-grid">
+      <div class="role-tile gc" onclick="startShift('amld')" id="role-amld">
+        <div class="rt-ico" style="background:rgba(255,77,106,.1)">🚨</div>
+        <div class="rt-name">AML Direct</div>
+        <div class="rt-sub" style="color:#ff4d6a">Customer Txn Monitoring</div>
+        <div class="rt-meta">2 cases</div>
+      </div>
+      <div class="role-tile gc" onclick="startShift('amlc')" id="role-amlc">
+        <div class="rt-ico" style="background:rgba(251,146,60,.1)">🏦</div>
+        <div class="rt-name">AML Corresp.</div>
+        <div class="rt-sub" style="color:#fb923c">Correspondent Banking</div>
+        <div class="rt-meta">2 cases</div>
+      </div>
+      <div class="role-tile gc" onclick="startShift('kycp')" id="role-kycp">
+        <div class="rt-ico" style="background:rgba(56,189,248,.1)">🔎</div>
+        <div class="rt-name">KYC Personal</div>
+        <div class="rt-sub" style="color:#38bdf8">Individual CDD</div>
+        <div class="rt-meta">2 cases</div>
+      </div>
+      <div class="role-tile gc" onclick="startShift('kyce')" id="role-kyce">
+        <div class="rt-ico" style="background:rgba(6,182,212,.1)">🏢</div>
+        <div class="rt-name">KYC Entity</div>
+        <div class="rt-sub" style="color:#06b6d4">Corporate &amp; Entity CDD</div>
+        <div class="rt-meta">3 cases</div>
+      </div>
+      <div class="role-tile gc" onclick="startShift('eddi')" id="role-eddi">
+        <div class="rt-ico" style="background:rgba(167,139,250,.1)">🔬</div>
+        <div class="rt-name">EDD Individual</div>
+        <div class="rt-sub" style="color:#a78bfa">Enhanced Due Diligence</div>
+        <div class="rt-meta">1 case</div>
+      </div>
+      <div class="role-tile gc" onclick="startShift('edde')" id="role-edde">
+        <div class="rt-ico" style="background:rgba(255,184,51,.1)">🏗️</div>
+        <div class="rt-name">EDD Entity</div>
+        <div class="rt-sub" style="color:#ffb833">Enhanced Due Diligence</div>
+        <div class="rt-meta">1 case</div>
+      </div>
+      <div class="role-tile ct-neon-tile" onclick="openCryptoTracer()">
+        <div class="rt-ico ct-neon-ico">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/>
+            <line x1="8" y1="7.5" x2="10.5" y2="16"/><line x1="16" y1="7.5" x2="13.5" y2="16"/><line x1="8.5" y1="6" x2="15.5" y2="6"/>
+            <circle cx="17" cy="17" r="4" stroke="#bf5af2" stroke-width="1.5"/><line x1="19.8" y1="19.8" x2="22" y2="22" stroke="#bf5af2" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="rt-name" style="color:#00e5ff">Crypto Tracer</div>
+        <div class="rt-sub" style="color:#bf5af2">Blockchain Fund Flow</div>
+        <div class="rt-meta" style="color:#00e5ff">4 preset traces</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">🛡️</div>
+        <div class="rt-name">Sanctions</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">🕵️</div>
+        <div class="rt-name">Fraud</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
+      </div>
+      <div class="role-tile gc" style="opacity:.3;pointer-events:none">
+        <div class="rt-ico" style="background:rgba(74,106,138,.08)">📊</div>
+        <div class="rt-name">Reporting</div>
+        <div class="rt-sub" style="color:#4a6a8a">Coming Soon</div>
+        <div class="rt-meta">—</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  // ── CASE 6: Crypto exchange — AML program deficiencies & mixer links ──
-  {
-    id: "EDD-E-2026-0708",
-    name: "Cryonex Digital Assets OÜ",
-    teaser: "Estonian VASP — outdated AML, mixer exposure, Dubai ops",
-    riskLevel: "very high",
-    riskLabel: "Very High",
-    correct: "exit",
-    profile: {
-      entityName: "Cryonex Digital Assets OÜ",
-      entityType: "Virtual Asset Service Provider (VASP)",
-      jurisdiction: "Estonia",
-      incorporationDate: "February 2022",
-      registeredAgent: "Baltvern Legal",
-      customerSince: "June 2023",
-      accountType: "Fiat On/Off Ramp + Settlement Account",
-      declaredTurnover: "$38M monthly volume (claimed)",
-      currentRiskRating: "Very High — crypto sector + chain alerts",
-      regulatedBy: "FIU Estonia — VASP registration (old regime)",
-    },
-    reviewTrigger: "Chainalysis alert (mixer usage) + outdated AML program + operations shifted to Dubai without licence.",
-    sourceOfWealth: {
-      declared: "Trading fees and spreads from global user base.",
-      findings: "On-chain analysis shows $7.2M inflows linked to mixers/tumblers (2025–2026). AML policy is 2022 template — no travel rule or chain analytics. No employees in Estonia; ops moved to Dubai (no VARA licence).",
-      assessment: "High risk of laundering via obfuscated crypto flows."
-    },
-    adverseMedia: [
-      { date: "2026-05-22", source: "CoinDesk", summary: "Cryonex among VASPs flagged for weak mixer screening.", flag: true },
-    ],
-    transactions: [
-      { amount: "$5,400,000", date: "2026-04-10", from: "Incoming — tagged high-risk wallet", country: "Global", flag: true },
-      { amount: "$8,100,000", date: "2026-03-15", to: "Outgoing — user withdrawals", country: "Multiple", flag: true },
-    ],
-    documents: [
-      { name: "Estonian VASP Registration", status: "provided", flag: true, note: "Old regime — not re-assessed post-2023 crackdown." },
-      { name: "AML/CTF Program", status: "provided", flag: true, note: "2022 template — no travel rule or chain screening." },
-      { name: "Audited Financials", status: "missing", flag: true, note: "Not provided — 'audit in progress'." },
-    ],
-    screening: [
-      { type: "Adverse Media", result: "Mixer screening deficiencies", flag: true },
-    ],
-    flags: [
-      "Confirmed on-chain mixer/tumbler exposure.",
-      "AML program outdated — lacks FATF travel rule and chain analytics.",
-      "Operations shifted to Dubai without regulatory licence.",
-      "No audited financials despite high claimed volumes.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Correct", points: 150,
-        explain: "Exit is appropriate. Weak AML controls + confirmed mixer exposure + regulatory gap = unacceptable ML/TF risk for fiat-crypto on-ramp." },
-      maintain: { grade: "bad", title: "High Risk", points: -60,
-        explain: "Continuing would import significant laundering risk into the bank." },
-    }
-  },
-];
+<!-- ═══ SHIFT ═══ -->
+<div class="screen" id="scr-shift">
+  <div class="p-5">
+    <button onclick="showScreen('roleselect')" style="background:0;border:0;color:#4a6a8a;font-size:.78rem;cursor:pointer;margin-bottom:.6rem">← Change Role</button>
+    <div class="op-bar">
+      <div class="op-name"><span class="op-dot"></span> Analyst: <span id="op-analyst-name">—</span></div>
+      <div class="op-clock" id="op-clock">—</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.8rem">
+      <div>
+        <div id="shift-role-badge" style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.15rem"></div>
+        <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:.3rem">Incoming Cases</h2>
+        <p style="font-size:.74rem;color:#4a6a8a">Select a row to begin your investigation.</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:12px">
+        <div style="font-size:.42rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00e68a">Economic Crime Hub</div>
+        <div style="margin-top:3px;padding:3px 8px;border-radius:5px;background:rgba(255,184,51,.06);border:1px solid rgba(255,184,51,.12);display:inline-flex;align-items:center;gap:4px">
+          <span style="font-size:.55rem">⚠️</span>
+          <span style="font-size:.42rem;font-weight:600;color:#ffb833;letter-spacing:.03em">EDUCATIONAL PURPOSES ONLY</span>
+        </div>
+      </div>
+    </div>
+    <div id="shift-cards"></div>
+  </div>
+</div>
+
+<!-- ═══ AML INVESTIGATION ═══ -->
+<div class="screen" id="scr-aml">
+  <!-- Top bar -->
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="aml-id"></span><strong id="aml-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="aml-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <!-- 3-panel grid -->
+  <div class="inv-grid">
+    <!-- LEFT: Profile + Flags -->
+    <div class="inv-left">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">👤</span> Core Metadata</div>
+        <div id="aml-profile" class="inv-profile-grid"></div>
+        <div id="aml-keystats" class="inv-keystats"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="aml-flagsum"></div>
+      </div>
+    </div>
+
+    <!-- CENTER: Network Graph -->
+    <div class="inv-center">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🔗</span> Money Flow &amp; Related Parties Network</div>
+        <div style="position:relative;flex:1;min-height:350px;touch-action:none" id="aml-net-wrap">
+          <svg id="aml-net" width="100%" height="420" viewBox="0 0 400 380"></svg>
+          <div class="net-tip" id="aml-tip"></div>
+          <div style="position:absolute;bottom:6px;right:8px;display:flex;gap:4px;z-index:30">
+            <button onclick="graphZoom('aml',-1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom out">−</button>
+            <button onclick="graphFit('aml')" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:.65rem;cursor:pointer;display:grid;place-items:center" title="Fit to view">⊞</button>
+            <button onclick="graphZoom('aml',1)" style="width:28px;height:28px;border-radius:6px;background:rgba(11,26,46,.85);border:1px solid rgba(74,106,138,.3);color:#8ba4c0;font-size:1rem;cursor:pointer;display:grid;place-items:center" title="Zoom in">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Risk Gauge + Transactions + Notes -->
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📊</span> Risk Assessment</div>
+        <div id="aml-gauge" class="risk-gauge"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transaction History <span class="coll-count" id="aml-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="aml-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="aml-notes" rows="3" placeholder="Add investigation notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action bar -->
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('clear')"><span class="ia-ico">✅</span>Clear Alert</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('sar')"><span class="ia-ico">🚨</span>File SAR</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('info')"><span class="ia-ico">🔍</span>More Info</button>
+  </div>
+</div>
+
+<!-- ═══ KYC INVESTIGATION ═══ -->
+<div class="screen" id="scr-kyc">
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="kyc-id"></span><strong id="kyc-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="kyc-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title" style="color:#38bdf8"><span class="pt-ico">📋</span> Application Summary</div>
+        <div id="kyc-app" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="kyc-flagsum"></div>
+      </div>
+    </div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Beneficial Ownership Structure</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="kyc-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="kyc-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Document Review</div>
+        <div id="kyc-docs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening Results</div>
+        <div id="kyc-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="kyc-notes" rows="3" placeholder="Add CDD notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('approve')"><span class="ia-ico">✅</span>Approve</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('reject')"><span class="ia-ico">🚫</span>Reject</button>
+    <button class="inv-act" style="background:rgba(255,184,51,.08);color:#ffb833;border:1px solid rgba(255,184,51,.15)" onclick="decide('edd')"><span class="ia-ico">🔬</span>Request EDD</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate</button>
+  </div>
+</div>
+
+<!-- ═══ EDD INDIVIDUAL INVESTIGATION ═══ -->
+<div class="screen" id="scr-eddi">
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="eddi-id"></span><strong id="eddi-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="eddi-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-purple">
+        <div class="inv-panel-title" style="color:#a78bfa"><span class="pt-ico">👤</span> Customer Profile</div>
+        <div id="eddi-profile" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">💰</span> Source of Wealth</div>
+        <div id="eddi-sow" style="font-size:.72rem"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="eddi-flagsum"></div>
+      </div>
+    </div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-purple">
+        <div class="inv-panel-title" style="color:#a78bfa"><span class="pt-ico">🔗</span> Relationship Map</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="eddi-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="eddi-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
+        <p id="eddi-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">📰</span> Adverse Media <span class="coll-count" id="eddi-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a;margin-left:auto"></span></div>
+        <div id="eddi-media" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transactions <span class="coll-count" id="eddi-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="eddi-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Documents</div>
+        <div id="eddi-docs" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening</div>
+        <div id="eddi-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="eddi-notes" rows="3" placeholder="Add EDD review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate to MLRO</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="ia-ico">📉</span>Downgrade Risk</button>
+  </div>
+</div>
+
+<!-- ═══ EDD ENTITY INVESTIGATION ═══ -->
+<div class="screen" id="scr-edde">
+  <div class="inv-topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="inv-back" onclick="backToShift()">← Cases</button>
+      <div class="inv-brand">ECH<span>Operations Simulator</span></div>
+    </div>
+    <div class="inv-caseid"><span id="edde-id"></span><strong id="edde-name"></strong></div>
+    <div class="inv-status"><div class="inv-status-dot"></div><span class="inv-status-text">Under Review</span><span id="edde-pill" style="margin-left:4px"></span></div>
+  </div>
+  <div class="inv-disclaimer"><span style="font-size:.6rem">⚠️</span><span>FOR EDUCATIONAL &amp; TRAINING PURPOSES ONLY — All cases, entities, and individuals are entirely fictitious.</span></div>
+
+  <div class="inv-grid">
+    <div class="inv-left">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏢</span> Entity Profile</div>
+        <div id="edde-profile" class="inv-profile-grid"></div>
+      </div>
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">💰</span> Source of Wealth / Funds</div>
+        <div id="edde-sow" style="font-size:.72rem"></div>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">🚩</span> Red Flags Summary</div>
+        <div id="edde-flagsum"></div>
+      </div>
+    </div>
+
+    <div class="inv-center">
+      <div class="inv-panel glow-amber">
+        <div class="inv-panel-title" style="color:#ffb833"><span class="pt-ico">🏛️</span> Ownership &amp; Relationship Structure</div>
+        <div style="position:relative;flex:1;min-height:350px">
+          <svg id="edde-net" width="100%" height="460" viewBox="0 0 460 420"></svg>
+          <div class="net-tip" id="edde-tip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-right">
+      <div class="inv-panel">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">⚡</span> Review Trigger</div>
+        <p id="edde-trigger" style="font-size:.72rem;color:#8ba4c0;line-height:1.5"></p>
+      </div>
+      <div class="inv-panel glow-red">
+        <div class="inv-panel-title" style="color:#ff4d6a"><span class="pt-ico">📰</span> Adverse Media <span class="coll-count" id="edde-media-count" style="background:rgba(255,77,106,.1);color:#ff4d6a;margin-left:auto"></span></div>
+        <div id="edde-media" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel glow-blue">
+        <div class="inv-panel-title"><span class="pt-ico">💳</span> Transactions <span class="coll-count" id="edde-txs-count" style="background:rgba(74,106,138,.1);color:#8ba4c0;margin-left:auto"></span></div>
+        <div id="edde-txs" class="inv-feed space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📄</span> Documents</div>
+        <div id="edde-docs" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">🛡️</span> Screening</div>
+        <div id="edde-scr" class="space-y-2"></div>
+      </div>
+      <div class="inv-panel">
+        <div class="inv-panel-title"><span class="pt-ico">📝</span> Analyst Notes</div>
+        <textarea id="edde-notes" rows="3" placeholder="Add EDD entity review notes…" style="width:100%;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.15);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#c8daf0;resize:vertical;outline:none;font-family:'DM Sans',sans-serif" oninput="saveNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="inv-actions">
+    <button class="inv-act" style="background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.18)" onclick="decide('maintain')"><span class="ia-ico">✅</span>Maintain</button>
+    <button class="inv-act" style="background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.18)" onclick="decide('exit')"><span class="ia-ico">🚪</span>Exit Relationship</button>
+    <button class="inv-act" style="background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.15)" onclick="decide('escalate')"><span class="ia-ico">👆</span>Escalate to MLRO</button>
+    <button class="inv-act" style="background:rgba(56,189,248,.08);color:#38bdf8;border:1px solid rgba(56,189,248,.15)" onclick="decide('downgrade')"><span class="ia-ico">📉</span>Downgrade Risk</button>
+  </div>
+</div>
+
+<!-- ═══ MY CASES ═══ -->
+<div class="screen" id="scr-cases">
+  <div class="p-5">
+    <div style="font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;margin-bottom:.15rem">Case Log</div>
+    <h2 style="font-family:'Anybody',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem">My Cases</h2>
+    <div id="cases-list" class="space-y-3"></div>
+    <div id="cases-empty" class="text-center py-12" style="color:#4a6a8a;font-size:.82rem">No cases reviewed yet. Start a shift!</div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div class="screen" id="scr-profile">
+  <div class="p-5">
+    <div class="text-center mb-5">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#00e68a,#38bdf8);display:grid;place-items:center;font-size:1.8rem;margin:0 auto .6rem">🕵️</div>
+      <h2 id="p-level" style="font-family:'Anybody',sans-serif;font-size:1.1rem;font-weight:800;color:#fff"></h2>
+      <div style="font-size:.62rem;color:#4a6a8a">Level <span id="p-lvl">1</span></div>
+    </div>
+    <div class="gc p-4 mb-4"><div class="grid grid-cols-2 gap-3">
+      <div class="text-center"><div id="p-xp" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.54rem;color:#4a6a8a">Total XP</div></div>
+      <div class="text-center"><div id="p-cases" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.54rem;color:#4a6a8a">Cases</div></div>
+      <div class="text-center"><div id="p-acc" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ffb833">—</div><div style="font-size:.54rem;color:#4a6a8a">Accuracy</div></div>
+      <div class="text-center"><div id="p-streak" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ff4d6a">0</div><div style="font-size:.54rem;color:#4a6a8a">Streak</div></div>
+    </div></div>
+    <div style="font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a78bfa;margin-bottom:.45rem">Badges Earned</div>
+    <div id="p-badges" class="space-y-2"></div>
+    <div id="p-no-badges" style="color:#4a6a8a;font-size:.78rem;padding:1rem 0">Complete cases to earn badges!</div>
+    <button onclick="if(confirm('Reset all progress?')){localStorage.removeItem('ech-state');location.reload()}" class="mt-6 w-full py-3 rounded-xl text-sm font-bold" style="background:rgba(255,77,106,.08);color:#ff4d6a;border:1px solid rgba(255,77,106,.12);cursor:pointer">Reset Progress</button>
+  </div>
+</div>
+
+<!-- ═══ CRYPTO TRACER ═══ -->
+<div class="screen" id="scr-crypto">
+  <!-- Title bar -->
+  <div class="ct-titlebar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="ct-btn" onclick="ctBackToDesks()" style="padding:4px 10px;font-size:10px">← Desks</button>
+      <div class="ct-title-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+          <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/>
+          <line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/><line x1="9" y1="6" x2="15" y2="6"/>
+        </svg>
+      </div>
+      <span class="ct-title-text">CRYPTO TRACER</span>
+      <div class="ct-pulse-dot"></div>
+      <span class="ct-title-sub">v1.0 — Intelligence Mode</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="ct-chain-lbl" class="ct-title-sub">Ethereum Network</span>
+      <div id="ct-chain-dot" style="width:8px;height:8px;border-radius:50%;background:#627eea;box-shadow:0 0 8px #627eea"></div>
+    </div>
+  </div>
+  <!-- Input bar -->
+  <div class="ct-input-bar">
+    <select id="ct-chain-sel" class="ct-select" onchange="ct.chain=this.value;ctUpdateChainIndicator()">
+      <option value="eth">Ethereum (ETH)</option>
+      <option value="btc">Bitcoin (BTC)</option>
+      <option value="sol">Solana (SOL)</option>
+      <option value="bsc">BSC (BNB)</option>
+      <option value="matic">Polygon (MATIC)</option>
+      <option value="tron">Tron (TRX)</option>
+    </select>
+    <input id="ct-addr" class="ct-input" placeholder="Wallet address or transaction hash…" onkeydown="if(event.key==='Enter')ctHandleTrace()">
+    <button class="ct-btn ct-btn-primary" onclick="ctHandleTrace()">⬡ TRACE</button>
+    <button class="ct-btn" onclick="ctClearTrace()">Clear</button>
+  </div>
+  <!-- Main area -->
+  <div class="ct-main">
+    <!-- Left sidebar -->
+    <div id="ct-left" class="ct-sidebar ct-sidebar-left">
+      <div id="ct-left-inner" class="ct-sidebar-scroll"></div>
+    </div>
+    <!-- Graph canvas -->
+    <div class="ct-graph-area">
+      <div style="position:absolute;top:8px;left:8px;z-index:10;display:flex;gap:4px">
+        <button class="ct-btn" onclick="ctTogglePanel('ct-left')" style="padding:4px 8px;font-size:10px">☰</button>
+        <button id="ct-focus-btn" class="ct-btn" onclick="ctExitFocus()" style="padding:4px 8px;font-size:10px;display:none">✕ Exit Focus</button>
+      </div>
+      <div style="position:absolute;top:8px;right:8px;z-index:10">
+        <button class="ct-btn" onclick="ctTogglePanel('ct-right')" style="padding:4px 8px;font-size:10px">📋</button>
+      </div>
+      <canvas id="ct-canvas" style="width:100%;height:100%;display:block;cursor:grab"></canvas>
+      <!-- Context menu -->
+      <div id="ct-ctx-menu" class="ct-ctx-menu" style="display:none">
+        <div class="ct-ctx-item" onclick="ctCtxAction('focus')">🔍 Focus on node</div>
+        <div class="ct-ctx-item" onclick="ctCtxAction('detail')">📋 View details</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">🏷️ Label as…</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">🌐 View on explorer</div>
+        <div class="ct-ctx-item" onclick="ctHideContextMenu()">📝 Add note</div>
+        <div class="ct-ctx-item" style="border-top:1px solid rgba(255,255,255,.06)" onclick="ctHideContextMenu()">✕ Close</div>
+      </div>
+    </div>
+    <!-- Right sidebar -->
+    <div id="ct-right" class="ct-sidebar ct-sidebar-right">
+      <div id="ct-right-inner" class="ct-sidebar-scroll"></div>
+    </div>
+  </div>
+  <!-- Timeline -->
+  <div class="ct-timeline">
+    <span style="font-size:9px;color:rgba(255,255,255,.3);font-family:monospace;min-width:56px">Timeline</span>
+    <input type="range" min="0" max="1" step="0.01" value="1" oninput="ctSetTimeline(this.value)" style="flex:1;accent-color:#00e5ff;height:3px">
+    <span id="ct-tl-pct" style="font-size:9px;color:#00e5ff;font-family:monospace;min-width:36px;text-align:right">100%</span>
+  </div>
+  <!-- Status bar -->
+  <div class="ct-status-bar">
+    <span id="ct-status-l">Ready</span>
+    <span id="ct-status-c">Select a trace to begin</span>
+    <span id="ct-status-r">Zoom: 100%</span>
+  </div>
+</div>
+
+<!-- ═══ DETAIL POPUP (flags, transactions, media, documents) ═══ -->
+<div class="overlay" id="ov-detail" onclick="if(event.target===this)closeDetail()">
+  <div class="overlay-inner gc p-0" style="max-width:520px;display:flex;flex-direction:column;max-height:80vh">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid rgba(74,106,138,.12);flex-shrink:0">
+      <div id="detail-title" style="font-size:.78rem;font-weight:700;color:#fff"></div>
+      <button onclick="closeDetail()" style="background:0;border:0;color:#4a6a8a;font-size:1.1rem;cursor:pointer;padding:4px 6px;line-height:1">✕</button>
+    </div>
+    <div id="detail-body" style="padding:14px 18px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch"></div>
+  </div>
+</div>
+
+<!-- ═══ FEEDBACK OVERLAY ═══ -->
+<div class="overlay" id="ov-feedback">
+  <div class="overlay-inner gc p-5 mx-3">
+    <div id="fb-icon" class="text-center text-4xl mb-3"></div>
+    <h3 id="fb-title" class="text-center font-bold text-lg mb-1" style="font-family:'Anybody',sans-serif"></h3>
+    <div id="fb-points" class="text-center text-sm font-bold mb-3"></div>
+    <div id="fb-explain" class="gc-s p-3 mb-3" style="font-size:.74rem;color:#8ba4c0;line-height:1.55"></div>
+    <div id="fb-coach" class="p-3 rounded-xl mb-4" style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1);font-size:.72rem;color:#a78bfa;line-height:1.45"></div>
+    <button id="fb-btn" class="w-full py-3 rounded-xl font-bold text-sm" style="background:#00e68a;color:#060e1a;border:none;cursor:pointer" onclick="afterFeedback()"></button>
+  </div>
+</div>
+
+<!-- ═══ SUMMARY OVERLAY ═══ -->
+<div class="overlay" id="ov-summary">
+  <div class="overlay-inner gc p-5 mx-3">
+    <div class="text-center text-3xl mb-2">🎖️</div>
+    <h3 class="text-center font-bold text-lg mb-1" style="font-family:'Anybody',sans-serif;color:#fff">Shift Complete!</h3>
+    <p class="text-center mb-4" style="font-size:.74rem;color:#4a6a8a">Great work, analyst.</p>
+    <div class="gc-s p-4 mb-3 grid grid-cols-3 gap-2 text-center">
+      <div><div id="sum-pts" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#00e68a">0</div><div style="font-size:.5rem;color:#4a6a8a">XP Earned</div></div>
+      <div><div id="sum-cases" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#38bdf8">0</div><div style="font-size:.5rem;color:#4a6a8a">Cases</div></div>
+      <div><div id="sum-acc" style="font-family:'Anybody';font-size:1.3rem;font-weight:800;color:#ffb833">0%</div><div style="font-size:.5rem;color:#4a6a8a">Accuracy</div></div>
+    </div>
+    <div id="sum-badges" class="space-y-2 mb-4"></div>
+    <div id="sum-msg" class="text-center mb-4" style="font-size:.78rem;color:#8ba4c0"></div>
+    <button class="w-full py-3 rounded-xl font-bold text-sm" style="background:#00e68a;color:#060e1a;border:none;cursor:pointer" onclick="closeSummary()">Return to Dashboard</button>
+  </div>
+</div>
+
+<!-- ── DATA (case files) ── -->
+<script src="/cases/aml-direct-cases.js"></script>
+<script src="/cases/aml-corresp-cases.js"></script>
+<script src="/cases/kyc-personal-cases.js"></script>
+<script src="/cases/kyc-entity-cases.js"></script>
+<script src="/cases/edd-individual-cases.js"></script>
+<script src="/cases/edd-entity-cases.js"></script>
+
+<!-- ── APP (config first, then logic) ── -->
+<script src="/simulator/config.js"></script>
+<script src="/simulator/simulator.js?v=2.4"></script>
+<script src="/simulator/crypto-tracer.js?v=1.0"></script>
+</body>
+</html>
