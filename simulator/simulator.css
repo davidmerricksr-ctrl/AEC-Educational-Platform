@@ -1,242 +1,357 @@
-// ═══════════════════════════════════════════════════════════════
-// EDD — INDIVIDUAL ENHANCED DUE DILIGENCE REVIEWS
-// Periodic deep-dive reviews of high-risk individual customers.
-// 7 Cases — All names are fictional and designed to be clearly non-real.
-// No real person bears these names or matches these profiles.
-// ═══════════════════════════════════════════════════════════════
-const EDD_INDIVIDUAL_CASES = [
-  // ── CASE 1: PEP with lifestyle inconsistency — should EXIT ──
-  {
-    id: "EDD-I-2026-0101",
-    name: "Kaelix Dromov",
-    teaser: "Annual PEP review — luxury spending vs. declared government salary",
-    riskLevel: "critical",
-    riskLabel: "Critical",
-    correct: "exit",
-    profile: {
-      fullName: "Kaelix Yevrin Dromov",
-      dateOfBirth: "14 March 1971",
-      nationality: "Kazvin Republic (fictional)",
-      occupation: "Deputy Minister — Ministry of Natural Resources",
-      pepStatus: "Yes — Senior Foreign PEP (Tier 1)",
-      customerSince: "January 2022",
-      accountType: "Personal Current + Savings + Investment Portfolio",
-      declaredIncome: "$92,000/year (government salary)",
-      declaredWealth: "$350,000 (inheritance — 2019 declaration)",
-      riskRating: "Critical — overdue for annual review",
-    },
-    reviewTrigger: "Mandatory annual PEP review (12 months overdue). Triggered additionally by adverse media alert and transaction monitoring flag for luxury goods spending exceeding 4× declared income.",
-    sourceOfWealth: {
-      declared: "Government salary ($92K/yr) and inheritance from father's estate ($350K in 2019). No other declared sources.",
-      findings: "Inheritance documentation provided in 2022 was a single-page letter from a Kazvin notary — not independently verifiable. No tax returns provided. Property records show acquisition of a $1.8M London apartment in 2023 — not declared to the bank. Companies House shows directorship of Voltrex Consulting Ltd (UK) incorporated March 2024 — also undeclared.",
-      assessment: "Significant unexplained wealth. Declared sources ($92K salary + $350K inheritance) cannot support observed lifestyle and asset acquisitions totalling $3.2M+."
-    },
-    adverseMedia: [
-      { date: "2026-01-15", source: "Global Investigations Network", summary: "Dromov named in leaked procurement documents showing $14M in contracts awarded to companies linked to his family.", flag: true },
-      { date: "2025-09-22", source: "Kazvin Independent Press", summary: "Investigation into Ministry of Natural Resources alleging systematic overbilling on mining permits. Dromov identified as signatory on 23 contracts.", flag: true },
-      { date: "2025-03-10", source: "Transparency Watch Annual Report", summary: "Kazvin Republic ranked 148/180 on corruption index. Ministry of Natural Resources cited as highest-risk department.", flag: true },
-    ],
-    transactions: [
-      { amount: "$48,000", date: "2026-02-10", to: "Harrods — Luxury Goods", country: "UK", flag: true },
-      { amount: "$125,000", date: "2026-01-28", to: "Wire → Voltrex Consulting Ltd", country: "UK", flag: true },
-      { amount: "$92,000", date: "2026-01-15", to: "Incoming — Kazvin Ministry Salary (annual)", country: "Kazvin", flag: false },
-      { amount: "$67,000", date: "2026-01-15", to: "Private Jet Charter — Meridian Aviation", country: "UAE", flag: true },
-      { amount: "$34,500", date: "2025-11-15", to: "School Fees — Elite Academy London", country: "UK", flag: false },
-      { amount: "$210,000", date: "2025-10-01", to: "Wire → Solveris Holdings SA", country: "Panama", flag: true },
-      { amount: "$15,800", date: "2025-09-12", to: "Luxury Car Lease — Mayfair Motors", country: "UK", flag: true },
-    ],
-    documents: [
-      { name: "Passport (Kazvin Republic)", status: "provided", flag: false, note: "Valid until 2029. Diplomatic passport." },
-      { name: "Proof of Address (UK)", status: "provided", flag: true, note: "Utility bill for London apartment — address not declared to bank. Property owned since 2023." },
-      { name: "Source of Wealth Declaration", status: "outdated", flag: true, note: "Last updated January 2022. Does not reflect $1.8M property or Voltrex directorship." },
-      { name: "Tax Returns / Financial Statements", status: "missing", flag: true, note: "Repeatedly requested since 2024. Customer has not provided." },
-      { name: "Inheritance Documentation", status: "provided", flag: true, note: "Single-page notary letter from Kazvin. No estate valuation. Cannot be independently verified." },
-    ],
-    screening: [
-      { type: "PEP Check", result: "MATCH — Senior Foreign PEP (Tier 1)", flag: true },
-      { type: "Sanctions", result: "No direct match", flag: false },
-      { type: "Adverse Media", result: "3 HITS — corruption investigations", flag: true },
-      { type: "Relatives & Close Associates", result: "Wife Daniyela Dromov — no adverse findings", flag: false },
-      { type: "Dual Nationality Check", result: "Kazvin + UK residency visa (Tier 1 Investor)", flag: true },
-    ],
-    network: {
-      nodes: [
-        { id: "dromov", label: "K. Dromov", type: "person", x: 230, y: 50, risk: "critical", info: "Deputy Minister. PEP Tier 1. Undeclared UK property and company directorship. Lifestyle far exceeds declared income.", jurisdiction: "Kazvin Republic" },
-        { id: "voltrex", label: "Voltrex Consulting", type: "company", x: 80, y: 160, risk: "high", info: "UK company, sole director K. Dromov. Incorporated March 2024 — not declared to bank. £125K wire received.", jurisdiction: "United Kingdom" },
-        { id: "solveris", label: "Solveris Holdings", type: "company", x: 380, y: 160, risk: "critical", info: "Panamanian holding company. $210K wire. Bearer shares until 2023. UBO not verified.", jurisdiction: "Panama" },
-        { id: "property", label: "London Flat", type: "property", x: 80, y: 280, risk: "high", info: "$1.8M Kensington apartment acquired 2023. Not declared to bank. Purchased through offshore structure.", jurisdiction: "United Kingdom" },
-        { id: "ministry", label: "Ministry of NR", type: "organisation", x: 380, y: 280, risk: "medium", info: "Kazvin Ministry of Natural Resources. Employer. Subject of multiple corruption investigations.", jurisdiction: "Kazvin Republic" },
-        { id: "daniyela", label: "D. Dromov (wife)", type: "person", x: 230, y: 340, risk: "low", info: "Daniyela Dromov, spouse. No adverse media. Listed as co-owner of London property.", jurisdiction: "United Kingdom" },
-      ],
-      edges: [
-        { from: "dromov", to: "voltrex", label: "Director" },
-        { from: "dromov", to: "solveris", label: "$210K" },
-        { from: "ministry", to: "dromov", label: "Salary" },
-        { from: "dromov", to: "property", label: "Owner" },
-        { from: "daniyela", to: "property", label: "Co-owner" },
-        { from: "solveris", to: "property", label: "Funds?" },
-      ],
-    },
-    flags: [
-      "Senior Foreign PEP (Tier 1) — Deputy Minister in country ranked 148/180 for corruption.",
-      "Unexplained wealth: $3.2M+ in assets/spending against $92K salary and $350K unverifiable inheritance.",
-      "$1.8M London property acquired 2023 — not declared to bank. Purchased through offshore structure.",
-      "Undeclared UK company directorship (Voltrex Consulting Ltd) — £125K wire to own company.",
-      "$210K wire to Solveris Holdings SA (Panama) — opaque jurisdiction, UBO unverified.",
-      "Adverse media: named in leaked procurement corruption documents. Ministry under investigation.",
-      "Source of wealth documentation outdated (2022) and unverifiable. Tax returns repeatedly refused.",
-      "Luxury spending ($48K Harrods, $67K private jet, $15.8K car lease) inconsistent with declared income.",
-    ],
-    feedback: {
-      exit: {
-        grade: "excellent", title: "Excellent Decision!", points: 160,
-        explain: "Recommending relationship exit is the right call. This is a <strong>Senior Foreign PEP</strong> with overwhelming evidence of unexplained wealth: $3.2M+ in assets on a $92K salary, undeclared property and companies, adverse media linking him to corruption, and repeated refusal to provide source-of-wealth documentation. The bank cannot satisfy its EDD obligations under <strong>FATF Recommendation 12</strong> and continuing the relationship exposes the institution to serious regulatory and reputational risk.",
-        coach: "🎓 <strong>AI Coach:</strong> When a PEP refuses to provide source-of-wealth documentation and adverse media links them to corruption — the risk is unmanageable. Exit decisions protect the institution. Always document your rationale thoroughly.",
-      },
-      maintain: {
-        grade: "bad", title: "Unacceptable Risk Retained", points: -50,
-        explain: "Maintaining this relationship would mean accepting <strong>unverifiable source of wealth</strong>, undeclared assets, corruption-linked adverse media, and repeated non-cooperation — for a Senior Foreign PEP. This would represent a serious failure to apply Enhanced Due Diligence and could constitute a regulatory breach.",
-        coach: "🎓 <strong>AI Coach:</strong> 'Maintain' means you've satisfied yourself the risk is manageable. Here, you can't even verify basic source of wealth. That's the opposite of managed risk.",
-      },
-      escalate: {
-        grade: "partial", title: "Good, But Your Recommendation Matters", points: 80,
-        explain: "Escalation to the MLRO is appropriate given the severity, but as the reviewing analyst you should include a <strong>clear recommendation to exit</strong>. The evidence is overwhelming. Escalation without a recommendation shifts responsibility without adding value.",
-        coach: "🎓 <strong>AI Coach:</strong> Senior management makes the final exit decision, but your recommendation carries weight. State it clearly in your escalation.",
-      },
-      downgrade: {
-        grade: "bad", title: "Risk Cannot Be Downgraded", points: -40,
-        explain: "Downgrading a Senior Foreign PEP with corruption-linked adverse media, unexplained wealth, and non-cooperation would be <strong>indefensible to a regulator</strong>. Risk can only be downgraded when concerns have been resolved — here, they've intensified.",
-        coach: "🎓 <strong>AI Coach:</strong> Downgrade is for cases where the original risk factors have genuinely diminished. This customer's risk has increased since the last review.",
-      }
-    }
-  },
+/* ═══════════════════════════════════════════════════════════════
+   ECONOMIC CRIME HUB — OPERATIONS SIMULATOR
+   simulator.css — All styles
+   ═══════════════════════════════════════════════════════════════ */
 
-  // ── CASE 2: Close Associate of Sanctioned Oligarch ──
-  {
-    id: "EDD-I-2026-0218",
-    name: "Viktoriy Palenko",
-    teaser: "High-net-worth client — long-term business partner of recently sanctioned individual",
-    riskLevel: "critical",
-    riskLabel: "Critical",
-    correct: "exit",
-    profile: {
-      fullName: "Viktoriy Mykola Palenko",
-      dateOfBirth: "09 November 1968",
-      nationality: "Ukraine / Cyprus",
-      occupation: "Private Investor / Consultant",
-      pepStatus: "No — but RCA of multiple PEPs and SDN-listed person",
-      customerSince: "March 2019",
-      accountType: "Private Banking Portfolio + Multi-currency Accounts",
-      declaredIncome: "Investment returns & consulting fees (~$420,000/year)",
-      declaredWealth: "$8.7M (mostly offshore trusts & real estate)",
-      riskRating: "Critical — triggered by SDN designation of long-term associate",
-    },
-    reviewTrigger: "Adverse media + sanctions alert: long-term business partner (since 2015) added to OFAC SDN list February 2026.",
-    sourceOfWealth: {
-      declared: "Returns from commodity trading joint ventures (2010–2022) and real estate investments in London & Dubai.",
-      findings: "Multiple wires ($1.9M total 2023–2025) received from companies previously linked to now-sanctioned associate. No updated source of funds declaration since designation. Cyprus company registry shows ongoing directorships in entities that received funds from SDN companies post-designation.",
-      assessment: "High risk of secondary sanctions exposure and potential sanctions evasion facilitation."
-    },
-    adverseMedia: [
-      { date: "2026-02-14", source: "OFAC Press Release", summary: "Associate Ivan Hrytsenko designated SDN for Russia-related procurement evasion.", flag: true },
-      { date: "2025-11-03", source: "Organised Crime & Corruption Reporting Project", summary: "Palenko named as Cyprus-based facilitator in network moving funds for Hrytsenko group.", flag: true },
-    ],
-    transactions: [
-      { amount: "$840,000", date: "2025-12-05", from: "Metallix Trading Ltd (Cyprus)", country: "Cyprus", flag: true },
-      { amount: "$275,000", date: "2026-01-19", to: "Dubai Property Developer", country: "UAE", flag: false },
-      { amount: "$1,200,000", date: "2024-08-12", from: "Black Sea Commodities SA", country: "Switzerland", flag: true },
-    ],
-    documents: [
-      { name: "Cypriot Passport", status: "provided", flag: false },
-      { name: "Source of Funds Declaration", status: "outdated", flag: true, note: "Last update 2023 — pre-dates associate's SDN designation." },
-      { name: "Trust Deeds (2 structures)", status: "provided", flag: true, note: "Cayman & BVI trusts — protectors & beneficiaries not fully disclosed." },
-    ],
-    screening: [
-      { type: "Sanctions", result: "No direct match — but multiple RCAs", flag: true },
-      { type: "PEP Check", result: "RCA of 3 PEPs (Ukraine/Cyprus)", flag: true },
-      { type: "Adverse Media", result: "2 major hits — sanctions & money laundering facilitation", flag: true },
-    ],
-    flags: [
-      "Close, long-term business associate of newly SDN-listed individual.",
-      "Significant funds received from entities linked to sanctioned person post-designation.",
-      "No updated source of funds / wealth since designation.",
-      "Ongoing Cyprus company directorships with opaque funding sources.",
-      "High secondary sanctions risk — especially with US/UK exposure.",
-    ],
-    feedback: {
-      exit: { grade: "excellent", title: "Correct & Necessary", points: 160,
-        explain: "Exit is the appropriate and prudent decision. Continuing banking services for a close associate of an SDN-listed individual — especially with recent large receipts from linked entities — creates unacceptable secondary sanctions risk and potential facilitation exposure." },
-      maintain: { grade: "bad", title: "High Sanctions Risk Accepted", points: -60,
-        explain: "Maintaining the relationship post-designation without full exit or severe restrictions would be highly risky and likely indefensible." },
-      escalate: { grade: "partial", title: "Required", points: 90,
-        explain: "Mandatory escalation to sanctions & legal team — with strong recommendation to exit." },
-    }
-  },
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#060e1a;color:#c8daf0;height:100%;overflow:hidden}
+::-webkit-scrollbar{width:0;height:0}
+.screen{display:none;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:148px}
+.screen.active{display:block;animation:sIn .32s cubic-bezier(.22,1,.36,1)}
+@keyframes sIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-  // ── CASE 3: PEP Family Member — Unexplained Wealth Growth ──
-  {
-    id: "EDD-I-2026-0325",
-    name: "Layla al-Qasimi",
-    teaser: "Spouse of senior UAE PEP — rapid wealth increase via consulting firm",
-    riskLevel: "high",
-    riskLabel: "High",
-    correct: "edd",
-    profile: {
-      fullName: "Layla bint Rashid al-Qasimi",
-      dateOfBirth: "18 June 1985",
-      nationality: "United Arab Emirates",
-      occupation: "Director — Al-Qasimi Strategic Consulting LLC",
-      pepStatus: "No — but RCA (spouse of Ruler's Court senior official — Tier 1 PEP)",
-      customerSince: "October 2021",
-      accountType: "Private Banking + Investment Portfolio",
-      declaredIncome: "$1.4M/year (consulting fees)",
-      declaredWealth: "$14.2M (2025 declaration)",
-      riskRating: "High — annual RCA review + transaction monitoring alert",
-    },
-    reviewTrigger: "Annual RCA review + large incoming wires from high-risk jurisdiction companies.",
-    sourceOfWealth: {
-      declared: "Consulting contracts with Middle East government entities and private sector.",
-      findings: "Consulting firm (Dubai free zone) generated $4.8M revenue in 2025 — no public tender evidence for 70% of contracts. Large wires from Lebanon, Iraq and Syria-based entities (2025–2026). No detailed contract documentation provided.",
-      assessment: "Unclear legitimacy of consulting revenue — concentration risk and possible intermediary role."
-    },
-    adverseMedia: [
-      { date: "2025-10-30", source: "Middle East Eye", summary: "Al-Qasimi family members linked to opaque consulting awards in public sector projects.", flag: true },
-    ],
-    transactions: [
-      { amount: "$920,000", date: "2026-02-03", from: "Beirut Trade Partners SAL", country: "Lebanon", flag: true },
-      { amount: "$1,050,000", date: "2025-11-18", from: "Baghdad Reconstruction Fund LLC", country: "Iraq", flag: true },
-    ],
-    documents: [
-      { name: "UAE Passport", status: "provided", flag: false },
-      { name: "Company Financial Statements", status: "provided", flag: true, note: "Management accounts only — no independent audit." },
-      { name: "Consulting Contracts Sample", status: "incomplete", flag: true, note: "Redacted versions — no end-client verification." },
-    ],
-    screening: [
-      { type: "PEP Check", result: "RCA — spouse of Tier 1 PEP", flag: true },
-      { type: "Adverse Media", result: "Family-linked opacity concerns", flag: true },
-    ],
-    flags: [
-      "Spouse of very senior UAE PEP (Ruler's Court level).",
-      "Rapid wealth growth through consulting firm with limited transparency.",
-      "Incoming funds from high-risk / conflict jurisdictions.",
-      "No audited financials for consulting company.",
-    ],
-    feedback: {
-      edd: { grade: "excellent", title: "Correct", points: 140,
-        explain: "Continue with enhanced monitoring and request full contract documentation, audited accounts, and enhanced source of funds evidence for large incoming wires." },
-      exit: { grade: "partial", title: "Defensible but Premature", points: 70,
-        explain: "Exit possible if non-cooperation persists, but proportionate response is deeper EDD first." },
-    }
-  },
+/* ── Simulator Nav (upper bar) ── */
+.sim-nav{position:fixed;bottom:calc(72px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:900;background:rgba(6,14,26,.94);border-top:1px solid rgba(74,106,138,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.sim-nav-inner{display:flex;justify-content:space-around;max-width:460px;margin:0 auto;height:56px}
+.sim-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:1;background:0;border:0;color:#4a6a8a;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:600;cursor:pointer;transition:.15s;position:relative}
+.sim-b.act{color:#00e68a}.sim-b.act::before{content:'';position:absolute;top:3px;width:4px;height:4px;background:#00e68a;border-radius:50%}
+.sim-ico{font-size:1.3rem;line-height:1}
 
-  // Additional cases 4–7 follow the same structure...
-  // CASE 4: Politically Exposed Banker from High-Risk Jurisdiction
-  // CASE 5: Individual with Direct Sanctions Match (recently added)
-  // CASE 6: High-Risk Crypto / Digital Asset Investor
-  // CASE 7: Elderly HNW with Suspected Exploitation / Undue Influence
+/* ── Main Site Nav (bottom bar) ── */
+.site-bnav{position:fixed;bottom:0;left:0;right:0;z-index:901;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid #e5e3dc;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(72px + env(safe-area-inset-bottom,0px))}
+.site-bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:72px}
+.snb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:'DM Sans',system-ui,sans-serif;font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0}
+.snb .sbi{font-size:1.31rem;line-height:1;transition:.12s}
+.snb.act{color:#b82d24;font-weight:700}
+.snb.act .sbi{transform:scale(1.08)}
+.snb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#b82d24;border-radius:50%}
 
-  // For space reasons in this message, only the first three are fully shown above.
-  // In a real implementation you would continue adding cases 4–7 using the same detailed format:
-  // id: "EDD-I-2026-04xx" etc.
-  // Include at least 3–4 more PEPs or RCAs, unexplained wealth, sanctions adjacency, etc.
-];
+/* ── More overlay (matches main site) ── */
+.site-mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.site-mo.open{display:flex}
+.site-msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(72px + env(safe-area-inset-bottom,0px) + .8rem);animation:sitesu .22s ease}
+@keyframes sitesu{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.site-msh h3{font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;color:#111}
+.site-mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent}
+.site-mi:active{background:#f6f5f0}
+.site-mic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f6f5f0;flex-shrink:0}
+.site-ml{font-weight:600;font-size:.8rem;color:#111}
+.site-ms{font-size:.63rem;color:#888}
+
+/* ── Cards ── */
+.gc{background:rgba(22,42,74,.6);border:1px solid rgba(74,106,138,.14);border-radius:16px;backdrop-filter:blur(8px)}
+.gc-s{background:rgba(22,42,74,.45);border:1px solid rgba(74,106,138,.1);border-radius:12px}
+.pill{padding:3px 10px;border-radius:100px;font-size:.6rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:inline-block}
+.pill-crit{background:rgba(255,77,106,.1);color:#ff4d6a;border:1px solid rgba(255,77,106,.2)}
+.pill-high{background:rgba(255,184,51,.1);color:#ffb833;border:1px solid rgba(255,184,51,.2)}
+.pill-med{background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.2)}
+.pill-low{background:rgba(0,230,138,.1);color:#00e68a;border:1px solid rgba(0,230,138,.2)}
+
+/* ── XP ── */
+.xp-bar{height:6px;border-radius:3px;background:rgba(74,106,138,.15);overflow:hidden}
+.xp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#00e68a,#38bdf8);transition:width .7s cubic-bezier(.22,1,.36,1)}
+
+/* ── Glow button ── */
+.glow-btn{position:relative;overflow:hidden;transition:transform .12s}.glow-btn:active{transform:scale(.96)}
+
+/* ── Flags ── */
+.flag-chip{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:10px;background:rgba(255,77,106,.05);border:1px solid rgba(255,77,106,.1);font-size:.74rem;line-height:1.45}
+.flag-dot{width:7px;height:7px;border-radius:50%;background:#ff4d6a;flex-shrink:0;margin-top:5px}
+
+/* ── Action grid ── */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 1rem 1rem}
+.act-btn{padding:14px 8px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;border:none;cursor:pointer;transition:.12s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.act-btn:active{transform:scale(.95)}.act-btn .act-ico{font-size:1.3rem}
+
+/* ── Overlay ── */
+.overlay{position:fixed;inset:0;z-index:800;background:rgba(6,14,26,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:1rem}
+#ov-detail{background:rgba(6,14,26,.35);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.overlay.show{display:flex}
+.overlay-inner{width:100%;max-width:420px;max-height:90vh;overflow-y:auto;animation:sIn .3s cubic-bezier(.22,1,.36,1)}
+
+/* ── Network / Ownership graph ── */
+.net-node{cursor:pointer;transition:filter .2s;-webkit-user-select:none;user-select:none}.net-node:hover{filter:brightness(1.3)}
+.net-label{font-family:'DM Sans',sans-serif;font-size:11px;fill:#c8daf0;pointer-events:none;text-anchor:middle;font-weight:600}
+.net-edge{stroke:rgba(74,106,138,.3);stroke-width:2}.net-edge.hot{stroke:rgba(255,77,106,.5);stroke-width:2.5}
+.net-elabel{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#ffb833;pointer-events:none;text-anchor:middle;font-weight:600}
+
+/* ── Money flow animation ── */
+@keyframes flowDash{to{stroke-dashoffset:-20}}
+@keyframes flowDashHot{to{stroke-dashoffset:-16}}
+@keyframes amtPulse{0%,100%{opacity:.85}50%{opacity:1}}
+.net-edge.flow{stroke-dasharray:10 10;animation:flowDash .9s linear infinite}
+.net-edge.flow.hot{stroke-dasharray:8 8;animation:flowDashHot .6s linear infinite}
+.net-amt-bg{fill:rgba(0,230,138,.12);stroke:rgba(0,230,138,.25);stroke-width:1}
+.net-amt-bg.hot{fill:rgba(255,77,106,.12);stroke:rgba(255,77,106,.25)}
+.net-amt{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#00e68a;pointer-events:none;text-anchor:middle;font-weight:700;letter-spacing:.02em}
+.net-amt.hot{fill:#ff4d6a}
+.net-amt-g{animation:amtPulse 2.5s ease-in-out infinite}
+
+.net-tip{position:absolute;background:rgba(6,14,26,.97);border:1px solid rgba(74,106,138,.3);border-radius:12px;padding:0;font-size:.74rem;color:#c8daf0;pointer-events:auto;z-index:60;width:260px;max-height:360px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6);opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;line-height:1.45}
+.net-tip.show{opacity:1;transform:translateY(0)}
+.tip-drag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;cursor:grab;user-select:none;-webkit-user-select:none;border-bottom:1px solid rgba(74,106,138,.12);background:rgba(11,26,46,.6)}
+.tip-drag:active{cursor:grabbing}
+.tip-body{padding:10px 14px 14px;max-height:290px;overflow-y:auto}
+
+/* ── Doc card ── */
+.doc-card{padding:10px 12px;border-radius:10px;font-size:.72rem;line-height:1.4;border:1px solid rgba(74,106,138,.1);background:rgba(22,42,74,.35);display:flex;gap:8px;align-items:flex-start}
+.doc-card.flagged{border-color:rgba(255,77,106,.15);background:rgba(255,77,106,.03)}
+.doc-ico{flex-shrink:0;font-size:1rem;margin-top:1px}
+.doc-status{font-size:.52rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:3px}
+.doc-ok{background:rgba(0,230,138,.1);color:#00e68a}
+.doc-miss{background:rgba(255,77,106,.1);color:#ff4d6a}
+.doc-inc{background:rgba(255,184,51,.1);color:#ffb833}
+
+/* ── Screening row ── */
+.scr-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid rgba(74,106,138,.08);background:rgba(22,42,74,.25);font-size:.72rem}
+.scr-row.flagged{border-color:rgba(255,77,106,.15);background:rgba(255,77,106,.03)}
+
+/* ── TX card ── */
+.tx-card{transition:transform .15s,background .15s}.tx-card:active{background:rgba(30,58,95,.6);transform:scale(.98)}
+
+/* ── Confetti ── */
+.confetti{position:fixed;width:8px;height:8px;z-index:9999;pointer-events:none;border-radius:2px;animation:cfall 2.8s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes cfall{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}100%{opacity:0;transform:translateY(105vh) rotate(900deg) scale(.5)}}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.1) rotate(2deg)}}
+.fire{display:inline-block;animation:flick 1.2s ease-in-out infinite}
+
+/* ── Badge ── */
+.badge-card{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.14);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.badge-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.2rem;background:rgba(167,139,250,.1);flex-shrink:0}
+
+/* ── Section headers ── */
+.sec-hdr{font-size:.78rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e2ecf5;margin-bottom:.5rem}
+
+/* ── Collapsible sections ── */
+.coll-hdr{display:flex;align-items:center;cursor:pointer;padding:8px 0;user-select:none;-webkit-tap-highlight-color:transparent;gap:8px}
+.coll-hdr:active{opacity:.7}
+.coll-title{font-size:.78rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e2ecf5}
+.coll-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.coll-count{font-size:.56rem;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.coll-chev{font-size:.7rem;color:#8ba4c0;transition:transform .25s ease;display:inline-block;line-height:1}
+.coll.open .coll-chev{transform:rotate(90deg)}
+.coll-body{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease;opacity:0}
+.coll.open .coll-body{max-height:2000px;opacity:1}
+.coll-body-inner{padding-top:6px}
+
+/* ── Flag summary table ── */
+.fsum{border-radius:10px;background:rgba(255,77,106,.04);border:1px solid rgba(255,77,106,.1);padding:10px 12px}
+.fsum-title{font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6a;margin-bottom:8px}
+.fsum-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:.64rem}
+.fsum-label{color:#8ba4c0;display:flex;align-items:center;gap:5px}
+.fsum-val{font-weight:700;min-width:18px;text-align:center;padding:1px 6px;border-radius:4px;font-size:.58rem}
+.fsum-val.hit{background:rgba(255,77,106,.12);color:#ff4d6a;animation:fpulse 2s ease-in-out infinite}
+.fsum-val.ok{background:rgba(0,230,138,.08);color:#00e68a}
+@keyframes fpulse{0%,100%{background:rgba(255,77,106,.12)}50%{background:rgba(255,77,106,.3)}}
+
+/* ── Role select ── */
+.role-card{border-radius:16px;padding:1.3rem;cursor:pointer;transition:.2s;border:2px solid transparent}
+.role-card:active{transform:scale(.97)}
+.role-card:hover{border-color:rgba(0,230,138,.3)}
+.role-card.sel{border-color:#00e68a;box-shadow:0 0 20px rgba(0,230,138,.15)}
+
+/* ── Case Table (spreadsheet layout) ── */
+.tbl-wrap{overflow-x:auto;overflow-y:auto;max-height:60vh;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid rgba(74,106,138,.15);background:rgba(22,42,74,.35);position:relative}
+.case-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.72rem}
+.case-table thead th{position:sticky;top:0;z-index:3;background:#0b1a2e;padding:10px 12px;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;text-align:left;border-bottom:2px solid rgba(74,106,138,.25);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.case-table thead th:first-child{border-radius:12px 0 0 0}
+.case-table thead th:last-child{border-radius:0 12px 0 0}
+.case-table tbody tr{cursor:pointer;transition:background .15s,box-shadow .15s;background:rgba(255,255,240,.06)}
+.case-table tbody tr:nth-child(even){background:rgba(255,255,240,.03)}
+.case-table tbody tr:hover{background:rgba(255,255,240,.12)}
+.case-table tbody tr:active{background:rgba(255,255,240,.18)}
+.case-table tbody tr.resolved{opacity:.4;pointer-events:none;cursor:default}
+.case-table tbody tr:not(:last-child) td{border-bottom:1px solid rgba(255,255,240,.05)}
+.case-table td{padding:11px 12px;vertical-align:middle;color:#f5f5eb}
+.case-table .col-id{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#8ba4c0;font-weight:600;white-space:nowrap}
+.case-table .col-name{font-weight:700;color:#fffff0;min-width:120px}
+.case-table .col-desc{color:#c8d0bc;max-width:260px;font-size:.68rem;line-height:1.45}
+.case-table .col-risk{white-space:nowrap}
+.case-table .col-amt{font-size:.66rem;color:#c8d0bc;white-space:nowrap}
+.case-table .col-status{white-space:nowrap;text-align:right}
+
+/* ── Role Tile Grid ── */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.role-grid{grid-template-columns:repeat(2,1fr)}}
+.role-tile{border-radius:14px;padding:1rem .8rem;cursor:pointer;transition:.2s;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-height:140px;justify-content:center}
+.role-tile:active{transform:scale(.96)}
+.role-tile:hover{border-color:rgba(0,230,138,.3);transform:translateY(-2px)}
+.role-tile .rt-ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem;flex-shrink:0;margin-bottom:2px}
+.role-tile .rt-name{font-family:'Anybody',sans-serif;font-size:.82rem;font-weight:800;color:#fff;line-height:1.2}
+.role-tile .rt-sub{font-size:.54rem;font-weight:600;line-height:1.3}
+.role-tile .rt-meta{font-size:.5rem;color:#4a6a8a;font-weight:600;margin-top:auto;line-height:1.3}
+
+/* ── Operator Bar ── */
+.op-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.12);margin-bottom:1rem}
+.op-bar .op-name{font-size:.72rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.op-bar .op-name .op-dot{width:7px;height:7px;border-radius:50%;background:#00e68a;flex-shrink:0;animation:opPulse 2s ease-in-out infinite}
+@keyframes opPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.op-bar .op-clock{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:#8ba4c0;letter-spacing:.03em}
+
+/* ═══════════════════════════════════════════════════════════════
+   INVESTIGATION DASHBOARD — Desktop-first 3-panel layout
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Override base .screen for investigation screens */
+#scr-aml,#scr-kyc,#scr-eddi,#scr-edde,#scr-crypto{padding-bottom:0;display:none;height:100%;overflow:hidden}
+#scr-aml.active,#scr-kyc.active,#scr-eddi.active,#scr-edde.active,#scr-crypto.active{display:flex;flex-direction:column;animation:sIn .32s cubic-bezier(.22,1,.36,1)}
+
+/* ── Case top bar (fixed header) ── */
+.inv-topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(6,14,26,.97);border-bottom:1px solid rgba(0,230,138,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);gap:10px;flex-shrink:0}
+.inv-brand{font-family:'Anybody',sans-serif;font-size:.72rem;font-weight:800;color:#00e68a;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;line-height:1.1}
+.inv-brand span{display:block;font-size:.42rem;letter-spacing:.14em;color:#4a6a8a;font-weight:700}
+.inv-caseid{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:#8ba4c0;text-align:center;line-height:1.4;min-width:0;flex:1}
+.inv-caseid strong{color:#fff;font-size:.72rem;display:block;font-family:'Anybody',sans-serif;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-status{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.inv-status-dot{width:8px;height:8px;border-radius:50%;background:#ff4d6a;animation:statusPulse 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes statusPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,106,.5)}50%{box-shadow:0 0 0 6px rgba(255,77,106,0)}}
+.inv-status-text{font-size:.58rem;font-weight:700;color:#ff4d6a;text-transform:uppercase;letter-spacing:.08em}
+
+/* ── Disclaimer bar ── */
+.inv-disclaimer{padding:3px 16px;background:rgba(255,184,51,.04);border-bottom:1px solid rgba(255,184,51,.1);display:flex;align-items:center;gap:5px;flex-shrink:0}
+.inv-disclaimer span{font-size:.44rem;font-weight:600;color:#ffb833;letter-spacing:.03em}
+
+/* ── 3-panel grid — fills remaining height ── */
+.inv-grid{display:grid;grid-template-columns:280px 1fr 260px;gap:10px;padding:10px 12px;flex:1;min-height:0;overflow:hidden}
+
+/* ── Glassmorphic panel ── */
+.inv-panel{background:rgba(11,26,46,.7);border:1px solid rgba(0,230,138,.08);border-radius:12px;padding:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 0 20px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.03);position:relative;overflow:hidden}
+.inv-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,230,138,.15),transparent)}
+.inv-panel.glow-red{border-color:rgba(255,77,106,.12)}.inv-panel.glow-red::before{background:linear-gradient(90deg,transparent,rgba(255,77,106,.2),transparent)}
+.inv-panel.glow-blue{border-color:rgba(56,189,248,.1)}.inv-panel.glow-blue::before{background:linear-gradient(90deg,transparent,rgba(56,189,248,.15),transparent)}
+.inv-panel.glow-amber{border-color:rgba(255,184,51,.1)}.inv-panel.glow-amber::before{background:linear-gradient(90deg,transparent,rgba(255,184,51,.15),transparent)}
+.inv-panel.glow-purple{border-color:rgba(167,139,250,.1)}.inv-panel.glow-purple::before{background:linear-gradient(90deg,transparent,rgba(167,139,250,.15),transparent)}
+
+.inv-panel-title{font-size:.54rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a6a8a;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.inv-panel-title .pt-ico{font-size:.8rem}
+
+/* ── Left column — scrollable ── */
+.inv-left{display:flex;flex-direction:column;gap:10px;min-width:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(74,106,138,.2) transparent}
+.inv-left::-webkit-scrollbar{width:3px}
+.inv-left::-webkit-scrollbar-thumb{background:rgba(74,106,138,.3);border-radius:3px}
+
+/* ── Profile card ── */
+.inv-profile-grid{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;font-size:.68rem;line-height:1.3}
+.inv-profile-grid .pf-label{color:#4a6a8a;font-weight:600;font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;padding:2px 0}
+.inv-profile-grid .pf-value{color:#c8daf0;padding:2px 0}
+
+/* ── Clickable hint text ── */
+.click-hint{font-size:.46rem;color:#4a6a8a;font-weight:600;margin-top:6px;text-transform:uppercase;letter-spacing:.06em;transition:color .15s}
+.click-hint:hover{color:#8ba4c0}
+
+/* ── Flag summary clickable rows ── */
+.fsum-row.clickable{cursor:pointer;border-radius:4px;padding:3px 4px;margin:0 -4px;transition:background .12s}
+.fsum-row.clickable:hover{background:rgba(255,77,106,.08)}
+
+/* ── Key stats row ── */
+.inv-keystats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.inv-keystat{text-align:center;padding:6px 4px;border-radius:8px;background:rgba(22,42,74,.5);border:1px solid rgba(74,106,138,.1)}
+.inv-keystat .ks-val{font-family:'Anybody',sans-serif;font-size:.9rem;font-weight:800;line-height:1.2}
+.inv-keystat .ks-label{font-size:.42rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4a6a8a;margin-top:1px}
+
+/* ── Center column (network) — fills height ── */
+.inv-center{min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.inv-center .inv-panel{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.inv-center svg{flex:1;width:100%;min-height:0}
+
+/* ── Right column — scrollable ── */
+.inv-right{display:flex;flex-direction:column;gap:10px;min-width:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(74,106,138,.2) transparent}
+.inv-right::-webkit-scrollbar{width:3px}
+.inv-right::-webkit-scrollbar-thumb{background:rgba(74,106,138,.3);border-radius:3px}
+
+/* ── Risk gauge ── */
+.risk-gauge{display:flex;flex-direction:column;align-items:center;padding:10px 8px 6px}
+.risk-gauge svg{width:130px;height:75px}
+.risk-gauge .rg-score{font-family:'Anybody',sans-serif;font-size:1.6rem;font-weight:900;line-height:1;margin-top:-4px}
+.risk-gauge .rg-label{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+
+/* ── Scrollable feed inside panels ── */
+.inv-feed{max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(74,106,138,.3) transparent}
+.inv-feed::-webkit-scrollbar{width:3px}
+.inv-feed::-webkit-scrollbar-thumb{background:rgba(74,106,138,.4);border-radius:3px}
+
+/* ── Investigation action bar (bottom strip) ── */
+.inv-actions{padding:6px 12px 8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;border-top:1px solid rgba(74,106,138,.1);background:rgba(6,14,26,.9)}
+.inv-act{padding:10px 6px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:700;border:none;cursor:pointer;transition:.12s;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center}
+.inv-act:active{transform:scale(.95)}
+.inv-act .ia-ico{font-size:1.1rem}
+
+/* ── Back button ── */
+.inv-back{background:0;border:0;color:#4a6a8a;font-size:.72rem;cursor:pointer;padding:6px 12px;display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;font-weight:600}
+.inv-back:hover{color:#8ba4c0}
+
+/* ═══════════════════════════════════════════════════════════════
+   CRYPTO TRACER — Cyberpunk blockchain analytics UI
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Neon desk tile ── */
+.ct-neon-tile{background:radial-gradient(ellipse at 50% 30%,rgba(0,229,255,.06),rgba(6,14,26,.95) 70%);border:1.5px solid rgba(0,229,255,.2)!important;box-shadow:0 0 18px rgba(0,229,255,.08),inset 0 1px 0 rgba(0,229,255,.06);animation:ctTileGlow 3s ease-in-out infinite;transition:all .25s!important}
+.ct-neon-tile:hover{border-color:rgba(0,229,255,.5)!important;box-shadow:0 0 32px rgba(0,229,255,.2),inset 0 1px 0 rgba(0,229,255,.1);transform:translateY(-3px)!important}
+.ct-neon-ico{background:rgba(0,229,255,.08)!important;border:1px solid rgba(0,229,255,.15)}
+@keyframes ctTileGlow{0%,100%{box-shadow:0 0 18px rgba(0,229,255,.08),inset 0 1px 0 rgba(0,229,255,.06)}50%{box-shadow:0 0 28px rgba(0,229,255,.15),inset 0 1px 0 rgba(0,229,255,.1)}}
+
+/* ── Screen background ── */
+#scr-crypto{background:#06060f;font-family:'JetBrains Mono','DM Sans',monospace;color:#e0e0e0}
+
+/* ── Title bar ── */
+.ct-titlebar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(0,229,255,.1);flex-shrink:0}
+.ct-title-icon{width:28px;height:28px;border-radius:6px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);display:grid;place-items:center}
+.ct-title-text{font-family:'Anybody','Orbitron',monospace;font-weight:900;font-size:14px;letter-spacing:.12em;color:#00e5ff}
+.ct-pulse-dot{width:6px;height:6px;border-radius:50%;background:#00e68a;animation:ctPulse 2s infinite;margin-left:4px}
+.ct-title-sub{font-size:10px;color:rgba(255,255,255,.25);font-family:'JetBrains Mono',monospace}
+@keyframes ctPulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── Input bar ── */
+.ct-input-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.04);flex-shrink:0;flex-wrap:wrap}
+.ct-select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e0e0e0;padding:7px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;cursor:pointer;-webkit-appearance:none;min-width:120px}
+.ct-select option{background:#0a0a14;color:#e0e0e0}
+.ct-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#e0e0e0;padding:7px 12px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;transition:border .15s;flex:1;min-width:180px}
+.ct-input:focus{border-color:#00e5ff;box-shadow:0 0 8px rgba(0,229,255,.2)}
+
+/* ── Buttons ── */
+.ct-btn{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25);color:#00e5ff;padding:6px 14px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.ct-btn:hover{background:rgba(0,229,255,.18);border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.3)}
+.ct-btn:active{transform:scale(.97)}
+.ct-btn-primary{background:linear-gradient(135deg,rgba(0,229,255,.2),rgba(191,90,242,.15));border-color:#00e5ff;font-size:13px;padding:8px 24px;text-transform:uppercase;letter-spacing:.1em}
+.ct-btn-primary:hover{background:linear-gradient(135deg,rgba(0,229,255,.35),rgba(191,90,242,.25));box-shadow:0 0 24px rgba(0,229,255,.4)}
+
+/* ── Main layout ── */
+.ct-main{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* ── Sidebars ── */
+.ct-sidebar{background:rgba(10,10,20,.6);flex-shrink:0;transition:width .25s ease,min-width .25s ease,opacity .25s ease;overflow:hidden}
+.ct-sidebar-left{width:220px;min-width:220px;border-right:1px solid rgba(255,255,255,.04)}
+.ct-sidebar-right{width:280px;min-width:280px;border-left:1px solid rgba(255,255,255,.04)}
+.ct-sidebar.ct-panel-collapsed{width:0!important;min-width:0!important;opacity:0;border:0}
+.ct-sidebar-scroll{height:100%;overflow-y:auto;padding:12px 10px;-webkit-overflow-scrolling:touch}
+.ct-sidebar-scroll::-webkit-scrollbar{width:4px}
+.ct-sidebar-scroll::-webkit-scrollbar-track{background:transparent}
+.ct-sidebar-scroll::-webkit-scrollbar-thumb{background:rgba(0,229,255,.2);border-radius:2px}
+
+/* ── Sidebar sections ── */
+.ct-side-sec{margin-bottom:16px}
+.ct-side-title{font-size:10px;font-weight:700;color:rgba(0,229,255,.6);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;padding:0 6px}
+
+/* ── Presets ── */
+.ct-preset{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;cursor:pointer;transition:all .12s;font-size:11px;color:rgba(255,255,255,.6);border:1px solid transparent}
+.ct-preset:hover{background:rgba(0,229,255,.06);border-color:rgba(0,229,255,.15);color:#fff}
+.ct-preset.active{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3);color:#00e5ff}
+
+/* ── Graph area ── */
+.ct-graph-area{flex:1;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,rgba(0,229,255,.015) 0%,#06060f 70%)}
+
+/* ── Context menu ── */
+.ct-ctx-menu{position:absolute;background:rgba(10,10,20,.95);border:1px solid rgba(0,229,255,.2);border-radius:8px;padding:4px;z-index:200;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);min-width:170px}
+.ct-ctx-item{padding:7px 12px;font-size:11px;color:rgba(255,255,255,.7);cursor:pointer;border-radius:4px;transition:all .1s;font-family:'JetBrains Mono',monospace}
+.ct-ctx-item:hover{background:rgba(0,229,255,.12);color:#00e5ff}
+
+/* ── Timeline ── */
+.ct-timeline{display:flex;align-items:center;gap:10px;padding:6px 16px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.04);flex-shrink:0}
+
+/* ── Status bar ── */
+.ct-status-bar{display:flex;justify-content:space-between;padding:4px 16px;background:rgba(0,0,0,.5);border-top:1px solid rgba(0,229,255,.06);font-size:9px;color:rgba(255,255,255,.25);flex-shrink:0}
+
+/* ── Scanline overlay ── */
+.ct-graph-area::after{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.06),transparent);pointer-events:none;animation:ctScanline 8s linear infinite;z-index:1}
+@keyframes ctScanline{0%{top:-2px}100%{top:100%}}
