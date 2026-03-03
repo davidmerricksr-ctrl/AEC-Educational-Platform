@@ -6,6 +6,7 @@
 <title>The Vault — Economic Crime Media Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../nav.css">
 <style>
 :root{
   --vbg:#0e0e11;--vs:#1a1a1f;--vs2:#222228;--vs3:#2a2a32;
@@ -16,14 +17,13 @@
   --fb:'IBM Plex Sans',system-ui,sans-serif;
   --fm:'IBM Plex Mono',monospace;
   --nav:54px;--sab:env(safe-area-inset-bottom,0px);
+  --line:rgba(0,0,0,.08);--crim:#b91c1c;--mute:#888;--bg:#f5f5f5;--sf:#fff;--rs:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-bottom:calc(var(--nav) + var(--sab) + 8px)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(185,28,28,.25);border-radius:3px}
-
-/* ── Sticky Header Block (disclaimer + control bar) ── */
 .v-sticky-hdr{position:sticky;top:0;z-index:100}
 .v-disc{background:rgba(14,14,17,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05);padding:7px 16px;text-align:center;font-size:.68rem;color:var(--vmute)}
 .v-disc b{color:var(--vtxt);font-weight:600}
@@ -45,8 +45,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-chip.on{background:var(--vred);border-color:var(--vred);color:#fff;box-shadow:0 2px 10px var(--vredG)}
 .v-chip .ct{font-size:.5rem;background:rgba(255,255,255,.1);padding:1px 5px;border-radius:8px}
 .v-chip.on .ct{background:rgba(255,255,255,.2)}
-
-/* ── Shelf Section ── */
 .v-shelf{max-width:960px;margin:0 auto;padding:1.5rem 0 .5rem}
 .v-shelf-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;padding:0 16px}
 .v-shelf-hdr h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
@@ -54,16 +52,12 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-shelf-hdr .sub{font-family:var(--fm);font-size:.55rem;color:var(--vmute);font-style:italic;display:none}
 @media(min-width:600px){.v-shelf-hdr .sub{display:inline}}
 .v-shelf-sep{border:0;border-top:1px solid rgba(255,255,255,.05);margin:0 auto;max-width:960px}
-
-/* ── Scroll track (shared by shelves + filtered) ── */
 .v-track-wrap{position:relative}
 .v-track-wrap:hover .v-arrow{opacity:1}
 .v-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:1.1rem;display:grid;place-items:center;cursor:pointer;transition:.2s;opacity:0;backdrop-filter:blur(6px)}
 .v-arrow:hover{background:var(--vred);border-color:var(--vred)}
 .v-arrow.al{left:6px}.v-arrow.ar{right:6px}
 @media(max-width:600px){.v-arrow{width:30px;height:30px;font-size:.9rem}}
-
-/* ═══ CARD — Landscape Briefing ═══ */
 .v-card{display:flex;border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s;background:var(--vs);margin-bottom:8px;text-decoration:none;color:inherit}
 .v-card:hover{border-color:rgba(185,28,28,.35);box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 0 1px rgba(185,28,28,.15);transform:translateY(-1px)}
 .v-card:active{transform:scale(.995)}
@@ -82,8 +76,6 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-card-themes span{font-family:var(--fm);font-size:.48rem;color:var(--vsilver);border:1px solid rgba(255,255,255,.1);padding:1px 6px;border-radius:8px}
 .v-card-line{width:3px;flex-shrink:0;background:transparent;transition:.2s;border-radius:0 10px 10px 0}
 .v-card:hover .v-card-line{background:var(--vred)}
-
-/* ── Horizontal scroll track ── */
 .v-hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;-ms-overflow-style:none;scrollbar-width:none;padding:0 16px;scroll-behavior:smooth}
 .v-hscroll::-webkit-scrollbar{display:none}
 .v-hscroll-inner{display:flex;gap:10px;padding:4px 0 12px}
@@ -93,44 +85,16 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 .v-filtered-hdr{padding:0 16px 8px;display:flex;align-items:baseline;gap:8px}
 .v-filtered-hdr h3{font-family:var(--fd);font-size:1rem;font-weight:700;color:#fff}
 .v-filtered-hdr .cnt{font-family:var(--fm);font-size:.55rem;color:var(--vdim);letter-spacing:.1em;text-transform:uppercase}
-
-/* ── Grid fallback ── */
 .v-grid{max-width:960px;margin:0 auto;padding:1rem 16px}
-
-/* ── Empty ── */
 .v-empty{text-align:center;padding:3rem 1rem}
 .v-empty .icon{font-size:2.5rem;opacity:.3;margin-bottom:8px}
 .v-empty h4{font-family:var(--fd);font-size:1rem;color:var(--vmute)}
 .v-empty p{font-size:.72rem;color:var(--vdim)}
-
-
-/* ── Bottom Nav — matches home page ── */
-.bnav{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.08);padding-bottom:var(--sab);height:calc(var(--nav) + var(--sab))}
-.bni{display:flex;justify-content:space-around;align-items:stretch;max-width:640px;margin:0 auto;height:var(--nav)}
-.nb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:1;background:0;border:0;font-family:var(--fb);font-size:.58rem;font-weight:500;color:#888;cursor:pointer;transition:.15s;padding:3px 1px;-webkit-tap-highlight-color:transparent;position:relative;min-width:0;text-decoration:none}
-.nb .bi{font-size:1.31rem;line-height:1;transition:.12s}
-.nb.act{color:#b91c1c;font-weight:700}
-.nb.act .bi{transform:scale(1.08)}
-.nb.act::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#b91c1c;border-radius:50%}
-/* ── More overlay ── */
-.mo{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
-.mo.open{display:flex}
-.msh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:1.2rem 1.5rem calc(var(--nav) + var(--sab) + .8rem);animation:su .22s ease}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.msh h3{font-size:.95rem;margin-bottom:.55rem;padding:0 .2rem;font-weight:700}
-.mi{display:flex;align-items:center;gap:.65rem;padding:.6rem .45rem;border-radius:10px;cursor:pointer;transition:.1s;-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit}
-.mi:active{background:#f5f5f5}
-.mi .ic{font-size:1.05rem;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:#f5f5f5;flex-shrink:0}
-.mi .ml{font-weight:600;font-size:.8rem}
-.mi .ms{font-size:.63rem;color:#888}
-
-/* ── Footer ── */
 .v-footer{border-top:1px solid rgba(255,255,255,.05);padding:2rem 16px;text-align:center}
 .v-footer .l1{font-family:var(--fm);font-size:.55rem;color:var(--vdim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px}
 .v-footer .l2{font-size:.65rem;color:var(--vmute)}
 .v-footer a{color:var(--vgold);text-decoration:none}
 .v-footer a:hover{color:#e0b94f}
-
 @media(max-width:600px){
   .v-card-icon{width:42px}.v-card-icon .emoji{font-size:1.2rem}
   .v-card-desc{font-size:.66rem}
@@ -140,8 +104,7 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 </style>
 </head>
 <body>
-
-<!-- ══ STICKY HEADER (disclaimer + controls — frozen at top) ══ -->
+<!-- ══ STICKY HEADER ══ -->
 <div class="v-sticky-hdr">
   <div class="v-disc">⚠ <b>Educational purposes only</b> — not legal, financial, or regulatory advice.</div>
   <div class="v-bar" id="controlBar">
@@ -174,7 +137,7 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 <!-- ══ SHELVES ══ -->
 <div id="shelvesContainer"></div>
 
-<!-- ══ FILTERED (horizontal swipe) ══ -->
+<!-- ══ FILTERED ══ -->
 <div id="filteredContainer" style="display:none"></div>
 
 <!-- ══ EMPTY ══ -->
@@ -187,28 +150,12 @@ body{background:var(--vbg);color:var(--vtxt);font-family:var(--fb);padding-botto
 <!-- ══ FOOTER ══ -->
 <footer class="v-footer">
   <div class="l1">The Vault — Economic Crime Media Archive</div>
-  <div class="l2">Part of <a href="index.html">EconomicCrimeHub.org</a> · Educational purposes only · © 2026</div>
+  <div class="l2">Part of <a href="../index.html">EconomicCrimeHub.org</a> · Educational purposes only · © 2026</div>
 </footer>
 
-<!-- ══ BOTTOM NAV — white, single Home button ══ -->
-<nav class="bnav"><div class="bni">
-<a class="nb" href="index.html"><span class="bi">&#x1F3E0;</span>Home</a>
-<a class="nb" href="index.html#impact"><span class="bi">&#x1F4CA;</span>Impact</a>
-<a class="nb" href="index.html#reference"><span class="bi">&#x1F4CB;</span>Typologies</a>
-<a class="nb" href="../simulator/index.html"><span class="bi">&#x1F575;&#xFE0F;</span>Ops Sim</a>
-<a class="nb" href="index.html#future"><span class="bi">&#x1F680;</span>Evolution</a>
-<a class="nb" href="index.html#intelligence"><span class="bi">&#x1F50E;</span>Directory</a>
-<button class="nb" onclick="toggleMore()"><span class="bi">&#x2261;</span>More</button>
-</div></nav>
-
-<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">
-<div class="msh">
-<h3>More Sections</h3>
-<a class="mi" href="index.html#competencies"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></a>
-<a class="mi" href="index.html#glossary"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></a>
-<a class="mi" href="index.html#about"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></a>
-</div>
-</div>
+<!-- ══ SHARED NAV ══ -->
+<script>window.NAV_BASE='../';</script>
+<script src="../nav.js"></script>
 
 <!-- ══ DATA + ENGINE ══ -->
 <script>
@@ -240,7 +187,7 @@ var typeGroups = {
   reports:  { label: "Reports",      types: ["report"] }
 };
 
-/* ═══ Media Items (all original data kept — "recent" shelf tag removed where present) ═══ */
+/* ═══ Films ═══ */
 mediaItems.push(
 {id:108, title:"Inside Job", type:"documentary", year:2010, creator:"Dir. Charles Ferguson", desc:"Takes a closer look at what brought about the 2008 financial meltdown, exposing systemic corruption in the financial services industry.", themes:["Financial Fraud","Corporate Fraud","Economic Crime"], shelves:["films"], url:"https://www.imdb.com/title/tt1645089/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Inside_Job_(2010_film)", gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
 {id:109, title:"Margin Call", type:"film", year:2011, creator:"Dir. J.C. Chandor", desc:"Follows the key people at an investment bank over a 24-hour period during the early stages of the 2008 financial crisis.", themes:["Financial Fraud","Wall Street","Economic Crime"], shelves:["films"], url:"https://www.imdb.com/title/tt1615147/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Margin_Call", gradient:"linear-gradient(135deg,#1a1a2e,#0a0a1a,#16213e)"},
@@ -262,7 +209,6 @@ mediaItems.push(
 {id:126, title:"Not My Life", type:"documentary", year:2011, creator:"Dir. Robert Bilheimer", desc:"Not My Life comprehensively depicts the cruel and dehumanizing practices of human trafficking and modern slavery on a global scale.", themes:["Human Trafficking","Slavery"], shelves:["films"], url:"https://www.imdb.com/title/tt3121710/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Not_My_Life", gradient:"linear-gradient(135deg,#0d0d0d,#1a1a1a,#2d1515)"},
 {id:127, title:"Stopping Traffic", type:"documentary", year:2017, creator:"Dir. Sadhvi Siddhali Shree", desc:"With 27 million victims worldwide, Stopping Traffic starts the conversation on a taboo topic through the eyes of survivors, activists, and front-line rescue teams to launch a movement to end modern-day slavery in the U.S. and abroad.", themes:["Human Trafficking","Slavery"], shelves:["films"], url:"https://www.imdb.com/title/tt6017364/", srcLabel:"IMDb", wikipediaUrl:"https://en.wikipedia.org/wiki/Stopping_Traffic", gradient:"linear-gradient(135deg,#0a0a0a,#1a1a0a,#2d2d0a)"}
 );
-
 /* Books */
 mediaItems.push(
 {id:207, title:"Criminal Capital", type:"book", year:2015, creator:"Stephen Platt", desc:"Explores how the global financial system inadvertently facilitates crime, including money laundering, terrorism financing, and corruption.", themes:["Money Laundering","Corporate Fraud","Regulation"], shelves:["books"], url:"https://www.amazon.co.uk/Criminal-Capital-Finance-Industry-Facilitates/dp/113733729X", srcLabel:"Amazon", wikipediaUrl:"https://en.wikipedia.org/wiki/Money_laundering", gradient:"linear-gradient(135deg,#0a192f,#112240,#1d3557)"},
@@ -297,13 +243,13 @@ mediaItems.push(
 /* Podcasts */
 mediaItems.push(
 {id:301,title:"Financial Crime Weekly Ep 228 — Global Sanctions & Iran Shadow Fleet",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Global sanctions roundup, US Iran shadow fleet penalties, UK TI report on Russia trade, SFO UWO use and Harlequin confiscation.",themes:["Sanctions","Money Laundering","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-episode-228/id1526719222?i=1000752296226",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)"},
-{id:302,title:"Financial Crime Weekly Ep 227 — 2025 Corruption Perceptions Index",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International’s 2025 Corruption Perceptions Index and the global decline in corruption controls.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast/ep/502f7fb3-f19a-47de-8829-5852ff8611e6",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
+{id:302,title:"Financial Crime Weekly Ep 227 — 2025 Corruption Perceptions Index",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International's 2025 Corruption Perceptions Index and the global decline in corruption controls.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://redcircle.com/shows/financial-crime-monthly-podcast/ep/502f7fb3-f19a-47de-8829-5852ff8611e6",srcLabel:"RedCircle",gradient:"linear-gradient(135deg,#0d1117,#1a1a2e,#16213e)"},
 {id:303,title:"Financial Crime Weekly Ep 226 — INTERPOL, CJNG Timeshare Fraud & RSF Sanctions",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"INTERPOL enforcement push, US Treasury targeting CJNG timeshare fraud network, and Sudanese RSF sanctions.",themes:["Sanctions","Fraud","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/pt/podcast/financial-crime-weekly-episode-226/id1526719222?i=1000750861262",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a0a2e,#0d1117,#16213e)"},
 {id:304,title:"Financial Crime Weekly Ep 225 — Insider Trading & OECD Bribery Reform",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Recent insider trading convictions and OECD recommendations for foreign bribery reform.",themes:["Wall Street","Corporate Fraud","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-podcast/id1526719222",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#16213e,#1a1a2e,#0f3460)"},
-{id:305,title:"Financial Crime Weekly Ep 223 — CPI Warnings on Democracy Decay",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International’s 2025 CPI warnings on democracy decay and weakening anti-corruption frameworks.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a1a2e)"},
+{id:305,title:"Financial Crime Weekly Ep 223 — CPI Warnings on Democracy Decay",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Transparency International's 2025 CPI warnings on democracy decay and weakening anti-corruption frameworks.",themes:["Regulation","Kleptocracy"],shelves:["podcasts"],url:"https://open.spotify.com/show/69Of8OrKYQnjzxb9MOiNKZ",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#0d1117,#161b22,#1a1a2e)"},
 {id:306,title:"Financial Crime Weekly — 2026 Horizon Scan Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"Localization and divergence in global FinCrime regulation, AMLA rollout, US CTA compliance, and UK Failure to Prevent Fraud Act.",themes:["Regulation","Fraud","Money Laundering"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/financial-crime-weekly-special-episode-2026-horizon-scan/id1526719222?i=1000743401918",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#16213e)"},
 {id:307,title:"Financial Crime Weekly — Crypto Regulation & Financial Crime Special",type:"podcast",year:2026,creator:"Financial Crime Weekly",desc:"MiCA EU Fortress, UK promotions regime, US stablecoin clarity, chain-hopping and DeFi laundering risks.",themes:["Crypto Crime","Regulation"],shelves:["podcasts"],url:"https://podcasts.apple.com/dz/podcast/financial-crime-weekly-special-edition-crypto-regulation/id1526719222?i=1000743678466&l=ar",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d1117,#1a0a2e,#161b22)"},
-{id:308,title:"Financial Crime Matters — Countering Canada’s Drug Trade",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Inspector Nick Souccar (RCMP) on border security, fentanyl precursors, and fentanyl czar efforts.",themes:["Money Laundering","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/countering-canadas-deadly-drug-trade-with-nick-souccar/id1456666158?i=1000741393205",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d1117,#0f3460)"},
+{id:308,title:"Financial Crime Matters — Countering Canada's Drug Trade",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Inspector Nick Souccar (RCMP) on border security, fentanyl precursors, and fentanyl czar efforts.",themes:["Money Laundering","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/us/podcast/countering-canadas-deadly-drug-trade-with-nick-souccar/id1456666158?i=1000741393205",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#1a1a2e,#0d1117,#0f3460)"},
 {id:309,title:"Financial Crime Matters — Big Banks, Stablecoins & Digital Assets",type:"podcast",year:2025,creator:"Financial Crime Matters",desc:"Ned Conway on how major banks view stablecoins, digital asset due diligence, and modernization.",themes:["Crypto Crime","Banking","Regulation"],shelves:["podcasts"],url:"https://open.spotify.com/episode/11Xvq39WXtqvL6ODRJyoNm",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#16213e,#0d1117,#1a0a2e)"},
 {id:310,title:"The Dark Money Files — Crime on the High Street Part 2",type:"podcast",year:2026,creator:"Graham Barrow",desc:"BBC investigation into illicit cigarettes and vapes, modern slavery, tax evasion, corruption and laundering on the high street.",themes:["Money Laundering","Investigation","Organised Crime"],shelves:["podcasts"],url:"https://podcasts.apple.com/in/podcast/crime-on-the-high-street-part-two/id1448635132?i=1000744446308",srcLabel:"Apple Podcasts",gradient:"linear-gradient(135deg,#0d0d0d,#1a1a2e,#16213e)"},
 {id:311,title:"The Dark Money Files — Crime on the High Street Part 1",type:"podcast",year:2025,creator:"Graham Barrow",desc:"BBC high-street crime and money laundering probe — part one of the investigative series.",themes:["Money Laundering","Investigation"],shelves:["podcasts"],url:"https://open.spotify.com/show/3KBjasejvrGSKriVFmCigx",srcLabel:"Spotify",gradient:"linear-gradient(135deg,#1a1a2e,#0d0d0d,#0f3460)"},
@@ -335,7 +281,7 @@ mediaItems.push(
 
 var activeType="all", searchQuery="";
 
-/* ── Filters — ONLY TYPES ── */
+/* ── Filters ── */
 function buildFilters(){
   var counts={all:mediaItems.length};
   Object.keys(typeGroups).forEach(function(k){
@@ -350,7 +296,6 @@ function setType(k){activeType=k;buildFilters();renderContent()}
 
 document.getElementById("searchInput").addEventListener("input",function(){searchQuery=this.value.trim().toLowerCase();renderContent()});
 
-/* ── Filter logic — no themes ── */
 function getFiltered(){
   var items=mediaItems;
   if(activeType!=="all"){var t=typeGroups[activeType].types;items=items.filter(function(m){return t.indexOf(m.type)!==-1})}
@@ -360,7 +305,6 @@ function getFiltered(){
   return items;
 }
 
-/* Card */
 function buildCard(item){
   return '<a class="v-card" href="'+item.url+'" target="_blank" rel="noopener">'+
     '<div class="v-card-accent" style="background:'+item.gradient+'"></div>'+
@@ -369,7 +313,7 @@ function buildCard(item){
       '<span class="yr">'+item.year+'</span>'+
     '</div>'+
     '<div class="v-card-body">'+
-      '<div class="v-card-top"><span class="v-card-type">'+mediaTypeLabels[item.type]+'</span><span class="v-card-src">'+item.srcLabel+' ↗</span></div>'+
+      '<div class="v-card-top"><span class="v-card-type">'+mediaTypeLabels[item.type]+'</span><span class="v-card-src">'+item.srcLabel+' \u2197</span></div>'+
       '<div class="v-card-title">'+item.title+'</div>'+
       '<div class="v-card-creator">'+item.creator+'</div>'+
       '<div class="v-card-desc">'+item.desc+'</div>'+
@@ -379,7 +323,6 @@ function buildCard(item){
   '</a>';
 }
 
-/* Shelf */
 var trackId=0;
 function buildShelf(shelf,items){
   if(!items.length)return "";
@@ -405,7 +348,6 @@ function scrollTrack(id,dir){
   if(el)el.scrollBy({left:dir*380,behavior:"smooth"});
 }
 
-/* Render */
 function renderContent(){
   var filtered=getFiltered();
   var isFiltered=activeType!=="all"||searchQuery;
@@ -440,10 +382,6 @@ function renderContent(){
     }).join("");
   }
 }
-
-/* More overlay */
-function toggleMore(){document.getElementById('moreOverlay').classList.add('open')}
-function closeMore(){document.getElementById('moreOverlay').classList.remove('open')}
 
 /* Init */
 buildFilters();
