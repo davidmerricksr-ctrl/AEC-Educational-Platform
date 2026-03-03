@@ -27,7 +27,6 @@
     '<div class="mo" id="moreOverlay" onclick="if(event.target===this)closeMore()">' +
       '<div class="msh">' +
         '<h3>More Sections</h3>' +
-        '<div class="mi" onclick="go(\'competencies\');closeMore()"><div class="ic">&#x1F511;</div><div><div class="ml">Competencies</div><div class="ms">Essential skills &amp; certifications</div></div></div>' +
         '<div class="mi" onclick="go(\'glossary\');closeMore()"><div class="ic">&#x1F4D6;</div><div><div class="ml">Glossary</div><div class="ms">A&#x2013;Z terminology</div></div></div>' +
         '<div class="mi" onclick="go(\'journey\');closeMore()"><div class="ic">&#x1F4D3;</div><div><div class="ml">Building Journey</div><div class="ms">AI interview journal</div></div></div>' +
         '<div class="mi" onclick="go(\'about\');closeMore()"><div class="ic">&#x2139;&#xFE0F;</div><div><div class="ml">About</div><div class="ms">Educational purpose &amp; sources</div></div></div>' +
@@ -46,7 +45,7 @@
   };
 
   /* ── SPA page ids (handled by hash routing on index.html) ── */
-  var spaPages = ['home','impact','reference','future','intelligence','competencies','glossary'];
+  var spaPages = ['home','impact','reference','future','intelligence','glossary'];
 
   /* ── go() — main navigation function ── */
   window.go = function(id){
