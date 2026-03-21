@@ -1,11 +1,11 @@
 {
   "cleanUrls": true,
-  "headers": [
-    {
-      "source": "/cases/(.*)",
-      "headers": [
-        { "key": "Content-Type", "value": "application/javascript" }
-      ]
-    }
+  "rewrites": [
+    { "source": "/about/:path*", "destination": "/" },
+    { "source": "/cases/:path*", "destination": "/" },
+    { "source": "/journey/:path*", "destination": "/" },
+    { "source": "/simulator/:path*", "destination": "/" },
+    { "source": "/vault/:path*", "destination": "/" },
+    { "source": "/data/:path*", "destination": "/" }
   ]
 }
