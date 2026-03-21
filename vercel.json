@@ -1,8 +1,4 @@
 {
-  "github": { "enabled": false }   // or "gitlab", "bitbucket" depending on provider
-}
-
-{
   "cleanUrls": true,
   "headers": [
     {
