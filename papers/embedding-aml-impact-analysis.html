@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Impact Analysis: Embedding-Augmented AML Pipeline — Economic Crime Hub</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#06070e;color:#c8cde0;font-family:'Source Sans 3',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+code,.mono{font-family:'Source Code Pro',monospace}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0c0d18}
+::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeIn .3s ease-out both}
+</style>
+</head>
+<body>
+<script src="/auth-gate.js"></script>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo,useCallback}=React;
+
+const C={
+  bg:'#06070e',card:'#0c0d18',bdr:'#181a2e',bdrHi:'#252840',
+  tx:'#eef0ff',body:'#c8cde0',dim:'#8890b0',muted:'#5a6080',
+  green:'#22c55e',blue:'#3b82f6',orange:'#f97316',purple:'#8b5cf6',
+  red:'#ef4444',cyan:'#0ea5e9',amber:'#f59e0b',
+  baseVal:'#ef9a9a',enhVal:'#86efac',
+  hlBg:'#3b82f606',hlBdr:'#3b82f622',
+};
+
+/* ── Helpers ─────────────────────────────────────────── */
+function Card({children,accent,style}){
+  return <div style={{background:C.card,border:`1px solid ${accent?accent+'33':C.bdr}`,borderRadius:12,padding:'20px 24px',marginBottom:14,...style}}>{children}</div>;
+}
+function Badge({color,children}){
+  return <span style={{display:'inline-block',fontSize:11,fontWeight:700,color,background:color+'18',padding:'2px 10px',borderRadius:4,letterSpacing:'.04em',textTransform:'uppercase'}}>{children}</span>;
+}
+
+/* ── Headline Cards ──────────────────────────────────── */
+const HEADLINES=[
+  {label:'False Positive Reduction',value:'50–60%',sub:'from ~93% to ~40%',color:C.green},
+  {label:'Investigation Time Saved',value:'70–80%',sub:'6–10 hrs → 1–2 hrs avg',color:C.blue},
+  {label:'Analyst FTE Reduction',value:'55–65%',sub:'18–25 → 6–10 FTEs',color:C.orange},
+  {label:'SAR Detection Improvement',value:'+15–25%',sub:'more true positives found',color:C.purple},
+];
+
+function HeadlineCards(){
+  return <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12,marginBottom:24}}>
+    {HEADLINES.map((h,i)=><Card key={i} accent={h.color} style={{textAlign:'center',padding:'24px 16px'}}>
+      <div className="mono" style={{fontSize:32,fontWeight:800,color:h.color,lineHeight:1}}>{h.value}</div>
+      <div style={{fontSize:14,fontWeight:600,color:C.tx,marginTop:8}}>{h.label}</div>
+      <div style={{fontSize:12,color:C.dim,marginTop:4}}>{h.sub}</div>
+    </Card>)}
+  </div>;
+}
+
+/* ── Model Descriptions ──────────────────────────────── */
+function ModelDescriptions(){
+  return <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:14,marginBottom:32}}>
+    <Card accent={C.red} style={{borderLeft:`3px solid ${C.baseVal}`}}>
+      <Badge color={C.baseVal}>Baseline Model</Badge>
+      <div style={{fontSize:16,fontWeight:700,color:C.tx,marginTop:8,marginBottom:8}}>Detection Engine + Manual Investigation</div>
+      <div style={{fontSize:14,color:C.body,lineHeight:1.65}}>Oracle Mantas or Quantexa generates alerts. Every alert goes to an analyst who manually pulls respondent data, screens counterparties, reviews transaction history, checks public sources, drafts RFI, manually reviews returned documents, and writes investigation narratives from scratch. This is how most correspondent banking AML operations work today.</div>
+    </Card>
+    <Card accent={C.green} style={{borderLeft:`3px solid ${C.enhVal}`}}>
+      <Badge color={C.enhVal}>Enhanced Model</Badge>
+      <div style={{fontSize:16,fontWeight:700,color:C.tx,marginTop:8,marginBottom:8}}>Detection Engine + Embedding + GBM + AI Tools</div>
+      <div style={{fontSize:14,color:C.body,lineHeight:1.65}}>Same detection engine fires alerts. Embedding layer auto-enriches from all available sources. GBM auto-closes 50–60% of low-risk alerts with audit trail. Remaining alerts get pre-assembled evidence, similar case finder, commodity price checker, AI narrative generator. Targeted RFI mapped to embedding gaps. Second embedding pass on returned documents. SHAP explainability throughout.</div>
+    </Card>
+  </div>;
+}
+
+/* ── Metric Table Data ───────────────────────────────── */
+const CATEGORIES=[
+{icon:'📊',title:'Alert Volume & False Positives',accent:C.blue,rows:[
+  {metric:'Raw alerts generated (monthly)',base:'~2,500',enh:'~2,500',note:'Same — detection engine unchanged. Embedding layer sits downstream, not replacing Mantas/Quantexa.',hl:false},
+  {metric:'False positive rate',base:'90–95%',enh:'35–50%',note:'Industry data: traditional rule-based systems generate 90–95% false positives. ML overlay with embedding features consistently demonstrates 50–70% reduction in published studies (Quantifind: 80–90% alert reduction, Silent Eight: up to 45% FP reduction, hybrid models: up to 70% FP reduction). Conservative estimate for correspondent banking: 50–60% reduction, bringing FP rate from ~93% to ~40%.',hl:true},
+  {metric:'Alerts requiring human investigation',base:'~2,500 (all)',enh:'~1,000–1,250',note:'GBM auto-close bucket (0–25% score) eliminates 50–60% of alerts with audit trail. Only alerts scoring above threshold reach an analyst.',hl:true},
+  {metric:'SARs filed (monthly)',base:'~15–25',enh:'~20–35',note:'SAR rate increases because embedding layer catches suspicious patterns that rule-based detection misses (new typology matches, cross-document pricing anomalies, network proximity signals). Estimated 15–25% improvement in true positive detection.',hl:true},
+]},
+{icon:'⏱',title:'Investigation Time Per Alert',accent:C.cyan,rows:[
+  {metric:'L1 Triage (initial review)',base:'30–60 min',enh:'Auto-closed or 5–10 min',note:'Baseline: analyst manually pulls respondent info, screens counterparties, checks transaction history, reviews payment fields. Enhanced: GBM auto-closes 50–60% with audit trail. Remaining alerts get pre-assembled evidence package — analyst validates rather than researches.',hl:true},
+  {metric:'L2 Investigation (deep dive, no RFI)',base:'4–8 hours',enh:'45–90 min',note:'Baseline: analyst manually searches sanctions databases, runs adverse media queries, pulls corporate registry data, reviews respondent file, checks prior alerts, writes investigation memo from scratch. Enhanced: all of this is pre-assembled. Similar case finder shows relevant historical cases. AI narrative generator drafts memo. Analyst validates and decides.',hl:true},
+  {metric:'L2 Investigation (with RFI cycle)',base:'8–16 hrs + 15–30 day wait',enh:'2–3 hrs + 15 day wait',note:'Baseline: same manual investigation + drafting generic RFI + waiting + manually reviewing returned documents + re-investigating + writing SAR narrative. Enhanced: targeted RFI auto-generated from embedding gaps + OCR/NLP auto-extracts returned documents + cross-document checks automated + second embedding pass + re-scored + SAR narrative auto-drafted.',hl:true},
+  {metric:'SAR narrative drafting',base:'2–4 hours',enh:'15–30 min (review & edit)',note:'Baseline: analyst writes narrative from scratch, pulling facts from multiple screens/systems. Enhanced: AI generates draft narrative from embedding analysis and SHAP drivers. Analyst reviews, edits, and approves.',hl:false},
+  {metric:'Total analyst hours per investigated alert (avg)',base:'6–10 hours',enh:'1–2 hours',note:'Weighted average across all alert types (simple close, investigation, RFI cycle, SAR). 70–80% reduction in analyst time per alert.',hl:true},
+]},
+{icon:'💰',title:'Operational Capacity & Cost',accent:C.orange,rows:[
+  {metric:'Analyst FTEs required (for 2,500 alerts/month)',base:'18–25 FTEs',enh:'6–10 FTEs',note:'Baseline: 2,500 alerts × 6–10 hrs avg = 15,000–25,000 hours/month ÷ 160 hrs/FTE = 18–25 FTEs (assuming L1+L2 combined). Enhanced: ~1,000 alerts reaching humans × 1.5 hrs avg = 1,500 hours/month ÷ 160 = ~10 FTEs. Senior investigators can focus on complex cases rather than clearing false positives.',hl:true},
+  {metric:'Annual analyst cost (at $85K avg fully loaded)',base:'$1.5M–$2.1M',enh:'$510K–$850K',note:'Direct headcount savings. Does not include technology cost of embedding pipeline, which must be weighed against savings. Typical ROI payback: 12–18 months.',hl:true},
+  {metric:'Cost per investigated alert',base:'$425–$710',enh:'$85–$170',note:'Baseline: high analyst time on each alert including false positives. Enhanced: auto-close eliminates most low-value work. Remaining investigations are faster with pre-assembled evidence.',hl:false},
+  {metric:'Alerts per analyst per day',base:'2–3',enh:'8–12',note:'Baseline: each alert requires extensive manual research. Enhanced: pre-assembled evidence, AI narrative, similar case finder — analyst validates rather than builds from scratch.',hl:false},
+  {metric:'Analyst time on high-value work (%)',base:'15–20%',enh:'60–70%',note:'Baseline: most time spent clearing false positives and manually gathering information. Enhanced: auto-close handles noise, pre-assembly handles research — analysts focus on judgment calls, complex investigations, and relationship management.',hl:true},
+]},
+{icon:'🎯',title:'Detection Quality',accent:C.purple,rows:[
+  {metric:'Typology detection coverage',base:'Limited to defined scenarios',enh:'Scenario + typology cluster proximity',note:'Baseline: Mantas/Quantexa detect patterns matching pre-defined scenarios. If a new typology emerges (e.g., novel TBML routing), detection depends on scenario updates. Enhanced: embedding similarity catches patterns that cluster near known typologies even without an explicit scenario.',hl:false},
+  {metric:'Cross-document consistency checking',base:'Manual (analyst compares docs)',enh:'Automated (OCR + NLP + cross-reference)',note:'Invoice price vs market rate, B/L weight vs invoice quantity, COO exporter vs seller — all automated. This specific capability is unavailable in any detection engine natively.',hl:true},
+  {metric:'Commodity pricing anomaly detection',base:'Not available',enh:'Real-time market comparison',note:'Embedding layer compares F70 commodity references against market data feeds. A $4,900/MT cotton invoice vs $2,800 market is flagged automatically — no detection engine does this natively.',hl:true},
+  {metric:'Respondent bank cumulative risk scoring',base:'Annual manual review',enh:'Continuous, updated per disposition',note:'Every wire disposition updates the respondent\'s risk embedding in real time. Triggers EDD/exit thresholds automatically. Traditional approach: static annual questionnaire.',hl:true},
+  {metric:'Cross-script name matching quality',base:'Fuzzy string matching',enh:'Embedding similarity (transliteration-native)',note:'Arabic ↔ Latin, Chinese ↔ English name variants handled natively by embedding similarity. Traditional fuzzy matching (Levenshtein, Jaro-Winkler) fails on cross-script.',hl:false},
+  {metric:'Adverse media on individuals (pre-RFI)',base:'Not possible (no names available)',enh:'Not possible (same constraint)',note:'Both approaches face the same limitation: you don\'t have director/UBO names from the payment message. Neither can screen individuals until RFI returns KYC. Honesty matters.',hl:false},
+]},
+{icon:'📨',title:'RFI Process',accent:C.amber,rows:[
+  {metric:'RFI targeting quality',base:'Generic checklist template',enh:'Precisely targeted at embedding gaps',note:'Baseline: standard RFI requests \'full KYC and supporting documentation\' regardless of case specifics. Enhanced: each document request maps to a specific low-confidence embedding dimension. The respondent knows exactly what you need and why.',hl:true},
+  {metric:'RFI necessity rate (% of investigations requiring RFI)',base:'60–80%',enh:'30–45%',note:'Pre-assembled evidence and public data lookups resolve many questions that traditionally required RFI. Embedding-powered investigation finds answers from available data that manual research would miss.',hl:true},
+  {metric:'Document processing time (returned RFI)',base:'2–4 hours (manual review)',enh:'15–30 min (OCR + auto-extract + cross-check)',note:'Baseline: analyst manually reads each document, extracts key facts, compares across documents. Enhanced: OCR extracts structured fields, NLP processes narratives, cross-document checks run automatically, second embedding generates updated risk profile.',hl:true},
+]},
+{icon:'⚖',title:'Regulatory & Audit',accent:C.green,rows:[
+  {metric:'Explainability of alert disposition',base:'Analyst narrative (subjective)',enh:'SHAP decomposition + analyst narrative',note:'Enhanced: every score is decomposable into specific factor contributions. \'Ownership opacity contributed +0.17 to the risk score because BVI trust with undisclosed settlor.\' Audit trail includes both model reasoning and analyst judgment.',hl:true},
+  {metric:'Auto-close audit defensibility',base:'N/A (all alerts manually reviewed)',enh:'Full model audit trail + periodic validation',note:'Auto-closed alerts retain complete embedding analysis, GBM score, confidence interval, and SHAP breakdown. Champion-challenger testing validates auto-close decisions against historical outcomes. Regulatory examiners can review any individual auto-close decision.',hl:false},
+  {metric:'Consistency of investigation quality',base:'Varies by analyst skill/experience',enh:'Standardized + analyst judgment',note:'Pre-assembled evidence and AI-generated narrative ensure consistent baseline quality. Senior analyst judgment adds value on complex cases rather than being wasted on routine triage.',hl:false},
+]},
+];
+
+const ASSUMPTIONS=[
+  'Alert volume: ~2,500/month is representative for a mid-to-large correspondent banking operation clearing USD wires for 15–30 respondent banks.',
+  'Baseline false positive rate of 90–95% is consistent with industry data from PwC, BCG/Celent, and Flagright research on traditional rule-based systems including Oracle Mantas.',
+  'ML false positive reduction estimates draw from Quantifind (80–90% alert reduction), Silent Eight (45% FP reduction), and hybrid model research (up to 70% reduction). We use a conservative 50–60% reduction for correspondent banking given limited initial data.',
+  'Investigation time estimates based on industry benchmarks: L1 triage 30–60 min (baseline), L2 investigation 4–8 hours (McKinsey, EY, Deloitte reports on AML operations), SAR narrative 2–4 hours (ACAMS practitioner surveys).',
+  'Enhanced investigation times based on the pre-assembled evidence model demonstrated in the pipeline — analyst validates rather than researches from scratch.',
+  'Analyst cost at $85K fully loaded is conservative for US-based L1/L2 analysts including benefits, training, tools, and overhead. Varies significantly by jurisdiction and seniority.',
+  'SAR detection improvement of 15–25% is conservative — embedding layer catches patterns invisible to rule-based detection (typology cluster proximity, pricing anomalies, cross-document inconsistencies) but does not replace human judgment.',
+  'These estimates do NOT include the cost of building and maintaining the embedding pipeline (infrastructure, ML engineering, model governance, vector DB). ROI analysis must weigh savings against implementation investment.',
+];
+
+/* ── Category Section Component ──────────────────────── */
+function CategorySection({cat,open,onToggle}){
+  return <div style={{marginBottom:16}} className="fi">
+    <div onClick={onToggle} style={{display:'flex',alignItems:'center',gap:10,padding:'14px 20px',background:C.card,border:`1px solid ${cat.accent}33`,borderRadius:open?'12px 12px 0 0':12,cursor:'pointer',userSelect:'none',transition:'border-radius .15s'}}>
+      <span style={{fontSize:20}}>{cat.icon}</span>
+      <span style={{fontSize:16,fontWeight:700,color:C.tx,flex:1}}>{cat.title}</span>
+      <span style={{fontSize:12,color:C.muted}}>{cat.rows.length} metrics</span>
+      <span style={{color:C.muted,fontSize:16,transition:'transform .2s',transform:open?'rotate(180deg)':'rotate(0)'}}>▾</span>
+    </div>
+    {open&&<div style={{background:C.card,border:`1px solid ${cat.accent}33`,borderTop:'none',borderRadius:'0 0 12px 12px',overflow:'hidden'}}>
+      {/* Header row */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 130px 130px',gap:0,padding:'10px 20px',borderBottom:`1px solid ${C.bdr}`,fontSize:11,fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase',color:C.muted}}>
+        <span>Metric</span><span style={{textAlign:'center'}}>Baseline</span><span style={{textAlign:'center'}}>Enhanced</span>
+      </div>
+      {cat.rows.map((r,i)=><MetricRow key={i} row={r} accent={cat.accent} last={i===cat.rows.length-1}/>)}
+    </div>}
+  </div>;
+}
+
+function MetricRow({row,accent,last}){
+  const[showNote,setShowNote]=useState(false);
+  return <div style={{borderBottom:last?'none':`1px solid ${C.bdr}44`,background:row.hl?C.hlBg:'transparent'}}>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 130px 130px',gap:0,padding:'12px 20px',alignItems:'center',cursor:row.note?'pointer':'default'}} onClick={()=>row.note&&setShowNote(!showNote)}>
+      <div style={{display:'flex',alignItems:'center',gap:6}}>
+        {row.hl&&<span style={{color:C.blue,fontSize:12,flexShrink:0}}>★</span>}
+        <span style={{fontSize:14,fontWeight:row.hl?600:400,color:row.hl?C.tx:C.body}}>{row.metric}</span>
+        {row.note&&<span style={{color:C.muted,fontSize:11,flexShrink:0}}>{showNote?'▴':'▾'}</span>}
+      </div>
+      <div style={{textAlign:'center',fontFamily:'Source Code Pro,monospace',fontSize:13,fontWeight:500,color:C.baseVal}}>{row.base}</div>
+      <div style={{textAlign:'center',fontFamily:'Source Code Pro,monospace',fontSize:13,fontWeight:600,color:C.enhVal}}>{row.enh}</div>
+    </div>
+    {showNote&&<div style={{padding:'0 20px 14px 20px',paddingLeft:row.hl?38:20}}>
+      <div style={{fontSize:13,color:C.dim,lineHeight:1.6,borderLeft:`2px solid ${accent}44`,paddingLeft:12}}>{row.note}</div>
+    </div>}
+  </div>;
+}
+
+/* ── Main App ────────────────────────────────────────── */
+function App(){
+  const[openCats,setOpenCats]=useState(()=>{const s={};CATEGORIES.forEach((_,i)=>s[i]=true);return s});
+  const allOpen=Object.values(openCats).every(Boolean);
+
+  const toggleCat=useCallback((i)=>setOpenCats(prev=>({...prev,[i]:!prev[i]})),[]);
+  const toggleAll=useCallback(()=>{
+    const next=!allOpen;
+    setOpenCats(prev=>{const s={};CATEGORIES.forEach((_,i)=>s[i]=next);return s});
+  },[allOpen]);
+
+  return <div style={{maxWidth:760,margin:'0 auto',padding:'24px 16px 80px'}}>
+    {/* Header */}
+    <div style={{textAlign:'center',marginBottom:32}}>
+      <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:'.15em',textTransform:'uppercase',marginBottom:6}}>IMPACT ANALYSIS</div>
+      <h1 style={{fontSize:'clamp(20px,5vw,30px)',fontWeight:800,color:C.tx,lineHeight:1.25,marginBottom:10}}>Embedding-Augmented AML Pipeline for Correspondent Banking</h1>
+      <p style={{fontSize:14,color:C.dim,maxWidth:600,margin:'0 auto',lineHeight:1.55}}>Quantitative comparison of traditional detection-engine-only operations vs an embedding-augmented pipeline. 6 categories, 28 metrics, industry-sourced benchmarks.</p>
+      <div style={{marginTop:10,display:'flex',gap:8,justifyContent:'center',flexWrap:'wrap'}}>
+        <Badge color={C.muted}>March 2026</Badge>
+        <Badge color={C.blue}>Correspondent Banking</Badge>
+        <Badge color={C.purple}>Machine Learning</Badge>
+      </div>
+    </div>
+
+    {/* Headlines */}
+    <HeadlineCards/>
+
+    {/* Model descriptions */}
+    <ModelDescriptions/>
+
+    {/* Expand/collapse toggle */}
+    <div style={{display:'flex',justifyContent:'flex-end',marginBottom:10}}>
+      <button onClick={toggleAll} style={{fontSize:12,color:C.muted,background:'none',border:`1px solid ${C.bdr}`,borderRadius:6,padding:'4px 12px',cursor:'pointer',fontFamily:'inherit'}}>{allOpen?'Collapse All':'Expand All'}</button>
+    </div>
+
+    {/* Categories */}
+    {CATEGORIES.map((cat,i)=><CategorySection key={i} cat={cat} open={!!openCats[i]} onToggle={()=>toggleCat(i)}/>)}
+
+    {/* Assumptions */}
+    <div style={{marginTop:32}}>
+      <Card accent={C.orange} style={{borderLeft:`3px solid ${C.orange}`}}>
+        <div style={{fontSize:12,fontWeight:700,color:C.orange,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:14}}>Assumptions & Methodology</div>
+        {ASSUMPTIONS.map((a,i)=><div key={i} style={{borderLeft:`2px solid ${C.orange}44`,paddingLeft:12,marginBottom:10,fontSize:13,color:C.body,lineHeight:1.6}}>
+          <span className="mono" style={{color:C.orange,fontSize:11,marginRight:6}}>{i+1}.</span>{a}
+        </div>)}
+      </Card>
+    </div>
+
+    {/* Bottom Line */}
+    <div style={{marginTop:20}}>
+      <Card accent={C.blue} style={{borderLeft:`3px solid ${C.blue}`}}>
+        <div style={{fontSize:12,fontWeight:700,color:C.blue,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:10}}>The Bottom Line</div>
+        <div style={{fontSize:15,color:C.body,lineHeight:1.7}}>The embedding pipeline doesn't replace Oracle Mantas or Quantexa — it makes their output dramatically more actionable. The detection engine remains the regulatory-required monitoring layer. The embedding layer is the intelligence amplifier that separates signal from noise, pre-assembles evidence, accelerates investigation, targets RFIs precisely, and continuously scores respondent risk. The result: fewer wasted hours on false positives, faster resolution on real cases, better SAR quality, and a continuously improving system. The 50–60% false positive reduction alone pays for the infrastructure within 12–18 months at most correspondent banking operations.</div>
+      </Card>
+    </div>
+
+    {/* Footer */}
+    <div style={{textAlign:'center',marginTop:48,paddingTop:24,borderTop:`1px solid ${C.bdr}`,fontSize:12,color:C.muted}}>
+      Economic Crime Hub — Impact Analysis: Embedding-Augmented AML Pipeline
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
