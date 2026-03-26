@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/auth-gate.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Papers — EconomicCrimeHub.org</title>
+<meta name="description" content="Research papers, interactive demos, and technical walkthroughs exploring financial crime detection, compliance technology, and AML operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../nav.css">
+<style>
+:root{
+  --bg:#faf9f6;--card:#fff;--sf:#faf9f6;--border:#e5e3dc;--line:#e5e3dc;
+  --crim:#b82d24;--crimL:rgba(184,45,36,.08);--crimB:rgba(184,45,36,.15);
+  --gold:#8b6914;--goldL:rgba(139,105,20,.07);--goldB:rgba(139,105,20,.12);
+  --txt:#1a1a1a;--mute:#555;--dim:#888;--light:#b0ada5;
+  --fd:'DM Serif Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+  --nav:72px;--sab:env(safe-area-inset-bottom,0px);--rs:10px
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);line-height:1.7;-webkit-font-smoothing:antialiased;padding-bottom:calc(var(--nav) + var(--sab) + 24px)}
+a{color:var(--crim);text-decoration:none}
+a:hover{text-decoration:underline}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.wrap{max-width:760px;margin:0 auto;padding:2.5rem 1.25rem 2rem}
+
+/* Header */
+.pg-hdr{text-align:center;margin-bottom:2.5rem;animation:fadeUp .5s ease both}
+.pg-hdr .icon{font-size:1.6rem;margin-bottom:.5rem}
+.pg-hdr h1{font-family:var(--fd);font-size:1.65rem;color:var(--txt);margin-bottom:.3rem}
+.pg-hdr .sub{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.18em;text-transform:uppercase}
+.pg-hdr .desc{font-size:.88rem;color:var(--mute);margin-top:.75rem;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.65}
+
+/* Paper card */
+.paper-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.75rem 1.75rem 1.5rem;margin-bottom:1.25rem;position:relative;overflow:hidden;animation:fadeUp .5s ease both;transition:border-color .15s,box-shadow .15s}
+.paper-card:hover{border-color:var(--crim);box-shadow:0 2px 20px rgba(184,45,36,.06)}
+.paper-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.paper-card.accent-red::before{background:var(--crim)}
+.paper-card.accent-gold::before{background:var(--gold)}
+.paper-card.accent-blue::before{background:#3b82f6}
+
+.paper-badge{display:inline-block;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:.6rem}
+.badge-interactive{color:#3b82f6;background:rgba(59,130,246,.08)}
+.badge-paper{color:var(--crim);background:var(--crimL)}
+.badge-coming{color:var(--dim);background:rgba(0,0,0,.05)}
+
+.paper-title{font-family:var(--fd);font-size:1.15rem;color:var(--txt);margin-bottom:.35rem;line-height:1.35}
+.paper-title a{color:inherit}
+.paper-title a:hover{color:var(--crim);text-decoration:none}
+.paper-meta{font-family:var(--fm);font-size:.58rem;color:var(--dim);letter-spacing:.04em;margin-bottom:.65rem;display:flex;flex-wrap:wrap;gap:.75rem}
+.paper-desc{font-size:.84rem;color:var(--mute);line-height:1.65}
+.paper-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
+.paper-tag{font-family:var(--fm);font-size:.56rem;color:var(--light);border:1px solid var(--border);border-radius:4px;padding:1px 6px;letter-spacing:.04em}
+
+/* Coming soon placeholder */
+.coming-soon{text-align:center;padding:2rem 1rem;color:var(--dim);font-size:.84rem}
+.coming-soon .cs-icon{font-size:2rem;margin-bottom:.5rem}
+
+/* Section divider */
+.section-label{font-family:var(--fm);font-size:.6rem;color:var(--dim);letter-spacing:.18em;text-transform:uppercase;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+@media(max-width:540px){
+  .wrap{padding:1.5rem 1rem 1.5rem}
+  .paper-card{padding:1.25rem 1.25rem 1rem}
+  .paper-title{font-size:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Header -->
+  <div class="pg-hdr">
+    <div class="icon">📄</div>
+    <h1>Papers & Interactive Demos</h1>
+    <div class="sub">Economic Crime Hub</div>
+    <div class="desc">Research papers, technical walkthroughs, and interactive demonstrations exploring financial crime detection, compliance technology, and AML operations.</div>
+  </div>
+
+  <!-- Published section -->
+  <div class="section-label">Published</div>
+
+  <!-- Correspondent Banking AML Pipeline -->
+  <div class="paper-card accent-blue" style="animation-delay:.1s">
+    <span class="paper-badge badge-interactive">Interactive Demo</span>
+    <div class="paper-title"><a href="/papers/correspondent-aml-pipeline">Correspondent Banking AML Pipeline</a></div>
+    <div class="paper-meta">
+      <span>10 phases</span>
+      <span>March 2026</span>
+      <span>Correspondent Banking</span>
+    </div>
+    <div class="paper-desc">
+      End-to-end walkthrough of how embedding/vector database technology, gradient boosting ML, and document intelligence layer on top of traditional detection engines (Oracle Financial Services AML / Quantexa Contextual Monitoring) to dramatically improve correspondent banking alert processing. Follows a single case from detection through investigation, RFI, document analysis, re-scoring, and respondent bank risk rating — demonstrating the two-pass embedding architecture that honestly accounts for what the correspondent bank can and cannot see.
+    </div>
+    <div class="paper-tags">
+      <span class="paper-tag">Correspondent Banking</span>
+      <span class="paper-tag">Embeddings</span>
+      <span class="paper-tag">GBM</span>
+      <span class="paper-tag">TBML</span>
+      <span class="paper-tag">Oracle Mantas</span>
+      <span class="paper-tag">Quantexa</span>
+      <span class="paper-tag">SHAP</span>
+      <span class="paper-tag">RFI</span>
+    </div>
+  </div>
+
+  <!-- Coming Soon section -->
+  <div class="section-label">Coming Soon</div>
+
+  <div class="paper-card" style="animation-delay:.2s;opacity:.7">
+    <span class="paper-badge badge-coming">Coming Soon</span>
+    <div class="paper-title" style="color:var(--dim)">More papers in development</div>
+    <div class="paper-desc" style="color:var(--light)">Additional research papers and interactive demos covering transaction monitoring operations, sanctions screening, KYC automation, and detection model validation are in preparation.</div>
+  </div>
+</div>
+
+<!-- Nav -->
+<script>window.NAV_BASE='../';</script>
+<script src="../nav.js"></script>
+</body>
+</html>
