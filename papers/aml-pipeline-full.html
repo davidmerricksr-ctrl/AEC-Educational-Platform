@@ -4,204 +4,335 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Correspondent Banking AML Pipeline — All Phases</title>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-html{background:#06070e;color:#c8cde0;font-family:'Source Sans 3',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+html{background:#06070e;color:#c8cde0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{min-height:100vh}
-#root{min-height:100vh}
-code,pre,.mono{font-family:'Source Code Pro',monospace}
+code,pre,.mono{font-family:'Courier New',Consolas,monospace}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#0c0d18}
 ::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn .35s ease-out both}
 a{text-decoration:none}
+.collapsible-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.collapsible-chevron{color:#5a6080;font-size:18px;transition:transform .2s}
+.collapsible-chevron.open{transform:rotate(180deg)}
+.collapsible-body{margin-top:16px;padding-top:16px;border-top:1px solid #181a2e}
+#back-to-top{position:fixed;bottom:24px;right:24px;z-index:999;width:44px;height:44px;border-radius:50%;border:1px solid #181a2e;background:#0c0d18ee;color:#eef0ff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,.4);opacity:0;pointer-events:none}
+#back-to-top.visible{opacity:1;pointer-events:auto}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect,useRef,useCallback}=React;
+<div id="root" style="max-width:820px;margin:0 auto;padding:32px 16px 80px"></div>
+<button id="back-to-top" title="Back to top">&#8593;</button>
 
+<script>
 /* ── Constants ── */
-const C={
+var C={
   bg:'#06070e',card:'#0c0d18',cardHi:'#10112a',
   bdr:'#181a2e',bdrHi:'#252840',
   tx:'#eef0ff',body:'#c8cde0',dim:'#8890b0',muted:'#5a6080',
   slate:'#64748b',cyan:'#0ea5e9',blue:'#3b82f6',orange:'#f97316',
   purple:'#8b5cf6',rose:'#e11d48',indigo:'#6366f1',red:'#ef4444',
-  fuchsia:'#d946ef',green:'#22c55e',amber:'#f59e0b',gray:'#5a6080',
+  fuchsia:'#d946ef',green:'#22c55e',amber:'#f59e0b',gray:'#5a6080'
 };
-const PHASE_COLORS=[C.slate,C.cyan,C.blue,C.orange,C.purple,C.rose,C.cyan,C.indigo,C.red,C.fuchsia];
-const PHASE_ICONS=['\u26A1','\uD83D\uDCCB','\u25C8','\u2699','\uD83D\uDD0D','\uD83D\uDCE8','\uD83D\uDCC4','\u25C8\u25C8','\u25C9','\uD83C\uDFE6'];
-const PHASE_TITLES=['Detection Alert','Data Inventory','First Embedding','ML Triage','Investigation','Targeted RFI','Doc Ingestion','Second Embedding','Final Decision','Respondent Risk'];
-const PHASE_SUBS=['Oracle Mantas / Quantexa fires on wire','What you actually know','Embed available intelligence','GBM scoring + routing','Accelerated with AI tools','Fill the gaps','OCR + cross-reference','Re-embed with full picture','GBM re-score + action','Cumulative client risk \u2192 EDD \u2192 Exit'];
-const SCORE_PHASES={3:'74%',4:'74%',5:'74%',8:'96%'};
+var PHASE_COLORS=[C.slate,C.cyan,C.blue,C.orange,C.purple,C.rose,C.cyan,C.indigo,C.red,C.fuchsia];
+var PHASE_ICONS=['\u26A1','\uD83D\uDCCB','\u25C8','\u2699','\uD83D\uDD0D','\uD83D\uDCE8','\uD83D\uDCC4','\u25C8\u25C8','\u25C9','\uD83C\uDFE6'];
+var PHASE_TITLES=['Detection Alert','Data Inventory','First Embedding','ML Triage','Investigation','Targeted RFI','Doc Ingestion','Second Embedding','Final Decision','Respondent Risk'];
+var PHASE_SUBS=['Oracle Mantas / Quantexa fires on wire','What you actually know','Embed available intelligence','GBM scoring + routing','Accelerated with AI tools','Fill the gaps','OCR + cross-reference','Re-embed with full picture','GBM re-score + action','Cumulative client risk \u2192 EDD \u2192 Exit'];
+var SCORE_PHASES={2:'74%',3:'74%',7:'96%',8:'96%'};
 
-/* ── Shared Helper Components ── */
-function Badge({color,children,mono}){
-  return <span style={{display:'inline-block',fontSize:11,fontWeight:700,fontFamily:mono?'Source Code Pro,monospace':'inherit',color,background:color+'18',padding:'2px 10px',borderRadius:4,letterSpacing:'.04em',textTransform:'uppercase'}}>{children}</span>;
+/* ── Unique ID counter ── */
+var _uid=0;
+function uid(){return 'c'+(_uid++);}
+
+/* ── Helper functions that return HTML strings ── */
+function badge(color,text,mono){
+  return '<span style="display:inline-block;font-size:11px;font-weight:700;font-family:'+(mono?"'Courier New',Consolas,monospace":"inherit")+';color:'+color+';background:'+color+'18;padding:2px 10px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase">'+text+'</span>';
 }
-function ScoreBadge({value,color}){
-  return <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:48,height:48,borderRadius:'50%',background:color+'22',border:`2px solid ${color}`,fontSize:16,fontWeight:800,color,fontFamily:'Source Code Pro,monospace'}}>{value}</span>;
+
+function scoreBadge(value,color){
+  return '<span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:'+color+'22;border:2px solid '+color+';font-size:16px;font-weight:800;color:'+color+';font-family:\'Courier New\',Consolas,monospace">'+value+'</span>';
 }
-function Section({title,accent,children,border}){
-  return <div style={{marginBottom:24}}>{title&&<div style={{fontSize:12,fontWeight:700,color:accent||C.dim,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:12}}>{title}</div>}{border?<div style={{borderLeft:`3px solid ${accent||C.bdr}`,paddingLeft:16}}>{children}</div>:children}</div>;
+
+function section(title,accent,html,border){
+  var out='<div style="margin-bottom:24px">';
+  if(title) out+='<div style="font-size:12px;font-weight:700;color:'+(accent||C.dim)+';letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">'+title+'</div>';
+  if(border) out+='<div style="border-left:3px solid '+(accent||C.bdr)+';padding-left:16px">'+html+'</div>';
+  else out+=html;
+  out+='</div>';
+  return out;
 }
-function CardBox({children,accent,highlight,style}){
-  return <div style={{background:highlight?C.cardHi:C.card,border:`1px solid ${accent?accent+'33':C.bdr}`,borderRadius:12,padding:'20px 24px',marginBottom:16,...style}}>{children}</div>;
+
+function cardBox(html,accent,highlight,extraStyle){
+  var bg=highlight?C.cardHi:C.card;
+  var bdr=accent?accent+'33':C.bdr;
+  var style='background:'+bg+';border:1px solid '+bdr+';border-radius:12px;padding:20px 24px;margin-bottom:16px;'+(extraStyle||'');
+  return '<div style="'+style+'">'+html+'</div>';
 }
-function Collapsible({title,badge,badgeColor,children,defaultOpen}){
-  const[open,setOpen]=useState(!!defaultOpen);
-  return <CardBox><div onClick={()=>setOpen(!open)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',userSelect:'none'}}><div style={{display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:15,fontWeight:600,color:C.tx}}>{title}</span>{badge&&<Badge color={badgeColor||C.green}>{badge}</Badge>}</div><span style={{color:C.muted,fontSize:18,transition:'transform .2s',transform:open?'rotate(180deg)':'rotate(0)'}}>{'\u25BE'}</span></div>{open&&<div style={{marginTop:16,paddingTop:16,borderTop:`1px solid ${C.bdr}`}}>{children}</div>}</CardBox>;
+
+function collapsible(id,title,badgeText,badgeColor,html,defaultOpen){
+  var chevClass='collapsible-chevron'+(defaultOpen?' open':'');
+  var bodyStyle=defaultOpen?'':'display:none;';
+  return cardBox(
+    '<div class="collapsible-header" onclick="toggleCollapsible(\''+id+'\')">'+
+      '<div style="display:flex;align-items:center;gap:10px">'+
+        '<span style="font-size:15px;font-weight:600;color:'+C.tx+'">'+title+'</span>'+
+        (badgeText?badge(badgeColor||C.green,badgeText):'')+
+      '</div>'+
+      '<span id="'+id+'-chevron" class="'+chevClass+'">\u25BE</span>'+
+    '</div>'+
+    '<div id="'+id+'-body" class="collapsible-body" style="'+bodyStyle+'">'+html+'</div>'
+  );
 }
-function KVRow({label,value,accent,mono}){
-  return <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',padding:'6px 0',borderLeft:accent?`3px solid ${accent}`:'none',paddingLeft:accent?12:0,gap:12}}><span style={{color:C.dim,fontSize:14,minWidth:0,flex:'0 0 auto'}}>{label}</span><span style={{color:C.tx,fontSize:14,fontFamily:mono?'Source Code Pro,monospace':'inherit',textAlign:'right',wordBreak:'break-word'}}>{value}</span></div>;
+
+function kvRow(label,value,accent,mono){
+  var bl=accent?'border-left:3px solid '+accent+';padding-left:12px;':'';
+  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;'+bl+'gap:12px">'+
+    '<span style="color:'+C.dim+';font-size:14px;min-width:0;flex:0 0 auto">'+label+'</span>'+
+    '<span style="color:'+C.tx+';font-size:14px;font-family:'+(mono?"'Courier New',Consolas,monospace":"inherit")+';text-align:right;word-break:break-word">'+value+'</span>'+
+  '</div>';
 }
-function EmbedBar({label,value,maxVal,confidence,source,color,prevValue}){
-  const confColor=confidence==='HIGH'?C.green:confidence==='MEDIUM'?C.amber:C.muted;
-  return <div style={{marginBottom:14}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}><span style={{fontSize:14,color:C.tx,fontWeight:500}}>{label}</span><div style={{display:'flex',alignItems:'center',gap:8}}><Badge color={confColor}>{confidence}</Badge><span className="mono" style={{fontSize:14,fontWeight:700,color:color||C.blue}}>{(value*1).toFixed(2)}</span></div></div><div style={{position:'relative',height:8,background:C.bdr,borderRadius:4,overflow:'hidden'}}>{prevValue!==undefined&&<div style={{position:'absolute',left:0,top:0,bottom:0,width:`${prevValue*100}%`,background:(color||C.blue)+'33',borderRadius:4,transition:'width .4s'}}/>}<div style={{position:'absolute',left:0,top:0,bottom:0,width:`${value*100}%`,background:color||C.blue,borderRadius:4,transition:'width .4s'}}/></div>{source&&<div style={{fontSize:12,color:C.muted,marginTop:3,fontStyle:'italic'}}>"{source}"</div>}</div>;
+
+function embedBar(label,value,confidence,source,color,prevValue){
+  var confColor=confidence==='HIGH'?C.green:confidence==='MEDIUM'?C.amber:C.muted;
+  var col=color||C.blue;
+  var out='<div style="margin-bottom:14px">';
+  out+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+  out+='<span style="font-size:14px;color:'+C.tx+';font-weight:500">'+label+'</span>';
+  out+='<div style="display:flex;align-items:center;gap:8px">'+badge(confColor,confidence)+
+    '<span class="mono" style="font-size:14px;font-weight:700;color:'+col+'">'+value.toFixed(2)+'</span></div></div>';
+  out+='<div style="position:relative;height:8px;background:'+C.bdr+';border-radius:4px;overflow:hidden">';
+  if(prevValue!==undefined){
+    out+='<div style="position:absolute;left:0;top:0;bottom:0;width:'+(prevValue*100)+'%;background:'+col+'33;border-radius:4px"></div>';
+  }
+  out+='<div style="position:absolute;left:0;top:0;bottom:0;width:'+(value*100)+'%;background:'+col+';border-radius:4px;transition:width .4s"></div>';
+  out+='</div>';
+  if(source) out+='<div style="font-size:12px;color:'+C.muted+';margin-top:3px;font-style:italic">&quot;'+source+'&quot;</div>';
+  out+='</div>';
+  return out;
 }
-function ShapBar({label,value,color}){
-  const maxMag=0.24;const pct=Math.min(Math.abs(value)/maxMag*100,100);const isPos=value>0;
-  return <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}><div style={{width:200,textAlign:'right',fontSize:13,color:C.body,flexShrink:0}}>{label}</div><div style={{flex:1,position:'relative',height:20}}><div style={{position:'absolute',left:'50%',top:0,bottom:0,width:1,background:C.bdr}}/>{isPos?<div style={{position:'absolute',left:'50%',top:2,bottom:2,width:`${pct/2}%`,background:C.red,borderRadius:'0 3px 3px 0',transition:'width .3s'}}/>:<div style={{position:'absolute',right:'50%',top:2,bottom:2,width:`${pct/2}%`,background:C.green,borderRadius:'3px 0 0 3px',transition:'width .3s'}}/>}</div><span className="mono" style={{width:50,fontSize:12,fontWeight:600,color:isPos?C.red:C.green,textAlign:'right',flexShrink:0}}>{isPos?'+':''}{value.toFixed(2)}</span></div>;
+
+function shapBar(label,value){
+  var maxMag=0.24;
+  var pct=Math.min(Math.abs(value)/maxMag*100,100);
+  var isPos=value>0;
+  var barHtml;
+  if(isPos){
+    barHtml='<div style="position:absolute;left:50%;top:2px;bottom:2px;width:'+(pct/2)+'%;background:'+C.red+';border-radius:0 3px 3px 0;transition:width .3s"></div>';
+  } else {
+    barHtml='<div style="position:absolute;right:50%;top:2px;bottom:2px;width:'+(pct/2)+'%;background:'+C.green+';border-radius:3px 0 0 3px;transition:width .3s"></div>';
+  }
+  var sign=isPos?'+':'';
+  var col=isPos?C.red:C.green;
+  return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+
+    '<div style="width:200px;text-align:right;font-size:13px;color:'+C.body+';flex-shrink:0">'+label+'</div>'+
+    '<div style="flex:1;position:relative;height:20px">'+
+      '<div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:'+C.bdr+'"></div>'+
+      barHtml+
+    '</div>'+
+    '<span class="mono" style="width:50px;font-size:12px;font-weight:600;color:'+col+';text-align:right;flex-shrink:0">'+sign+value.toFixed(2)+'</span>'+
+  '</div>';
 }
-function InsightBox({accent,children}){
-  return <div style={{borderLeft:`3px solid ${accent||C.blue}`,background:accent?accent+'08':C.blue+'08',padding:'16px 20px',borderRadius:'0 8px 8px 0',marginTop:16,marginBottom:16,fontSize:14,color:C.body,lineHeight:1.7}}>{children}</div>;
+
+function insightBox(accent,html){
+  var col=accent||C.blue;
+  return '<div style="border-left:3px solid '+col+';background:'+col+'08;padding:16px 20px;border-radius:0 8px 8px 0;margin-top:16px;margin-bottom:16px;font-size:14px;color:'+C.body+';line-height:1.7">'+html+'</div>';
 }
-function CheckItem({icon,status,color,children}){
-  return <div style={{display:'flex',alignItems:'flex-start',gap:10,padding:'6px 0',borderLeft:`3px solid ${color||C.green}`,paddingLeft:12,marginBottom:4}}><span style={{color:color||C.green,flexShrink:0,fontSize:14}}>{icon||'\u2713'}</span><span style={{fontSize:14,color:status==='red'?C.red:status==='amber'?C.amber:C.body}}>{children}</span></div>;
+
+function checkItem(html,icon,color){
+  var c=color||C.green;
+  var ic=icon||'\u2713';
+  return '<div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-left:3px solid '+c+';padding-left:12px;margin-bottom:4px">'+
+    '<span style="color:'+c+';flex-shrink:0;font-size:14px">'+ic+'</span>'+
+    '<span style="font-size:14px;color:'+C.body+'">'+html+'</span>'+
+  '</div>';
 }
-function PaymentChain(){
-  const nodes=[
-    {label:'Originator\n(Sender)',color:C.muted},
-    {label:'Respondent Bank\n(Your Client)',color:C.orange},
-    {label:'Your Bank\n(Correspondent)',color:C.blue},
-    {label:'Downstream PSP\n(Destination)',color:C.purple},
-    {label:'Beneficiary\n(Recipient)',color:C.muted},
+
+function paymentChain(){
+  var nodes=[
+    {label:'Originator',sub:'(Sender)',color:C.muted},
+    {label:'Respondent Bank',sub:'(Your Client)',color:C.orange},
+    {label:'Your Bank',sub:'(Correspondent)',color:C.blue},
+    {label:'Downstream PSP',sub:'(Destination)',color:C.purple},
+    {label:'Beneficiary',sub:'(Recipient)',color:C.muted}
   ];
-  return <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:0,padding:'16px 0',overflowX:'auto',minWidth:0}}>
-    {nodes.map((n,i)=><React.Fragment key={i}>
-      <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:90,maxWidth:130,flex:'0 0 auto'}}>
-        <div style={{border:`2px solid ${n.color}`,borderRadius:8,padding:'8px 10px',background:n.color+'12',textAlign:'center',width:'100%'}}>
-          {n.label.split('\n').map((l,j)=><div key={j} style={{fontSize:j===0?13:11,fontWeight:j===0?700:400,color:j===0?n.color:C.dim,lineHeight:1.3}}>{l}</div>)}
-        </div>
-      </div>
-      {i<nodes.length-1&&<div style={{width:28,height:2,background:C.bdr,flexShrink:0,position:'relative'}}><div style={{position:'absolute',right:-3,top:-4,fontSize:10,color:C.muted}}>{'\u2192'}</div></div>}
-    </React.Fragment>)}
-  </div>;
+  var out='<div style="display:flex;align-items:center;justify-content:center;gap:0;padding:16px 0;overflow-x:auto;min-width:0">';
+  for(var i=0;i<nodes.length;i++){
+    var n=nodes[i];
+    out+='<div style="display:flex;flex-direction:column;align-items:center;min-width:90px;max-width:130px;flex:0 0 auto">';
+    out+='<div style="border:2px solid '+n.color+';border-radius:8px;padding:8px 10px;background:'+n.color+'12;text-align:center;width:100%">';
+    out+='<div style="font-size:13px;font-weight:700;color:'+n.color+';line-height:1.3">'+n.label+'</div>';
+    out+='<div style="font-size:11px;font-weight:400;color:'+C.dim+';line-height:1.3">'+n.sub+'</div>';
+    out+='</div></div>';
+    if(i<nodes.length-1){
+      out+='<div style="width:28px;height:2px;background:'+C.bdr+';flex-shrink:0;position:relative"><div style="position:absolute;right:-3px;top:-4px;font-size:10px;color:'+C.muted+'">\u2192</div></div>';
+    }
+  }
+  out+='</div>';
+  return out;
+}
+
+/* ── Phase Divider ── */
+function phaseDivider(index){
+  var color=PHASE_COLORS[index];
+  var score=SCORE_PHASES[index];
+  var num=String(index+1).padStart(2,'0');
+  var out='<div id="phase-'+num+'" style="padding-top:48px;margin-bottom:32px">';
+  out+='<div style="height:3px;background:linear-gradient(90deg,'+color+','+color+'44,transparent);border-radius:2px;margin-bottom:24px"></div>';
+  out+='<div style="display:flex;align-items:center;gap:14px">';
+  out+='<span style="font-size:36px">'+PHASE_ICONS[index]+'</span>';
+  out+='<div style="flex:1">';
+  out+='<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">';
+  out+='<span class="mono" style="font-size:14px;font-weight:700;color:'+color+'">PHASE '+num+'</span>';
+  if(score) out+=scoreBadge(score,color);
+  out+='</div>';
+  out+='<h2 style="font-size:26px;font-weight:800;color:'+C.tx+';margin-top:2px;line-height:1.2">'+PHASE_TITLES[index]+'</h2>';
+  out+='<div style="font-size:14px;color:'+C.dim+';margin-top:2px">'+PHASE_SUBS[index]+'</div>';
+  out+='</div></div></div>';
+  return out;
 }
 
 /* ── Phase 01: Detection Alert ── */
-function Phase01(){
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>The detection engine (Oracle Financial Services AML or Quantexa Contextual Monitoring) flags a wire based on scenario rules or contextual behavioral detection applied to the SWIFT message fields. As correspondent, you have the payment payload, your relationship data on the respondent, and transaction history for parties you've previously seen.</p>
-    <Section title="Payment Message (MT103 / pacs.008)" accent={C.slate}>
-      <div style={{fontSize:13,color:C.muted,marginBottom:12,fontStyle:'italic'}}>This is ALL that arrives at your bank when the wire hits. Every field below is parsed from the SWIFT message.</div>
-      <CardBox>
-        <KVRow label="Sender's Ref (F20)" value="FCB20260418-7741" mono/>
-        <KVRow label="Value/Amount (F32A)" value="260218 USD 2,450,000.00" mono/>
-        <KVRow label="Ordering Customer (F50K)" value="SILK ROAD COMMODITIES FZE / PO BOX 18447 JAFZA, DUBAI UAE" accent={C.orange} mono/>
-        <KVRow label="Ordering Inst. (F52A)" value="FCBKGETB — First Commerce Bank of Eurasia, Tbilisi" mono/>
-        <KVRow label="Intermediary (F56A)" value="YOUR BANK — Correspondent" mono/>
-        <KVRow label="Acct With Inst. (F57A)" value="DEUTDEFF — Deutsche Bank Frankfurt (downstream PSP)" mono/>
-        <KVRow label="Beneficiary (F59)" value="VOSTOK INDUSTRIAL SUPPLY GMBH / HAMBURGER STRASSE 42, HAMBURG" accent={C.purple} mono/>
-        <KVRow label="Remittance (F70)" value="INV-2026-TR-4418 COTTON FIBER SHIPMENT" accent={C.amber} mono/>
-      </CardBox>
-    </Section>
-    <Section title="Detection Engine Alert" accent={C.slate}>
-      <CardBox>
-        <KVRow label="Alert ID" value="DET-2026-074821" mono/>
-        <KVRow label="Engine" value="Oracle Financial Services AML (Mantas) / Quantexa Contextual Monitoring" />
-        <KVRow label="Scenario" value="SCN-CB-401: High-value trade wire, high-risk corridor" mono/>
-        <KVRow label="Detection Score" value="72 / 100" mono/>
-        <div style={{marginTop:12}}><div style={{fontSize:12,fontWeight:600,color:C.dim,marginBottom:6}}>TRIGGERED FACTORS</div>
-          {['Amount > $1M','JAFZA free zone originator','Commodity keyword in F70','Georgia respondent jurisdiction','First-time beneficiary'].map((f,i)=><div key={i} style={{borderLeft:`3px solid ${C.slate}`,paddingLeft:10,fontSize:13,color:C.body,marginBottom:4}}>{f}</div>)}
-        </div>
-      </CardBox>
-      <div style={{fontSize:13,color:C.muted,fontStyle:'italic',marginTop:8}}>Whether alert originates from Mantas scenario-based detection or Quantexa contextual monitoring, the downstream embedding pipeline adds intelligence layers neither captures natively.</div>
-    </Section>
-    <InsightBox accent={C.orange}>
-      <strong style={{color:C.tx}}>Key Constraint:</strong> You are in the middle of this chain. The originator's KYC belongs to your respondent bank. The beneficiary's KYC belongs to the downstream PSP. You see only what's on the payment message, your own records on parties you've encountered before, and what you can look up from the names and identifiers provided.
-    </InsightBox>
-  </div>;
+function phase01(){
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">The detection engine (Oracle Financial Services AML or Quantexa Contextual Monitoring) flags a wire based on scenario rules or contextual behavioral detection applied to the SWIFT message fields. As correspondent, you have the payment payload, your relationship data on the respondent, and transaction history for parties you\'ve previously seen.</p>';
+
+  out+=section('Payment Message (MT103 / pacs.008)',C.slate,
+    '<div style="font-size:13px;color:'+C.muted+';margin-bottom:12px;font-style:italic">This is ALL that arrives at your bank when the wire hits. Every field below is parsed from the SWIFT message.</div>'+
+    cardBox(
+      kvRow("Sender's Ref (F20)","FCB20260418-7741",null,true)+
+      kvRow("Value/Amount (F32A)","260218 USD 2,450,000.00",null,true)+
+      kvRow("Ordering Customer (F50K)","SILK ROAD COMMODITIES FZE / PO BOX 18447 JAFZA, DUBAI UAE",C.orange,true)+
+      kvRow("Ordering Inst. (F52A)","FCBKGETB \u2014 First Commerce Bank of Eurasia, Tbilisi",null,true)+
+      kvRow("Intermediary (F56A)","YOUR BANK \u2014 Correspondent",null,true)+
+      kvRow("Acct With Inst. (F57A)","DEUTDEFF \u2014 Deutsche Bank Frankfurt (downstream PSP)",null,true)+
+      kvRow("Beneficiary (F59)","VOSTOK INDUSTRIAL SUPPLY GMBH / HAMBURGER STRASSE 42, HAMBURG",C.purple,true)+
+      kvRow("Remittance (F70)","INV-2026-TR-4418 COTTON FIBER SHIPMENT",C.amber,true)
+    )
+  );
+
+  var triggers=['Amount > $1M','JAFZA free zone originator','Commodity keyword in F70','Georgia respondent jurisdiction','First-time beneficiary'];
+  var trigHtml='';
+  for(var i=0;i<triggers.length;i++){
+    trigHtml+='<div style="border-left:3px solid '+C.slate+';padding-left:10px;font-size:13px;color:'+C.body+';margin-bottom:4px">'+triggers[i]+'</div>';
+  }
+
+  out+=section('Detection Engine Alert',C.slate,
+    cardBox(
+      kvRow("Alert ID","DET-2026-074821",null,true)+
+      kvRow("Engine","Oracle Financial Services AML (Mantas) / Quantexa Contextual Monitoring")+
+      kvRow("Scenario","SCN-CB-401: High-value trade wire, high-risk corridor",null,true)+
+      kvRow("Detection Score","72 / 100",null,true)+
+      '<div style="margin-top:12px"><div style="font-size:12px;font-weight:600;color:'+C.dim+';margin-bottom:6px">TRIGGERED FACTORS</div>'+trigHtml+'</div>'
+    )+
+    '<div style="font-size:13px;color:'+C.muted+';font-style:italic;margin-top:8px">Whether alert originates from Mantas scenario-based detection or Quantexa contextual monitoring, the downstream embedding pipeline adds intelligence layers neither captures natively.</div>'
+  );
+
+  out+=insightBox(C.orange,'<strong style="color:'+C.tx+'">Key Constraint:</strong> You are in the middle of this chain. The originator\'s KYC belongs to your respondent bank. The beneficiary\'s KYC belongs to the downstream PSP. You see only what\'s on the payment message, your own records on parties you\'ve encountered before, and what you can look up from the names and identifiers provided.');
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 02: Data Inventory ── */
-function Phase02(){
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>Before any analysis, enumerate exactly what data IS and IS NOT available to the correspondent bank. This honest inventory determines what the first embedding can realistically encode.</p>
-    <Collapsible title="Payment Payload (Parsed)" badge="AVAILABLE" badgeColor={C.green} defaultOpen>
-      <CheckItem>Originator name parsed: <strong style={{color:C.tx}}>SILK ROAD COMMODITIES FZE</strong> — entity type: Free Zone Establishment (UAE)</CheckItem>
-      <CheckItem>Originator address: PO Box only (JAFZA) — no physical street address</CheckItem>
-      <CheckItem>Originator account: <span className="mono">AE42…</span> — IBAN prefix confirms UAE</CheckItem>
-      <CheckItem>Beneficiary name parsed: <strong style={{color:C.tx}}>VOSTOK INDUSTRIAL SUPPLY GMBH</strong> — German limited company</CheckItem>
-      <CheckItem>Beneficiary address: HAMBURGER STRASSE 42, HAMBURG — physical address present</CheckItem>
-      <CheckItem>Beneficiary account: <span className="mono">DE89…</span> — IBAN confirms Germany</CheckItem>
-      <CheckItem>F70 NLP: keywords extracted — COTTON, FIBER, SHIPMENT, invoice ref pattern detected</CheckItem>
-    </Collapsible>
-    <Collapsible title="Respondent Bank Profile (Your Client)" badge="AVAILABLE" badgeColor={C.green}>
-      <CheckItem>First Commerce Bank of Eurasia — Nostro client since 2022</CheckItem>
-      <CheckItem>Jurisdiction: Georgia — FATF mutual evaluation 2024 noted AML deficiencies</CheckItem>
-      <CheckItem>Your internal risk rating: <strong style={{color:C.orange}}>MEDIUM-HIGH</strong> (last annual review: Oct 2025)</CheckItem>
-      <CheckItem>Total wire volume through your bank: <span className="mono">$48M</span> past 12 months — up 140% YoY</CheckItem>
-      <CheckItem>Prior RFIs sent: 3 in 18 months — response quality: adequate (2), slow (1)</CheckItem>
-      <CheckItem>Number of unique originators through this respondent: 47 (past 12 months)</CheckItem>
-      <CheckItem>SARs filed on wires from this respondent: 2 (past 3 years)</CheckItem>
-    </Collapsible>
-    <Collapsible title="Transaction History (Your Books)" badge="AVAILABLE" badgeColor={C.green}>
-      <CheckItem>Originator 'Silk Road Commodities' first seen 6 months ago through this respondent</CheckItem>
-      <CheckItem>8 prior wires totaling <span className="mono">$12.4M</span> — all commodity-related (cotton, synthetic fiber)</CheckItem>
-      <CheckItem>Average wire: <span className="mono">$1.55M</span> — this wire ($2.45M) is 58% above average</CheckItem>
-      <CheckItem>All prior wires routed to Deutsche Bank Frankfurt (same downstream PSP)</CheckItem>
-      <CheckItem>3 different beneficiaries previously: 2 in Germany, 1 in Turkey</CheckItem>
-      <CheckItem>Beneficiary 'Vostok Industrial Supply' — <strong style={{color:C.orange}}>FIRST TIME</strong> seen across entire book</CheckItem>
-      <CheckItem>Downstream PSP (Deutsche Bank) — established, high volume, low-risk</CheckItem>
-      <CheckItem>No prior alerts on this originator; 1 prior alert on different originator through same respondent (closed, no action)</CheckItem>
-    </Collapsible>
-    <Collapsible title="Downstream PSP Profile" badge="AVAILABLE" badgeColor={C.green}>
-      <CheckItem>Deutsche Bank AG, Frankfurt — <span className="mono">DEUTDEFF</span></CheckItem>
-      <CheckItem>Tier-1 global bank, EU-regulated, full FATF-compliant jurisdiction</CheckItem>
-      <CheckItem>Your relationship: long-standing correspondent, high volume</CheckItem>
-      <CheckItem>Risk profile: <strong style={{color:C.green}}>LOW</strong> — strong AML controls, responsive to inquiries</CheckItem>
-      <CheckItem>This PSP will route to beneficiary's account in Hamburg</CheckItem>
-    </Collapsible>
-    <Collapsible title="Sanctions / Watchlist Screening" badge="AVAILABLE" badgeColor={C.green}>
-      <CheckItem>Silk Road Commodities FZE — no exact match (embedding similarity to nearest SDN: <span className="mono">0.52</span>, below threshold)</CheckItem>
-      <CheckItem>Vostok Industrial Supply GmbH — no match ('Vostok' in 6 SDN entries, embedding correctly distinguishes)</CheckItem>
-      <CheckItem>First Commerce Bank — not sanctioned</CheckItem>
-      <CheckItem>Deutsche Bank AG — not sanctioned</CheckItem>
-      <CheckItem icon={'\u25D0'} color={C.amber}>Limitation: screening names only. No DOB/ID. Director/UBO names unknown — cannot screen individuals.</CheckItem>
-    </Collapsible>
-    <Collapsible title="Public / Commercial Data Lookups" badge="PARTIAL" badgeColor={C.amber}>
-      <CheckItem>UAE JAFZA registry: entity found — License <span className="mono">JLT-2023-48821</span>, Nov 2023, General Trading</CheckItem>
-      <CheckItem icon={'\u2717'} color={C.red}>JAFZA does NOT publicly disclose UBO — ownership unknown</CheckItem>
-      <CheckItem>German Handelsregister: Vostok found — <span className="mono">HRB 172845</span>, Hamburg 2019, director: Klaus Becker</CheckItem>
-      <CheckItem icon={'\u25D0'} color={C.amber}>No adverse media on entity names (too new/generic)</CheckItem>
-      <CheckItem icon={'\u25D0'} color={C.amber}>Cannot screen individual directors/UBOs</CheckItem>
-    </Collapsible>
-    <Collapsible title="Commodity / Trade Intelligence (from F70)" badge="PARTIAL" badgeColor={C.amber}>
-      <CheckItem>Market rate: <span className="mono">$2,100–$2,800/MT</span> for Grade A raw cotton</CheckItem>
-      <CheckItem>$2.45M buys ~875–1,167 MT — plausible shipment volume</CheckItem>
-      <CheckItem icon={'\u25D0'} color={C.amber}>Cannot verify unit price/quantity/route without trade docs</CheckItem>
-      <CheckItem icon={'\u26A0'} color={C.amber}>UAE→Germany corridor flagged in FinCEN Advisory 2023-A002 for TBML</CheckItem>
-      <CheckItem icon={'\u26A0'} color={C.amber}>JAFZA known transit point for Central Asian cotton — forced labor risk if Turkmen origin</CheckItem>
-      <CheckItem icon={'\u2717'} color={C.red}>Origin country unknown from payment message</CheckItem>
-    </Collapsible>
-    <InsightBox accent={C.red}>
-      <strong style={{color:C.tx}}>What You Still Don't Know</strong>
-      {['Who owns Silk Road Commodities (UBO unknown)','Directors/key individuals (no personal names to screen for media/PEP)','Originator\'s full KYC/CDD (belongs to respondent bank)','Actual trade documents (invoice, B/L, certificate of origin)','Whether commodity pricing is legitimate or inflated','Source of funds / source of wealth','Beneficiary\'s full KYC (belongs to downstream PSP)','Relationship between originator and beneficiary'].map((g,i)=><div key={i} style={{borderLeft:`3px solid ${C.red}`,paddingLeft:12,marginTop:8,fontSize:14,color:C.body}}>{g}</div>)}
-    </InsightBox>
-  </div>;
+function phase02(){
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">Before any analysis, enumerate exactly what data IS and IS NOT available to the correspondent bank. This honest inventory determines what the first embedding can realistically encode.</p>';
+
+  // 1. Payment Payload
+  var id1=uid();
+  out+=collapsible(id1,'Payment Payload (Parsed)','AVAILABLE',C.green,
+    checkItem('Originator name parsed: <strong style="color:'+C.tx+'">SILK ROAD COMMODITIES FZE</strong> \u2014 entity type: Free Zone Establishment (UAE)')+
+    checkItem('Originator address: PO Box only (JAFZA) \u2014 no physical street address')+
+    checkItem('Originator account: <span class="mono">AE42\u2026</span> \u2014 IBAN prefix confirms UAE')+
+    checkItem('Beneficiary name parsed: <strong style="color:'+C.tx+'">VOSTOK INDUSTRIAL SUPPLY GMBH</strong> \u2014 German limited company')+
+    checkItem('Beneficiary address: HAMBURGER STRASSE 42, HAMBURG \u2014 physical address present')+
+    checkItem('Beneficiary account: <span class="mono">DE89\u2026</span> \u2014 IBAN confirms Germany')+
+    checkItem('F70 NLP: keywords extracted \u2014 COTTON, FIBER, SHIPMENT, invoice ref pattern detected')
+  ,true);
+
+  // 2. Respondent Bank Profile
+  var id2=uid();
+  out+=collapsible(id2,'Respondent Bank Profile (Your Client)','AVAILABLE',C.green,
+    checkItem('First Commerce Bank of Eurasia \u2014 Nostro client since 2022')+
+    checkItem('Jurisdiction: Georgia \u2014 FATF mutual evaluation 2024 noted AML deficiencies')+
+    checkItem('Your internal risk rating: <strong style="color:'+C.orange+'">MEDIUM-HIGH</strong> (last annual review: Oct 2025)')+
+    checkItem('Total wire volume through your bank: <span class="mono">$48M</span> past 12 months \u2014 up 140% YoY')+
+    checkItem('Prior RFIs sent: 3 in 18 months \u2014 response quality: adequate (2), slow (1)')+
+    checkItem('Number of unique originators through this respondent: 47 (past 12 months)')+
+    checkItem('SARs filed on wires from this respondent: 2 (past 3 years)')
+  );
+
+  // 3. Transaction History
+  var id3=uid();
+  out+=collapsible(id3,'Transaction History (Your Books)','AVAILABLE',C.green,
+    checkItem('Originator \'Silk Road Commodities\' first seen 6 months ago through this respondent')+
+    checkItem('8 prior wires totaling <span class="mono">$12.4M</span> \u2014 all commodity-related (cotton, synthetic fiber)')+
+    checkItem('Average wire: <span class="mono">$1.55M</span> \u2014 this wire ($2.45M) is 58% above average')+
+    checkItem('All prior wires routed to Deutsche Bank Frankfurt (same downstream PSP)')+
+    checkItem('3 different beneficiaries previously: 2 in Germany, 1 in Turkey')+
+    checkItem('Beneficiary \'Vostok Industrial Supply\' \u2014 <strong style="color:'+C.orange+'">FIRST TIME</strong> seen across entire book')+
+    checkItem('Downstream PSP (Deutsche Bank) \u2014 established, high volume, low-risk')+
+    checkItem('No prior alerts on this originator; 1 prior alert on different originator through same respondent (closed, no action)')
+  );
+
+  // 4. Downstream PSP Profile
+  var id4=uid();
+  out+=collapsible(id4,'Downstream PSP Profile','AVAILABLE',C.green,
+    checkItem('Deutsche Bank AG, Frankfurt \u2014 <span class="mono">DEUTDEFF</span>')+
+    checkItem('Tier-1 global bank, EU-regulated, full FATF-compliant jurisdiction')+
+    checkItem('Your relationship: long-standing correspondent, high volume')+
+    checkItem('Risk profile: <strong style="color:'+C.green+'">LOW</strong> \u2014 strong AML controls, responsive to inquiries')+
+    checkItem('This PSP will route to beneficiary\'s account in Hamburg')
+  );
+
+  // 5. Sanctions / Watchlist Screening
+  var id5=uid();
+  out+=collapsible(id5,'Sanctions / Watchlist Screening','AVAILABLE',C.green,
+    checkItem('Silk Road Commodities FZE \u2014 no exact match (embedding similarity to nearest SDN: <span class="mono">0.52</span>, below threshold)')+
+    checkItem('Vostok Industrial Supply GmbH \u2014 no match (\'Vostok\' in 6 SDN entries, embedding correctly distinguishes)')+
+    checkItem('First Commerce Bank \u2014 not sanctioned')+
+    checkItem('Deutsche Bank AG \u2014 not sanctioned')+
+    checkItem('Limitation: screening names only. No DOB/ID. Director/UBO names unknown \u2014 cannot screen individuals.','\u25D0',C.amber)
+  );
+
+  // 6. Public / Commercial Data Lookups
+  var id6=uid();
+  out+=collapsible(id6,'Public / Commercial Data Lookups','PARTIAL',C.amber,
+    checkItem('UAE JAFZA registry: entity found \u2014 License <span class="mono">JLT-2023-48821</span>, Nov 2023, General Trading')+
+    checkItem('JAFZA does NOT publicly disclose UBO \u2014 ownership unknown','\u2717',C.red)+
+    checkItem('German Handelsregister: Vostok found \u2014 <span class="mono">HRB 172845</span>, Hamburg 2019, director: Klaus Becker')+
+    checkItem('No adverse media on entity names (too new/generic)','\u25D0',C.amber)+
+    checkItem('Cannot screen individual directors/UBOs','\u25D0',C.amber)
+  );
+
+  // 7. Commodity / Trade Intelligence
+  var id7=uid();
+  out+=collapsible(id7,'Commodity / Trade Intelligence (from F70)','PARTIAL',C.amber,
+    checkItem('Market rate: <span class="mono">$2,100\u2013$2,800/MT</span> for Grade A raw cotton')+
+    checkItem('$2.45M buys ~875\u20131,167 MT \u2014 plausible shipment volume')+
+    checkItem('Cannot verify unit price/quantity/route without trade docs','\u25D0',C.amber)+
+    checkItem('UAE\u2192Germany corridor flagged in FinCEN Advisory 2023-A002 for TBML','\u26A0',C.amber)+
+    checkItem('JAFZA known transit point for Central Asian cotton \u2014 forced labor risk if Turkmen origin','\u26A0',C.amber)+
+    checkItem('Origin country unknown from payment message','\u2717',C.red)
+  );
+
+  var gaps=['Who owns Silk Road Commodities (UBO unknown)','Directors/key individuals (no personal names to screen for media/PEP)','Originator\'s full KYC/CDD (belongs to respondent bank)','Actual trade documents (invoice, B/L, certificate of origin)','Whether commodity pricing is legitimate or inflated','Source of funds / source of wealth','Beneficiary\'s full KYC (belongs to downstream PSP)','Relationship between originator and beneficiary'];
+  var gapHtml='';
+  for(var i=0;i<gaps.length;i++){
+    gapHtml+='<div style="border-left:3px solid '+C.red+';padding-left:12px;margin-top:8px;font-size:14px;color:'+C.body+'">'+gaps[i]+'</div>';
+  }
+  out+=insightBox(C.red,'<strong style="color:'+C.tx+'">What You Still Don\'t Know</strong>'+gapHtml);
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 03: First Embedding ── */
-function Phase03(){
-  const dims=[
+function phase03(){
+  var dims=[
     {label:'Corridor risk',value:0.78,confidence:'HIGH',source:'BIC: Georgia \u2192 UAE originator \u2192 Germany via Frankfurt'},
     {label:'Originator recency',value:0.72,confidence:'HIGH',source:'First seen 6mo ago, JAFZA license Nov 2023, 8 prior wires'},
     {label:'Respondent risk profile',value:0.70,confidence:'HIGH',source:'Your internal rating: MED-HIGH, FATF deficiencies, 140% volume growth'},
@@ -213,29 +344,35 @@ function Phase03(){
     {label:'Sanctions proximity',value:0.42,confidence:'MEDIUM',source:'Name screening only \u2014 no personal identifiers available'},
     {label:'Pricing anomaly',value:0.40,confidence:'LOW',source:'ESTIMATED: amount is plausible but unverifiable without docs'},
     {label:'Network risk',value:0.35,confidence:'LOW',source:'Limited \u2014 first-time beneficiary, no known entity connections'},
-    {label:'Adverse media',value:0.15,confidence:'LOW',source:'Entity names only \u2014 no director/UBO names to screen'},
+    {label:'Adverse media',value:0.15,confidence:'LOW',source:'Entity names only \u2014 no director/UBO names to screen'}
   ];
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>Generate a composite embedding from ALL realistically available data: payment fields, respondent bank profile, your transaction history, counterparty basics, sanctions/watchlist results, public lookups, and commodity intelligence from the remittance text.</p>
-    <Section title="Embedding Dimensions — What You Can Actually Encode" accent={C.blue}>
-      <div style={{fontSize:13,color:C.muted,marginBottom:16,fontStyle:'italic'}}>Each dimension shows signal strength AND confidence level. HIGH confidence = derived from data you possess. MEDIUM = inferred from available signals. LOW = estimated or inferred from absence of information.</div>
-      <CardBox>{dims.map((d,i)=><EmbedBar key={i} label={d.label} value={d.value} confidence={d.confidence} source={d.source} color={C.blue}/>)}</CardBox>
-    </Section>
-    <InsightBox accent={C.blue}>
-      Six dimensions have HIGH confidence — corridor risk, respondent profile, originator recency, wire anomaly, beneficiary novelty, and downstream PSP profile. These are derived from data you actually hold. Two dimensions are MEDIUM — TBML corridor signal and entity type, inferred from payment fields. Four dimensions are LOW confidence — ownership, media, pricing, and network are mostly gaps. The embedding encodes both the signals AND the uncertainty. This partial embedding is still valuable because the GBM has learned from thousands of prior cases which combinations of high-confidence signals predict real risk, even when low-confidence dimensions are ambiguous.
-    </InsightBox>
-  </div>;
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">Generate a composite embedding from ALL realistically available data: payment fields, respondent bank profile, your transaction history, counterparty basics, sanctions/watchlist results, public lookups, and commodity intelligence from the remittance text.</p>';
+
+  var barsHtml='<div style="font-size:13px;color:'+C.muted+';margin-bottom:16px;font-style:italic">Each dimension shows signal strength AND confidence level. HIGH confidence = derived from data you possess. MEDIUM = inferred from available signals. LOW = estimated or inferred from absence of information.</div>';
+  var innerBars='';
+  for(var i=0;i<dims.length;i++){
+    innerBars+=embedBar(dims[i].label,dims[i].value,dims[i].confidence,dims[i].source,C.blue);
+  }
+  barsHtml+=cardBox(innerBars);
+
+  out+=section('Embedding Dimensions \u2014 What You Can Actually Encode',C.blue,barsHtml);
+
+  out+=insightBox(C.blue,'Six dimensions have HIGH confidence \u2014 corridor risk, respondent profile, originator recency, wire anomaly, beneficiary novelty, and downstream PSP profile. These are derived from data you actually hold. Two dimensions are MEDIUM \u2014 TBML corridor signal and entity type, inferred from payment fields. Four dimensions are LOW confidence \u2014 ownership, media, pricing, and network are mostly gaps. The embedding encodes both the signals AND the uncertainty. This partial embedding is still valuable because the GBM has learned from thousands of prior cases which combinations of high-confidence signals predict real risk, even when low-confidence dimensions are ambiguous.');
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 04: ML Triage ── */
-function Phase04(){
-  const buckets=[
+function phase04(){
+  var buckets=[
     {label:'Auto-Close',range:'0\u201325%',color:C.green,pct:'~50\u201360%',desc:'Low risk across all available signals.'},
     {label:'Expedited Review',range:'25\u201350%',color:C.amber,pct:'~18\u201322%',desc:'Some signals. Analyst validates in 15\u201330 min.'},
     {label:'Full Investigation',range:'50\u201380%',color:C.orange,pct:'~12\u201318%',desc:'Material risk + data gaps. Likely needs RFI.',active:true},
-    {label:'High Priority / SAR Track',range:'80\u2013100%',color:C.red,pct:'~5\u20138%',desc:'Strong indicators even on available data.'},
+    {label:'High Priority / SAR Track',range:'80\u2013100%',color:C.red,pct:'~5\u20138%',desc:'Strong indicators even on available data.'}
   ];
-  const shap=[
+  var shap=[
     {label:'Corridor risk (Georgia\u2192UAE\u2192Germany)',value:0.16},
     {label:'Originator newness (6mo, entity < 3yr)',value:0.14},
     {label:'Respondent risk profile (MED-HIGH)',value:0.11},
@@ -245,148 +382,201 @@ function Phase04(){
     {label:'FZE entity type (free zone)',value:0.05},
     {label:'No sanctions hit',value:-0.05},
     {label:'Downstream PSP Deutsche Bank (low-risk)',value:-0.06},
-    {label:'Established respondent relationship (4yr)',value:-0.04},
+    {label:'Established respondent relationship (4yr)',value:-0.04}
   ];
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>GBM consumes the detection engine score plus all embedding-derived features. It routes alerts into four buckets. The model has learned from historical dispositions which signal combinations — even with partial data — are worth investigating.</p>
-    <CardBox accent={C.orange} style={{textAlign:'center',padding:'32px 24px'}}>
-      <div className="mono" style={{fontSize:56,fontWeight:800,color:C.orange}}>74%</div>
-      <div style={{fontSize:18,fontWeight:700,color:C.tx,marginTop:4}}>FULL INVESTIGATION</div>
-      <div style={{fontSize:13,color:C.dim,marginTop:4}}>Confidence range: 60\u201386% (wider due to low-confidence embedding dims)</div>
-      <div style={{fontSize:14,color:C.body,marginTop:12,maxWidth:560,margin:'12px auto 0',lineHeight:1.6}}>GBM scores 74% — not higher — because the model honestly weights confidence levels. With unknown ownership, no adverse media on individuals, and unverified pricing, the model assigns material risk but acknowledges significant uncertainty.</div>
-    </CardBox>
-    <Section title="Triage Buckets" accent={C.orange}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12}}>
-        {buckets.map((b,i)=><CardBox key={i} accent={b.active?b.color:undefined} highlight={b.active} style={{borderWidth:b.active?2:1}}>
-          <div style={{fontSize:13,fontWeight:700,color:b.color}}>{b.label}</div>
-          <div className="mono" style={{fontSize:12,color:C.dim,marginTop:2}}>{b.range}</div>
-          <div style={{fontSize:12,color:C.muted,marginTop:2}}>{b.pct} of alerts</div>
-          <div style={{fontSize:12,color:C.body,marginTop:6}}>{b.desc}</div>
-          {b.active&&<Badge color={C.orange}>{'\u2190'} THIS CASE</Badge>}
-        </CardBox>)}
-      </div>
-    </Section>
-    <Section title="SHAP Feature Importance" accent={C.orange}>
-      <CardBox>{shap.map((s,i)=><ShapBar key={i} label={s.label} value={s.value}/>)}</CardBox>
-    </Section>
-  </div>;
+
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">GBM consumes the detection engine score plus all embedding-derived features. It routes alerts into four buckets. The model has learned from historical dispositions which signal combinations \u2014 even with partial data \u2014 are worth investigating.</p>';
+
+  // Big score card
+  out+=cardBox(
+    '<div class="mono" style="font-size:56px;font-weight:800;color:'+C.orange+'">74%</div>'+
+    '<div style="font-size:18px;font-weight:700;color:'+C.tx+';margin-top:4px">FULL INVESTIGATION</div>'+
+    '<div style="font-size:13px;color:'+C.dim+';margin-top:4px">Confidence range: 60\u201386% (wider due to low-confidence embedding dims)</div>'+
+    '<div style="font-size:14px;color:'+C.body+';margin-top:12px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6">GBM scores 74% \u2014 not higher \u2014 because the model honestly weights confidence levels. With unknown ownership, no adverse media on individuals, and unverified pricing, the model assigns material risk but acknowledges significant uncertainty.</div>'
+  ,C.orange,false,'text-align:center;padding:32px 24px;');
+
+  // Triage Buckets
+  var buckHtml='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">';
+  for(var i=0;i<buckets.length;i++){
+    var b=buckets[i];
+    var bStyle='border-width:'+(b.active?'2px':'1px')+';';
+    if(b.active) bStyle+='border-left:3px solid '+b.color+';';
+    buckHtml+=cardBox(
+      '<div style="font-size:13px;font-weight:700;color:'+b.color+'">'+b.label+'</div>'+
+      '<div class="mono" style="font-size:12px;color:'+C.dim+';margin-top:2px">'+b.range+'</div>'+
+      '<div style="font-size:12px;color:'+C.muted+';margin-top:2px">'+b.pct+' of alerts</div>'+
+      '<div style="font-size:12px;color:'+C.body+';margin-top:6px">'+b.desc+'</div>'+
+      (b.active?badge(C.orange,'\u2190 THIS CASE'):'')
+    ,b.active?b.color:undefined,b.active,bStyle);
+  }
+  buckHtml+='</div>';
+  out+=section('Triage Buckets',C.orange,buckHtml);
+
+  // SHAP bars
+  var shapHtml='';
+  for(var i=0;i<shap.length;i++){
+    shapHtml+=shapBar(shap[i].label,shap[i].value);
+  }
+  out+=section('SHAP Feature Importance',C.orange,cardBox(shapHtml));
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 05: Investigation ── */
-function Phase05(){
-  const tools=[
+function phase05(){
+  var tools=[
     {icon:'\uD83D\uDCCB',title:'Evidence Package',desc:'All available intel pre-organized by risk theme. Timeline view showing entity creation \u2192 first wire \u2192 volume ramp.'},
-    {icon:'\uD83D\uDD0E',title:'Similar Case Finder',desc:'Vector search returns 5 most similar historical cases. "This case is 88% similar to SAR-2025-1204 (TBML cotton trade, Central Asian corridor)."'},
+    {icon:'\uD83D\uDD0E',title:'Similar Case Finder',desc:'Vector search returns 5 most similar historical cases. &quot;This case is 88% similar to SAR-2025-1204 (TBML cotton trade, Central Asian corridor).&quot;'},
     {icon:'\uD83D\uDD78',title:'Network Visualizer',desc:'Graph: Silk Road \u2192 3 prior beneficiaries + this new one. Overlays wires involving related entities.'},
     {icon:'\uD83D\uDCB0',title:'Commodity Price Checker',desc:'Cotton Grade A market: $2,100\u2013$2,800/MT. Wire amount plausible but unit price unverifiable.'},
     {icon:'\uD83D\uDCDD',title:'AI Narrative Generator',desc:'Auto-drafts investigation memo. Marks confirmed vs inferred vs unknown.'},
-    {icon:'\uD83D\uDCE8',title:'RFI Decision Support',desc:'Recommends RFI, auto-generates targeted letter with specific requests mapped to embedding gaps.'},
+    {icon:'\uD83D\uDCE8',title:'RFI Decision Support',desc:'Recommends RFI, auto-generates targeted letter with specific requests mapped to embedding gaps.'}
   ];
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>Investigator receives a pre-built case package with all available intelligence organized by risk theme. Embedding-powered tools surface similar historical cases, network connections, and pattern analysis. The investigator decides whether RFI is needed.</p>
-    <Section title="Investigator Tools" accent={C.purple}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:12}}>
-        {tools.map((t,i)=><CardBox key={i}><div style={{display:'flex',gap:10,alignItems:'flex-start'}}><span style={{fontSize:24}}>{t.icon}</span><div><div style={{fontSize:15,fontWeight:600,color:C.tx}}>{t.title}</div><div style={{fontSize:13,color:C.body,marginTop:4,lineHeight:1.5}}>{t.desc}</div></div></div></CardBox>)}
-      </div>
-    </Section>
-    <Section title="Investigator Actions" accent={C.purple}>
-      <CardBox>
-        <CheckItem icon={'\u2713'} color={C.green}>Reviewed evidence — confirmed corridor risk and respondent concerns</CheckItem>
-        <CheckItem icon={'\u2713'} color={C.green}>Checked similar cases — 88% match to prior TBML SAR</CheckItem>
-        <CheckItem icon={'\u2713'} color={C.green}>Reviewed wire history — escalating pattern (8 wires, 6 months, increasing amounts)</CheckItem>
-        <CheckItem icon={'\u2713'} color={C.green}>Noted first-time beneficiary</CheckItem>
-        <CheckItem icon={'\u2713'} color={C.green}>Validated commodity plausibility, cannot confirm pricing</CheckItem>
-        <div style={{marginTop:12,padding:'12px 16px',background:C.rose+'18',borderRadius:8,borderLeft:`3px solid ${C.rose}`}}>
-          <span style={{fontSize:15,fontWeight:700,color:C.rose}}>{'\u2192'} Decision: SEND RFI</span>
-        </div>
-        <div style={{fontSize:13,color:C.muted,marginTop:10,fontStyle:'italic'}}>Investigator time: ~45 minutes vs 4\u20138 hours traditional.</div>
-      </CardBox>
-    </Section>
-  </div>;
+
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">Investigator receives a pre-built case package with all available intelligence organized by risk theme. Embedding-powered tools surface similar historical cases, network connections, and pattern analysis. The investigator decides whether RFI is needed.</p>';
+
+  var toolHtml='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">';
+  for(var i=0;i<tools.length;i++){
+    var t=tools[i];
+    toolHtml+=cardBox(
+      '<div style="display:flex;gap:10px;align-items:flex-start">'+
+        '<span style="font-size:24px">'+t.icon+'</span>'+
+        '<div><div style="font-size:15px;font-weight:600;color:'+C.tx+'">'+t.title+'</div>'+
+        '<div style="font-size:13px;color:'+C.body+';margin-top:4px;line-height:1.5">'+t.desc+'</div></div>'+
+      '</div>'
+    );
+  }
+  toolHtml+='</div>';
+  out+=section('Investigator Tools',C.purple,toolHtml);
+
+  out+=section('Investigator Actions',C.purple,
+    cardBox(
+      checkItem('Reviewed evidence \u2014 confirmed corridor risk and respondent concerns','\u2713',C.green)+
+      checkItem('Checked similar cases \u2014 88% match to prior TBML SAR','\u2713',C.green)+
+      checkItem('Reviewed wire history \u2014 escalating pattern (8 wires, 6 months, increasing amounts)','\u2713',C.green)+
+      checkItem('Noted first-time beneficiary','\u2713',C.green)+
+      checkItem('Validated commodity plausibility, cannot confirm pricing','\u2713',C.green)+
+      '<div style="margin-top:12px;padding:12px 16px;background:'+C.rose+'18;border-radius:8px;border-left:3px solid '+C.rose+'">'+
+        '<span style="font-size:15px;font-weight:700;color:'+C.rose+'">\u2192 Decision: SEND RFI</span>'+
+      '</div>'+
+      '<div style="font-size:13px;color:'+C.muted+';margin-top:10px;font-style:italic">Investigator time: ~45 minutes vs 4\u20138 hours traditional.</div>'
+    )
+  );
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 06: Targeted RFI ── */
-function Phase06(){
-  const docs=[
+function phase06(){
+  var docs=[
     {name:'Full KYC \u2014 Silk Road Commodities FZE',reason:'Identify natural persons behind the entity',resolves:'ownership_opacity, entity_maturity, adverse_media (need director names)'},
     {name:'Beneficial ownership including trust/nominee structures',reason:'Determine ultimate beneficial owner(s)',resolves:'ownership_opacity, network_risk'},
     {name:'Commercial invoice INV-2026-TR-4418',reason:'Verify pricing, quantities, and terms',resolves:'pricing_anomaly, tbml_typology'},
     {name:'Bill of Lading / shipping docs',reason:'Confirm physical shipment and routing',resolves:'routing_risk, doc_consistency'},
     {name:'Certificate of Origin',reason:'Determine true country of origin for sanctions/forced labor check',resolves:'jurisdiction_risk, forced_labor'},
-    {name:'Source of funds for transaction and business relationship',reason:'Understand economic rationale',resolves:'sof_risk, entity_maturity'},
+    {name:'Source of funds for transaction and business relationship',reason:'Understand economic rationale',resolves:'sof_risk, entity_maturity'}
   ];
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>The RFI is surgically targeted at specific gaps the embedding identified. Each document request maps to an unknown or low-confidence embedding dimension.</p>
-    <CardBox accent={C.rose} style={{marginBottom:20}}>
-      <div style={{display:'flex',flexWrap:'wrap',gap:16,fontSize:13,color:C.body}}>
-        <div><strong style={{color:C.tx}}>To:</strong> First Commerce Bank Compliance</div>
-        <div><strong style={{color:C.tx}}>Re:</strong> Wire <span className="mono">FCB20260418-7741</span>, $2,450,000</div>
-        <div><strong style={{color:C.tx}}>Deadline:</strong> 15 business days</div>
-      </div>
-    </CardBox>
-    <Section title="Document Requests" accent={C.rose}>
-      {docs.map((d,i)=><CardBox key={i} style={{borderLeft:`3px solid ${C.rose}`}}>
-        <div style={{fontSize:15,fontWeight:600,color:C.tx,marginBottom:4}}>{i+1}. {d.name}</div>
-        <div style={{fontSize:13,color:C.body,marginBottom:6}}>{d.reason}</div>
-        <div style={{fontSize:12,color:C.dim}}>Resolves embedding gaps: <span className="mono" style={{color:C.rose}}>{d.resolves}</span></div>
-      </CardBox>)}
-    </Section>
-  </div>;
+
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">The RFI is surgically targeted at specific gaps the embedding identified. Each document request maps to an unknown or low-confidence embedding dimension.</p>';
+
+  out+=cardBox(
+    '<div style="display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:'+C.body+'">'+
+      '<div><strong style="color:'+C.tx+'">To:</strong> First Commerce Bank Compliance</div>'+
+      '<div><strong style="color:'+C.tx+'">Re:</strong> Wire <span class="mono">FCB20260418-7741</span>, $2,450,000</div>'+
+      '<div><strong style="color:'+C.tx+'">Deadline:</strong> 15 business days</div>'+
+    '</div>'
+  ,C.rose,false,'margin-bottom:20px;');
+
+  var docHtml='';
+  for(var i=0;i<docs.length;i++){
+    var d=docs[i];
+    docHtml+=cardBox(
+      '<div style="font-size:15px;font-weight:600;color:'+C.tx+';margin-bottom:4px">'+(i+1)+'. '+d.name+'</div>'+
+      '<div style="font-size:13px;color:'+C.body+';margin-bottom:6px">'+d.reason+'</div>'+
+      '<div style="font-size:12px;color:'+C.dim+'">Resolves embedding gaps: <span class="mono" style="color:'+C.rose+'">'+d.resolves+'</span></div>'
+    ,null,false,'border-left:3px solid '+C.rose+';');
+  }
+  out+=section('Document Requests',C.rose,docHtml);
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 07: Doc Ingestion ── */
-function Phase07(){
-  const docs=[
+function phase07(){
+  var docs=[
     {title:'KYC Package',status:'\u2713 RECEIVED',statusColor:C.green,pages:'14pg',detail:'UBO: Kavtaradze 60%, Seabridge Holdings BVI 40%. Director: Rustam Kavtaradze. Turnover $18M.'},
     {title:'UBO Documentation (Seabridge)',status:'\u25D0 PARTIAL',statusColor:C.amber,pages:'3pg',detail:'Trust deed: Meridian Fiduciary Services (Liechtenstein). Settlor redacted. No natural person UBO.'},
     {title:'Trade Invoice',status:'\u2713 RECEIVED',statusColor:C.green,pages:'3pg',detail:'500 MT cotton Grade A @ $4,900/MT = $2,450,000. T/T 5 days.'},
     {title:'Bill of Lading',status:'\u2713 RECEIVED',statusColor:C.green,pages:'2pg',detail:'Turkmenbashi, Turkmenistan \u2192 Hamburg. Vessel: MV Caspian Star. Weight: 502.4 MT.'},
     {title:'Certificate of Origin',status:'\u2713 RECEIVED',statusColor:C.green,pages:'1pg',detail:'Turkmenistan Chamber of Commerce. Exporter: Turkmen Cotton State Enterprise.'},
-    {title:'Source of Funds',status:'\u2717 NOT PROVIDED',statusColor:C.red,pages:'\u2014',detail:'Client declined to provide personal financial documentation.'},
+    {title:'Source of Funds',status:'\u2717 NOT PROVIDED',statusColor:C.red,pages:'\u2014',detail:'Client declined to provide personal financial documentation.'}
   ];
-  const checks=[
+  var checks=[
     {icon:'\u2713',label:'Invoice amount vs wire',result:'MATCH',color:C.green},
     {icon:'\u2713',label:'Invoice seller vs KYC entity',result:'MATCH',color:C.green},
     {icon:'\u2713',label:'B/L shipper vs invoice seller',result:'MATCH',color:C.green},
     {icon:'\u25D0',label:'B/L weight (502.4 MT) vs invoice (500 MT)',result:'MINOR DISCREPANCY',color:C.amber},
     {icon:'\u2717',label:'COO exporter vs invoice seller',result:'MISMATCH \u2014 State Enterprise \u2260 Silk Road',color:C.red},
-    {icon:'\u2717',label:'Invoice unit price ($4,900) vs market ($2,100\u20132,800)',result:'ANOMALY 75\u2013130% ABOVE',color:C.red},
+    {icon:'\u2717',label:'Invoice unit price ($4,900) vs market ($2,100\u2013$2,800)',result:'ANOMALY 75\u2013130% ABOVE',color:C.red},
     {icon:'\u2717',label:'UBO disclosure',result:'INCOMPLETE \u2014 settlor hidden',color:C.red},
     {icon:'\u2717',label:'Source of funds',result:'REFUSED BY CLIENT',color:C.red},
-    {icon:'\u25D0',label:'Payment terms T/T 5 days vs norm 30\u201390 days',result:'ANOMALOUS',color:C.orange},
+    {icon:'\u25D0',label:'Payment terms T/T 5 days vs norm 30\u201390 days',result:'ANOMALOUS',color:C.orange}
   ];
-  const findings=['Cotton 75\u2013130% above market \u2014 TBML over-invoicing','COO: Turkmen state enterprise but seller is UAE FZE \u2014 pass-through, no value-add','Turkmenistan origin = forced labor (CBP WRO)','BVI trust settlor not disclosed despite explicit request','Client REFUSED source of funds','Payment terms abnormally fast (5 days vs 30\u201390 norm)','NEW: Director name Rustam Kavtaradze \u2014 can now screen for adverse media/PEP'];
-  return <div className="fade-in">
-    <Section title="Documents Received" accent={C.cyan}>
-      {docs.map((d,i)=><Collapsible key={i} title={d.title} badge={d.status} badgeColor={d.statusColor}>
-        <div style={{fontSize:13,color:C.muted,marginBottom:6}}>Pages: {d.pages}</div>
-        <div style={{fontSize:14,color:C.body}}>{d.detail}</div>
-      </Collapsible>)}
-    </Section>
-    <Section title="Cross-Document Consistency Checks" accent={C.cyan}>
-      <CardBox>{checks.map((c,i)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:10,padding:'6px 0',borderLeft:`3px solid ${c.color}`,paddingLeft:12,marginBottom:4}}>
-        <span style={{color:c.color,flexShrink:0,fontSize:14}}>{c.icon}</span>
-        <span style={{fontSize:13,color:C.body}}>{c.label}: <strong style={{color:c.color}}>{c.result}</strong></span>
-      </div>)}</CardBox>
-    </Section>
-    <InsightBox accent={C.red}>
-      <strong style={{color:C.tx}}>Critical Findings</strong>
-      {findings.map((f,i)=><div key={i} style={{borderLeft:`3px solid ${C.red}`,paddingLeft:12,marginTop:8,fontSize:14,color:C.body}}>{f}</div>)}
-    </InsightBox>
-  </div>;
+  var findings=['Cotton 75\u2013130% above market \u2014 TBML over-invoicing','COO: Turkmen state enterprise but seller is UAE FZE \u2014 pass-through, no value-add','Turkmenistan origin = forced labor (CBP WRO)','BVI trust settlor not disclosed despite explicit request','Client REFUSED source of funds','Payment terms abnormally fast (5 days vs 30\u201390 norm)','NEW: Director name Rustam Kavtaradze \u2014 can now screen for adverse media/PEP'];
+
+  var out='<div class="fade-in">';
+
+  // Documents Received
+  var docHtml='';
+  for(var i=0;i<docs.length;i++){
+    var d=docs[i];
+    var cid=uid();
+    docHtml+=collapsible(cid,d.title,d.status,d.statusColor,
+      '<div style="font-size:13px;color:'+C.muted+';margin-bottom:6px">Pages: '+d.pages+'</div>'+
+      '<div style="font-size:14px;color:'+C.body+'">'+d.detail+'</div>'
+    );
+  }
+  out+=section('Documents Received',C.cyan,docHtml);
+
+  // Cross-Document Consistency Checks
+  var checkHtml='';
+  for(var i=0;i<checks.length;i++){
+    var c=checks[i];
+    checkHtml+='<div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-left:3px solid '+c.color+';padding-left:12px;margin-bottom:4px">'+
+      '<span style="color:'+c.color+';flex-shrink:0;font-size:14px">'+c.icon+'</span>'+
+      '<span style="font-size:13px;color:'+C.body+'">'+c.label+': <strong style="color:'+c.color+'">'+c.result+'</strong></span>'+
+    '</div>';
+  }
+  out+=section('Cross-Document Consistency Checks',C.cyan,cardBox(checkHtml));
+
+  // Critical Findings
+  var findHtml='<strong style="color:'+C.tx+'">Critical Findings</strong>';
+  for(var i=0;i<findings.length;i++){
+    findHtml+='<div style="border-left:3px solid '+C.red+';padding-left:12px;margin-top:8px;font-size:14px;color:'+C.body+'">'+findings[i]+'</div>';
+  }
+  out+=insightBox(C.red,findHtml);
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 08: Second Embedding ── */
-function Phase08(){
-  const newIntel=[
+function phase08(){
+  var newIntel=[
     'Director name: Kavtaradze \u2192 adverse media: 3 hits (opaque commodity networks, Tbilisi real estate scrutiny)',
     'Actual unit price: $4,900/MT \u2192 confirmed over-invoicing',
     'Origin country: Turkmenistan \u2192 forced labor confirmed',
     'Shipping route: Turkmenbashi \u2192 Hamburg \u2192 seller in UAE = pass-through confirmed',
     'BVI trust with hidden settlor \u2192 ownership opacity confirmed, not inferred',
-    'Client non-cooperation \u2192 refused SOF = new risk signal',
+    'Client non-cooperation \u2192 refused SOF = new risk signal'
   ];
-  const dims=[
+  var dims=[
     {label:'Non-cooperation signal',before:0.00,after:0.82,delta:82,note:'DID NOT EXIST \u2192 NEW DIMENSION'},
     {label:'Adverse media',before:0.15,after:0.78,delta:63,note:'Was near-zero \u2192 NOW 3 HITS on Kavtaradze'},
     {label:'Forced labor exposure',before:0.30,after:0.90,delta:60,note:'Was possible \u2192 CONFIRMED: Turkmen state enterprise'},
@@ -396,45 +586,56 @@ function Phase08(){
     {label:'Doc consistency',before:0.30,after:0.65,delta:35,note:'Weight discrepancy + COO mismatch + fast terms'},
     {label:'TBML typology',before:0.62,after:0.94,delta:32,note:'Was inferred \u2192 CONFIRMED with trade doc evidence'},
     {label:'Entity maturity',before:0.72,after:0.85,delta:13,note:'Confirmed $18M turnover in < 3 years'},
-    {label:'Corridor risk',before:0.78,after:0.90,delta:12,note:'Confirmed Turkmenistan origin'},
+    {label:'Corridor risk',before:0.78,after:0.90,delta:12,note:'Confirmed Turkmenistan origin'}
   ];
-  return <div className="fade-in">
-    <Section title="New Intelligence — Available Only After RFI" accent={C.indigo}>
-      <CardBox>{newIntel.map((n,i)=><div key={i} style={{borderLeft:`3px solid ${C.indigo}`,paddingLeft:12,marginBottom:6,fontSize:14,color:C.body}}>{n}</div>)}</CardBox>
-    </Section>
-    <Section title="Embedding Dimension Shifts" accent={C.indigo}>
-      <div style={{fontSize:13,color:C.muted,marginBottom:12,fontStyle:'italic'}}>Faint bar = pre-RFI value. Solid bar = post-RFI value. Sorted by delta magnitude.</div>
-      <CardBox>{dims.map((d,i)=><div key={i} style={{marginBottom:16}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
-          <span style={{fontSize:14,color:C.tx,fontWeight:500}}>{d.label}</span>
-          <div style={{display:'flex',alignItems:'center',gap:8}}>
-            <span className="mono" style={{fontSize:12,color:C.muted}}>{d.before.toFixed(2)}</span>
-            <span style={{color:C.dim}}>{'\u2192'}</span>
-            <span className="mono" style={{fontSize:14,fontWeight:700,color:C.indigo}}>{d.after.toFixed(2)}</span>
-            <Badge color={C.indigo}>+{d.delta}</Badge>
-          </div>
-        </div>
-        <div style={{position:'relative',height:8,background:C.bdr,borderRadius:4,overflow:'hidden'}}>
-          <div style={{position:'absolute',left:0,top:0,bottom:0,width:`${d.before*100}%`,background:C.blue+'44',borderRadius:4}}/>
-          <div style={{position:'absolute',left:0,top:0,bottom:0,width:`${d.after*100}%`,background:C.indigo,borderRadius:4,transition:'width .4s'}}/>
-        </div>
-        <div style={{fontSize:12,color:C.muted,marginTop:3,fontStyle:'italic'}}>{d.note}</div>
-      </div>)}</CardBox>
-    </Section>
-    <InsightBox accent={C.indigo}>
-      The first embedding had 4 LOW + 2 MEDIUM confidence dims. After documents, almost all HIGH. The first pass tells you WHAT to ask for; the second tells you WHAT IT MEANS.
-    </InsightBox>
-  </div>;
+
+  var out='<div class="fade-in">';
+
+  // New Intelligence
+  var intelHtml='';
+  for(var i=0;i<newIntel.length;i++){
+    intelHtml+='<div style="border-left:3px solid '+C.indigo+';padding-left:12px;margin-bottom:6px;font-size:14px;color:'+C.body+'">'+newIntel[i]+'</div>';
+  }
+  out+=section('New Intelligence \u2014 Available Only After RFI',C.indigo,cardBox(intelHtml));
+
+  // Embedding Dimension Shifts
+  var dimHtml='<div style="font-size:13px;color:'+C.muted+';margin-bottom:12px;font-style:italic">Faint bar = pre-RFI value. Solid bar = post-RFI value. Sorted by delta magnitude.</div>';
+  var innerDims='';
+  for(var i=0;i<dims.length;i++){
+    var d=dims[i];
+    innerDims+='<div style="margin-bottom:16px">';
+    innerDims+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+    innerDims+='<span style="font-size:14px;color:'+C.tx+';font-weight:500">'+d.label+'</span>';
+    innerDims+='<div style="display:flex;align-items:center;gap:8px">';
+    innerDims+='<span class="mono" style="font-size:12px;color:'+C.muted+'">'+d.before.toFixed(2)+'</span>';
+    innerDims+='<span style="color:'+C.dim+'">\u2192</span>';
+    innerDims+='<span class="mono" style="font-size:14px;font-weight:700;color:'+C.indigo+'">'+d.after.toFixed(2)+'</span>';
+    innerDims+=badge(C.indigo,'+'+d.delta);
+    innerDims+='</div></div>';
+    innerDims+='<div style="position:relative;height:8px;background:'+C.bdr+';border-radius:4px;overflow:hidden">';
+    innerDims+='<div style="position:absolute;left:0;top:0;bottom:0;width:'+(d.before*100)+'%;background:'+C.blue+'44;border-radius:4px"></div>';
+    innerDims+='<div style="position:absolute;left:0;top:0;bottom:0;width:'+(d.after*100)+'%;background:'+C.indigo+';border-radius:4px;transition:width .4s"></div>';
+    innerDims+='</div>';
+    innerDims+='<div style="font-size:12px;color:'+C.muted+';margin-top:3px;font-style:italic">'+d.note+'</div>';
+    innerDims+='</div>';
+  }
+  dimHtml+=cardBox(innerDims);
+  out+=section('Embedding Dimension Shifts',C.indigo,dimHtml);
+
+  out+=insightBox(C.indigo,'The first embedding had 4 LOW + 2 MEDIUM confidence dims. After documents, almost all HIGH. The first pass tells you WHAT to ask for; the second tells you WHAT IT MEANS.');
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 09: Final Decision ── */
-function Phase09(){
-  const scores=[
+function phase09(){
+  var scores=[
     {label:'Detection engine raw',value:72,color:C.slate},
     {label:'1st embed + GBM',value:74,color:C.orange},
-    {label:'Post-RFI + 2nd embed',value:96,color:C.red},
+    {label:'Post-RFI + 2nd embed',value:96,color:C.red}
   ];
-  const shap=[
+  var shap=[
     {label:'Pricing anomaly confirmed 75\u2013130%',value:0.24},
     {label:'Ownership opacity BVI trust',value:0.17},
     {label:'TBML typology 94% similarity',value:0.14},
@@ -444,9 +645,9 @@ function Phase09(){
     {label:'Adverse media Kavtaradze 3 hits',value:0.07},
     {label:'Wire escalation 8 wires 6 months',value:0.05},
     {label:'No direct sanctions match',value:-0.04},
-    {label:'Downstream PSP Deutsche Bank low-risk',value:-0.05},
+    {label:'Downstream PSP Deutsche Bank low-risk',value:-0.05}
   ];
-  const actions=[
+  var actions=[
     {text:'File SAR \u2014 narrative auto-generated from embedding analysis and SHAP drivers',highlight:true,icon:'\u26A0'},
     {text:'UPDATE RESPONDENT RISK RATING \u2014 this SAR feeds into First Commerce Bank\'s cumulative risk embedding (see Phase 10)',highlight:true,icon:'\u26A0'},
     {text:'Flag originator \'Silk Road Commodities\' for enhanced screening on future wires',icon:'\u2192'},
@@ -454,35 +655,54 @@ function Phase09(){
     {text:'Refer forced labor indicators to Trade Compliance / CBP liaison',icon:'\u2192'},
     {text:'Notify downstream PSP (Deutsche Bank) \u2014 Section 314(b) sharing',icon:'\u2192'},
     {text:'Update TBML typology cluster in vector DB with confirmed case',icon:'\u2192'},
-    {text:'Feed disposition back to GBM training set',icon:'\u2192'},
+    {text:'Feed disposition back to GBM training set',icon:'\u2192'}
   ];
-  return <div className="fade-in">
-    <Section title="Score Progression" accent={C.red}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8}}>
-        {scores.map((s,i)=><CardBox key={i} style={{textAlign:'center',padding:'20px 12px'}}>
-          <div className="mono" style={{fontSize:40,fontWeight:800,color:s.color}}>{s.value}</div>
-          <div style={{fontSize:12,color:C.dim,marginTop:4}}>{s.label}</div>
-        </CardBox>)}
-      </div>
-      <div style={{fontSize:14,color:C.body,lineHeight:1.6}}>First embedding barely moved the needle (72{'\u2192'}74) because so much was unknown. The jump happens after RFI (74{'\u2192'}96) when low-confidence becomes high-confidence.</div>
-    </Section>
-    <Section title="Final SHAP Feature Importance" accent={C.red}>
-      <CardBox>{shap.map((s,i)=><ShapBar key={i} label={s.label} value={s.value}/>)}</CardBox>
-    </Section>
-    <Section title="Recommended Actions" accent={C.red}>
-      {actions.map((a,i)=><div key={i} style={{padding:'10px 16px',marginBottom:6,borderRadius:8,background:a.highlight?C.red+'18':C.card,border:`1px solid ${a.highlight?C.red+'44':C.bdr}`,borderLeft:`3px solid ${a.highlight?C.red:C.dim}`,fontSize:14,color:a.highlight?C.tx:C.body}}>
-        <span style={{marginRight:8}}>{a.icon}</span>{a.text}
-      </div>)}
-    </Section>
-    <InsightBox accent={C.blue}>
-      The two-pass embedding architecture is honest about correspondent banking reality. At Phase 03, you have limited data — the GBM scores 74% with a wide confidence range. The system doesn't pretend to know what it doesn't. But that partial embedding is enough to intelligently triage: auto-close 50–60% of alerts where available signals are clearly benign, and focus investigation on cases with material risk signals alongside critical data gaps. The RFI is targeted at the gaps the embedding identified. When documents return, 6 dimensions shift by 30%+, a new dimension emerges, and the GBM re-score jumps from 74 to 96. Every disposition also feeds into the respondent bank's cumulative risk profile — see Phase 10.
-    </InsightBox>
-  </div>;
+
+  var out='<div class="fade-in">';
+
+  // Score Progression
+  var scoreHtml='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px">';
+  for(var i=0;i<scores.length;i++){
+    var s=scores[i];
+    scoreHtml+=cardBox(
+      '<div class="mono" style="font-size:40px;font-weight:800;color:'+s.color+'">'+s.value+'</div>'+
+      '<div style="font-size:12px;color:'+C.dim+';margin-top:4px">'+s.label+'</div>'
+    ,null,false,'text-align:center;padding:20px 12px;');
+  }
+  scoreHtml+='</div>';
+  scoreHtml+='<div style="font-size:14px;color:'+C.body+';line-height:1.6">First embedding barely moved the needle (72\u219274) because so much was unknown. The jump happens after RFI (74\u219296) when low-confidence becomes high-confidence.</div>';
+  out+=section('Score Progression',C.red,scoreHtml);
+
+  // Final SHAP
+  var shapHtml='';
+  for(var i=0;i<shap.length;i++){
+    shapHtml+=shapBar(shap[i].label,shap[i].value);
+  }
+  out+=section('Final SHAP Feature Importance',C.red,cardBox(shapHtml));
+
+  // Recommended Actions
+  var actHtml='';
+  for(var i=0;i<actions.length;i++){
+    var a=actions[i];
+    var bg=a.highlight?C.red+'18':C.card;
+    var bdr=a.highlight?C.red+'44':C.bdr;
+    var bl=a.highlight?C.red:C.dim;
+    var col=a.highlight?C.tx:C.body;
+    actHtml+='<div style="padding:10px 16px;margin-bottom:6px;border-radius:8px;background:'+bg+';border:1px solid '+bdr+';border-left:3px solid '+bl+';font-size:14px;color:'+col+'">'+
+      '<span style="margin-right:8px">'+a.icon+'</span>'+a.text+
+    '</div>';
+  }
+  out+=section('Recommended Actions',C.red,actHtml);
+
+  out+=insightBox(C.blue,'The two-pass embedding architecture is honest about correspondent banking reality. At Phase 03, you have limited data \u2014 the GBM scores 74% with a wide confidence range. The system doesn\'t pretend to know what it doesn\'t. But that partial embedding is enough to intelligently triage: auto-close 50\u201360% of alerts where available signals are clearly benign, and focus investigation on cases with material risk signals alongside critical data gaps. The RFI is targeted at the gaps the embedding identified. When documents return, 6 dimensions shift by 30%+, a new dimension emerges, and the GBM re-score jumps from 74 to 96. Every disposition also feeds into the respondent bank\'s cumulative risk profile \u2014 see Phase 10.');
+
+  out+='</div>';
+  return out;
 }
 
 /* ── Phase 10: Respondent Risk ── */
-function Phase10(){
-  const dims=[
+function phase10(){
+  var dims=[
     {label:'Typology concentration',value:0.82,desc:'3 of 3 SARs involve TBML commodity trade \u2014 concentrated, not random'},
     {label:'SAR filing rate',value:0.75,desc:'3 SARs from 47 originators \u2014 6.4% vs 2.1% portfolio average'},
     {label:'Originator quality score',value:0.72,desc:'Aggregate risk of all originators \u2014 high-risk FZEs, shell structures dominate'},
@@ -490,246 +710,174 @@ function Phase10(){
     {label:'Client non-cooperation rate',value:0.68,desc:'Rising refusals to provide requested documentation'},
     {label:'RFI responsiveness',value:0.65,desc:'2 adequate, 1 slow, 1 partial, 1 client refusal. Declining trend.'},
     {label:'Jurisdiction risk trajectory',value:0.60,desc:'Georgia FATF deficiencies noted, no improvement action plan'},
-    {label:'Downstream risk propagation',value:0.55,desc:'Respondent\'s originators appearing in alerts at other correspondents'},
+    {label:'Downstream risk propagation',value:0.55,desc:'Respondent\'s originators appearing in alerts at other correspondents'}
   ];
-  const timeline=[
+  var timeline=[
     {period:'Q1 2024',score:38,color:C.green,note:'Relationship baseline, standard onboarding'},
     {period:'Q3 2024',score:45,color:C.amber,note:'First SAR (TBML, synthetic fiber)'},
     {period:'Q1 2025',score:52,color:C.amber,note:'Second SAR + slow RFI response'},
     {period:'Q3 2025',score:58,color:C.orange,note:'Volume growth 140% YoY, FATF deficiencies'},
-    {period:'Q1 2026',score:72,color:C.red,note:'THIS CASE: Third SAR, non-cooperation, BVI opacity'},
+    {period:'Q1 2026',score:72,color:C.red,note:'THIS CASE: Third SAR, non-cooperation, BVI opacity'}
   ];
-  const thresholds=[
+  var thresholds=[
     {score:40,label:'Enhanced Monitoring',detail:'Increase screening sensitivity. Lower GBM auto-close threshold.',triggered:'TRIGGERED Q3 2024',active:true},
     {score:55,label:'Enhanced Due Diligence / EDD',detail:'Request updated KYC, AML program docs, independent testing. Increase RFI frequency.',triggered:'TRIGGERED Q1 2025',active:true},
     {score:70,label:'Senior Management Escalation',detail:'Escalate to BSA Officer. Formal risk acceptance required. Consider volume caps, product restrictions.',triggered:'TRIGGERED NOW',active:true},
     {score:80,label:'Relationship Exit Consideration',detail:'Formal exit assessment. Full dossier to exit committee. 90-day wind-down if approved.',triggered:'NOT YET \u2014 projected Q3 2026',active:false},
-    {score:90,label:'Mandatory Exit',detail:'Risk exceeds appetite. Mandatory exit with regulatory notification. Final SAR on pattern.',triggered:'NOT YET',active:false},
+    {score:90,label:'Mandatory Exit',detail:'Risk exceeds appetite. Mandatory exit with regulatory notification. Final SAR on pattern.',triggered:'NOT YET',active:false}
   ];
-  const tradVsEmbed=[
+  var tradVsEmbed=[
     ['Annual risk review \u2014 static snapshot','Continuous scoring \u2014 updates with every disposition'],
     ['Checkbox-based questionnaire','Multi-dimensional risk profile from real behavior'],
     ['SAR count as crude metric','Typology concentration, not just SAR count'],
     ['Jurisdiction risk from static list','RFI quality and client cooperation as risk signals'],
     ['No connection between transaction alerts and client risk','Every transaction outcome directly updates client risk'],
-    ['Exit decisions reactive and relationship-driven','Exit decisions data-driven with clear audit trail'],
+    ['Exit decisions reactive and relationship-driven','Exit decisions data-driven with clear audit trail']
   ];
-  return <div className="fade-in">
-    <p style={{fontSize:15,color:C.body,marginBottom:24}}>Every case disposition feeds back into a cumulative risk embedding for the respondent bank itself — your direct client. Over time, the system builds an evolving picture of each respondent's risk posture based on the quality of clients they're onboarding, the transactions they're allowing, their RFI responsiveness, and confirmed suspicious activity. This drives EDD triggers and ultimately exit decisions.</p>
-    <InsightBox accent={C.fuchsia}>
-      <strong style={{color:C.tx}}>The Feedback Loop — Transaction {'\u2192'} Client Risk</strong><br/>
-      Every alert disposition from Phases 01–09 generates data points about the respondent bank. Over time, these accumulate into a living risk profile. A single SAR doesn't trigger an exit — but a pattern of problematic clients, poor RFI responses, opaque structures, and confirmed typology matches builds a cumulative case that the respondent's own AML controls are inadequate.
-    </InsightBox>
-    <Section title="Signals That Build the Respondent Risk Embedding" accent={C.fuchsia}>
-      <CardBox>{dims.map((d,i)=><div key={i} style={{marginBottom:14}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
-          <span style={{fontSize:14,color:C.tx,fontWeight:500}}>{d.label}</span>
-          <span className="mono" style={{fontSize:14,fontWeight:700,color:C.fuchsia}}>{d.value.toFixed(2)}</span>
-        </div>
-        <div style={{position:'relative',height:8,background:C.bdr,borderRadius:4,overflow:'hidden'}}>
-          <div style={{position:'absolute',left:0,top:0,bottom:0,width:`${d.value*100}%`,background:C.fuchsia,borderRadius:4,transition:'width .4s'}}/>
-        </div>
-        <div style={{fontSize:12,color:C.muted,marginTop:3}}>{d.desc}</div>
-      </div>)}</CardBox>
-    </Section>
-    <Section title="Risk Trajectory" accent={C.fuchsia}>
-      <CardBox>
-        <div style={{display:'flex',alignItems:'flex-end',gap:0,height:180,padding:'0 8px',marginBottom:12}}>
-          {timeline.map((t,i)=>{
-            const h=t.score/100*160;
-            return <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-end',gap:4}}>
-              <span className="mono" style={{fontSize:16,fontWeight:800,color:t.color}}>{t.score}</span>
-              <div style={{width:'60%',height:h,background:t.color,borderRadius:'6px 6px 0 0',transition:'height .4s'}}/>
-              <span style={{fontSize:11,color:C.dim,marginTop:4,textAlign:'center'}}>{t.period}</span>
-            </div>;
-          })}
-        </div>
-        {timeline.map((t,i)=><div key={i} style={{fontSize:13,color:C.body,marginBottom:4}}><span className="mono" style={{color:t.color,marginRight:8}}>{t.period}</span>{t.note}</div>)}
-      </CardBox>
-    </Section>
-    <Section title="Threshold-Triggered Actions" accent={C.fuchsia}>
-      {thresholds.map((t,i)=><CardBox key={i} accent={t.active?C.fuchsia:undefined} style={{borderLeft:`3px solid ${t.active?C.fuchsia:C.muted}`}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
-          <div><span className="mono" style={{fontSize:13,color:C.dim}}>Score {'>'} {t.score}</span> <span style={{fontSize:14,fontWeight:600,color:C.tx,marginLeft:8}}>{t.label}</span></div>
-          {t.active&&<Badge color={C.fuchsia}>{'\u25CF'} ACTIVE</Badge>}
-        </div>
-        <div style={{fontSize:13,color:t.active?C.body:C.muted}}>{t.detail}</div>
-        <div style={{fontSize:12,color:C.dim,marginTop:4}}>{t.triggered}</div>
-      </CardBox>)}
-    </Section>
-    <InsightBox accent={C.fuchsia}>
-      <strong style={{color:C.tx}}>Circular Feedback</strong><br/>
-      The respondent's cumulative score feeds BACK into Phase 03 for every future wire. When First Commerce's score crossed 55, the 'Respondent risk profile' embedding dimension increased from 0.50 to 0.70. After this case pushes past 70, that dimension increases again — future wires start at higher baseline risk. This creates a virtuous cycle: bad transactions degrade the score {'\u2192'} degraded score increases scrutiny {'\u2192'} increased scrutiny catches more problems {'\u2192'} which further degrades the score {'\u2192'} until either the respondent cleans up or the relationship exits.
-    </InsightBox>
-    <Section title="Traditional vs Embedding-Based Respondent Risk" accent={C.fuchsia}>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-        <CardBox style={{borderTop:`3px solid ${C.muted}`}}>
-          <div style={{fontSize:12,fontWeight:700,color:C.muted,letterSpacing:'.1em',marginBottom:12}}>TRADITIONAL</div>
-          {tradVsEmbed.map((r,i)=><div key={i} style={{borderLeft:`3px solid ${C.muted}33`,paddingLeft:10,marginBottom:8,fontSize:13,color:C.dim}}>{r[0]}</div>)}
-        </CardBox>
-        <CardBox style={{borderTop:`3px solid ${C.fuchsia}`}}>
-          <div style={{fontSize:12,fontWeight:700,color:C.fuchsia,letterSpacing:'.1em',marginBottom:12}}>EMBEDDING-BASED</div>
-          {tradVsEmbed.map((r,i)=><div key={i} style={{borderLeft:`3px solid ${C.fuchsia}33`,paddingLeft:10,marginBottom:8,fontSize:13,color:C.body}}>{r[1]}</div>)}
-        </CardBox>
-      </div>
-    </Section>
-  </div>;
+
+  var out='<div class="fade-in">';
+  out+='<p style="font-size:15px;color:'+C.body+';margin-bottom:24px">Every case disposition feeds back into a cumulative risk embedding for the respondent bank itself \u2014 your direct client. Over time, the system builds an evolving picture of each respondent\'s risk posture based on the quality of clients they\'re onboarding, the transactions they\'re allowing, their RFI responsiveness, and confirmed suspicious activity. This drives EDD triggers and ultimately exit decisions.</p>';
+
+  out+=insightBox(C.fuchsia,'<strong style="color:'+C.tx+'">The Feedback Loop \u2014 Transaction \u2192 Client Risk</strong><br/>Every alert disposition from Phases 01\u201309 generates data points about the respondent bank. Over time, these accumulate into a living risk profile. A single SAR doesn\'t trigger an exit \u2014 but a pattern of problematic clients, poor RFI responses, opaque structures, and confirmed typology matches builds a cumulative case that the respondent\'s own AML controls are inadequate.');
+
+  // Signals
+  var sigHtml='';
+  for(var i=0;i<dims.length;i++){
+    var d=dims[i];
+    sigHtml+='<div style="margin-bottom:14px">';
+    sigHtml+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+    sigHtml+='<span style="font-size:14px;color:'+C.tx+';font-weight:500">'+d.label+'</span>';
+    sigHtml+='<span class="mono" style="font-size:14px;font-weight:700;color:'+C.fuchsia+'">'+d.value.toFixed(2)+'</span>';
+    sigHtml+='</div>';
+    sigHtml+='<div style="position:relative;height:8px;background:'+C.bdr+';border-radius:4px;overflow:hidden">';
+    sigHtml+='<div style="position:absolute;left:0;top:0;bottom:0;width:'+(d.value*100)+'%;background:'+C.fuchsia+';border-radius:4px;transition:width .4s"></div>';
+    sigHtml+='</div>';
+    sigHtml+='<div style="font-size:12px;color:'+C.muted+';margin-top:3px">'+d.desc+'</div>';
+    sigHtml+='</div>';
+  }
+  out+=section('Signals That Build the Respondent Risk Embedding',C.fuchsia,cardBox(sigHtml));
+
+  // Risk Trajectory
+  var trajHtml='<div style="display:flex;align-items:flex-end;gap:0;height:180px;padding:0 8px;margin-bottom:12px">';
+  for(var i=0;i<timeline.length;i++){
+    var t=timeline[i];
+    var h=t.score/100*160;
+    trajHtml+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px">';
+    trajHtml+='<span class="mono" style="font-size:16px;font-weight:800;color:'+t.color+'">'+t.score+'</span>';
+    trajHtml+='<div style="width:60%;height:'+h+'px;background:'+t.color+';border-radius:6px 6px 0 0;transition:height .4s"></div>';
+    trajHtml+='<span style="font-size:11px;color:'+C.dim+';margin-top:4px;text-align:center">'+t.period+'</span>';
+    trajHtml+='</div>';
+  }
+  trajHtml+='</div>';
+  for(var i=0;i<timeline.length;i++){
+    var t=timeline[i];
+    trajHtml+='<div style="font-size:13px;color:'+C.body+';margin-bottom:4px"><span class="mono" style="color:'+t.color+';margin-right:8px">'+t.period+'</span>'+t.note+'</div>';
+  }
+  out+=section('Risk Trajectory',C.fuchsia,cardBox(trajHtml));
+
+  // Threshold-Triggered Actions
+  var threshHtml='';
+  for(var i=0;i<thresholds.length;i++){
+    var t=thresholds[i];
+    threshHtml+=cardBox(
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+        '<div><span class="mono" style="font-size:13px;color:'+C.dim+'">Score &gt; '+t.score+'</span> <span style="font-size:14px;font-weight:600;color:'+C.tx+';margin-left:8px">'+t.label+'</span></div>'+
+        (t.active?badge(C.fuchsia,'\u25CF ACTIVE'):'')+
+      '</div>'+
+      '<div style="font-size:13px;color:'+(t.active?C.body:C.muted)+'">'+t.detail+'</div>'+
+      '<div style="font-size:12px;color:'+C.dim+';margin-top:4px">'+t.triggered+'</div>'
+    ,t.active?C.fuchsia:undefined,false,'border-left:3px solid '+(t.active?C.fuchsia:C.muted)+';');
+  }
+  out+=section('Threshold-Triggered Actions',C.fuchsia,threshHtml);
+
+  // Circular Feedback insight
+  out+=insightBox(C.fuchsia,'<strong style="color:'+C.tx+'">Circular Feedback</strong><br/>The respondent\'s cumulative score feeds BACK into Phase 03 for every future wire. When First Commerce\'s score crossed 55, the \'Respondent risk profile\' embedding dimension increased from 0.50 to 0.70. After this case pushes past 70, that dimension increases again \u2014 future wires start at higher baseline risk. This creates a virtuous cycle: bad transactions degrade the score \u2192 degraded score increases scrutiny \u2192 increased scrutiny catches more problems \u2192 which further degrades the score \u2192 until either the respondent cleans up or the relationship exits.');
+
+  // Traditional vs Embedding-Based
+  var tradHtml='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+  var leftItems='';
+  var rightItems='';
+  for(var i=0;i<tradVsEmbed.length;i++){
+    leftItems+='<div style="border-left:3px solid '+C.muted+'33;padding-left:10px;margin-bottom:8px;font-size:13px;color:'+C.dim+'">'+tradVsEmbed[i][0]+'</div>';
+    rightItems+='<div style="border-left:3px solid '+C.fuchsia+'33;padding-left:10px;margin-bottom:8px;font-size:13px;color:'+C.body+'">'+tradVsEmbed[i][1]+'</div>';
+  }
+  tradHtml+=cardBox(
+    '<div style="font-size:12px;font-weight:700;color:'+C.muted+';letter-spacing:.1em;margin-bottom:12px">TRADITIONAL</div>'+leftItems
+  ,null,false,'border-top:3px solid '+C.muted+';');
+  tradHtml+=cardBox(
+    '<div style="font-size:12px;font-weight:700;color:'+C.fuchsia+';letter-spacing:.1em;margin-bottom:12px">EMBEDDING-BASED</div>'+rightItems
+  ,null,false,'border-top:3px solid '+C.fuchsia+';');
+  tradHtml+='</div>';
+  out+=section('Traditional vs Embedding-Based Respondent Risk',C.fuchsia,tradHtml);
+
+  out+='</div>';
+  return out;
 }
 
-/* ── Phase Components Array ── */
-const PHASE_COMPONENTS=[Phase01,Phase02,Phase03,Phase04,Phase05,Phase06,Phase07,Phase08,Phase09,Phase10];
-
-/* ── TOC Component ── */
-function TOCSidebar({activePhase,onNavigate}){
-  return <nav style={{display:'flex',flexDirection:'column',gap:2}}>
-    {PHASE_TITLES.map((title,i)=>{
-      const isActive=activePhase===i;
-      const color=PHASE_COLORS[i];
-      return <a key={i} href={`#phase-${String(i+1).padStart(2,'0')}`}
-        onClick={(e)=>{e.preventDefault();onNavigate(i);}}
-        style={{
-          display:'flex',alignItems:'center',gap:8,padding:'7px 12px',borderRadius:6,
-          background:isActive?color+'18':'transparent',
-          borderLeft:isActive?`3px solid ${color}`:'3px solid transparent',
-          textDecoration:'none',transition:'all .15s',cursor:'pointer',
-        }}>
-        <span style={{fontSize:11,fontFamily:'Source Code Pro,monospace',fontWeight:700,color:isActive?color:C.muted,minWidth:20}}>{String(i+1).padStart(2,'0')}</span>
-        <span style={{fontSize:13,fontWeight:isActive?600:400,color:isActive?C.tx:C.dim,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</span>
-        {SCORE_PHASES[i]!==undefined&&<span className="mono" style={{fontSize:10,color:isActive?color:C.muted,marginLeft:'auto',flexShrink:0}}>{SCORE_PHASES[i]}</span>}
-      </a>;
-    })}
-  </nav>;
+/* ── Toggle collapsible ── */
+function toggleCollapsible(id){
+  var body=document.getElementById(id+'-body');
+  var chev=document.getElementById(id+'-chevron');
+  if(!body)return;
+  if(body.style.display==='none'||body.style.display===''){
+    body.style.display='block';
+    chev.classList.add('open');
+  } else {
+    body.style.display='none';
+    chev.classList.remove('open');
+  }
 }
 
-/* ── Mobile TOC ── */
-function MobileTOC({activePhase,onNavigate,open,setOpen}){
-  return <div style={{position:'fixed',top:0,left:0,right:0,zIndex:1000,background:C.bg,borderBottom:`1px solid ${C.bdr}`}}>
-    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 16px'}}>
-      <div style={{display:'flex',alignItems:'center',gap:8}}>
-        <span style={{fontSize:16}}>{PHASE_ICONS[activePhase]}</span>
-        <span style={{fontSize:13,fontWeight:600,color:C.tx}}>Phase {String(activePhase+1).padStart(2,'0')}: {PHASE_TITLES[activePhase]}</span>
-      </div>
-      <button onClick={()=>setOpen(!open)} style={{background:'none',border:`1px solid ${C.bdr}`,borderRadius:6,padding:'6px 10px',color:C.tx,cursor:'pointer',fontSize:14}}>
-        {open?'\u2715':'\u2630'}
-      </button>
-    </div>
-    {open&&<div style={{padding:'8px 12px 16px',maxHeight:'70vh',overflowY:'auto',background:C.card}}>
-      <TOCSidebar activePhase={activePhase} onNavigate={(i)=>{onNavigate(i);setOpen(false);}}/>
-    </div>}
-  </div>;
+/* ── Build the page ── */
+function buildPage(){
+  var root=document.getElementById('root');
+  var html='';
+
+  // Header
+  html+='<div style="text-align:center;margin-bottom:48px;padding-top:16px">';
+  html+='<div style="font-size:12px;font-weight:700;color:'+C.cyan+';letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px">Interactive Demo</div>';
+  html+='<h1 style="font-size:36px;font-weight:800;color:'+C.tx+';line-height:1.2;margin-bottom:8px">Correspondent Banking AML Pipeline</h1>';
+  html+='<p style="font-size:16px;color:'+C.dim+';max-width:600px;margin:0 auto 24px;line-height:1.6">End-to-end: from detection alert to respondent risk exit decision. 10 phases, two embedding passes, one case study.</p>';
+  html+=paymentChain();
+  html+='<div style="display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap">';
+  html+=badge(C.cyan,'MT103 / pacs.008',true);
+  html+=badge(C.orange,'GBM TRIAGE',true);
+  html+=badge(C.indigo,'TWO-PASS EMBEDDING',true);
+  html+=badge(C.red,'SAR DECISION',true);
+  html+=badge(C.fuchsia,'RESPONDENT EXIT',true);
+  html+='</div></div>';
+
+  // All 10 Phases
+  var phaseFns=[phase01,phase02,phase03,phase04,phase05,phase06,phase07,phase08,phase09,phase10];
+  for(var i=0;i<10;i++){
+    html+=phaseDivider(i);
+    html+=phaseFns[i]();
+  }
+
+  // Footer
+  html+='<div style="margin-top:64px;padding-top:32px;border-top:1px solid '+C.bdr+';text-align:center">';
+  html+='<div style="font-size:13px;color:'+C.muted+'">Correspondent Banking AML Pipeline</div>';
+  html+='<div style="font-size:12px;color:'+C.muted+'88;margin-top:4px">All 10 phases in a single scrolling document</div>';
+  html+='</div>';
+
+  root.innerHTML=html;
 }
 
-/* ── Phase Divider ── */
-function PhaseDivider({index}){
-  const color=PHASE_COLORS[index];
-  const score=SCORE_PHASES[index];
-  return <div id={`phase-${String(index+1).padStart(2,'0')}`} style={{paddingTop:48,marginBottom:32}}>
-    <div style={{height:3,background:`linear-gradient(90deg, ${color}, ${color}44, transparent)`,borderRadius:2,marginBottom:24}}/>
-    <div style={{display:'flex',alignItems:'center',gap:14}}>
-      <span style={{fontSize:36}}>{PHASE_ICONS[index]}</span>
-      <div style={{flex:1}}>
-        <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
-          <span className="mono" style={{fontSize:14,fontWeight:700,color}}>PHASE {String(index+1).padStart(2,'0')}</span>
-          {score&&<ScoreBadge value={score} color={color}/>}
-        </div>
-        <h2 style={{fontSize:26,fontWeight:800,color:C.tx,marginTop:2,lineHeight:1.2}}>{PHASE_TITLES[index]}</h2>
-        <div style={{fontSize:14,color:C.dim,marginTop:2}}>{PHASE_SUBS[index]}</div>
-      </div>
-    </div>
-  </div>;
-}
+/* ── Back to top button ── */
+var topBtn=document.getElementById('back-to-top');
+window.addEventListener('scroll',function(){
+  if(window.scrollY>400){
+    topBtn.classList.add('visible');
+  } else {
+    topBtn.classList.remove('visible');
+  }
+},{passive:true});
+topBtn.addEventListener('click',function(){
+  window.scrollTo({top:0,behavior:'smooth'});
+});
 
-/* ── Main App ── */
-function App(){
-  const[activePhase,setActivePhase]=useState(0);
-  const[mobileOpen,setMobileOpen]=useState(false);
-  const[isMobile,setIsMobile]=useState(window.innerWidth<1024);
-  const[showTop,setShowTop]=useState(false);
-  const phaseRefs=useRef([]);
-
-  useEffect(()=>{
-    const handleResize=()=>setIsMobile(window.innerWidth<1024);
-    window.addEventListener('resize',handleResize);
-    return ()=>window.removeEventListener('resize',handleResize);
-  },[]);
-
-  useEffect(()=>{
-    const handleScroll=()=>setShowTop(window.scrollY>400);
-    window.addEventListener('scroll',handleScroll,{passive:true});
-    return ()=>window.removeEventListener('scroll',handleScroll);
-  },[]);
-
-  useEffect(()=>{
-    const observer=new IntersectionObserver((entries)=>{
-      let best=null;let bestRatio=0;
-      entries.forEach(e=>{
-        if(e.isIntersecting&&e.intersectionRatio>bestRatio){
-          bestRatio=e.intersectionRatio;
-          best=parseInt(e.target.dataset.phase,10);
-        }
-      });
-      if(best!==null)setActivePhase(best);
-    },{rootMargin:'-10% 0px -60% 0px',threshold:[0,0.1,0.25,0.5]});
-    phaseRefs.current.forEach(el=>{if(el)observer.observe(el);});
-    return ()=>observer.disconnect();
-  },[]);
-
-  const navigateTo=useCallback((idx)=>{
-    const el=document.getElementById(`phase-${String(idx+1).padStart(2,'0')}`);
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  },[]);
-
-  const scrollToTop=useCallback(()=>{
-    window.scrollTo({top:0,behavior:'smooth'});
-  },[]);
-
-  return <div style={{minHeight:'100vh'}}>
-    {/* Main Content */}
-    <div style={{maxWidth:820,margin:'0 auto',padding:'32px 16px 80px'}}>
-      {/* Header */}
-      <div style={{textAlign:'center',marginBottom:48,paddingTop:isMobile?8:16}}>
-        <div style={{fontSize:12,fontWeight:700,color:C.cyan,letterSpacing:'.15em',textTransform:'uppercase',marginBottom:8}}>Interactive Demo</div>
-        <h1 style={{fontSize:isMobile?28:36,fontWeight:800,color:C.tx,lineHeight:1.2,marginBottom:8}}>Correspondent Banking AML Pipeline</h1>
-        <p style={{fontSize:16,color:C.dim,maxWidth:600,margin:'0 auto 24px',lineHeight:1.6}}>End-to-end: from detection alert to respondent risk exit decision. 10 phases, two embedding passes, one case study.</p>
-        <PaymentChain/>
-        <div style={{display:'flex',justifyContent:'center',gap:12,marginTop:16,flexWrap:'wrap'}}>
-          <Badge color={C.cyan} mono>MT103 / pacs.008</Badge>
-          <Badge color={C.orange} mono>GBM TRIAGE</Badge>
-          <Badge color={C.indigo} mono>TWO-PASS EMBEDDING</Badge>
-          <Badge color={C.red} mono>SAR DECISION</Badge>
-          <Badge color={C.fuchsia} mono>RESPONDENT EXIT</Badge>
-        </div>
-      </div>
-
-      {/* All 10 Phases */}
-      {PHASE_COMPONENTS.map((PhaseComponent,i)=>(
-        <div key={i} ref={el=>phaseRefs.current[i]=el} data-phase={i}>
-          <PhaseDivider index={i}/>
-          <PhaseComponent/>
-        </div>
-      ))}
-
-      {/* Footer */}
-      <div style={{marginTop:64,paddingTop:32,borderTop:`1px solid ${C.bdr}`,textAlign:'center'}}>
-        <div style={{fontSize:13,color:C.muted}}>Correspondent Banking AML Pipeline</div>
-        <div style={{fontSize:12,color:C.muted+'88',marginTop:4}}>All 10 phases in a single scrolling document</div>
-      </div>
-    </div>
-
-    {/* Back to Top */}
-    {showTop&&<button onClick={scrollToTop} style={{
-      position:'fixed',bottom:24,right:24,zIndex:999,
-      width:44,height:44,borderRadius:'50%',border:`1px solid ${C.bdr}`,
-      background:C.card+'ee',backdropFilter:'blur(8px)',
-      color:C.tx,fontSize:18,cursor:'pointer',
-      display:'flex',alignItems:'center',justifyContent:'center',
-      transition:'opacity .2s',boxShadow:'0 4px 12px rgba(0,0,0,.4)',
-    }} title="Back to top">{'\u2191'}</button>}
-  </div>;
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* ── Initialize ── */
+buildPage();
 </script>
 </body>
 </html>
-
