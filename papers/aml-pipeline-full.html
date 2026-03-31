@@ -683,22 +683,9 @@ function App(){
     window.scrollTo({top:0,behavior:'smooth'});
   },[]);
 
-  return <div style={{display:'flex',minHeight:'100vh'}}>
-    {/* Desktop TOC Sidebar */}
-    {!isMobile&&<div style={{
-      width:240,flexShrink:0,position:'sticky',top:0,height:'100vh',
-      overflowY:'auto',padding:'24px 12px',borderRight:`1px solid ${C.bdr}`,
-      background:C.bg+'ee',backdropFilter:'blur(8px)',zIndex:100,
-    }}>
-      <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:16,paddingLeft:12}}>Pipeline Phases</div>
-      <TOCSidebar activePhase={activePhase} onNavigate={navigateTo}/>
-    </div>}
-
-    {/* Mobile TOC */}
-    {isMobile&&<MobileTOC activePhase={activePhase} onNavigate={navigateTo} open={mobileOpen} setOpen={setMobileOpen}/>}
-
+  return <div style={{minHeight:'100vh'}}>
     {/* Main Content */}
-    <div style={{flex:1,maxWidth:820,margin:'0 auto',padding:isMobile?'60px 16px 80px':'32px 32px 80px'}}>
+    <div style={{maxWidth:820,margin:'0 auto',padding:'32px 16px 80px'}}>
       {/* Header */}
       <div style={{textAlign:'center',marginBottom:48,paddingTop:isMobile?8:16}}>
         <div style={{fontSize:12,fontWeight:700,color:C.cyan,letterSpacing:'.15em',textTransform:'uppercase',marginBottom:8}}>Economic Crime Hub</div>
