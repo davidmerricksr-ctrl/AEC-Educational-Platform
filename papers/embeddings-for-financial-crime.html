@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Embeddings for Financial Crime: From Concept to Counterparty Risk Engine — Economic Crime Hub</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#090b12;color:#c0c8e0;font-family:'Libre Franklin',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+code,.mono{font-family:'IBM Plex Mono',monospace}
+ul,ol{list-style:none;margin:0;padding:0}
+li{list-style:none}
+li::before{display:none}
+li::marker{content:none;display:none;font-size:0}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#090b12}
+::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fadeIn .3s ease-out both}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState}=React;
+
+const C={
+  bg:'#090b12',card:'#0d1017',bdr:'#1c1f2e',
+  tx:'#eef0ff',body:'#c0c8e0',muted:'#5a6080',
+  indigo:'#6366f1',blue:'#3b82f6',red:'#ef4444',
+  green:'#22c55e',amber:'#f59e0b',orange:'#f97316',
+  purple:'#8b5cf6',
+};
+
+const SECTIONS=[
+  {id:'concept',title:'What Are Embeddings?',icon:'◈'},
+  {id:'how',title:'How They Work',icon:'⚙'},
+  {id:'why',title:'Why This Matters for Financial Crime',icon:'🛡'},
+  {id:'engine',title:'Counterparty Risk Rating Engine',icon:'🏗'},
+  {id:'sources',title:'Data Sources & What They Contribute',icon:'📥'},
+  {id:'example',title:'Worked Example',icon:'🔍'},
+  {id:'flows',title:'Integration Into Compliance Flows',icon:'🔀'},
+];
+
+function Card({children,accent,style}){
+  return <div style={{background:C.card,border:`1px solid ${accent?accent+'33':C.bdr}`,borderRadius:14,padding:18,marginBottom:14,...style}}>{children}</div>;
+}
+
+function SectionLabel({children,color}){
+  return <div className="mono" style={{fontSize:10,fontWeight:600,textTransform:'uppercase',letterSpacing:'1.8px',color:color||C.indigo,marginBottom:10}}>{children}</div>;
+}
+
+function AccentItem({color,children,style}){
+  return <div style={{borderLeft:`2px solid ${color||C.indigo}`,paddingLeft:14,marginBottom:10,...style}}>{children}</div>;
+}
+
+function NumberBadge({n,color}){
+  return <div style={{width:32,height:32,borderRadius:8,background:color+'22',color:color,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:14,flexShrink:0}} className="mono">{n}</div>;
+}
+
+/* ── Section 1: What Are Embeddings? ── */
+function SectionConcept(){
+  return <div className="fi">
+    <Card accent={C.indigo} style={{borderLeft:`2px solid ${C.indigo}`}}>
+      <SectionLabel color={C.indigo}>THE SIMPLE IDEA</SectionLabel>
+      <p style={{fontSize:14,color:C.tx,lineHeight:1.7,marginBottom:12}}>An embedding turns something complex — a name, a document, a company profile — into a list of numbers (a 'vector'). These numbers encode meaning. Things that are similar in the real world end up close together in number space. Things that are different end up far apart.</p>
+      <p style={{fontSize:13,color:C.muted,lineHeight:1.7}}>Think of it like coordinates on a map. London and Paris are close together. London and Tokyo are far apart. Embeddings do the same thing but for concepts, entities, and risk profiles — placing them in a mathematical space where distance equals similarity.</p>
+    </Card>
+
+    <Card accent={C.indigo}>
+      <SectionLabel color={C.indigo}>VISUAL EXAMPLE</SectionLabel>
+      <div style={{overflowX:'auto',marginBottom:12}}>
+        <svg viewBox="0 0 780 520" style={{width:'100%',minWidth:600,height:'auto'}} xmlns="http://www.w3.org/2000/svg">
+          {/* Left column: text strings */}
+          <rect x="10" y="20" width="160" height="36" rx="6" fill="#0d1017" stroke="#1c1f2e"/>
+          <text x="90" y="43" textAnchor="middle" fill="#eef0ff" fontSize="13" fontFamily="'Libre Franklin',sans-serif">"Bank"</text>
+          <rect x="10" y="70" width="160" height="36" rx="6" fill="#0d1017" stroke="#1c1f2e"/>
+          <text x="90" y="93" textAnchor="middle" fill="#eef0ff" fontSize="12" fontFamily="'Libre Franklin',sans-serif">"Financial institution"</text>
+          <rect x="10" y="120" width="160" height="36" rx="6" fill="#0d1017" stroke="#1c1f2e"/>
+          <text x="90" y="143" textAnchor="middle" fill="#eef0ff" fontSize="13" fontFamily="'Libre Franklin',sans-serif">"Llama"</text>
+
+          {/* Arrows */}
+          <line x1="175" y1="38" x2="280" y2="38" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#arrowhead)"/>
+          <line x1="175" y1="88" x2="280" y2="88" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#arrowhead)"/>
+          <line x1="175" y1="138" x2="280" y2="138" stroke="#6366f1" strokeWidth="1.5" markerEnd="url(#arrowhead)"/>
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#6366f1"/>
+            </marker>
+          </defs>
+
+          {/* Middle label */}
+          <rect x="210" y="72" width="65" height="20" rx="4" fill="#6366f122"/>
+          <text x="242" y="86" textAnchor="middle" fill="#6366f1" fontSize="9" fontFamily="'IBM Plex Mono',monospace">Embedding</text>
+          <text x="242" y="67" textAnchor="middle" fill="#6366f1" fontSize="9" fontFamily="'IBM Plex Mono',monospace">Model</text>
+
+          {/* Right column: vectors */}
+          <text x="295" y="43" fill="#22c55e" fontSize="12" fontFamily="'IBM Plex Mono',monospace">[0.82, 0.91, 0.15, 0.73]</text>
+          <text x="295" y="93" fill="#22c55e" fontSize="12" fontFamily="'IBM Plex Mono',monospace">[0.79, 0.88, 0.18, 0.70]</text>
+          <text x="295" y="143" fill="#ef4444" fontSize="12" fontFamily="'IBM Plex Mono',monospace">[0.12, 0.08, 0.95, 0.04]</text>
+
+          {/* Far right: similarity annotations */}
+          <line x1="545" y1="43" x2="545" y2="93" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,3"/>
+          <text x="560" y="72" fill="#22c55e" fontSize="11" fontFamily="'IBM Plex Mono',monospace">0.97 similar</text>
+          <line x1="545" y1="93" x2="545" y2="143" stroke="#ef4444" strokeWidth="1" strokeDasharray="4,3"/>
+          <text x="560" y="122" fill="#ef4444" fontSize="11" fontFamily="'IBM Plex Mono',monospace">0.11 similar</text>
+
+          {/* Dashed connecting bracket lines */}
+          <circle cx="540" cy="43" r="3" fill="#22c55e"/>
+          <circle cx="540" cy="93" r="3" fill="#22c55e"/>
+          <circle cx="540" cy="143" r="3" fill="#ef4444"/>
+
+          {/* Bottom left scatter plot */}
+          <rect x="10" y="200" width="350" height="200" rx="8" fill="#080a10" stroke="#1c1f2e"/>
+          <text x="185" y="225" textAnchor="middle" fill="#5a6080" fontSize="10" fontFamily="'IBM Plex Mono',monospace">Vector space (2D projection)</text>
+          {/* Axes */}
+          <line x1="40" y1="370" x2="340" y2="370" stroke="#1c1f2e" strokeWidth="1"/>
+          <line x1="40" y1="240" x2="40" y2="370" stroke="#1c1f2e" strokeWidth="1"/>
+          {/* Bank and Financial inst clustered */}
+          <circle cx="120" cy="280" r="6" fill="#3b82f6"/>
+          <text x="132" y="284" fill="#3b82f6" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Bank</text>
+          <circle cx="140" cy="295" r="6" fill="#3b82f6"/>
+          <text x="152" y="299" fill="#3b82f6" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Financial inst.</text>
+          {/* Llama far away */}
+          <circle cx="290" cy="350" r="6" fill="#ef4444"/>
+          <text x="255" y="345" fill="#ef4444" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Llama</text>
+
+          {/* Bottom right scatter plot */}
+          <rect x="390" y="200" width="380" height="200" rx="8" fill="#080a10" stroke="#1c1f2e"/>
+          <text x="580" y="225" textAnchor="middle" fill="#5a6080" fontSize="10" fontFamily="'IBM Plex Mono',monospace">Risk entity space</text>
+          {/* Axes */}
+          <line x1="420" y1="370" x2="750" y2="370" stroke="#1c1f2e" strokeWidth="1"/>
+          <line x1="420" y1="240" x2="420" y2="370" stroke="#1c1f2e" strokeWidth="1"/>
+          {/* Low-risk cluster */}
+          <circle cx="480" cy="330" r="6" fill="#22c55e"/>
+          <text x="492" y="334" fill="#22c55e" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Low-risk co.</text>
+          <circle cx="500" cy="345" r="6" fill="#22c55e"/>
+          <text x="512" y="349" fill="#22c55e" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Retail bank</text>
+          {/* High-risk cluster */}
+          <circle cx="680" cy="270" r="6" fill="#ef4444"/>
+          <text x="692" y="274" fill="#ef4444" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Shell company</text>
+          <circle cx="700" cy="285" r="6" fill="#ef4444"/>
+          <text x="712" y="289" fill="#ef4444" fontSize="10" fontFamily="'Libre Franklin',sans-serif">Sanctioned entity</text>
+          {/* Your counterparty amber dot */}
+          <circle cx="590" cy="305" r="7" fill="#f59e0b"/>
+          <text x="560" y="298" fill="#f59e0b" fontSize="10" fontFamily="'Libre Franklin',sans-serif" fontWeight="600">Your counterparty?</text>
+
+          {/* Labels for scatter axes */}
+          <text x="185" y="390" textAnchor="middle" fill="#5a6080" fontSize="9" fontFamily="'IBM Plex Mono',monospace">Dimension 1</text>
+          <text x="580" y="390" textAnchor="middle" fill="#5a6080" fontSize="9" fontFamily="'IBM Plex Mono',monospace">Risk Dimension 1</text>
+        </svg>
+      </div>
+      <p style={{fontSize:11,color:C.muted,lineHeight:1.6}}>'Bank' and 'Financial institution' get similar vectors because they mean similar things. 'Llama' gets a completely different vector. The cosine similarity between the first two is 0.97 (nearly identical); between 'Bank' and 'Llama' it's 0.11 (unrelated). The same principle applies to entity risk profiles — a shell company with hidden ownership clusters near other shell companies, not near transparent retail banks.</p>
+    </Card>
+
+    <Card accent={C.indigo}>
+      <SectionLabel color={C.indigo}>KEY PROPERTIES</SectionLabel>
+      <AccentItem color={C.indigo}>
+        <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Similarity = proximity</div>
+        <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>Similar entities have vectors that are close together. You can measure closeness with cosine similarity — a number from 0 (unrelated) to 1 (identical).</div>
+      </AccentItem>
+      <AccentItem color={C.indigo}>
+        <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Multi-dimensional</div>
+        <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>A real embedding might have 128 or 256 dimensions, each encoding a different aspect — jurisdiction risk, ownership complexity, media exposure, transaction patterns. Humans can't visualise 256 dimensions, but maths works fine in them.</div>
+      </AccentItem>
+      <AccentItem color={C.indigo}>
+        <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Learned, not hand-coded</div>
+        <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>The model learns which features matter from historical data — which entity profiles ended up in SARs, which were sanctioned, which were exited. No human manually writes rules for what makes entities similar.</div>
+      </AccentItem>
+      <AccentItem color={C.indigo} style={{marginBottom:0}}>
+        <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Cross-modal</div>
+        <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>You can embed different types of data — names, documents, transaction patterns, corporate structures — into the same vector space. This lets you compare a company's registration profile against its media footprint against its transaction behaviour.</div>
+      </AccentItem>
+    </Card>
+  </div>;
+}
+
+/* ── Section 2: How They Work ── */
+function SectionHow(){
+  return <div className="fi">
+    <Card accent={C.blue} style={{borderLeft:`2px solid ${C.blue}`}}>
+      <SectionLabel color={C.blue}>THE PROCESS — THREE STEPS</SectionLabel>
+      <div style={{display:'flex',gap:14,alignItems:'flex-start',marginBottom:16}}>
+        <NumberBadge n="1" color={C.blue}/>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Collect data about the entity</div>
+          <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>Gather everything available: company registration, directors, addresses, sanctions screening results, media articles, transaction history. Each data type goes through a specialised model.</div>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:14,alignItems:'flex-start',marginBottom:16}}>
+        <NumberBadge n="2" color={C.indigo}/>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Convert to numbers (embed)</div>
+          <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>Each data source produces a partial vector. A name embedding model handles the company name and director names. A document model processes media articles and filings. A structured data model handles registration details, SIC codes, and dates. These partial vectors are fused into one composite vector.</div>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:14,alignItems:'flex-start'}}>
+        <NumberBadge n="3" color={C.purple}/>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>Compare against reference points</div>
+          <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>The entity's vector is compared against known clusters: sanctioned entities, SAR-filed cases, high-risk typologies, and low-risk baselines. Cosine similarity tells you how close this entity is to each cluster. That proximity IS the risk score.</div>
+        </div>
+      </div>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.muted}>ANALOGY: HOW YOUR BRAIN ALREADY DOES THIS</SectionLabel>
+      <p style={{fontSize:12,color:C.body,lineHeight:1.7}}>When an experienced investigator sees a company registered at a known formation agent address, with a single foreign director, no filed accounts, and a commodity-trading name — they instinctively feel 'this looks like a shell company.' They're not running explicit rules. Their brain has built an internal model from seeing thousands of entities, and this one's 'pattern' matches the shell company pattern. Embeddings do the same thing, but mathematically, consistently, at scale, and with an audit trail. The investigator's intuition becomes a measurable vector distance.</p>
+    </Card>
+  </div>;
+}
+
+/* ── Section 3: Why This Matters ── */
+function SectionWhy(){
+  const problems=[
+    {title:"Name matching fails across scripts and transliterations",body:"Embedding similarity captures that 'Банк' and 'Bank' are the same concept, that 'Mohammad' and 'Muhammad' and 'محمد' refer to the same name, without explicit rules for every variant."},
+    {title:"Rules can't capture combinatorial risk",body:"No single attribute screams 'shell company' — but the COMBINATION of virtual address + single foreign director + overdue accounts + mismatched SIC code does. Embeddings encode the combination, not individual fields."},
+    {title:"Counterparties are blind spots",body:"Entities that aren't your customers have no KYC file. But public data (Companies House, media, World-Check) can be embedded to create a risk profile for ANY entity — customer or not."},
+    {title:"Static risk ratings decay",body:"A company rated low-risk at onboarding may drift toward high-risk as directors change, media articles appear, or related entities get sanctioned. Embedding-based ratings update continuously."},
+    {title:"Siloed systems miss cross-domain signals",body:"A sanctions near-miss that also shows adverse media AND shell company characteristics is far more concerning than any single signal. Embeddings fuse all signals into one representation."},
+  ];
+  return <div className="fi">
+    <Card accent={C.red} style={{borderLeft:`2px solid ${C.red}`}}>
+      <SectionLabel color={C.red}>THE PROBLEM EMBEDDINGS SOLVE</SectionLabel>
+      {problems.map((p,i)=>(
+        <div key={i} style={{background:'#080a10',borderRadius:10,padding:14,marginBottom:i<problems.length-1?10:0}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.tx,marginBottom:4}}>{p.title}</div>
+          <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>→ {p.body}</div>
+        </div>
+      ))}
+    </Card>
+  </div>;
+}
+
+/* ── Section 4: Engine ── */
+function SectionEngine(){
+  const steps=[
+    {n:'1',title:'Counterparty name appears',body:"A name surfaces on a payment message, in a beneficial ownership chain, or as a trade counterparty. The engine receives the name and any available identifiers (address, jurisdiction, company number)."},
+    {n:'2',title:'Automated source lookups',body:"The engine queries Companies House (UK registry), World-Check (sanctions/PEP database from LSEG), Ripjar (adverse media AI platform), and runs a broad media screen — all automatically, in seconds."},
+    {n:'3',title:'Entity resolution',body:"Results from all four sources are resolved to confirm they refer to the same real-world entity. Director names from Companies House are matched against World-Check and media results."},
+    {n:'4',title:'Embedding generation',body:"Structured data (registration date, SIC code, address, filing status, director nationality) and unstructured data (media articles, sanctions narrative text) are embedded into a composite vector."},
+    {n:'5',title:'Similarity comparison',body:"The embedding is compared against reference clusters: known shell companies, sanctioned entity profiles, SAR-associated entities, and low-risk baselines. Proximity to each cluster becomes a dimension score."},
+    {n:'6',title:'Risk score + API output',body:"The engine outputs: composite risk score (0–100), individual dimension scores with source attribution, confidence levels, nearest historical match, and recommended actions. Available via real-time API."},
+  ];
+  return <div className="fi">
+    <Card accent={C.indigo} style={{borderLeft:`2px solid ${C.indigo}`}}>
+      <SectionLabel color={C.indigo}>COUNTERPARTY RISK RATING ENGINE</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.7,marginBottom:16}}>This engine rates counterparties who are NOT your customers — entities you encounter only as names on payment messages, trade documents, or beneficial ownership chains. It builds a risk profile using four commercially available data sources, generates an embedding, and exposes the risk score via API to every downstream compliance process.</p>
+
+      {/* Architecture SVG */}
+      <div style={{overflowX:'auto',marginBottom:4}}>
+        <svg viewBox="0 0 700 340" style={{width:'100%',minWidth:500,height:'auto'}} xmlns="http://www.w3.org/2000/svg">
+          {/* Top row: 4 source boxes */}
+          <rect x="10" y="10" width="155" height="50" rx="8" fill="#3b82f618" stroke="#3b82f6" strokeWidth="1.5"/>
+          <text x="87" y="40" textAnchor="middle" fill="#3b82f6" fontSize="12" fontFamily="'Libre Franklin',sans-serif" fontWeight="600">Companies House</text>
+
+          <rect x="185" y="10" width="155" height="50" rx="8" fill="#ef444418" stroke="#ef4444" strokeWidth="1.5"/>
+          <text x="262" y="40" textAnchor="middle" fill="#ef4444" fontSize="12" fontFamily="'Libre Franklin',sans-serif" fontWeight="600">World-Check</text>
+
+          <rect x="360" y="10" width="155" height="50" rx="8" fill="#f59e0b18" stroke="#f59e0b" strokeWidth="1.5"/>
+          <text x="437" y="40" textAnchor="middle" fill="#f59e0b" fontSize="12" fontFamily="'Libre Franklin',sans-serif" fontWeight="600">Ripjar</text>
+
+          <rect x="535" y="10" width="155" height="50" rx="8" fill="#8b5cf618" stroke="#8b5cf6" strokeWidth="1.5"/>
+          <text x="612" y="40" textAnchor="middle" fill="#8b5cf6" fontSize="12" fontFamily="'Libre Franklin',sans-serif" fontWeight="600">Media Screen</text>
+
+          {/* Arrows down from sources */}
+          <line x1="87" y1="60" x2="87" y2="100" stroke="#5a6080" strokeWidth="1.5" markerEnd="url(#arrowG)"/>
+          <line x1="262" y1="60" x2="262" y2="100" stroke="#5a6080" strokeWidth="1.5" markerEnd="url(#arrowG)"/>
+          <line x1="437" y1="60" x2="437" y2="100" stroke="#5a6080" strokeWidth="1.5" markerEnd="url(#arrowG)"/>
+          <line x1="612" y1="60" x2="612" y2="100" stroke="#5a6080" strokeWidth="1.5" markerEnd="url(#arrowG)"/>
+          <defs>
+            <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#5a6080"/>
+            </marker>
+            <marker id="arrowI" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#6366f1"/>
+            </marker>
+            <marker id="arrowGr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
+            </marker>
+          </defs>
+
+          {/* Entity Resolution box */}
+          <rect x="10" y="100" width="680" height="50" rx="8" fill="#3b82f60d" stroke="#3b82f633" strokeWidth="1.5"/>
+          <text x="350" y="130" textAnchor="middle" fill="#3b82f6" fontSize="14" fontFamily="'Libre Franklin',sans-serif" fontWeight="700">Entity Resolution</text>
+
+          {/* Arrow down */}
+          <line x1="350" y1="150" x2="350" y2="190" stroke="#6366f1" strokeWidth="2" markerEnd="url(#arrowI)"/>
+
+          {/* Embedding Engine box */}
+          <rect x="10" y="190" width="680" height="55" rx="8" fill="#6366f118" stroke="#6366f1" strokeWidth="2"/>
+          <text x="350" y="223" textAnchor="middle" fill="#6366f1" fontSize="16" fontFamily="'Libre Franklin',sans-serif" fontWeight="800">Embedding Engine</text>
+
+          {/* Arrow down */}
+          <line x1="350" y1="245" x2="350" y2="280" stroke="#22c55e" strokeWidth="2" markerEnd="url(#arrowGr)"/>
+
+          {/* Output box */}
+          <rect x="10" y="280" width="680" height="50" rx="8" fill="#22c55e0d" stroke="#22c55e" strokeWidth="1.5"/>
+          <text x="350" y="310" textAnchor="middle" fill="#22c55e" fontSize="13" fontFamily="'IBM Plex Mono',monospace" fontWeight="600">Risk Score + Dimension Breakdown + Confidence → API</text>
+        </svg>
+      </div>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.blue}>HOW IT WORKS — STEP BY STEP</SectionLabel>
+      {steps.map((s,i)=>(
+        <div key={i} style={{display:'flex',gap:14,alignItems:'flex-start',marginBottom:i<steps.length-1?14:0}}>
+          <NumberBadge n={s.n} color={C.indigo}/>
+          <div>
+            <div style={{fontSize:14,fontWeight:700,color:C.tx,marginBottom:2}}>{s.title}</div>
+            <div style={{fontSize:13,color:C.body,lineHeight:1.6}}>{s.body}</div>
+          </div>
+        </div>
+      ))}
+    </Card>
+  </div>;
+}
+
+/* ── Section 5: Sources ── */
+function SectionSources(){
+  return <div className="fi">
+    {/* Companies House */}
+    <Card accent={C.blue} style={{borderLeft:`2px solid ${C.blue}`}}>
+      <SectionLabel color={C.blue}>1. COMPANIES HOUSE (UK) 🏛</SectionLabel>
+      <div style={{marginBottom:14}}>
+        <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.blue,textTransform:'uppercase',marginBottom:8}}>WHAT IT PROVIDES</div>
+        <AccentItem color={C.blue}><span style={{fontSize:13,color:C.body}}>Company status, incorporation date, registered address</span></AccentItem>
+        <AccentItem color={C.blue}><span style={{fontSize:13,color:C.body}}>SIC codes (industry classification)</span></AccentItem>
+        <AccentItem color={C.blue}><span style={{fontSize:13,color:C.body}}>Director names, nationalities, appointment dates, residential country</span></AccentItem>
+        <AccentItem color={C.blue}><span style={{fontSize:13,color:C.body}}>PSC — beneficial ownership</span></AccentItem>
+        <AccentItem color={C.blue}><span style={{fontSize:13,color:C.body}}>Filing history — accounts, confirmation statements, overdue status</span></AccentItem>
+        <AccentItem color={C.blue} style={{marginBottom:0}}><span style={{fontSize:13,color:C.body}}>Registered office address analysis (formation agent detection)</span></AccentItem>
+      </div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:10}}>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.green,textTransform:'uppercase',marginBottom:6}}>CONTRIBUTES</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Entity maturity, registration legitimacy, governance structure, ownership transparency, business activity alignment</p>
+        </div>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:6}}>LIMITATION</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>UK entities only. Does not provide financial data beyond what's in filed accounts. No adverse information — purely factual registry data.</p>
+        </div>
+      </div>
+    </Card>
+
+    {/* World-Check */}
+    <Card accent={C.red} style={{borderLeft:`2px solid ${C.red}`}}>
+      <SectionLabel color={C.red}>2. WORLD-CHECK (LSEG/REFINITIV) 🛡</SectionLabel>
+      <div style={{marginBottom:14}}>
+        <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.red,textTransform:'uppercase',marginBottom:8}}>WHAT IT PROVIDES</div>
+        <AccentItem color={C.red}><span style={{fontSize:13,color:C.body}}>Sanctions list matching (OFAC, UN, EU, UK, 100+ national lists)</span></AccentItem>
+        <AccentItem color={C.red}><span style={{fontSize:13,color:C.body}}>PEP identification and classification</span></AccentItem>
+        <AccentItem color={C.red}><span style={{fontSize:13,color:C.body}}>Associated entity and individual screening</span></AccentItem>
+        <AccentItem color={C.red}><span style={{fontSize:13,color:C.body}}>Sanctions narrative text (describes relationships and reasons for designation)</span></AccentItem>
+        <AccentItem color={C.red} style={{marginBottom:0}}><span style={{fontSize:13,color:C.body}}>Adverse information categories (fraud, corruption, organised crime)</span></AccentItem>
+      </div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:10}}>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.green,textTransform:'uppercase',marginBottom:6}}>CONTRIBUTES</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Direct sanctions match, indirect sanctions association, PEP exposure, network risk via designation narratives</p>
+        </div>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:6}}>LIMITATION</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Name-based matching. Requires good identifiers (full name, DOB, nationality) for reliable matching. Common names generate false positives. Subscription required.</p>
+        </div>
+      </div>
+    </Card>
+
+    {/* Ripjar */}
+    <Card accent={C.amber} style={{borderLeft:`2px solid ${C.amber}`}}>
+      <SectionLabel color={C.amber}>3. RIPJAR 📰</SectionLabel>
+      <div style={{marginBottom:14}}>
+        <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:8}}>WHAT IT PROVIDES</div>
+        <AccentItem color={C.amber}><span style={{fontSize:13,color:C.body}}>AI-powered adverse media screening across global news sources</span></AccentItem>
+        <AccentItem color={C.amber}><span style={{fontSize:13,color:C.body}}>Categorised risk alerts (sanctions evasion, fraud, corruption, terrorism financing)</span></AccentItem>
+        <AccentItem color={C.amber}><span style={{fontSize:13,color:C.body}}>Continuous monitoring with real-time alerts</span></AccentItem>
+        <AccentItem color={C.amber}><span style={{fontSize:13,color:C.body}}>Multi-language coverage including non-English sources</span></AccentItem>
+        <AccentItem color={C.amber} style={{marginBottom:0}}><span style={{fontSize:13,color:C.body}}>Structured risk intelligence from unstructured media data</span></AccentItem>
+      </div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:10}}>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.green,textTransform:'uppercase',marginBottom:6}}>CONTRIBUTES</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Adverse media signal strength, risk category classification, temporal media trend (emerging vs historical), language coverage breadth</p>
+        </div>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:6}}>LIMITATION</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Media availability varies by jurisdiction and entity prominence. Very new or obscure entities may have no media footprint. Media presence ≠ guilt — requires contextual assessment.</p>
+        </div>
+      </div>
+    </Card>
+
+    {/* Media Screen */}
+    <Card accent={C.purple} style={{borderLeft:`2px solid ${C.purple}`}}>
+      <SectionLabel color={C.purple}>4. MEDIA SCREEN (BROAD) 🔍</SectionLabel>
+      <div style={{marginBottom:14}}>
+        <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.purple,textTransform:'uppercase',marginBottom:8}}>WHAT IT PROVIDES</div>
+        <AccentItem color={C.purple}><span style={{fontSize:13,color:C.body}}>General web and news search beyond Ripjar's structured coverage</span></AccentItem>
+        <AccentItem color={C.purple}><span style={{fontSize:13,color:C.body}}>Investigative journalism, blog posts, court records, regulatory actions</span></AccentItem>
+        <AccentItem color={C.purple}><span style={{fontSize:13,color:C.body}}>Social media references and forum discussions</span></AccentItem>
+        <AccentItem color={C.purple}><span style={{fontSize:13,color:C.body}}>Pattern detection across multiple entity names (same director, multiple companies)</span></AccentItem>
+        <AccentItem color={C.purple} style={{marginBottom:0}}><span style={{fontSize:13,color:C.body}}>Historical archive access for older references</span></AccentItem>
+      </div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:10}}>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.green,textTransform:'uppercase',marginBottom:6}}>CONTRIBUTES</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Supplementary media coverage, pattern identification across entities, historical context, informal intelligence</p>
+        </div>
+        <div style={{flex:'1 1 280px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:6}}>LIMITATION</div>
+          <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>Unstructured and noisy. Requires NLP processing to extract signal from noise. Higher false positive rate than structured sources. Quality varies.</p>
+        </div>
+      </div>
+    </Card>
+  </div>;
+}
+
+/* ── Section 6: Worked Example ── */
+function SectionExample(){
+  const dimensions=[
+    {label:'Registration risk',value:0.85,confidence:'HIGH',source:'Companies House: virtual office, formation agent address, FCA warning'},
+    {label:'Entity maturity risk',value:0.82,confidence:'HIGH',source:'Companies House: incorporated 2022, never filed accounts'},
+    {label:'Adverse media signal',value:0.78,confidence:'HIGH',source:'Ripjar + media: sanctions evasion reporting on director'},
+    {label:'Governance risk',value:0.75,confidence:'HIGH',source:'Companies House: single foreign director, no board oversight'},
+    {label:'Sanctions proximity',value:0.72,confidence:'MEDIUM',source:'World-Check: director associated with SDN-listed individual'},
+    {label:'SIC mismatch',value:0.70,confidence:'HIGH',source:'Companies House: \'other services\' SIC code vs commodity trading name'},
+    {label:'Network risk',value:0.65,confidence:'MEDIUM',source:'Media: pattern of multiple UK shell entities by same individual'},
+    {label:'Jurisdiction blend',value:0.55,confidence:'MEDIUM',source:'UK registration but Romanian director/PSC, Romania residence'},
+  ];
+
+  function barColor(v){
+    if(v>0.75) return C.red;
+    if(v>0.55) return C.amber;
+    if(v>0.35) return C.green;
+    return '#5a6080';
+  }
+
+  return <div className="fi">
+    {/* Scenario */}
+    <Card accent={C.amber} style={{borderLeft:`2px solid ${C.amber}`}}>
+      <SectionLabel color={C.amber}>SCENARIO</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.7}}>A USD wire arrives at your bank. The beneficiary is your customer. The originator — <strong style={{color:C.tx}}>Meridian Commodities Trading Ltd</strong> — is NOT your customer. You see only the name from the payment message. The engine automatically queries all four sources and builds a risk profile.</p>
+    </Card>
+
+    {/* Companies House */}
+    <Card accent={C.blue} style={{borderLeft:`2px solid ${C.blue}`}}>
+      <SectionLabel color={C.blue}>COMPANIES HOUSE FINDINGS</SectionLabel>
+      {[
+        ['status','Active'],
+        ['incorporated','September 2022'],
+        ['registeredAddress','71–75 Shelton Street, Covent Garden, London WC2H 9JQ'],
+        ['nature','Other service activities not elsewhere classified (96090)'],
+        ['Director','Viktor Andrei Popescu — Romanian, appointed Sep 2022, residence: Romania'],
+        ['persons','1 active PSC: Viktor Andrei Popescu, 75%+ ownership'],
+        ['filings','No accounts filed (first accounts overdue)'],
+      ].map(([k,v],i)=>(
+        <div key={i} style={{background:'#080a10',borderRadius:8,padding:'8px 12px',marginBottom:4,display:'flex',gap:10,flexWrap:'wrap'}}>
+          <span className="mono" style={{fontSize:12,color:C.blue,minWidth:140}}>{k}:</span>
+          <span style={{fontSize:12,color:C.body,flex:1}}>{v}</span>
+        </div>
+      ))}
+      <div style={{marginTop:12}}>
+        <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.red,textTransform:'uppercase',marginBottom:8}}>RED FLAGS</div>
+        <AccentItem color={C.red}><span style={{fontSize:12,color:C.body}}>Virtual office address (known formation agent address)</span></AccentItem>
+        <AccentItem color={C.red}><span style={{fontSize:12,color:C.body}}>Single foreign director/PSC</span></AccentItem>
+        <AccentItem color={C.red}><span style={{fontSize:12,color:C.body}}>SIC code doesn't match trade activity implied by name</span></AccentItem>
+        <AccentItem color={C.red} style={{marginBottom:0}}><span style={{fontSize:12,color:C.body}}>Overdue accounts — never filed</span></AccentItem>
+      </div>
+    </Card>
+
+    {/* World-Check */}
+    <Card accent={C.red} style={{borderLeft:`2px solid ${C.red}`}}>
+      <SectionLabel color={C.red}>WORLD-CHECK FINDINGS</SectionLabel>
+      <AccentItem color={C.muted}><span style={{fontSize:12,color:C.body}}><strong style={{color:C.tx}}>Entity:</strong> No direct match for 'Meridian Commodities Trading Ltd'</span></AccentItem>
+      <AccentItem color={C.amber} style={{marginBottom:14}}><span style={{fontSize:12,color:C.body}}><strong style={{color:C.tx}}>Director:</strong> Viktor Andrei Popescu — 1 potential match: Viktor A. Popescu, Romanian national, listed as associate of sanctioned individual Dragos Ionescu (OFAC SDN) in 2021 designation narrative. Match confidence: MEDIUM (common name variant, same nationality, age-consistent).</span></AccentItem>
+      <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.red,textTransform:'uppercase',marginBottom:8}}>RED FLAGS</div>
+      <AccentItem color={C.red}><span style={{fontSize:12,color:C.body}}>Director has potential association to sanctioned individual</span></AccentItem>
+      <AccentItem color={C.red} style={{marginBottom:0}}><span style={{fontSize:12,color:C.body}}>Match is indirect — named in narrative, not directly designated</span></AccentItem>
+    </Card>
+
+    {/* Ripjar */}
+    <Card accent={C.amber} style={{borderLeft:`2px solid ${C.amber}`}}>
+      <SectionLabel color={C.amber}>RIPJAR FINDINGS</SectionLabel>
+      <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.muted,textTransform:'uppercase',marginBottom:8}}>3 ADVERSE MEDIA ITEMS</div>
+      <AccentItem color={C.amber}><span style={{fontSize:12,color:C.body}}>Viktor Popescu mentioned in Romanian investigative report (2023) regarding commodity trading networks linked to sanctions evasion through Balkan intermediaries</span></AccentItem>
+      <AccentItem color={C.amber}><span style={{fontSize:12,color:C.body}}>Meridian Commodities — no direct media hits (entity too new/obscure)</span></AccentItem>
+      <AccentItem color={C.amber} style={{marginBottom:14}}><span style={{fontSize:12,color:C.body}}>Shelton Street address flagged in 2024 FCA warning about shell company registrations at formation agent addresses</span></AccentItem>
+      <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.amber,textTransform:'uppercase',marginBottom:8}}>FLAGS</div>
+      <AccentItem color={C.amber}><span style={{fontSize:12,color:C.body}}>Director linked to sanctions evasion reporting</span></AccentItem>
+      <AccentItem color={C.amber} style={{marginBottom:0}}><span style={{fontSize:12,color:C.body}}>Address on FCA warning list</span></AccentItem>
+    </Card>
+
+    {/* Embedding dimensions */}
+    <Card accent={C.indigo} style={{borderLeft:`2px solid ${C.indigo}`}}>
+      <SectionLabel color={C.indigo}>RESULTING EMBEDDING — 8 DIMENSIONS</SectionLabel>
+      <p style={{fontSize:11,color:C.muted,marginBottom:14}}>Each dimension shows signal strength, data source, and confidence level.</p>
+      {dimensions.map((d,i)=>{
+        const bc=barColor(d.value);
+        const confColor=d.confidence==='HIGH'?C.green:C.amber;
+        return <div key={i} style={{marginBottom:10}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4,flexWrap:'wrap'}}>
+            <span className="mono" style={{fontSize:11,color:C.tx,minWidth:140,flexShrink:0}}>{d.label}</span>
+            <div style={{flex:1,minWidth:120,height:18,background:'#080a10',borderRadius:4,overflow:'hidden',position:'relative'}}>
+              <div style={{width:`${d.value*100}%`,height:'100%',background:bc,borderRadius:4,transition:'width .5s ease'}}/>
+            </div>
+            <span className="mono" style={{fontSize:12,color:bc,minWidth:36,textAlign:'right'}}>{d.value.toFixed(2)}</span>
+            <span className="mono" style={{fontSize:9,color:confColor,background:confColor+'18',padding:'2px 6px',borderRadius:3,letterSpacing:'.5px'}}>{d.confidence}</span>
+          </div>
+          <div style={{fontSize:10,color:C.muted,paddingLeft:148}}>{d.source}</div>
+        </div>;
+      })}
+    </Card>
+
+    {/* Risk score box */}
+    <Card style={{background:'rgba(239,68,68,0.08)',border:`1px solid ${C.red}`,borderLeft:`2px solid ${C.red}`}}>
+      <div style={{fontSize:18,fontWeight:800,color:C.red,marginBottom:8}} className="mono">Composite Risk Score: 76 / 100 — HIGH</div>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.7}}>This counterparty — which has NO KYC file at your bank — is rated HIGH risk based on publicly available and commercial data. Virtual office registration, overdue filings, mismatched SIC code, single foreign director with adverse media linking to sanctions evasion networks, and a potential World-Check association with a designated individual. Traditional sanctions screening returned NO HIT. The embedding captured the risk that name matching missed.</p>
+    </Card>
+  </div>;
+}
+
+/* ── Section 7: Integration Into Compliance Flows ── */
+function SectionFlows(){
+  const flows=[
+    {
+      icon:'🛡',title:'Sanctions Screening',color:C.red,
+      without:"Name screened against sanctions lists at payment level. Fuzzy string matching returns no hit for 'Meridian Commodities Trading Ltd' or 'Viktor Popescu' (not directly designated). Alert closed. Wire processed.",
+      with_:"Embedding engine scores counterparty at 0.72 sanctions proximity because director is ASSOCIATED with a designated individual (named in SDN narrative). This near-miss doesn't trigger a traditional name match but the embedding captures the relationship proximity. Wire is flagged for enhanced review before processing. The indirect sanctions exposure — invisible to string matching — is surfaced.",
+      delta:"Catches indirect/associative sanctions exposure that name matching misses entirely",
+    },
+    {
+      icon:'📋',title:'Enhanced Due Diligence (EDD)',color:C.orange,
+      without:"EDD triggered by jurisdiction or product risk rules. Analyst manually researches the counterparty — pulls Companies House, searches media, checks World-Check. Takes 4–6 hours. Quality depends on analyst skill and which databases they think to check.",
+      with_:"EDD automatically receives the counterparty's pre-computed risk embedding with full source attribution. Analyst sees: registration risk 0.85 (virtual office, overdue filings), adverse media 0.78 (sanctions evasion reporting), sanctions proximity 0.72 (associate of SDN individual). All sources cited. Analyst validates rather than researches. Time: 30–60 minutes.",
+      delta:"EDD time reduced 75–85%. Consistent quality regardless of individual analyst. No risk signals missed because an analyst didn't think to check a particular source.",
+    },
+    {
+      icon:'👤',title:'KYC / Customer Risk Rating',color:C.blue,
+      without:"Counterparty is NOT your customer — you have no KYC on them. They appear as a name on a wire. Your KYC applies to your own customer (the account holder sending or receiving the wire). The counterparty is a blind spot.",
+      with_:"Even though the counterparty is not your customer, the engine builds a risk profile from publicly available and commercial data sources. This counterparty risk score becomes a FEATURE in your customer's own risk rating. If your customer regularly transacts with high-risk counterparties (as rated by the engine), your customer's own risk embedding shifts upward. Counterparty risk propagates into customer risk — automatically.",
+      delta:"Transforms counterparties from blind spots into quantified risk signals that influence your customer's risk rating in real time",
+    },
+    {
+      icon:'💸',title:'AML Transaction Monitoring',color:C.purple,
+      without:"Transaction monitoring rules fire based on amount, frequency, geography, and pattern thresholds. The counterparty name is screened for sanctions but not risk-rated. A $500K wire to 'Meridian Commodities Trading Ltd' might not trigger any scenario if the amount and pattern are within normal bounds for the account holder.",
+      with_:"The monitoring system now receives the counterparty's risk embedding as an input feature. The GBM model learns that a transaction to a counterparty with 0.85 registration risk + 0.78 adverse media + 0.72 sanctions proximity is suspicious even if the amount and pattern are unremarkable. The COMBINATION of counterparty risk and transaction characteristics surfaces alerts that rules alone miss.",
+      delta:"Adds counterparty intelligence as a detection dimension. Rules see amounts and patterns; embeddings see who the money is going to and what's known about them.",
+    },
+  ];
+
+  return <div className="fi">
+    <Card accent={C.green} style={{borderLeft:`2px solid ${C.green}`}}>
+      <SectionLabel color={C.green}>ONE ENGINE, FOUR FLOWS</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.7}}>The counterparty risk rating engine is queried by every compliance process that encounters an entity name. The same risk score, the same embedding dimensions, the same source attribution — consumed differently by each flow. Below is the concrete impact for each, using the Meridian Commodities example.</p>
+    </Card>
+
+    {flows.map((f,i)=>(
+      <Card key={i} accent={f.color}>
+        <div style={{fontSize:16,fontWeight:700,color:C.tx,marginBottom:14}}>{f.icon} {f.title}</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:12,marginBottom:14}}>
+          <div style={{flex:'1 1 300px'}}>
+            <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.red,textTransform:'uppercase',marginBottom:8}}>WITHOUT ENGINE</div>
+            <div style={{borderLeft:`2px solid ${C.red}`,paddingLeft:14}}>
+              <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>{f.without}</p>
+            </div>
+          </div>
+          <div style={{flex:'1 1 300px'}}>
+            <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:f.color,textTransform:'uppercase',marginBottom:8}}>WITH ENGINE</div>
+            <div style={{borderLeft:`2px solid ${f.color}`,paddingLeft:14}}>
+              <p style={{fontSize:12,color:C.body,lineHeight:1.6}}>{f.with_}</p>
+            </div>
+          </div>
+        </div>
+        <div style={{background:f.color+'12',border:`1px solid ${f.color}33`,borderRadius:8,padding:'10px 14px'}}>
+          <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:f.color,textTransform:'uppercase',marginBottom:4}}>KEY DELTA</div>
+          <p style={{fontSize:12,color:C.tx,lineHeight:1.5,fontWeight:600}}>{f.delta}</p>
+        </div>
+      </Card>
+    ))}
+
+    {/* Closing card */}
+    <Card accent={C.indigo} style={{borderLeft:`2px solid ${C.indigo}`}}>
+      <SectionLabel color={C.indigo}>THE VIRTUOUS CYCLE</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.7}}>Every time the engine rates a counterparty that later appears in a SAR, sanctions designation, or fraud case, that outcome feeds back into the training data. The embedding model learns: 'entities with THIS profile shape tend to be bad.' Next time a similar entity appears — even with a different name, different address, different jurisdiction — the engine recognises the pattern. The more it's used, the better it gets. And because every compliance flow queries the same engine, an insight from sanctions screening immediately improves AML detection, and vice versa.</p>
+    </Card>
+  </div>;
+}
+
+/* ── Main App ── */
+function App(){
+  const [active,setActive]=useState('concept');
+
+  const sectionMap={
+    concept:<SectionConcept/>,
+    how:<SectionHow/>,
+    why:<SectionWhy/>,
+    engine:<SectionEngine/>,
+    sources:<SectionSources/>,
+    example:<SectionExample/>,
+    flows:<SectionFlows/>,
+  };
+
+  const currentIdx=SECTIONS.findIndex(s=>s.id===active);
+
+  return <div style={{minHeight:'100vh',background:C.bg}}>
+    {/* Sticky nav */}
+    <div style={{position:'sticky',top:0,zIndex:100,background:C.bg,borderBottom:`1px solid ${C.bdr}`,padding:'12px 0'}}>
+      <div style={{maxWidth:740,margin:'0 auto',padding:'0 16px',overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+        <div style={{display:'flex',gap:4,minWidth:'max-content'}}>
+          {SECTIONS.map(s=>(
+            <button key={s.id} onClick={()=>setActive(s.id)} style={{
+              background:active===s.id?C.indigo+'22':'transparent',
+              border:active===s.id?`1px solid ${C.indigo}`:`1px solid transparent`,
+              borderRadius:8,padding:'6px 12px',cursor:'pointer',
+              color:active===s.id?C.indigo:C.muted,
+              fontSize:12,fontFamily:"'Libre Franklin',sans-serif",fontWeight:active===s.id?600:400,
+              whiteSpace:'nowrap',transition:'all .2s',
+            }}>
+              <span style={{marginRight:4}}>{s.icon}</span>{s.title}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* Header */}
+    <div style={{maxWidth:740,margin:'0 auto',padding:'40px 16px 0'}}>
+      <div className="mono" style={{fontSize:10,letterSpacing:'1.8px',color:C.indigo,textTransform:'uppercase',marginBottom:8}}>ECONOMIC CRIME HUB — PAPERS</div>
+      <h1 style={{fontSize:28,fontWeight:800,color:C.tx,lineHeight:1.25,marginBottom:6,fontFamily:"'Libre Franklin',sans-serif"}}>Embeddings for Financial Crime</h1>
+      <p style={{fontSize:15,color:C.muted,marginBottom:32,fontFamily:"'Libre Franklin',sans-serif"}}>From Concept to Counterparty Risk Engine</p>
+    </div>
+
+    {/* Content */}
+    <div style={{maxWidth:740,margin:'0 auto',padding:'0 16px 60px'}} key={active}>
+      {sectionMap[active]}
+
+      {/* Prev/Next */}
+      <div style={{display:'flex',justifyContent:'space-between',marginTop:24,gap:12}}>
+        {currentIdx>0?(
+          <button onClick={()=>setActive(SECTIONS[currentIdx-1].id)} style={{
+            background:C.card,border:`1px solid ${C.bdr}`,borderRadius:10,padding:'10px 18px',cursor:'pointer',
+            color:C.body,fontSize:13,fontFamily:"'Libre Franklin',sans-serif",
+          }}>
+            ← {SECTIONS[currentIdx-1].title}
+          </button>
+        ):<div/>}
+        {currentIdx<SECTIONS.length-1?(
+          <button onClick={()=>setActive(SECTIONS[currentIdx+1].id)} style={{
+            background:C.indigo+'18',border:`1px solid ${C.indigo}44`,borderRadius:10,padding:'10px 18px',cursor:'pointer',
+            color:C.indigo,fontSize:13,fontWeight:600,fontFamily:"'Libre Franklin',sans-serif",
+          }}>
+            {SECTIONS[currentIdx+1].title} →
+          </button>
+        ):<div/>}
+      </div>
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

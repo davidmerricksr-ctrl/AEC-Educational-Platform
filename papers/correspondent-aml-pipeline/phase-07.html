@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Phase 07: Doc Ingestion — Correspondent Banking AML Pipeline</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#06070e;color:#c8cde0;font-family:'Source Sans 3',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+#root{min-height:100vh}
+code,pre,.mono{font-family:'Source Code Pro',monospace}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0c0d18}
+::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease-out both}
+input[type=number]{-moz-appearance:textfield}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+a{text-decoration:none}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo,useCallback,useEffect,useRef}=React;
+
+const C={
+  bg:'#06070e',card:'#0c0d18',cardHi:'#10112a',
+  bdr:'#181a2e',bdrHi:'#252840',
+  tx:'#eef0ff',body:'#c8cde0',dim:'#8890b0',muted:'#5a6080',
+  slate:'#64748b',cyan:'#0ea5e9',blue:'#3b82f6',orange:'#f97316',
+  purple:'#8b5cf6',rose:'#e11d48',indigo:'#6366f1',red:'#ef4444',
+  fuchsia:'#d946ef',green:'#22c55e',amber:'#f59e0b',gray:'#5a6080',
+};
+const PHASE_COLORS=[C.slate,C.cyan,C.blue,C.orange,C.purple,C.rose,C.cyan,C.indigo,C.red,C.fuchsia];
+const PHASE_ICONS=['\u26A1','\uD83D\uDCCB','\u25C8','\u2699','\uD83D\uDD0D','\uD83D\uDCE8','\uD83D\uDCC4','\u25C8\u25C8','\u25C9','\uD83C\uDFE6'];
+const PHASE_TITLES=['Detection Alert','Data Inventory','First Embedding','ML Triage','Investigation','Targeted RFI','Doc Ingestion','Second Embedding','Final Decision','Respondent Risk'];
+const PHASE_SUBS=['Oracle Mantas / Quantexa fires on wire','What you actually know','Embed available intelligence','GBM scoring + routing','Accelerated with AI tools','Fill the gaps','OCR + cross-reference','Re-embed with full picture','GBM re-score + action','Cumulative client risk \u2192 EDD \u2192 Exit'];
+const SCORE_PHASES={3:'74%',4:'74%',5:'74%',8:'96%'};
+
+function Badge({color,children,mono}){
+  return <span style={{display:'inline-block',fontSize:11,fontWeight:700,fontFamily:mono?'Source Code Pro,monospace':'inherit',color,background:color+'18',padding:'2px 10px',borderRadius:4,letterSpacing:'.04em',textTransform:'uppercase'}}>{children}</span>;
+}
+function ScoreBadge({value,color}){
+  return <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:48,height:48,borderRadius:'50%',background:color+'22',border:`2px solid ${color}`,fontSize:16,fontWeight:800,color,fontFamily:'Source Code Pro,monospace'}}>{value}</span>;
+}
+function Section({title,accent,children,border}){
+  return <div style={{marginBottom:24}}>{title&&<div style={{fontSize:12,fontWeight:700,color:accent||C.dim,letterSpacing:'.12em',textTransform:'uppercase',marginBottom:12}}>{title}</div>}{border?<div style={{borderLeft:`3px solid ${accent||C.bdr}`,paddingLeft:16}}>{children}</div>:children}</div>;
+}
+function CardBox({children,accent,highlight,style}){
+  return <div style={{background:highlight?C.cardHi:C.card,border:`1px solid ${accent?accent+'33':C.bdr}`,borderRadius:12,padding:'20px 24px',marginBottom:16,...style}}>{children}</div>;
+}
+function Collapsible({title,badge,badgeColor,children,defaultOpen}){
+  const[open,setOpen]=useState(!!defaultOpen);
+  return <CardBox><div onClick={()=>setOpen(!open)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',userSelect:'none'}}><div style={{display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:15,fontWeight:600,color:C.tx}}>{title}</span>{badge&&<Badge color={badgeColor||C.green}>{badge}</Badge>}</div><span style={{color:C.muted,fontSize:18,transition:'transform .2s',transform:open?'rotate(180deg)':'rotate(0)'}}>{'\u25BE'}</span></div>{open&&<div style={{marginTop:16,paddingTop:16,borderTop:`1px solid ${C.bdr}`}}>{children}</div>}</CardBox>;
+}
+function KVRow({label,value,accent,mono}){
+  return <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',padding:'6px 0',borderLeft:accent?`3px solid ${accent}`:'none',paddingLeft:accent?12:0,gap:12}}><span style={{color:C.dim,fontSize:14,minWidth:0,flex:'0 0 auto'}}>{label}</span><span style={{color:C.tx,fontSize:14,fontFamily:mono?'Source Code Pro,monospace':'inherit',textAlign:'right',wordBreak:'break-word'}}>{value}</span></div>;
+}
+function EmbedBar({label,value,maxVal,confidence,source,color,prevValue}){
+  const confColor=confidence==='HIGH'?C.green:confidence==='MEDIUM'?C.amber:C.muted;
+  return <div style={{marginBottom:14}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}><span style={{fontSize:14,color:C.tx,fontWeight:500}}>{label}</span><div style={{display:'flex',alignItems:'center',gap:8}}><Badge color={confColor}>{confidence}</Badge><span className="mono" style={{fontSize:14,fontWeight:700,color:color||C.blue}}>{(value*1).toFixed(2)}</span></div></div><div style={{position:'relative',height:8,background:C.bdr,borderRadius:4,overflow:'hidden'}}>{prevValue!==undefined&&<div style={{position:'absolute',left:0,top:0,bottom:0,width:`${prevValue*100}%`,background:(color||C.blue)+'33',borderRadius:4,transition:'width .4s'}}/>}<div style={{position:'absolute',left:0,top:0,bottom:0,width:`${value*100}%`,background:color||C.blue,borderRadius:4,transition:'width .4s'}}/></div>{source&&<div style={{fontSize:12,color:C.muted,marginTop:3,fontStyle:'italic'}}>"{source}"</div>}</div>;
+}
+function ShapBar({label,value,color}){
+  const maxMag=0.24;const pct=Math.min(Math.abs(value)/maxMag*100,100);const isPos=value>0;
+  return <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}><div style={{width:200,textAlign:'right',fontSize:13,color:C.body,flexShrink:0}}>{label}</div><div style={{flex:1,position:'relative',height:20}}><div style={{position:'absolute',left:'50%',top:0,bottom:0,width:1,background:C.bdr}}/>{isPos?<div style={{position:'absolute',left:'50%',top:2,bottom:2,width:`${pct/2}%`,background:C.red,borderRadius:'0 3px 3px 0',transition:'width .3s'}}/>:<div style={{position:'absolute',right:'50%',top:2,bottom:2,width:`${pct/2}%`,background:C.green,borderRadius:'3px 0 0 3px',transition:'width .3s'}}/>}</div><span className="mono" style={{width:50,fontSize:12,fontWeight:600,color:isPos?C.red:C.green,textAlign:'right',flexShrink:0}}>{isPos?'+':''}{value.toFixed(2)}</span></div>;
+}
+function InsightBox({accent,children}){
+  return <div style={{borderLeft:`3px solid ${accent||C.blue}`,background:accent?accent+'08':C.blue+'08',padding:'16px 20px',borderRadius:'0 8px 8px 0',marginTop:16,marginBottom:16,fontSize:14,color:C.body,lineHeight:1.7}}>{children}</div>;
+}
+function CheckItem({icon,status,color,children}){
+  return <div style={{display:'flex',alignItems:'flex-start',gap:10,padding:'6px 0',borderLeft:`3px solid ${color||C.green}`,paddingLeft:12,marginBottom:4}}><span style={{color:color||C.green,flexShrink:0,fontSize:14}}>{icon||'\u2713'}</span><span style={{fontSize:14,color:status==='red'?C.red:status==='amber'?C.amber:C.body}}>{children}</span></div>;
+}
+function PaymentChain(){
+  const nodes=[
+    {label:'Originator\n(Sender)',color:C.muted},
+    {label:'Respondent Bank\n(Your Client)',color:C.orange},
+    {label:'Your Bank\n(Correspondent)',color:C.blue},
+    {label:'Downstream PSP\n(Destination)',color:C.purple},
+    {label:'Beneficiary\n(Recipient)',color:C.muted},
+  ];
+  return <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:0,padding:'16px 0',overflowX:'auto',minWidth:0}}>
+    {nodes.map((n,i)=><React.Fragment key={i}>
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:90,maxWidth:130,flex:'0 0 auto'}}>
+        <div style={{border:`2px solid ${n.color}`,borderRadius:8,padding:'8px 10px',background:n.color+'12',textAlign:'center',width:'100%'}}>
+          {n.label.split('\n').map((l,j)=><div key={j} style={{fontSize:j===0?13:11,fontWeight:j===0?700:400,color:j===0?n.color:C.dim,lineHeight:1.3}}>{l}</div>)}
+        </div>
+      </div>
+      {i<nodes.length-1&&<div style={{width:28,height:2,background:C.bdr,flexShrink:0,position:'relative'}}><div style={{position:'absolute',right:-3,top:-4,fontSize:10,color:C.muted}}>{'\u2192'}</div></div>}
+    </React.Fragment>)}
+  </div>;
+}
+
+/* ── Phase Content ── */
+function Phase07(){
+  const docs=[
+    {title:'KYC Package',status:'\u2713 RECEIVED',statusColor:C.green,pages:'14pg',detail:'UBO: Kavtaradze 60%, Seabridge Holdings BVI 40%. Director: Rustam Kavtaradze. Turnover $18M.'},
+    {title:'UBO Documentation (Seabridge)',status:'\u25D0 PARTIAL',statusColor:C.amber,pages:'3pg',detail:'Trust deed: Meridian Fiduciary Services (Liechtenstein). Settlor redacted. No natural person UBO.'},
+    {title:'Trade Invoice',status:'\u2713 RECEIVED',statusColor:C.green,pages:'3pg',detail:'500 MT cotton Grade A @ $4,900/MT = $2,450,000. T/T 5 days.'},
+    {title:'Bill of Lading',status:'\u2713 RECEIVED',statusColor:C.green,pages:'2pg',detail:'Turkmenbashi, Turkmenistan \u2192 Hamburg. Vessel: MV Caspian Star. Weight: 502.4 MT.'},
+    {title:'Certificate of Origin',status:'\u2713 RECEIVED',statusColor:C.green,pages:'1pg',detail:'Turkmenistan Chamber of Commerce. Exporter: Turkmen Cotton State Enterprise.'},
+    {title:'Source of Funds',status:'\u2717 NOT PROVIDED',statusColor:C.red,pages:'\u2014',detail:'Client declined to provide personal financial documentation.'},
+  ];
+  const checks=[
+    {icon:'\u2713',label:'Invoice amount vs wire',result:'MATCH',color:C.green},
+    {icon:'\u2713',label:'Invoice seller vs KYC entity',result:'MATCH',color:C.green},
+    {icon:'\u2713',label:'B/L shipper vs invoice seller',result:'MATCH',color:C.green},
+    {icon:'\u25D0',label:'B/L weight (502.4 MT) vs invoice (500 MT)',result:'MINOR DISCREPANCY',color:C.amber},
+    {icon:'\u2717',label:'COO exporter vs invoice seller',result:'MISMATCH \u2014 State Enterprise \u2260 Silk Road',color:C.red},
+    {icon:'\u2717',label:'Invoice unit price ($4,900) vs market ($2,100\u20132,800)',result:'ANOMALY 75\u2013130% ABOVE',color:C.red},
+    {icon:'\u2717',label:'UBO disclosure',result:'INCOMPLETE \u2014 settlor hidden',color:C.red},
+    {icon:'\u2717',label:'Source of funds',result:'REFUSED BY CLIENT',color:C.red},
+    {icon:'\u25D0',label:'Payment terms T/T 5 days vs norm 30\u201390 days',result:'ANOMALOUS',color:C.orange},
+  ];
+  const findings=['Cotton 75\u2013130% above market \u2014 TBML over-invoicing','COO: Turkmen state enterprise but seller is UAE FZE \u2014 pass-through, no value-add','Turkmenistan origin = forced labor (CBP WRO)','BVI trust settlor not disclosed despite explicit request','Client REFUSED source of funds','Payment terms abnormally fast (5 days vs 30\u201390 norm)','NEW: Director name Rustam Kavtaradze \u2014 can now screen for adverse media/PEP'];
+
+  return <div className="fade-in">
+    <Section title="Documents Received" accent={C.cyan}>
+      {docs.map((d,i)=><Collapsible key={i} title={d.title} badge={d.status} badgeColor={d.statusColor}>
+        <div style={{fontSize:13,color:C.muted,marginBottom:6}}>Pages: {d.pages}</div>
+        <div style={{fontSize:14,color:C.body}}>{d.detail}</div>
+      </Collapsible>)}
+    </Section>
+
+    <Section title="Cross-Document Consistency Checks" accent={C.cyan}>
+      <CardBox>{checks.map((c,i)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:10,padding:'6px 0',borderLeft:`3px solid ${c.color}`,paddingLeft:12,marginBottom:4}}>
+        <span style={{color:c.color,flexShrink:0,fontSize:14}}>{c.icon}</span>
+        <span style={{fontSize:13,color:C.body}}>{c.label}: <strong style={{color:c.color}}>{c.result}</strong></span>
+      </div>)}</CardBox>
+    </Section>
+
+    <InsightBox accent={C.red}>
+      <strong style={{color:C.tx}}>Critical Findings</strong>
+      {findings.map((f,i)=><div key={i} style={{borderLeft:`3px solid ${C.red}`,paddingLeft:12,marginTop:8,fontSize:14,color:C.body}}>{f}</div>)}
+    </InsightBox>
+  </div>;
+}
+
+/* ── App Wrapper ── */
+const PHASE_IDX=6;
+function App(){
+  const color=PHASE_COLORS[PHASE_IDX];
+  const score=SCORE_PHASES[PHASE_IDX];
+  return <div style={{maxWidth:760,margin:'0 auto',padding:'24px 16px 80px'}}>
+    <a href="index.html" style={{display:'inline-flex',alignItems:'center',gap:6,fontSize:13,color:C.dim,marginBottom:20,padding:'6px 0',cursor:'pointer'}}>{'<'} Back to all phases</a>
+    <div style={{marginBottom:24}}>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <span style={{fontSize:32}}>{PHASE_ICONS[PHASE_IDX]}</span>
+        <div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <span className="mono" style={{fontSize:13,fontWeight:700,color}}>PHASE {String(PHASE_IDX+1).padStart(2,'0')}</span>
+            {score&&<ScoreBadge value={score} color={color}/>}
+          </div>
+          <h2 style={{fontSize:24,fontWeight:800,color:C.tx,marginTop:2}}>{PHASE_TITLES[PHASE_IDX]}</h2>
+          <div style={{fontSize:14,color:C.dim}}>{PHASE_SUBS[PHASE_IDX]}</div>
+        </div>
+      </div>
+    </div>
+    <Phase07/>
+    <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
+      <a href="phase-06.html" style={{padding:'10px 20px',borderRadius:8,border:`1.5px solid ${C.bdr}`,background:C.card,color:C.body,cursor:'pointer',fontSize:14,fontWeight:500}}>{'\u2190'} Phase 06: {PHASE_TITLES[5]}</a>
+      <a href="phase-08.html" style={{padding:'10px 20px',borderRadius:8,border:`1.5px solid ${PHASE_COLORS[7]}`,background:PHASE_COLORS[7]+'18',color:C.tx,cursor:'pointer',fontSize:14,fontWeight:600}}>Phase 08: {PHASE_TITLES[7]} {'\u2192'}</a>
+    </div>
+    <div style={{textAlign:'center',marginTop:48,paddingTop:24,borderTop:`1px solid ${C.bdr}`,fontSize:12,color:C.muted}}>Economic Crime Hub</div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

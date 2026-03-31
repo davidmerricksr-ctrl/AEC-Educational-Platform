@@ -39,6 +39,8 @@
       d.remove();
       var els=document.body.querySelectorAll('[data-ech-hidden]');
       for(var j=0;j<els.length;j++){els[j].style.display='';els[j].removeAttribute('data-ech-hidden');}
+      // Notify on login
+      try{fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:location.pathname,userAgent:navigator.userAgent,timestamp:new Date().toISOString(),referrer:document.referrer||''})});}catch(e){}
     }else{
       document.getElementById('ech-ge').style.display='block';
       inp.value='';inp.focus();

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>The AML Investigation Process: L1 Triage, L2 Investigation, and the RFI Cycle in Correspondent Banking — Before Automation</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#070910;color:#b8c0d8;font-family:'General Sans',sans-serif;font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+#root{min-height:100vh}
+code,.mono{font-family:'Fira Code',monospace}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0b0e15}
+::-webkit-scrollbar-thumb{background:#2a2d44;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease-out both}
+ul,ol{list-style:none}
+li{list-style:none}
+li::before{display:none}
+li::marker{display:none;content:''}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef}=React;
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTIONS CONFIG
+   ══════════════════════════════════════════════════════════════════ */
+const SECTIONS=[
+  {id:'overview',title:'Process Overview',icon:'◇'},
+  {id:'l1',title:'L1 — Alert Triage',icon:'①'},
+  {id:'l2',title:'L2 — Full Investigation',icon:'②'},
+  {id:'l2rfi',title:'L2 with RFI Cycle',icon:'③'},
+  {id:'decisions',title:'Escalation & Discount Decisions',icon:'⚖'},
+  {id:'challenges',title:'Challenges & Risks',icon:'⚠'},
+  {id:'roles',title:'Analyst Roles & Skillsets',icon:'👥'},
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   COLORS
+   ══════════════════════════════════════════════════════════════════ */
+const C={
+  bg:'#070910',card:'#0b0e15',cardDark:'#080a10',
+  bdr:'#191d2c',
+  tx:'#e0e4f0',body:'#b8c0d8',dim:'#8890ac',muted:'#5a6080',mutedMid:'#6d7590',
+  green:'#22c55e',amber:'#f59e0b',red:'#ef4444',purple:'#8b5cf6',slate:'#6d7590',
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   HELPER COMPONENTS
+   ══════════════════════════════════════════════════════════════════ */
+function SectionLabel({color,children}){
+  return <div style={{fontSize:10,fontFamily:'Fira Code, monospace',fontWeight:600,color:color||C.dim,letterSpacing:'1.6px',textTransform:'uppercase',marginBottom:14}}>{children}</div>;
+}
+
+function Card({children,accent,style}){
+  return <div style={{background:C.card,border:`1px solid ${accent?accent+'33':C.bdr}`,borderRadius:13,padding:18,marginBottom:16,...style}}>{children}</div>;
+}
+
+function StatCard({number,label,sub,color,style}){
+  return <div style={{background:C.cardDark,border:`1px solid ${color?color+'33':C.bdr}`,borderRadius:13,padding:'18px 16px',flex:'1 1 0',minWidth:160,...style}}>
+    <div className="mono" style={{fontSize:22,fontWeight:600,color:color||C.tx,lineHeight:1.2,marginBottom:6}}>{number}</div>
+    <div style={{fontSize:13,fontWeight:600,color:C.tx,marginBottom:4}}>{label}</div>
+    {sub&&<div style={{fontSize:12,color:C.muted,lineHeight:1.5}}>{sub}</div>}
+  </div>;
+}
+
+function StatRow({children}){
+  return <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:16}}>{children}</div>;
+}
+
+function AccentItem({color,title,children}){
+  return <div style={{borderLeft:`2px solid ${color||C.dim}`,paddingLeft:14,marginBottom:14}}>
+    {title&&<div style={{fontSize:14,fontWeight:600,color:C.tx,marginBottom:4}}>{title}</div>}
+    <div style={{fontSize:13,color:C.body,lineHeight:1.8}}>{children}</div>
+  </div>;
+}
+
+function TimelineStep({num,title,time,children,color,isLast}){
+  return <div style={{display:'flex',gap:14,position:'relative',paddingBottom:isLast?0:24}}>
+    {!isLast&&<div style={{position:'absolute',left:14,top:34,bottom:0,width:2,background:(color||C.dim)+'4d'}}/>}
+    <div style={{width:30,height:30,minWidth:30,borderRadius:8,background:color||C.dim,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:'#fff',fontFamily:'Fira Code, monospace',position:'relative',zIndex:1}}>{num}</div>
+    <div style={{flex:1,paddingTop:2}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:6}}>
+        <span style={{fontSize:14,fontWeight:600,color:C.tx}}>{title}</span>
+        <span className="mono" style={{fontSize:10,fontWeight:500,color:color||C.dim,background:(color||C.dim)+'18',padding:'2px 8px',borderRadius:4}}>{time}</span>
+      </div>
+      <div style={{fontSize:13,color:C.body,lineHeight:1.8}}>{children}</div>
+    </div>
+  </div>;
+}
+
+function FlowStep({num,label,sub,color,pct,isLast}){
+  return <div style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+    <div style={{background:color+'14',border:`1px solid ${color}40`,borderRadius:13,padding:'14px 18px',width:'100%',textAlign:'center'}}>
+      <div className="mono" style={{fontSize:11,fontWeight:600,color:color,marginBottom:4}}>{num}</div>
+      <div style={{fontSize:14,fontWeight:600,color:C.tx,marginBottom:4}}>{label}</div>
+      <div style={{fontSize:12,color:C.mutedMid,marginBottom:6}}>{sub}</div>
+      <div className="mono" style={{fontSize:11,color:color,fontWeight:500}}>{pct}</div>
+    </div>
+    {!isLast&&<div style={{width:2,height:24,background:color+'4d'}}/>}
+  </div>;
+}
+
+function ResponseOutcome({num,label,pct,color,desc}){
+  return <div style={{borderLeft:`2px solid ${color}`,paddingLeft:14,marginBottom:14}}>
+    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
+      <span className="mono" style={{fontSize:11,fontWeight:600,color:color}}>{num}.</span>
+      <span style={{fontSize:14,fontWeight:600,color:C.tx}}>{label}</span>
+      <span className="mono" style={{fontSize:10,color:color,background:color+'18',padding:'2px 8px',borderRadius:4}}>{pct}</span>
+    </div>
+    <div style={{fontSize:13,color:C.body,lineHeight:1.8}}>{desc}</div>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: OVERVIEW
+   ══════════════════════════════════════════════════════════════════ */
+function SectionOverview(){
+  return <div className="fade-in">
+    <Card>
+      <SectionLabel color={C.dim}>THE THREE-TIER MODEL</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>Most financial institutions organise their AML investigation function into a tiered structure. Alerts generated by the detection engine — whether Oracle Mantas, Quantexa, or another transaction monitoring system — flow into a queue. From there, they pass through a series of human review stages, each with increasing depth, seniority, and time investment. The tiers are not always labelled identically across institutions, but the underlying logic is consistent: filter fast at the top, investigate deeply in the middle, and escalate decisively at the bottom.</p>
+    </Card>
+
+    <StatRow>
+      <StatCard number="30–60m" label="L1 — Alert Triage" sub="per alert" color={C.green}/>
+      <StatCard number="4–8 hrs" label="L2 — Full Investigation" sub="per case" color={C.amber}/>
+      <StatCard number="8–16 hrs" label="L2 + RFI Cycle" sub="+ 15–30 day wait" color={C.red}/>
+    </StatRow>
+
+    <Card>
+      <SectionLabel color={C.dim}>THE FLOW</SectionLabel>
+      <FlowStep num="01" label="Detection Engine Alert" sub="Mantas / Quantexa generates alert" color={C.slate} pct="100% of alerts"/>
+      <FlowStep num="02" label="L1 — Alert Triage" sub="Initial review, discount or escalate" color={C.green} pct="~60–70% discounted here"/>
+      <FlowStep num="03" label="L2 — Full Investigation" sub="Deep dive, evidence gathering" color={C.amber} pct="~50–60% of escalated resolved here"/>
+      <FlowStep num="04" label="L2 + RFI Cycle" sub="Request for information from respondent" color={C.red} pct="~30–40% of L2 cases require RFI"/>
+      <FlowStep num="05" label="Disposition" sub="SAR / Close / Enhanced monitoring" color={C.purple} pct="Final decision" isLast/>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.dim}>CORRESPONDENT BANKING CONTEXT</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>In correspondent banking, the investigation is fundamentally constrained by information asymmetry. You are clearing wires for your respondent bank client. The originator and beneficiary are your respondent's customers — not yours. You see only what appears on the SWIFT message: names, addresses, BIC codes, amounts, and free-text remittance information. You have no access to the originator's KYC, their transaction history with the respondent, their source of wealth, or their beneficial ownership structure. This means every investigation begins from a position of partial blindness, and the quality of the outcome depends heavily on the analyst's ability to extract maximum intelligence from minimal data and determine — often with significant uncertainty — whether to discount, investigate further, or send a Request for Information to the respondent bank.</p>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: L1 — ALERT TRIAGE
+   ══════════════════════════════════════════════════════════════════ */
+function SectionL1(){
+  return <div className="fade-in">
+    <Card accent={C.green}>
+      <StatRow>
+        <StatCard number="30–60 min" label="Time per alert" color={C.green}/>
+        <StatCard number="60–70%" label="Discount rate" color={C.green}/>
+        <StatCard number="30–40%" label="Escalation to L2" color={C.green}/>
+      </StatRow>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>L1 triage is the first human touchpoint after the detection engine fires an alert. The L1 analyst's primary task is to determine whether the alert warrants further investigation or can be discounted as a false positive. This is high-volume, time-pressured work. A typical L1 analyst handles 6–10 alerts per day, and the expectation is rapid assessment — not deep investigation.</p>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.green}>WHAT THE L1 ANALYST ACTUALLY DOES</SectionLabel>
+      <TimelineStep num={1} title="Open the alert in the case management system" time="2–3 min" color={C.green}>
+        Review alert summary: detection scenario, risk score, payment details, prior alerts on same parties.
+      </TimelineStep>
+      <TimelineStep num={2} title="Review the payment message fields" time="3–5 min" color={C.green}>
+        Read MT103/pacs.008 fields: F50K, F59, F52A, F57A, F70. Look for red flags: high-risk jurisdictions, commodity keywords, round amounts, unusual remittance text, formation agent addresses.
+      </TimelineStep>
+      <TimelineStep num={3} title="Check the respondent bank profile" time="3–5 min" color={C.green}>
+        Pull respondent's internal risk rating, jurisdiction, prior RFI history, enhanced monitoring flags. If HIGH risk or recent SARs, escalation threshold drops.
+      </TimelineStep>
+      <TimelineStep num={4} title="Screen counterparties against sanctions lists" time="5–10 min" color={C.green}>
+        Run originator and beneficiary through screening system. Verify results. Check for exact and near-matches on OFAC, UN, EU, UK lists.
+      </TimelineStep>
+      <TimelineStep num={5} title="Check internal transaction history" time="5–10 min" color={C.green}>
+        Search wire history for originator/beneficiary. How many times seen? Through which respondents? What patterns? Is originator new or established? Is beneficiary first-time?
+      </TimelineStep>
+      <TimelineStep num={6} title="Make the triage decision" time="5–10 min" color={C.green} isLast>
+        Discount (close with narrative) or escalate to L2 (summarise findings and flag concerns).
+      </TimelineStep>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.green}>WHAT TRIGGERS A DISCOUNT AT L1</SectionLabel>
+      <AccentItem color={C.green}>Routine transaction consistent with established pattern</AccentItem>
+      <AccentItem color={C.green}>Well-known entities with no prior adverse history</AccentItem>
+      <AccentItem color={C.green}>Amount within normal parameters for respondent's business mix</AccentItem>
+      <AccentItem color={C.green}>Sanctions screening clean, low-risk jurisdictions</AccentItem>
+      <AccentItem color={C.green}>Remittance info clearly describes legitimate purpose</AccentItem>
+      <AccentItem color={C.green}>Same activity recently investigated and closed with no action</AccentItem>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.amber}>WHAT TRIGGERS ESCALATION TO L2</SectionLabel>
+      <AccentItem color={C.amber}>New originator or first-time beneficiary</AccentItem>
+      <AccentItem color={C.amber}>Amount significantly above established pattern, or pattern has changed</AccentItem>
+      <AccentItem color={C.amber}>Respondent rated MEDIUM-HIGH or HIGH, or has recent SARs/unresolved RFIs</AccentItem>
+      <AccentItem color={C.amber}>High-risk commodity references or vague/inconsistent remittance info</AccentItem>
+      <AccentItem color={C.amber}>Sanctions near-matches or semantic similarity to watchlist entities</AccentItem>
+      <AccentItem color={C.amber}>Multiple alerts on same respondent/originator in short period</AccentItem>
+      <AccentItem color={C.amber}>Analyst "gut feel" — documented as "escalated based on professional judgment"</AccentItem>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: L2 — FULL INVESTIGATION
+   ══════════════════════════════════════════════════════════════════ */
+function SectionL2(){
+  return <div className="fade-in">
+    <Card accent={C.amber}>
+      <StatRow>
+        <StatCard number="4–8 hrs" label="Time per case" color={C.amber}/>
+        <StatCard number="50–60%" label="Resolved here" sub="of escalated" color={C.amber}/>
+        <StatCard number="30–40%" label="Require RFI" color={C.amber}/>
+      </StatRow>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>L2 investigation is where the real analytical work happens. The L2 investigator receives an escalated case from L1 with initial findings and concerns. Their task is to build a comprehensive picture of the transaction, the parties, and the risk — using every data source available — and reach a disposition: close with no further action, file a SAR, place the parties on enhanced monitoring, or send an RFI to the respondent bank to obtain additional information.</p>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.amber}>WHAT THE L2 INVESTIGATOR ACTUALLY DOES</SectionLabel>
+      <TimelineStep num={1} title="Review L1 triage notes and alert context" time="15–20 min" color={C.amber}>
+        Read L1 notes, understand flagged concerns, review original payment message and detection scenario. Assess whether escalation was appropriate.
+      </TimelineStep>
+      <TimelineStep num={2} title="Deep-dive sanctions and watchlist screening" time="20–30 min" color={C.amber}>
+        Beyond initial screening: search multiple databases, check PEP lists, look for partial matches, aliases, associated entities in designation narratives. Search for directors and beneficial owners where known.
+      </TimelineStep>
+      <TimelineStep num={3} title="Adverse media research" time="30–60 min" color={C.amber}>
+        Search originator, beneficiary, and known associated individuals across news databases, journalism archives, court records, regulatory actions. Most time-consuming manual task. Multiple databases. Filter false matches. Assess credibility and recency. Absence of footprint is itself a data point.
+      </TimelineStep>
+      <TimelineStep num={4} title="Corporate registry and ownership research" time="20–40 min" color={C.amber}>
+        Check public registries (Companies House for UK, equivalents elsewhere). Incorporation date, address, SIC codes, directors, filing history, beneficial ownership. For opaque jurisdictions (UAE, BVI, Cayman), may yield little.
+      </TimelineStep>
+      <TimelineStep num={5} title="Transaction pattern analysis" time="30–45 min" color={C.amber}>
+        Full wire history for originator and beneficiary. Build picture: how many wires, what period, what amounts, which counterparties, which respondents. Escalating pattern? Rotating counterparties? Same originator through multiple respondents?
+      </TimelineStep>
+      <TimelineStep num={6} title="Respondent bank relationship review" time="15–20 min" color={C.amber}>
+        Full respondent file: risk rating, jurisdiction, last due diligence, RFI response quality, prior alerts/SARs. Contextualises the transaction.
+      </TimelineStep>
+      <TimelineStep num={7} title="Analysis, assessment, and write-up" time="60–90 min" color={C.amber}>
+        Synthesise all findings. Weigh evidence: confirmed vs inferred vs unknown. Most plausible explanation? Typology match? Mitigating factors? Write narrative for senior reviewer, compliance officer, regulatory examiner.
+      </TimelineStep>
+      <TimelineStep num={8} title="Disposition decision" time="15–20 min" color={C.amber} isLast>
+        Preliminary disposition: close, recommend SAR, enhanced monitoring, or send RFI. Goes to senior reviewer for approval.
+      </TimelineStep>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: L2 WITH RFI CYCLE
+   ══════════════════════════════════════════════════════════════════ */
+function SectionL2RFI(){
+  return <div className="fade-in">
+    <Card accent={C.red}>
+      <StatRow>
+        <StatCard number="8–16 hrs" label="Analyst time (total)" color={C.red}/>
+        <StatCard number="15–30 days" label="RFI wait" color={C.red}/>
+        <StatCard number="60–70%" label="Adequate response rate" color={C.red}/>
+      </StatRow>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>When the L2 investigator cannot reach a disposition based on available information — which happens in 30–40% of escalated cases in correspondent banking — a Request for Information is sent to the respondent bank. This adds an entire sub-process to the investigation: drafting the RFI, waiting for a response (typically 15–30 business days), reviewing returned documents, and re-assessing the case with new information. The RFI cycle often doubles the total analyst time invested in a case and introduces a multi-week delay.</p>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.red}>THE RFI SUB-PROCESS</SectionLabel>
+      <TimelineStep num={1} title="Identify information gaps" time="15–20 min" color={C.red}>
+        Document specifically what's missing: beneficial owners, business rationale, trade documents, source of funds, expected transaction profile.
+      </TimelineStep>
+      <TimelineStep num={2} title="Draft the RFI" time="30–45 min" color={C.red}>
+        Formal request letter to respondent compliance. Standardised template customised to case. Quality varies — targeted vs generic.
+      </TimelineStep>
+      <TimelineStep num={3} title="Internal approval and dispatch" time="30–60 min" color={C.red}>
+        Team lead/compliance manager review. Sometimes legal review. Dispatch via SWIFT, encrypted email, or secure portal.
+      </TimelineStep>
+      <TimelineStep num={4} title="Wait for response" time="15–30 business days" color={C.red}>
+        Case in holding state. Chase if deadline approaches. Non-response is a risk indicator.
+      </TimelineStep>
+      <TimelineStep num={5} title="Receive and review returned documents" time="2–4 hours" color={C.red}>
+        Read KYC package (10–20+ pages), examine trade docs for consistency (invoice vs wire vs B/L vs COO), assess SOF, verify ownership, compare against earlier findings.
+      </TimelineStep>
+      <TimelineStep num={6} title="Re-assess with new information" time="60–90 min" color={C.red}>
+        Update analysis. New info may confirm suspicions, resolve concerns, or introduce new red flags. Screen newly obtained director/UBO names.
+      </TimelineStep>
+      <TimelineStep num={7} title="Update narrative and reach final disposition" time="60–90 min" color={C.red} isLast>
+        Substantially rewrite narrative. Final disposition: close, SAR, or rare follow-up RFI.
+      </TimelineStep>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.red}>WHAT HAPPENS WHEN THE RESPONSE IS INADEQUATE</SectionLabel>
+      <ResponseOutcome num={1} label="Complete, satisfactory response" pct="35–45%" color={C.green} desc="Investigation proceeds with full info."/>
+      <ResponseOutcome num={2} label="Partial response, key gaps remain" pct="25–30%" color={C.amber} desc="Assess sufficiency, may SAR or follow up."/>
+      <ResponseOutcome num={3} label="Client declined to provide" pct="10–15%" color={C.red} desc="Strong negative signal. Often tips to SAR. Impacts respondent risk."/>
+      <ResponseOutcome num={4} label="No response within deadline" pct="10–15%" color={C.red} desc="Escalate to relationship management. Document. May SAR on available info."/>
+      <ResponseOutcome num={5} label="Response raises new concerns" pct="5–10%" color={C.red} desc="New red flags in documents. Almost always results in SAR."/>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: ESCALATION & DISCOUNT DECISIONS
+   ══════════════════════════════════════════════════════════════════ */
+function SectionDecisions(){
+  return <div className="fade-in">
+    <Card>
+      <SectionLabel color={C.dim}>THE DECISION FRAMEWORK</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>At every stage of the investigation process, analysts face the same fundamental question: is the available information sufficient to determine whether this activity is suspicious, or is more information needed? This decision is inherently probabilistic — certainty is rare. The analyst operates on a spectrum between 'clearly benign' and 'clearly suspicious,' with most cases falling somewhere in the middle. The institutional framework for making this decision rests on three pillars: regulatory expectation, documented rationale, and professional judgment.</p>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.green}>THE DISCOUNT DECISION</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8,marginBottom:16}}>Discounting an alert means closing it with a documented determination that the activity is not suspicious and does not warrant further investigation or reporting. This is not a casual decision. The analyst must articulate a positive reason for closure — not merely the absence of red flags. The standard is: would a reasonable compliance professional, reviewing this file, agree that the decision is defensible?</p>
+      <AccentItem color={C.green} title="Established pattern consistency">
+        The transaction is consistent with the originator's and beneficiary's established activity through this respondent. The amount, frequency, counterparties, and corridors match the historical profile. No deviation from expected behaviour.
+      </AccentItem>
+      <AccentItem color={C.green} title="Scenario threshold artifact">
+        The alert was generated because the transaction crossed a detection threshold (e.g., cumulative value over rolling period) but the underlying activity is routine. The detection rule is functioning as designed, but the specific instance is not suspicious.
+      </AccentItem>
+      <AccentItem color={C.green} title="Previously investigated activity">
+        The same or substantially similar activity involving the same parties has been recently investigated and closed with no action. No new information has emerged that would change the prior assessment.
+      </AccentItem>
+      <AccentItem color={C.green} title="Corroborated legitimate purpose">
+        The remittance information, combined with publicly available information about the parties, supports a clear, lawful business purpose. The transaction makes commercial sense in context.
+      </AccentItem>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.amber}>THE ESCALATION DECISION</SectionLabel>
+      <AccentItem color={C.amber} title="Unexplained anomaly">
+        Something about the transaction does not fit the expected pattern and cannot be explained by available information. This includes unusual amounts, new counterparties, atypical corridors, or inconsistent remittance details.
+      </AccentItem>
+      <AccentItem color={C.amber} title="Accumulating risk signals">
+        No single factor is conclusive, but multiple indicators — high-risk jurisdiction, vague remittance, new originator, elevated respondent risk — create a cumulative picture that warrants deeper investigation.
+      </AccentItem>
+      <AccentItem color={C.amber} title="Typology alignment">
+        The transaction pattern matches a known financial crime typology: trade-based money laundering, funnel accounts, shell company layering, sanctions evasion structuring, or other documented methodologies.
+      </AccentItem>
+      <AccentItem color={C.amber} title="Information insufficiency">
+        The analyst cannot form a reasonable judgment about the legitimacy of the transaction based on available data. The gap between what is known and what would need to be known to make a defensible decision is too wide.
+      </AccentItem>
+      <AccentItem color={C.amber} title="Professional judgment">
+        The analyst's experience and training indicate that something is wrong, even if the specific concern is difficult to articulate in terms of a single data point. This is explicitly recognised by regulators as a valid basis for escalation, provided it is documented.
+      </AccentItem>
+    </Card>
+
+    <Card>
+      <SectionLabel color={C.purple}>THE SAR DECISION</SectionLabel>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>The decision to file a SAR is the highest-stakes determination in the process. The regulatory standard is not proof of criminal activity — it is whether the institution 'knows, suspects, or has reasonable grounds to suspect' that a transaction involves proceeds of crime, is designed to evade reporting requirements, or lacks a lawful purpose. The investigator must document the specific factual basis for the suspicion, the relevant typology or pattern, what was investigated and what was found, and why the activity cannot be explained by a legitimate business purpose. The SAR narrative is a legal document that may be reviewed by law enforcement, regulatory examiners, and in rare cases, courts.</p>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: CHALLENGES & RISKS
+   ══════════════════════════════════════════════════════════════════ */
+function SectionChallenges(){
+  const challenges=[
+    {title:'False positive overload',color:C.red,text:'The single most dominant feature of AML operations is the false positive rate. Industry benchmarks consistently place it at 90–95% — meaning that for every 100 alerts generated by the detection engine, 90–95 will be closed as not suspicious after human review. This is not a system failure; it is a design feature of rule-based detection engines operating under regulatory pressure to over-detect rather than under-detect. The consequence is that analysts spend the vast majority of their time reviewing activity that is ultimately benign. This creates alert fatigue, cognitive drain, and a persistent tension between thoroughness and throughput.'},
+    {title:'Information asymmetry in correspondent banking',color:C.red,text:'The correspondent bank cannot screen people it does not know exist. The originator and beneficiary are the respondent\'s customers. The correspondent sees names on a wire — nothing more. There is no access to the customer\'s KYC file, transaction history with the respondent, source of wealth documentation, or beneficial ownership structure. Every investigation begins from a position of partial blindness. The analyst must infer risk from fragments: names, jurisdictions, amounts, frequencies, and whatever can be found in public sources. This is fundamentally different from investigating your own retail or commercial customers, where you hold the full picture.'},
+    {title:'Inconsistent investigation quality',color:C.amber,text:'Two analysts reviewing the same alert may reach different conclusions — not because one is wrong, but because the process allows for significant subjective variation. One analyst may find adverse media that another missed. One may interpret a vague remittance field as suspicious while another reads it as benign. One may have deep knowledge of TBML typologies while another does not. This inconsistency is a persistent challenge for compliance leadership and a frequent finding in regulatory examinations. It is difficult to achieve standardisation when so much of the process depends on individual knowledge, research skill, and professional judgment.'},
+    {title:'Documentation burden',color:C.amber,text:'An estimated 30–40% of total investigation time is spent on documentation rather than analysis. Every decision — discount, escalate, SAR, close — must be supported by a written narrative that explains what was reviewed, what was found, what was not found, and why the determination is reasonable. This narrative must be intelligible to a regulatory examiner who may review the file months or years later with no prior context. The documentation requirement is not optional — it is the primary evidence of the institution\'s compliance program effectiveness — but it significantly reduces the time available for actual investigative analysis.'},
+    {title:'RFI response quality and timeliness',color:C.amber,text:'The RFI process is entirely dependent on the willingness and capability of the respondent bank to provide requested information. Response quality varies enormously: some respondent banks return comprehensive KYC packages within days; others provide minimal, generic responses after repeated chasing; some never respond at all. The investigating analyst has limited leverage — escalation to relationship management is the primary tool, and even that may be ineffective if the respondent is a significant revenue relationship. Meanwhile, the case sits in limbo, consuming calendar time and requiring periodic follow-up.'},
+    {title:'Typology knowledge gaps',color:C.amber,text:'Complex financial crime — particularly trade-based money laundering, proliferation financing, and professional money laundering networks — follows patterns that require specific, often deep, domain knowledge to recognise. An analyst who has not been trained on TBML red flags may not notice that an invoice price is 3x the market rate, or that a bill of lading shows a shipping route that makes no commercial sense, or that the same goods appear to be sold multiple times between related entities. Typology training is typically provided, but its depth and currency vary significantly across institutions.'},
+    {title:'Technology fragmentation',color:C.slate,text:'A typical AML investigation requires the analyst to access 5–10 separate systems: the case management platform, the detection engine alert queue, the sanctions screening tool, the customer/respondent database, the wire transaction archive, adverse media databases, corporate registry websites, internal communication logs, and potentially external databases like World-Check or Dow Jones. Each system has its own interface, search logic, and data format. Context-switching between systems wastes time and increases the risk of missed information.'},
+    {title:'Analyst retention and burnout',color:C.slate,text:'L1 triage work is repetitive by design. The same alert types, the same review steps, the same documentation requirements — day after day. Analyst turnover at L1 is high across the industry, and each departure represents a loss of institutional knowledge and a 3–6 month ramp period for the replacement. L2 roles are more intellectually stimulating but carry their own burden: complex cases, ambiguous evidence, high-stakes decisions, and regulatory scrutiny. Burnout is a recognised risk at all levels, and retention strategies — career progression, rotation, training investment — are critical but inconsistently applied.'},
+    {title:'Regulatory moving target',color:C.slate,text:'Regulatory expectations for AML investigation quality and documentation are not static. They evolve through enforcement actions, examination findings, industry guidance, and legislative change. What was considered a defensible investigation file two years ago may fall short of current expectations. Analysts and compliance leadership must continuously adapt — but the feedback loop is slow (examination findings may arrive 12–18 months after the reviewed period), and the cost of falling behind can be severe: consent orders, civil money penalties, and reputational damage.'},
+  ];
+  return <div className="fade-in">
+    {challenges.map((c,i)=><Card key={i}>
+      <div style={{borderLeft:`2px solid ${c.color}`,paddingLeft:14}}>
+        <div style={{fontSize:15,fontWeight:700,color:C.tx,marginBottom:8}}>{c.title}</div>
+        <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>{c.text}</p>
+      </div>
+    </Card>)}
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SECTION: ANALYST ROLES & SKILLSETS
+   ══════════════════════════════════════════════════════════════════ */
+function SectionRoles(){
+  return <div className="fade-in">
+    {/* ROLE 1: L1 */}
+    <Card accent={C.green}>
+      <SectionLabel color={C.green}>L1 ALERT TRIAGE ANALYST</SectionLabel>
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginBottom:16}}>
+        <div style={{borderLeft:`2px solid ${C.green}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Level</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>Junior / Entry-Level</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.green}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Experience</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>0–3 years</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.green}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Salary</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>$45K–$65K (US) / £30K–£42K (UK)</div>
+        </div>
+      </div>
+
+      <SectionLabel color={C.green}>RESPONSIBILITIES</SectionLabel>
+      <AccentItem color={C.green}>Review and triage detection engine alerts within assigned SLA</AccentItem>
+      <AccentItem color={C.green}>Perform initial sanctions and watchlist screening</AccentItem>
+      <AccentItem color={C.green}>Review payment message fields for red flags</AccentItem>
+      <AccentItem color={C.green}>Check respondent bank risk profile and prior alert history</AccentItem>
+      <AccentItem color={C.green}>Document triage rationale for every alert (discount narrative or escalation summary)</AccentItem>
+      <AccentItem color={C.green}>Escalate alerts meeting investigation criteria to L2 queue</AccentItem>
+
+      <SectionLabel color={C.green}>KEY SKILLS</SectionLabel>
+      <AccentItem color={C.green} title="Payment message literacy">Ability to read and interpret SWIFT MT103/MT202 and ISO 20022 pacs.008 message fields. Understanding of field codes, ordering/beneficiary institution roles, and remittance information conventions.</AccentItem>
+      <AccentItem color={C.green} title="Sanctions screening proficiency">Competence with screening tools and understanding of match logic (exact, fuzzy, phonetic). Ability to distinguish true matches from false positives and document screening results.</AccentItem>
+      <AccentItem color={C.green} title="Pattern recognition">Ability to spot anomalies in transaction data quickly: unusual amounts, atypical corridors, first-time counterparties, round-number patterns, frequency changes.</AccentItem>
+      <AccentItem color={C.green} title="Attention to detail under volume">Maintaining accuracy and thoroughness while processing 6–10 alerts per day under time pressure. Resistance to alert fatigue.</AccentItem>
+      <AccentItem color={C.green} title="Documentation discipline">Ability to write clear, concise triage narratives that would satisfy a regulatory examiner reviewing the file 12 months later.</AccentItem>
+
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:8}}>
+        <div style={{borderLeft:`2px solid ${C.green}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Certifications</div>
+          <div style={{fontSize:13,color:C.body}}>ACAMS CAMS desirable not required. ICA Certificate. In-house training.</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.green}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Progression</div>
+          <div style={{fontSize:13,color:C.body}}>12–24 months at L1 before L2 consideration.</div>
+        </div>
+      </div>
+    </Card>
+
+    {/* ROLE 2: L2 */}
+    <Card accent={C.amber}>
+      <SectionLabel color={C.amber}>L2 AML INVESTIGATOR</SectionLabel>
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginBottom:16}}>
+        <div style={{borderLeft:`2px solid ${C.amber}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Level</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>Mid-Level / Experienced</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.amber}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Experience</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>3–7 years</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.amber}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Salary</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>$65K–$95K (US) / £42K–£65K (UK)</div>
+        </div>
+      </div>
+
+      <SectionLabel color={C.amber}>RESPONSIBILITIES</SectionLabel>
+      <AccentItem color={C.amber}>Conduct full investigations on escalated alerts</AccentItem>
+      <AccentItem color={C.amber}>Perform comprehensive sanctions, PEP, and adverse media screening</AccentItem>
+      <AccentItem color={C.amber}>Research corporate ownership, beneficial owners, and entity relationships</AccentItem>
+      <AccentItem color={C.amber}>Analyse transaction patterns across multiple respondents and time periods</AccentItem>
+      <AccentItem color={C.amber}>Draft and dispatch Requests for Information to respondent banks</AccentItem>
+      <AccentItem color={C.amber}>Review and analyse RFI responses including KYC packages and trade documents</AccentItem>
+      <AccentItem color={C.amber}>Write detailed investigation narratives supporting disposition decisions</AccentItem>
+      <AccentItem color={C.amber}>Present complex cases to senior reviewers and compliance officers</AccentItem>
+
+      <SectionLabel color={C.amber}>KEY SKILLS</SectionLabel>
+      <AccentItem color={C.amber} title="Typology knowledge">Deep understanding of financial crime typologies relevant to correspondent banking: TBML, shell company layering, funnel accounts, sanctions evasion, proliferation financing, tax evasion through mirror trades. Ability to recognise patterns that match known methodologies.</AccentItem>
+      <AccentItem color={C.amber} title="Multi-source research proficiency">Ability to extract intelligence from diverse sources: corporate registries, news databases, court records, regulatory actions, shipping databases, commodity price references. Knowing where to look and how to assess source credibility.</AccentItem>
+      <AccentItem color={C.amber} title="Document analysis">Ability to review and assess KYC packages, trade documents (invoices, bills of lading, certificates of origin, letters of credit), and financial statements. Spotting inconsistencies, verifying authenticity indicators, cross-referencing across documents.</AccentItem>
+      <AccentItem color={C.amber} title="Analytical writing">The defining skill of an L2 investigator. Ability to synthesise complex, multi-source findings into a coherent narrative that clearly articulates what was found, what it means, and why the disposition is justified. The narrative must withstand regulatory scrutiny.</AccentItem>
+      <AccentItem color={C.amber} title="Regulatory awareness">Understanding of relevant AML regulations, guidance, and examination expectations. Awareness of what regulators consider adequate investigation and documentation.</AccentItem>
+      <AccentItem color={C.amber} title="Professional skepticism">The ability to question apparent explanations, probe for alternative interpretations, and resist the cognitive bias toward closing cases quickly. Not cynicism — disciplined doubt.</AccentItem>
+
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:8}}>
+        <div style={{borderLeft:`2px solid ${C.amber}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Certifications</div>
+          <div style={{fontSize:13,color:C.body}}>ACAMS CAMS expected. ICA Diploma. CAMS-FCI desirable.</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.amber}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Progression</div>
+          <div style={{fontSize:13,color:C.body}}>3–5 years at L2 before Senior/Team Lead/Compliance Officer.</div>
+        </div>
+      </div>
+    </Card>
+
+    {/* ROLE 3: Senior */}
+    <Card accent={C.purple}>
+      <SectionLabel color={C.purple}>SENIOR INVESTIGATOR / TEAM LEAD</SectionLabel>
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginBottom:16}}>
+        <div style={{borderLeft:`2px solid ${C.purple}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Level</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>Senior / Management</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.purple}`,paddingLeft:14,flex:'1 1 140px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Experience</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>7–12+ years</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.purple}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Salary</div>
+          <div style={{fontSize:13,color:C.tx,fontWeight:600}}>$95K–$140K (US) / £65K–£95K (UK)</div>
+        </div>
+      </div>
+
+      <SectionLabel color={C.purple}>RESPONSIBILITIES</SectionLabel>
+      <AccentItem color={C.purple}>Review and approve L2 investigation dispositions (SAR recommendations, closures, RFI decisions)</AccentItem>
+      <AccentItem color={C.purple}>Provide guidance on complex or ambiguous cases</AccentItem>
+      <AccentItem color={C.purple}>Ensure investigation quality and consistency across the team</AccentItem>
+      <AccentItem color={C.purple}>Manage escalations to compliance officers and regulatory affairs</AccentItem>
+      <AccentItem color={C.purple}>Conduct quality control reviews on completed investigations</AccentItem>
+      <AccentItem color={C.purple}>Identify training needs and knowledge gaps across L1 and L2 teams</AccentItem>
+      <AccentItem color={C.purple}>Liaise with respondent bank relationship managers on high-risk relationships</AccentItem>
+      <AccentItem color={C.purple}>Represent the investigation function in regulatory examinations and audits</AccentItem>
+      <AccentItem color={C.purple}>Monitor team capacity, SLA adherence, and backlog management</AccentItem>
+
+      <SectionLabel color={C.purple}>KEY SKILLS</SectionLabel>
+      <AccentItem color={C.purple} title="Judgment under ambiguity">The defining skill at senior level. Ability to make defensible decisions when evidence is incomplete, conflicting, or subject to multiple interpretations. Knowing when enough is enough — when to close, when to file, when to push for more information.</AccentItem>
+      <AccentItem color={C.purple} title="Regulatory credibility">Ability to represent the investigation function credibly to regulators, auditors, and senior management. This requires both technical depth and communication skill — explaining complex investigative decisions in terms that non-specialists can understand and accept.</AccentItem>
+      <AccentItem color={C.purple} title="Portfolio-level pattern recognition">Seeing patterns not just within individual cases but across the portfolio: the same respondent generating increasing alerts, the same corridor appearing in multiple typologies, emerging trends that individual investigators — focused on their own caseload — may not see.</AccentItem>
+      <AccentItem color={C.purple} title="People management">Leading a team of analysts with varying experience levels, managing workload distribution, providing constructive feedback on investigation quality, supporting professional development, and maintaining morale in a high-pressure, high-volume environment.</AccentItem>
+
+      <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:8}}>
+        <div style={{borderLeft:`2px solid ${C.purple}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Certifications</div>
+          <div style={{fontSize:13,color:C.body}}>ACAMS CAMS required. CAMS-FCI or equivalent. May have regulatory/law enforcement background.</div>
+        </div>
+        <div style={{borderLeft:`2px solid ${C.purple}`,paddingLeft:14,flex:'1 1 220px'}}>
+          <div style={{fontSize:11,color:C.muted,fontFamily:'Fira Code, monospace',textTransform:'uppercase',letterSpacing:'1.2px'}}>Progression</div>
+          <div style={{fontSize:13,color:C.body}}>BSA Officer, Head of Financial Crime Investigations, Deputy MLRO, advisory roles.</div>
+        </div>
+      </div>
+    </Card>
+
+    {/* Team Structure */}
+    <Card>
+      <SectionLabel color={C.dim}>TEAM STRUCTURE</SectionLabel>
+      <StatRow>
+        <StatCard number="10–14" label="L1 Analysts" color={C.green}/>
+        <StatCard number="6–8" label="L2 Investigators" color={C.amber}/>
+        <StatCard number="2–3" label="Senior / Team Lead" color={C.purple}/>
+      </StatRow>
+      <p style={{fontSize:13,color:C.body,lineHeight:1.8}}>Total headcount: 18–25 FTEs. This does not include SAR filing specialists, compliance officers, model governance staff, or relationship managers who may be involved in respondent bank reviews. The ratio is heavily weighted toward L1 because the false positive rate drives volume — 60–70% of all analyst time across the team is consumed by triaging and discounting alerts that turn out to be benign. This is the single largest efficiency opportunity in the current process.</p>
+    </Card>
+  </div>;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MAIN APP
+   ══════════════════════════════════════════════════════════════════ */
+function App(){
+  const [active,setActive]=useState('overview');
+  const navRef=useRef(null);
+
+  const idx=SECTIONS.findIndex(s=>s.id===active);
+  const prev=idx>0?SECTIONS[idx-1]:null;
+  const next=idx<SECTIONS.length-1?SECTIONS[idx+1]:null;
+
+  function goTo(id){
+    setActive(id);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // Scroll active nav button into view
+  useEffect(()=>{
+    if(!navRef.current)return;
+    const btn=navRef.current.querySelector(`[data-id="${active}"]`);
+    if(btn)btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  },[active]);
+
+  function renderSection(){
+    switch(active){
+      case 'overview': return <SectionOverview/>;
+      case 'l1': return <SectionL1/>;
+      case 'l2': return <SectionL2/>;
+      case 'l2rfi': return <SectionL2RFI/>;
+      case 'decisions': return <SectionDecisions/>;
+      case 'challenges': return <SectionChallenges/>;
+      case 'roles': return <SectionRoles/>;
+      default: return <SectionOverview/>;
+    }
+  }
+
+  return <div style={{minHeight:'100vh',background:C.bg}}>
+    {/* Header */}
+    <div style={{maxWidth:740,margin:'0 auto',padding:'48px 20px 0'}}>
+      <div style={{fontSize:10,fontFamily:'Fira Code, monospace',fontWeight:600,color:C.muted,letterSpacing:'1.6px',textTransform:'uppercase',marginBottom:12}}>ECONOMIC CRIME HUB — OPERATIONAL PAPER</div>
+      <h1 style={{fontSize:22,fontWeight:700,color:C.tx,lineHeight:1.4,marginBottom:8}}>The AML Investigation Process</h1>
+      <p style={{fontSize:14,color:C.dim,lineHeight:1.6,marginBottom:32}}>L1 Triage, L2 Investigation, and the RFI Cycle in Correspondent Banking — Before Automation</p>
+    </div>
+
+    {/* Section Nav */}
+    <div style={{position:'sticky',top:0,zIndex:100,background:C.bg,borderBottom:`1px solid ${C.bdr}`}}>
+      <div ref={navRef} style={{maxWidth:740,margin:'0 auto',padding:'0 20px',display:'flex',gap:4,overflowX:'auto',WebkitOverflowScrolling:'touch',scrollbarWidth:'none',msOverflowStyle:'none'}}>
+        {SECTIONS.map(s=>{
+          const isActive=active===s.id;
+          return <button key={s.id} data-id={s.id} onClick={()=>goTo(s.id)} style={{
+            display:'flex',alignItems:'center',gap:6,
+            padding:'12px 14px',
+            background:'none',border:'none',borderBottom:isActive?`2px solid ${C.tx}`:'2px solid transparent',
+            color:isActive?C.tx:C.muted,
+            fontSize:11,fontFamily:'Fira Code, monospace',fontWeight:isActive?600:400,
+            letterSpacing:'0.5px',
+            cursor:'pointer',whiteSpace:'nowrap',transition:'all .2s',
+            flexShrink:0,
+          }}>
+            <span style={{fontSize:13}}>{s.icon}</span>
+            <span>{s.title}</span>
+          </button>;
+        })}
+      </div>
+    </div>
+
+    {/* Content */}
+    <div style={{maxWidth:740,margin:'0 auto',padding:'32px 20px 60px'}} key={active}>
+      {renderSection()}
+
+      {/* Prev / Next */}
+      <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
+        {prev?<button onClick={()=>goTo(prev.id)} style={{
+          background:C.card,border:`1px solid ${C.bdr}`,borderRadius:13,padding:'14px 20px',
+          color:C.dim,fontSize:12,fontFamily:'Fira Code, monospace',cursor:'pointer',textAlign:'left',flex:'1 1 0',
+        }}>
+          <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:'1px',textTransform:'uppercase'}}>Previous</div>
+          <div style={{color:C.tx,fontWeight:600}}>{prev.icon} {prev.title}</div>
+        </button>:<div style={{flex:'1 1 0'}}/>}
+        {next?<button onClick={()=>goTo(next.id)} style={{
+          background:C.card,border:`1px solid ${C.bdr}`,borderRadius:13,padding:'14px 20px',
+          color:C.dim,fontSize:12,fontFamily:'Fira Code, monospace',cursor:'pointer',textAlign:'right',flex:'1 1 0',
+        }}>
+          <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:'1px',textTransform:'uppercase'}}>Next</div>
+          <div style={{color:C.tx,fontWeight:600}}>{next.title} {next.icon}</div>
+        </button>:<div style={{flex:'1 1 0'}}/>}
+      </div>
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
